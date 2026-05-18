@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="JX Design & Dev — Portfolio details & projects.">
+  <meta name="author" content="Okezie Ferdinand">
+  <meta name="theme-color" content="#000000">
+  <title>Portfolio — JX Design & Dev</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&family=Playfair+Display:ital,wght@1,900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="style.css?v=1.1">
+
+  <!-- GSAP 3 -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+  <!-- Lenis Smooth Scroll -->
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js" defer></script>
+
+  <!-- Shared Nav Script -->
+  <script src="nav.js" defer></script>
+  <!-- Page Utilities -->
+  <script src="page.js" defer></script>
+  <!-- Work Animations -->
+  <script src="work.js" defer></script>
+  <!-- Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase.js"></script>
+</head>
+<body>
+
+
+
+  <!-- Navigation -->
+  <nav class="nav" id="nav">
+    <div class="nav-logo">
+      <svg class="jx-logo" viewBox="0 0 72 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="JX"><path class="jx-stroke jx-j" d="M8 2H22V22Q22 30 14 30Q6 30 6 22"/><path class="jx-stroke jx-x1" d="M36 2L60 30"/><path class="jx-stroke jx-x2" d="M60 2L36 30"/></svg>
+      <span class="logo-text">Design &amp; Dev</span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="index.html" class="nav-link">Home</a></li>
+      <li><a href="work.html" class="nav-link active">Work</a></li>
+      <li><a href="about.html" class="nav-link">About</a></li>
+      <li><a href="services.html" class="nav-link">Services</a></li>
+      <li><a href="contact.html" class="nav-link cta-link">Let's Talk</a></li>
+    </ul>
+    <button class="theme-toggle" id="theme-toggle">
+      <span class="theme-icon">◐</span>
+    </button>
+    <div class="nav-menu" id="nav-menu">
+      <span></span><span></span><span></span>
+    </div>
+  </nav>
+
+  <!-- Mobile Menu Overlay -->
+  <div class="mobile-menu" id="mobile-menu">
+    <ul class="mobile-menu-links">
+      <li><a href="index.html" class="mobile-link">Home</a></li>
+      <li><a href="work.html" class="mobile-link active">Work</a></li>
+      <li><a href="about.html" class="mobile-link">About</a></li>
+      <li><a href="services.html" class="mobile-link">Services</a></li>
+      <li><a href="contact.html" class="mobile-link">Let's Talk</a></li>
+    </ul>
+  </div>
+
+  <!-- Portfolio Page Content -->
+  <section class="portfolio-page">
+    <div class="portfolio-header">
+      <span class="section-label">Portfolio</span>
+      <h1 class="section-title">
+        Things I've<br/>
+        <span class="title-stroke">Built ✦</span>
+      </h1>
+      <p class="portfolio-subtext">Product Design · No-Code · Automation · Security</p>
+    </div>
+
+    <!-- Filter Tabs -->
+    <div class="filter-tabs">
+      <!-- Injected dynamically by work.js -->
+    </div>
+
+    <!-- Portfolio Grid -->
+    <div class="portfolio-grid">
+      <!-- Injected dynamically by work.js -->
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-top">
+      <div class="footer-left">
+        <div class="footer-logo">
+          <svg class="jx-logo" viewBox="0 0 72 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="JX"><path class="jx-stroke jx-j" d="M8 2H22V22Q22 30 14 30Q6 30 6 22"/><path class="jx-stroke jx-x1" d="M36 2L60 30"/><path class="jx-stroke jx-x2" d="M60 2L36 30"/></svg>
+          <span class="logo-text">Design &amp; Dev</span>
+        </div>
+        <p class="footer-tagline">
+          System Designer &amp; Builder
+        </p>
+        <p class="footer-copy">
+          © 2025 Okezie Ferdinand.<br/>
+          All rights reserved.
+        </p>
+      </div>
+      <div class="footer-center">
+        <p class="footer-label">Navigation</p>
+        <ul class="footer-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="work.html">Work</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="services.html">Services</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-right">
+        <p class="footer-label">Connect</p>
+        <ul class="footer-links">
+          <li><a href="#">LinkedIn</a></li>
+          <li><a href="#">Twitter/X</a></li>
+          <li><a href="#">GitHub</a></li>
+          <li><a href="#">Dribbble</a></li>
+        </ul>
+        <p class="footer-easter-egg">
+          Built with passion, code ✦<br/>
+          and a dream of being an astronaut 🚀
+        </p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>JX Design &amp; Dev — Nigeria 🇳🇬</span>
+      <span>Designed &amp; Built by Okezie Ferdinand</span>
+    </div>
+  </footer>
+
+  <!-- Scroll To Top -->
+  <button class="scroll-top" id="scroll-top">↑</button>
+
+  <!-- Custom Cursor -->
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-follower" id="cursor-follower"></div>
+
+</body>
+</html>

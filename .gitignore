@@ -1,0 +1,22 @@
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor
+.vscode/
+.idea/
+
+# Node (if you ever add npm)
+node_modules/
+
+# Environment/secrets (if any)
+.env
+.env.local
+
+# n8n local files
+start-n8n.bat
+start-tunnel.bat
+
+# Gemini AI
+.gemini/

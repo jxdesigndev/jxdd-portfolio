@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Contact Okezie Ferdinand for Product Design, No-Code Development, and Automation. Reach out via WhatsApp or Email.">
+  <meta name="author" content="Okezie Ferdinand">
+  <meta name="theme-color" content="#000000">
+  <title>Contact — JX Design & Dev | Let's Build</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="style.css?v=1.4">
+
+  <!-- GSAP 3 -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+  <!-- Lenis Smooth Scroll -->
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js" defer></script>
+
+  <!-- Scripts -->
+  <script src="nav.js" defer></script>
+  <script src="page.js" defer></script>
+  <script src="contact.js" defer></script>
+  <!-- Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase.js"></script>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="nav" id="nav">
+    <div class="nav-logo">
+      <svg class="jx-logo" viewBox="0 0 72 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="JX"><path class="jx-stroke jx-j" d="M8 2H22V22Q22 30 14 30Q6 30 6 22"/><path class="jx-stroke jx-x1" d="M36 2L60 30"/><path class="jx-stroke jx-x2" d="M60 2L36 30"/></svg>
+      <span class="logo-text">Design &amp; Dev</span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="index.html" class="nav-link">Home</a></li>
+      <li><a href="work.html" class="nav-link">Work</a></li>
+      <li><a href="about.html" class="nav-link">About</a></li>
+      <li><a href="services.html" class="nav-link">Services</a></li>
+      <li><a href="contact.html" class="nav-link active cta-link">Let's Talk</a></li>
+    </ul>
+    <button class="theme-toggle" id="theme-toggle">
+      <span class="theme-icon">◐</span>
+    </button>
+    <div class="nav-menu" id="nav-menu">
+      <span></span><span></span><span></span>
+    </div>
+  </nav>
+
+  <!-- Mobile Menu Overlay -->
+  <div class="mobile-menu" id="mobile-menu">
+    <ul class="mobile-menu-links">
+      <li><a href="index.html" class="mobile-link">Home</a></li>
+      <li><a href="work.html" class="mobile-link">Work</a></li>
+      <li><a href="about.html" class="mobile-link">About</a></li>
+      <li><a href="services.html" class="mobile-link">Services</a></li>
+      <li><a href="contact.html" class="mobile-link active">Let's Talk</a></li>
+    </ul>
+  </div>
+
+  <main class="cp-page-wrap">
+    
+    <div class="cp-hero">
+      <span class="cp-label">Get In Touch</span>
+      <h1 class="cp-heading">
+        <span>Let's Build Something ✦</span>
+        <span class="accent">Together.</span>
+      </h1>
+    </div>
+
+    <div class="cp-content">
+      
+      <!-- Left: Contact Form -->
+      <div>
+        <form id="contact-form" class="cp-form">
+          <!-- Honeypot -->
+          <div style="display:none;">
+            <label for="bot-field">Don't fill this out if you're human:</label>
+            <input type="text" id="bot-field" name="bot-field" tabindex="-1">
+          </div>
+
+          <div class="cp-form-row">
+            <div class="cp-form-group">
+              <label for="name">Name *</label>
+              <input type="text" id="name" required placeholder="John Doe">
+            </div>
+            <div class="cp-form-group">
+              <label for="email">Email *</label>
+              <input type="email" id="email" required placeholder="john@example.com">
+            </div>
+          </div>
+
+          <div class="cp-form-row">
+            <div class="cp-form-group">
+              <label for="subject">How can I help you?</label>
+              <select id="subject">
+                <option value="UI/UX Design">I need a UI/UX Design</option>
+                <option value="No-Code Product">I need a No-Code Product Built</option>
+                <option value="Automation">I need Automation Setup</option>
+                <option value="Template">I want to buy a template</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div class="cp-form-group">
+              <label for="budget">Budget Range</label>
+              <select id="budget">
+                <option value="< $500">&lt; $500</option>
+                <option value="$500 - $1,000">$500 - $1,000</option>
+                <option value="$1,000 - $3,000">$1,000 - $3,000</option>
+                <option value="$3,000+">$3,000+</option>
+                <option value="Let's discuss">Let's discuss</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="cp-form-group">
+            <label for="message">Message *</label>
+            <textarea id="message" required placeholder="Tell me about your project..."></textarea>
+          </div>
+
+          <div id="form-msg" class="cp-message-box"></div>
+
+          <button type="submit" id="submit-btn" class="cp-submit-btn">
+            <span class="cp-spinner"></span>
+            <span id="btn-text">Send Message →</span>
+          </button>
+        </form>
+
+        <!-- Template Sale Section below form -->
+        <div class="cp-glass-card" style="margin-top: 40px;">
+          <h3 class="cp-template-title">💼 Want this website as a template?</h3>
+          <p class="cp-template-desc">Get the full source code, customized for your brand. Includes instructions for managing content easily without breaking the animations.</p>
+          <a href="#" class="cp-submit-btn" style="background: transparent; border: 1px solid var(--border-medium); color: var(--white); width: fit-content; padding: 12px 24px;">Get Template — $49 →</a>
+          <p class="cp-template-subtext">Includes: full code, admin panel, n8n automation setup guide.</p>
+        </div>
+      </div>
+
+      <!-- Right: Direct Contact & Sidebar -->
+      <div class="cp-sidebar">
+        
+        <!-- Availability -->
+        <div class="cp-glass-card">
+          <div class="cp-avail-row">
+            <div class="cp-pulse-dot"></div>
+            <span>Currently Available</span>
+          </div>
+          <p class="cp-avail-info">Response time: &lt; 24hrs on WhatsApp<br>Based in Nigeria 🇳🇬</p>
+        </div>
+
+        <a href="https://wa.me/2349028821109" target="_blank" rel="noopener noreferrer" class="cp-wa-btn">
+          <span>Chat on WhatsApp</span>
+          <span>→</span>
+        </a>
+
+        <div class="cp-divider">or reach me on</div>
+
+        <div class="cp-socials">
+          <a href="https://www.linkedin.com/in/okezie-ferdinand" target="_blank" rel="noopener noreferrer" class="cp-social-link">
+            <span>↳ LinkedIn</span>
+          </a>
+          <a href="https://x.com/JX_Design_Dev" target="_blank" rel="noopener noreferrer" class="cp-social-link">
+            <span>↳ Twitter/X</span>
+          </a>
+          <a href="mailto:justxaviers@icloud.com" class="cp-social-link">
+            <span>↳ Email</span>
+          </a>
+          <a href="https://github.com/jxdesigndev" target="_blank" rel="noopener noreferrer" class="cp-social-link">
+            <span>↳ GitHub</span>
+          </a>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-top">
+      <div class="footer-left">
+        <div class="footer-logo">
+          <svg class="jx-logo" viewBox="0 0 72 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="JX"><path class="jx-stroke jx-j" d="M8 2H22V22Q22 30 14 30Q6 30 6 22"/><path class="jx-stroke jx-x1" d="M36 2L60 30"/><path class="jx-stroke jx-x2" d="M60 2L36 30"/></svg>
+          <span class="logo-text">Design &amp; Dev</span>
+        </div>
+        <p class="footer-tagline">
+          System Designer &amp; Builder
+        </p>
+        <p class="footer-copy">
+          © 2025 Okezie Ferdinand.<br/>
+          All rights reserved.
+        </p>
+      </div>
+      <div class="footer-center">
+        <p class="footer-label">Navigation</p>
+        <ul class="footer-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="work.html">Work</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="services.html">Services</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-right">
+        <p class="footer-label">Connect</p>
+        <ul class="footer-links">
+          <li><a href="#">LinkedIn</a></li>
+          <li><a href="#">Twitter/X</a></li>
+          <li><a href="#">GitHub</a></li>
+          <li><a href="#">Dribbble</a></li>
+        </ul>
+        <p class="footer-easter-egg">
+          Built with passion, code ✦<br/>
+          and a dream of being an astronaut 🚀
+        </p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>JX Design &amp; Dev — Nigeria 🇳🇬</span>
+      <span>Designed &amp; Built by Okezie Ferdinand</span>
+    </div>
+  </footer>
+
+  <!-- Scroll To Top -->
+  <button class="scroll-top" id="scroll-top">↑</button>
+
+  <!-- Custom Cursor -->
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-follower" id="cursor-follower"></div>
+
+</body>
+</html>

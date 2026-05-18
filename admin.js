@@ -1213,6 +1213,10 @@ function renderSettingsForm() {
   document.getElementById('set-linkedin').value = s.linkedin || '';
   document.getElementById('set-twitter').value = s.twitter || '';
   document.getElementById('set-github').value = s.github || '';
+  document.getElementById('set-dribbble').value = s.dribbble || '';
+  document.getElementById('set-instagram').value = s.instagram || '';
+  document.getElementById('set-contra').value = s.contra || '';
+  document.getElementById('set-upwork').value = s.upwork || '';
 }
 
 async function saveSettings() {
@@ -1228,6 +1232,10 @@ async function saveSettings() {
   s.linkedin = document.getElementById('set-linkedin').value;
   s.twitter = document.getElementById('set-twitter').value;
   s.github = document.getElementById('set-github').value;
+  s.dribbble = document.getElementById('set-dribbble').value;
+  s.instagram = document.getElementById('set-instagram').value;
+  s.contra = document.getElementById('set-contra').value;
+  s.upwork = document.getElementById('set-upwork').value;
 
   data.settings = s;
   await saveData('settings', 'Updated Global Settings');

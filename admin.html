@@ -17,8 +17,13 @@
   <!-- Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="supabase.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
 </head>
 <body>
+  <div id="offline-banner" class="offline-banner" style="display:none;">⚠️ You're offline — changes will sync when connected</div>
+  <div id="ptr-loader" class="ptr-loader"><i data-lucide="refresh-cw"></i></div>
 
   <!-- LOGIN OVERLAY -->
   <div id="login-overlay" class="login-overlay">
@@ -92,10 +97,16 @@
           <span class="nav-badge" id="nav-msg-badge" style="display:none">0</span>
         </a>
 
+        <div class="nav-section-label">Tools</div>
+        <a href="#" data-target="visual-editor" class="nav-item">
+          <i data-lucide="monitor"></i>
+          <span>Visual Editor</span>
+        </a>
+
         <div class="nav-section-label">Commerce</div>
         <a href="#" data-target="template" class="nav-item">
           <i data-lucide="shopping-bag"></i>
-          <span>Template Sales</span>
+          <span>Template Manager</span>
         </a>
         <a href="#" data-target="settings" class="nav-item">
           <i data-lucide="settings"></i>
@@ -150,6 +161,10 @@
           <button class="close-sheet">&times;</button>
         </div>
         <div class="sheet-links">
+          <a href="#" data-target="visual-editor" class="nav-item">
+            <i data-lucide="monitor"></i>
+            <span>Visual Editor</span>
+          </a>
           <a href="#" data-target="categories" class="nav-item">
             <i data-lucide="layers"></i>
             <span>Categories</span>
@@ -168,7 +183,7 @@
           </a>
           <a href="#" data-target="template" class="nav-item">
             <i data-lucide="shopping-bag"></i>
-            <span>Template Sales</span>
+            <span>Template Manager</span>
           </a>
           <div class="divider"></div>
           <a href="#" id="btn-logout-mobile" class="nav-item nav-item-danger">
@@ -251,7 +266,28 @@
             </button>
           </div>
 
-          <div class="dashboard-cols">
+          
+          <!-- QUICK STATS GRID -->
+          <div class="quick-stats-grid">
+            <div class="stat-card glass-card haptic-click" onclick="switchTab('work')">
+              <div class="stat-value" id="stat-projects">0</div>
+              <div class="stat-label">Total Projects</div>
+            </div>
+            <div class="stat-card glass-card haptic-click" onclick="switchTab('messages')">
+              <div class="stat-value" id="stat-messages">0</div>
+              <div class="stat-label">Unread Messages</div>
+            </div>
+            <div class="stat-card glass-card haptic-click">
+              <div class="stat-value" id="stat-visits">1,204</div>
+              <div class="stat-label">Site Visits</div>
+            </div>
+            <div class="stat-card glass-card haptic-click" onclick="switchTab('template')">
+              <div class="stat-value" id="stat-sales">0</div>
+              <div class="stat-label">Template Sales</div>
+            </div>
+          </div>
+          
+<div class="dashboard-cols">
             <div class="activity-log-panel glass-card">
               <div class="panel-header">
                 <i data-lucide="clock" style="width:16px;height:16px;color:var(--neon-green)"></i>
@@ -533,54 +569,159 @@
           </div>
         </section>
 
-        <!-- TEMPLATE SALES SECTION -->
+        <!-- TEMPLATE MANAGER SECTION -->
         <section id="section-template" class="admin-section">
           <div class="section-header">
-            <h2>Template Sales</h2>
+            <h2>Template Manager</h2>
             <button class="btn-neon" onclick="saveTemplate()">
               <i data-lucide="save" style="width:16px;height:16px"></i>
               <span>Save Changes</span>
             </button>
           </div>
-          <div class="form-card glass-card">
-            <div class="input-group toggle-group">
-              <label>Template Button Visible on Site?</label>
-              <label class="switch">
-                <input type="checkbox" id="tpl-visible">
-                <span class="slider"></span>
-              </label>
+          
+          <div class="cards-container">
+            <!-- SECTION 1: My Template Product -->
+            <div class="form-card glass-card" style="flex: 1;">
+              <h3 style="margin-top:0; color:var(--neon-green)">1. My Template Product</h3>
+              
+              <div class="input-group toggle-group" style="margin-top:20px;">
+                <label>Template Button Visible on Site?</label>
+                <label class="switch">
+                  <input type="checkbox" id="tpl-visible">
+                  <span class="slider"></span>
+                </label>
+              </div>
+              <div class="input-group">
+                <label>Template Name</label>
+                <input type="text" id="tpl-name">
+              </div>
+              <div class="input-group">
+                <label>Description</label>
+                <textarea id="tpl-desc" rows="3"></textarea>
+              </div>
+              <div class="input-group">
+                <label>Price ($)</label>
+                <input type="number" id="tpl-price" step="0.01">
+              </div>
+              <div class="input-group">
+                <label>Gumroad/LemonSqueezy URL</label>
+                <input type="url" id="tpl-url">
+              </div>
+              <div class="input-group">
+                <label>Button Text</label>
+                <input type="text" id="tpl-btn-text">
+              </div>
+              <div class="input-group">
+                <label>What's Included</label>
+                <div class="ve-list-editor" style="border:1px dashed var(--border-light); border-radius:8px; padding:12px;">
+                  <div id="tpl-included-list"></div>
+                  <div class="ve-list-add" style="display:flex; gap:8px; margin-top:8px;">
+                    <input type="text" id="tpl-included-add-input" class="ve-field-input" placeholder="Add feature...">
+                    <button class="btn-neon" style="padding:0 12px;" onclick="addTplIncluded()">+</button>
+                  </div>
+                </div>
+              </div>
+              <div class="input-group">
+                <label>Sales Count (Manual Tracking)</label>
+                <input type="number" id="tpl-count">
+              </div>
+              
+              <!-- Mini Mockup Card -->
+              <div style="margin-top:30px; padding:20px; background:var(--bg-darker); border-radius:12px; border:1px solid var(--border-light);">
+                <label style="font-size:0.75rem; color:var(--text-dim); text-transform:uppercase; margin-bottom:12px; display:block;">Preview on Site</label>
+                <div style="background:var(--bg-card); padding:20px; border-radius:16px; border:1px solid var(--border-light); display:flex; flex-direction:column; gap:10px;">
+                  <h4 style="margin:0; font-family:var(--font-heading); font-size:1.2rem; color:white;" id="tpl-preview-name">Template Name</h4>
+                  <p style="margin:0; font-size:0.9rem; color:var(--text-muted);" id="tpl-preview-desc">Description goes here</p>
+                  <ul style="margin:0; padding-left:20px; color:var(--text-main); font-size:0.85rem;" id="tpl-preview-features">
+                    <li>Feature 1</li>
+                  </ul>
+                  <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px;">
+                    <span style="font-size:1.4rem; font-family:var(--font-mono); color:white;" id="tpl-preview-price">$49</span>
+                    <button class="btn-neon" id="tpl-preview-btn">Get Template</button>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="input-group">
-              <label>Template Name</label>
-              <input type="text" id="tpl-name">
+
+            <!-- SECTION 2: Clone This Site -->
+            <div class="form-card glass-card" style="flex: 1; border-color:rgba(57,255,20,0.3);">
+              <h3 style="margin-top:0; color:var(--neon-green)">2. Clone This Site <i data-lucide="copy" style="width:18px;height:18px;vertical-align:middle;"></i></h3>
+              <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:24px;">Create a clean copy of your entire portfolio ready to customize for a new client.</p>
+              
+              <div style="background:rgba(0,0,0,0.3); padding:16px; border-radius:8px; margin-bottom:20px;">
+                <h4 style="margin:0 0 12px 0; font-size:0.85rem; text-transform:uppercase; color:var(--text-dim);">Step 1: Client Details</h4>
+                <div class="input-group">
+                  <label>Client Name</label>
+                  <input type="text" id="clone-client-name" placeholder="e.g. John Doe">
+                </div>
+                <div class="input-group">
+                  <label>Client Brand Name</label>
+                  <input type="text" id="clone-client-brand" placeholder="e.g. JD Designs">
+                </div>
+                <div class="input-group">
+                  <label>Client Tagline</label>
+                  <input type="text" id="clone-client-tagline" placeholder="e.g. Digital Architect">
+                </div>
+                <div style="display:flex; gap:16px;">
+                  <div class="input-group" style="flex:1;">
+                    <label>Primary Color</label>
+                    <div style="display:flex; gap:8px;">
+                      <input type="color" id="clone-primary-color" value="#33ff14" style="width:40px;height:40px;padding:0;border:none;background:none;cursor:pointer;">
+                      <input type="text" id="clone-primary-hex" value="#33ff14" style="flex:1;">
+                    </div>
+                  </div>
+                  <div class="input-group" style="flex:1;">
+                    <label>Background Color</label>
+                    <div style="display:flex; gap:8px;">
+                      <input type="color" id="clone-bg-color" value="#000000" style="width:40px;height:40px;padding:0;border:none;background:none;cursor:pointer;">
+                      <input type="text" id="clone-bg-hex" value="#000000" style="flex:1;">
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div style="background:rgba(0,0,0,0.3); padding:16px; border-radius:8px; margin-bottom:24px;">
+                <h4 style="margin:0 0 12px 0; font-size:0.85rem; text-transform:uppercase; color:var(--text-dim);">Step 2: Content Swap</h4>
+                <div class="input-group toggle-group" style="margin-bottom:0;">
+                  <label>Clear Placeholder Projects?</label>
+                  <label class="switch">
+                    <input type="checkbox" id="clone-clear-projects">
+                    <span class="slider"></span>
+                  </label>
+                </div>
+                <p style="font-size:0.75rem; color:var(--text-dim); margin-top:4px;">If toggled, the generated site will have an empty projects list.</p>
+              </div>
+
+              <button class="btn-neon" style="width:100%; justify-content:center; padding:16px; font-size:1.1rem; border-width:2px;" onclick="generateClonePackage()" id="btn-generate-clone">
+                <span>Generate Clone Package →</span>
+              </button>
+              
+              <!-- Loader inside button essentially, but let's add a status text -->
+              <div id="clone-status" style="margin-top:16px; font-family:var(--font-mono); font-size:0.8rem; color:var(--neon-green); text-align:center; display:none;">
+                Building package...
+              </div>
             </div>
-            <div class="input-group">
-              <label>Description</label>
-              <textarea id="tpl-desc" rows="3"></textarea>
-            </div>
-            <div class="input-group">
-              <label>Price ($)</label>
-              <input type="number" id="tpl-price" step="0.01">
-            </div>
-            <div class="input-group">
-              <label>Gumroad/LemonSqueezy URL</label>
-              <input type="url" id="tpl-url">
-            </div>
-            <div class="input-group">
-              <label>Button Text</label>
-              <input type="text" id="tpl-btn-text">
-            </div>
-            <div class="input-group">
-              <label>What's Included (one per line)</label>
-              <textarea id="tpl-included" rows="5"></textarea>
-            </div>
-            <div class="input-group">
-              <label>Sales Count (Manual)</label>
-              <input type="number" id="tpl-count">
-            </div>
-            <div class="input-group">
-              <label>Private Notes</label>
-              <textarea id="tpl-notes" rows="3"></textarea>
+          </div>
+
+          <!-- SECTION 3: Template Versions -->
+          <div class="form-card glass-card" style="margin-top:30px;">
+            <h3 style="margin-top:0; color:var(--neon-green)">3. Template Versions</h3>
+            <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:20px;">History of all generated clones.</p>
+            
+            <div style="overflow-x:auto;">
+              <table style="width:100%; border-collapse:collapse; text-align:left; font-size:0.9rem;">
+                <thead>
+                  <tr style="border-bottom:1px solid var(--border-light); color:var(--text-dim);">
+                    <th style="padding:12px 8px; font-weight:normal;">Date</th>
+                    <th style="padding:12px 8px; font-weight:normal;">Client Name</th>
+                    <th style="padding:12px 8px; font-weight:normal;">Brand Name</th>
+                    <th style="padding:12px 8px; font-weight:normal; text-align:right;">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="clone-history-tbody">
+                  <!-- JS populated -->
+                </tbody>
+              </table>
             </div>
           </div>
         </section>
@@ -677,6 +818,255 @@
                   Import Data
                 </button>
                 <input type="file" id="import-file" style="display: none" accept=".json" onchange="importData(event)">
+              </div>
+
+              <!-- Project Slide Panel -->
+              <div class="ve-slide-panel" id="ve-project-panel">
+                <div class="ve-slide-header">
+                  <h3 class="ve-slide-title" id="ve-project-panel-title">Edit Project</h3>
+                  <button class="ve-slide-close" id="ve-project-close-btn">&times;</button>
+                </div>
+                
+                <div class="ve-slide-tabs">
+                  <button class="ve-tab-btn active" data-tab="content">Content</button>
+                  <button class="ve-tab-btn" data-tab="media">Media</button>
+                  <button class="ve-tab-btn" data-tab="settings">Settings</button>
+                </div>
+                
+                <div class="ve-slide-body">
+                  <form id="ve-project-form">
+                    <input type="hidden" id="ve-proj-id">
+                    
+                    <!-- TAB 1: CONTENT -->
+                    <div class="ve-tab-content active" id="ve-tab-content">
+                      <div class="ve-field">
+                        <label class="ve-field-label">Project Name</label>
+                        <input type="text" id="ve-proj-name" class="ve-field-input" required>
+                      </div>
+                      
+                      <div class="ve-field-group-row" style="margin-bottom:14px;">
+                        <div class="ve-field" style="flex:1; margin-bottom:0;">
+                          <label class="ve-field-label">Category</label>
+                          <select id="ve-proj-category" class="ve-field-input"></select>
+                        </div>
+                        <div class="ve-field" style="flex:1; margin-bottom:0;">
+                          <label class="ve-field-label">Status</label>
+                          <select id="ve-proj-status" class="ve-field-input">
+                            <option value="Live">Live</option>
+                            <option value="In Progress">In Progress</option>
+                            <option value="Coming Soon">Coming Soon</option>
+                            <option value="Draft">Draft</option>
+                          </select>
+                        </div>
+                      </div>
+                      
+                      <div class="ve-field">
+                        <label class="ve-field-label">Short Description (Max 150)</label>
+                        <textarea id="ve-proj-shortdesc" class="ve-field-textarea" maxlength="150" style="min-height:60px;"></textarea>
+                        <div style="text-align:right; font-size:0.7rem; color:var(--text-dim);" id="ve-proj-shortdesc-counter">0/150</div>
+                      </div>
+                      
+                      <div class="ve-field">
+                        <label class="ve-field-label" style="border-bottom:1px dashed var(--border-light); padding-bottom:6px; margin-bottom:12px; color:var(--neon-green)">Full Story Sections</label>
+                        <label class="ve-field-label">The Human (Client/Persona)</label>
+                        <textarea id="ve-proj-story-human" class="ve-field-textarea"></textarea>
+                      </div>
+                      <div class="ve-field">
+                        <label class="ve-field-label">The Problem</label>
+                        <textarea id="ve-proj-story-problem" class="ve-field-textarea"></textarea>
+                      </div>
+                      <div class="ve-field">
+                        <label class="ve-field-label">How I Solved It</label>
+                        <textarea id="ve-proj-story-solution" class="ve-field-textarea"></textarea>
+                      </div>
+                      <div class="ve-field">
+                        <label class="ve-field-label">The Outcome (Use ✦ for bullets)</label>
+                        <textarea id="ve-proj-story-outcome" class="ve-field-textarea"></textarea>
+                      </div>
+                      
+                      <div class="ve-field">
+                        <label class="ve-field-label">Pull Quote (Powerful one-liner)</label>
+                        <input type="text" id="ve-proj-quote" class="ve-field-input">
+                      </div>
+                      
+                      <div class="ve-field">
+                        <label class="ve-field-label">Tools Used (comma separated)</label>
+                        <input type="text" id="ve-proj-tools" class="ve-field-input" placeholder="React, Node.js, GSAP">
+                      </div>
+                    </div>
+                    
+                    <!-- TAB 2: MEDIA -->
+                    <div class="ve-tab-content" id="ve-tab-media">
+                      <div class="ve-field">
+                        <label class="ve-field-label">Thumbnail Image</label>
+                        <div class="ve-image-uploader" id="ve-image-uploader">
+                          <img id="ve-image-preview" src="" style="display:none; max-width:100%; max-height:200px; border-radius:8px; margin-bottom:10px;">
+                          <div class="ve-upload-zone" id="ve-upload-zone">
+                            <i data-lucide="image" style="width:24px;height:24px; margin-bottom:8px; color:var(--text-dim)"></i>
+                            <div>Drag & drop an image or click to upload</div>
+                            <div style="font-size:0.7rem; color:var(--text-dim); margin-top:4px;">Uploads to Supabase Storage</div>
+                          </div>
+                          <input type="file" id="ve-file-input" accept="image/*" style="display:none;">
+                        </div>
+                        <div style="margin-top:8px;">
+                          <label class="ve-field-label">Or paste image URL directly:</label>
+                          <input type="url" id="ve-proj-image-url" class="ve-field-input" placeholder="https://...">
+                        </div>
+                      </div>
+                      
+                      <div class="ve-field" style="margin-top:20px;">
+                        <label class="ve-field-label">Placeholder Gradient (Fallback)</label>
+                        <div class="ve-gradient-selector" id="ve-gradient-selector">
+                          <div class="ve-grad-swatch" data-grad="neon-green" style="background: linear-gradient(135deg, rgba(57, 255, 20, 0.2), #000);"></div>
+                          <div class="ve-grad-swatch" data-grad="teal" style="background: linear-gradient(135deg, rgba(20, 255, 200, 0.2), #000);"></div>
+                          <div class="ve-grad-swatch" data-grad="purple" style="background: linear-gradient(135deg, rgba(160, 32, 240, 0.2), #000);"></div>
+                          <div class="ve-grad-swatch" data-grad="red" style="background: linear-gradient(135deg, rgba(255, 68, 68, 0.2), #000);"></div>
+                          <div class="ve-grad-swatch" data-grad="blue" style="background: linear-gradient(135deg, rgba(0, 102, 255, 0.2), #000);"></div>
+                          <div class="ve-grad-swatch" data-grad="orange" style="background: linear-gradient(135deg, rgba(255, 136, 0, 0.2), #000);"></div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <!-- TAB 3: SETTINGS -->
+                    <div class="ve-tab-content" id="ve-tab-settings">
+                      <div class="ve-field">
+                        <label class="ve-field-label">Client Name</label>
+                        <input type="text" id="ve-proj-client" class="ve-field-input">
+                      </div>
+                      <div class="ve-field-group-row">
+                        <div class="ve-field" style="flex:1;">
+                          <label class="ve-field-label">Client Country</label>
+                          <input type="text" id="ve-proj-country" class="ve-field-input" placeholder="USA">
+                        </div>
+                        <div class="ve-field" style="flex:1;">
+                          <label class="ve-field-label">Flag Emoji</label>
+                          <input type="text" id="ve-proj-flag" class="ve-field-input" placeholder="🇺🇸" maxlength="4">
+                        </div>
+                      </div>
+                      
+                      <div class="ve-field">
+                        <label class="ve-field-label">Project Live URL</label>
+                        <input type="url" id="ve-proj-url" class="ve-field-input" placeholder="https://...">
+                      </div>
+                      <div class="ve-field">
+                        <label class="ve-field-label">Case Study / Behance URL</label>
+                        <input type="url" id="ve-proj-casestudy" class="ve-field-input" placeholder="https://...">
+                      </div>
+                      
+                      <div class="ve-field-group-row" style="margin-top:16px; align-items:flex-end;">
+                        <div class="ve-field" style="flex:1;">
+                          <label class="ve-field-label">Featured on Home Page?</label>
+                          <label class="switch"><input type="checkbox" id="ve-proj-featured"><span class="slider"></span></label>
+                        </div>
+                        <div class="ve-field" style="flex:1;">
+                          <label class="ve-field-label">Priority Order (1-20)</label>
+                          <input type="number" id="ve-proj-priority" class="ve-field-input" min="1" max="100" value="5">
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+                
+                <div class="ve-slide-footer">
+                  <button type="button" class="btn-outline" id="ve-project-cancel-btn">Cancel</button>
+                  <button type="button" class="btn-neon" id="ve-project-save-btn">Save Project</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- VISUAL EDITOR SECTION -->
+        <section id="section-visual-editor" class="admin-section ve-section">
+          <!-- Toolbar -->
+          <div class="ve-toolbar">
+            <div class="ve-toolbar-left">
+              <div class="ve-page-selector">
+                <i data-lucide="file-text" style="width:16px;height:16px;color:var(--neon-green)"></i>
+                <select id="ve-page-select">
+                  <option value="home">Home</option>
+                  <option value="work">Work</option>
+                  <option value="about">About</option>
+                  <option value="services">Services</option>
+                  <option value="contact">Contact</option>
+                  <option value="navigation">Navigation & Pages</option>
+                </select>
+              </div>
+              <div class="ve-device-group">
+                <button class="ve-device-btn active" data-device="desktop" title="Desktop (1440px)">
+                  <i data-lucide="monitor" style="width:16px;height:16px"></i>
+                </button>
+                <button class="ve-device-btn" data-device="tablet" title="Tablet (768px)">
+                  <i data-lucide="tablet" style="width:16px;height:16px"></i>
+                </button>
+                <button class="ve-device-btn" data-device="mobile" title="Mobile (375px)">
+                  <i data-lucide="smartphone" style="width:16px;height:16px"></i>
+                </button>
+              </div>
+            </div>
+            <div class="ve-toolbar-right">
+              <button class="ve-btn-discard" id="ve-discard-btn" onclick="veDiscardChanges()">
+                <i data-lucide="rotate-ccw" style="width:14px;height:14px"></i>
+                Discard
+              </button>
+              <button class="ve-btn-publish" id="ve-publish-btn" onclick="vePublishChanges()">
+                <i data-lucide="upload-cloud" style="width:14px;height:14px"></i>
+                Publish Changes
+              </button>
+            </div>
+          </div>
+
+          <!-- Split Pane -->
+          <div class="ve-split">
+  <!-- Mobile Tabs -->
+  <div class="ve-mobile-tabs mobile-only">
+    <button class="ve-tab active" data-tab="controls">Controls</button>
+    <button class="ve-tab" data-tab="preview">Preview</button>
+  </div>
+
+            <!-- Controls Panel -->
+            <div class="ve-controls-panel" id="ve-controls-panel">
+              <div class="ve-controls-header">
+                <span class="ve-controls-title" id="ve-controls-title">Home — Sections</span>
+                <span class="ve-change-count" id="ve-change-count"></span>
+              </div>
+              
+              <!-- GLOBAL STYLES -->
+              <div class="ve-global-styles" id="ve-global-styles" style="border-bottom: 1px solid var(--border-light); padding-bottom: 8px; margin-bottom: 8px;">
+                <div class="ve-controls-header" style="border-bottom: none; padding-top: 8px; padding-bottom: 8px;">
+                  <span class="ve-controls-title" style="color: var(--neon-green);">Global Styles</span>
+                </div>
+                <div class="ve-accordion" id="ve-global-accordion">
+                  <!-- JS populated global styles -->
+                </div>
+                <div style="padding: 12px 20px;">
+                  <button type="button" class="btn-outline btn-sm" id="ve-reset-global-btn" style="width: 100%; border-color: rgba(255,68,68,0.3); color: #ff4444;">
+                    <i data-lucide="rotate-ccw" style="width:14px;height:14px"></i> Reset Defaults
+                  </button>
+                </div>
+              </div>
+
+              <!-- PAGE SECTIONS -->
+              <div class="ve-accordion" id="ve-accordion">
+                <!-- Populated by JS -->
+              </div>
+            </div>
+
+            <!-- Draggable Divider -->
+            <div class="ve-divider" id="ve-divider">
+              <div class="ve-divider-line"></div>
+            </div>
+
+            <!-- Preview Panel -->
+            <div class="ve-preview-panel" id="ve-preview-panel">
+              <div class="ve-device-frame" id="ve-device-frame">
+                <div class="ve-frame-chrome" id="ve-frame-chrome">
+                  <div class="ve-chrome-dots">
+                    <span></span><span></span><span></span>
+                  </div>
+                  <div class="ve-chrome-url" id="ve-chrome-url">jxdesigndev.com</div>
+                </div>
+                <iframe id="ve-iframe" class="ve-iframe" src="about:blank" sandbox="allow-same-origin allow-scripts"></iframe>
               </div>
             </div>
           </div>
@@ -871,5 +1261,42 @@
 
   <!-- SCRIPTS -->
   <script src="admin.js"></script>
+
+  <!-- FAB -->
+  <div class="fab-container mobile-only">
+    <div class="fab-menu" id="fab-menu">
+      <button class="fab-item haptic-click" onclick="document.getElementById('fab-main').click(); switchTab('work'); setTimeout(() => document.querySelector('.ve-page-selector select').value='work'; document.querySelector('.ve-page-selector select').dispatchEvent(new Event('change')); veAddProject(), 100);"><i data-lucide="folder-plus"></i></button>
+      <button class="fab-item haptic-click" onclick="document.getElementById('fab-main').click(); switchTab('messages');"><i data-lucide="message-square"></i></button>
+      <button class="fab-item haptic-click" onclick="document.getElementById('fab-main').click(); document.getElementById('set-availability').click(); saveSettings();"><i data-lucide="toggle-right"></i></button>
+    </div>
+    <button class="fab-main haptic-click" id="fab-main"><i data-lucide="plus"></i></button>
+  </div>
+
+  <!-- PIN Lock -->
+  <div id="pin-lock-overlay" class="pin-lock-overlay" style="display:none;">
+    <div class="pin-lock-box glass-card">
+      <i data-lucide="lock" style="width:32px;height:32px;color:var(--neon-green);margin-bottom:16px;"></i>
+      <h3>Admin Locked</h3>
+      <p style="color:var(--text-muted); margin-bottom:20px; font-size:0.9rem;">Enter PIN to continue</p>
+      <div class="pin-dots" id="pin-dots">
+        <div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div><div class="pin-dot"></div>
+      </div>
+      <div class="pin-keypad">
+        <button class="pin-key haptic-click" data-key="1">1</button>
+        <button class="pin-key haptic-click" data-key="2">2</button>
+        <button class="pin-key haptic-click" data-key="3">3</button>
+        <button class="pin-key haptic-click" data-key="4">4</button>
+        <button class="pin-key haptic-click" data-key="5">5</button>
+        <button class="pin-key haptic-click" data-key="6">6</button>
+        <button class="pin-key haptic-click" data-key="7">7</button>
+        <button class="pin-key haptic-click" data-key="8">8</button>
+        <button class="pin-key haptic-click" data-key="9">9</button>
+        <div></div>
+        <button class="pin-key haptic-click" data-key="0">0</button>
+        <button class="pin-key haptic-click" data-key="back"><i data-lucide="delete"></i></button>
+      </div>
+    </div>
+  </div>
+
 </body>
 </html>

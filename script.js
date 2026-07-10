@@ -176,8 +176,22 @@
     renderer.setSize(canvas.clientWidth, canvas.clientHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-    // Create 1800 particles
-    const particleCount = 1800;
+    // Create particles based on global styles
+    let intensity = 50;
+    let particleColor = 0x33ff14;
+    
+    if (window.jxGlobalStyles) {
+      if (window.jxGlobalStyles.particle_intensity !== undefined) {
+        intensity = window.jxGlobalStyles.particle_intensity;
+      }
+      if (window.jxGlobalStyles.primary_color) {
+        particleColor = parseInt(window.jxGlobalStyles.primary_color.replace('#', '0x'));
+      }
+    }
+    
+    const particleCount = Math.floor((intensity / 50) * 1800);
+    if (particleCount <= 0) return; // Disable particles if intensity is 0
+
     const geometry = new THREE.BufferGeometry();
     const positions = new Float32Array(particleCount * 3);
     const speeds = new Float32Array(particleCount);
@@ -194,7 +208,7 @@
     particleSpeeds = speeds;
 
     const material = new THREE.PointsMaterial({
-      color: 0x33ff14,
+      color: particleColor,
       size: 1.8,
       transparent: true,
       opacity: 0.6,

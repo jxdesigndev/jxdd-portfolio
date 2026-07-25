@@ -6,12 +6,15 @@ window.initSupabase = async function() {
     if (window.supabaseClient) return window.supabaseClient;
     
     // Poll for the CDN to finish loading
-    while (!window.supabase) {
+    while (!window.supabase || !window.supabase.createClient) {
         await new Promise(r => setTimeout(r, 50));
     }
     
-    window.supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
-    return window.supabaseClient;
+    const client = window.supabase.createClient(supabaseUrl, supabaseKey);
+    window.supabaseClient = client;
+    window.sbClient = client;
+    window.supabase = client;
+    return client;
 }
 
 // Boot up immediately

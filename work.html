@@ -3,143 +3,411 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="JX Design & Dev — Portfolio details & projects.">
-  <meta name="author" content="Okezie Ferdinand">
+  <meta name="description" content="The Vault: JX Projects. Product Design, Full-Stack Dev, N8N Automations, Security.">
   <meta name="theme-color" content="#000000">
-  <title>Portfolio — JX Design & Dev</title>
+  <title>The Vault | Work | JX Design & Dev</title>
 
-  <!-- Google Fonts -->
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&family=Playfair+Display:ital,wght@1,900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&family=Playfair+Display:ital,wght@1,900&display=swap" rel="stylesheet">
 
-  <!-- Stylesheet -->
-  <link rel="stylesheet" href="style.css?v=1.1">
-
-  <!-- GSAP 3 -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
-  <!-- Lenis Smooth Scroll -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js" defer></script>
-
-  <!-- Shared Nav Script -->
-  <script src="nav.js" defer></script>
-  <!-- Page Utilities -->
-  <script src="page.js" defer></script>
-  <!-- Work Animations -->
-  <script src="work.js" defer></script>
-  <!-- Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="supabase.js"></script>
+
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    #page { opacity: 0; }
+
+    /* ── Work Hero ── */
+    .work-hero {
+      min-height: 70svh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 140px var(--s-8) var(--s-16);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .work-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 40% 50% at 20% 80%, rgba(0,255,65,0.05) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .work-hero-inner {
+      max-width: var(--container-xl);
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .work-hero-count {
+      font-family: var(--font-mono);
+      font-size: clamp(5rem, 15vw, 12rem);
+      font-weight: 800;
+      color: transparent;
+      -webkit-text-stroke: 1px var(--green-dim);
+      line-height: 0.85;
+      position: absolute;
+      right: var(--s-8);
+      top: 140px;
+      pointer-events: none;
+      font-family: var(--font-display);
+    }
+
+    /* ── Filters ── */
+    .work-filters {
+      padding: var(--s-8) var(--s-8);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      gap: var(--s-2);
+      flex-wrap: wrap;
+      max-width: var(--container-xl);
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .filter-btn {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: var(--s-2) var(--s-4);
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--gray-3);
+      cursor: pointer;
+      border-radius: 2px;
+      transition: all 0.2s ease;
+    }
+
+    .filter-btn:hover,
+    .filter-btn.active {
+      border-color: var(--green);
+      color: var(--green);
+      background: rgba(0, 255, 65, 0.04);
+    }
+
+    /* ── Projects Grid ── */
+    .work-grid-section {
+      padding: var(--s-12) var(--s-8) var(--s-20);
+      max-width: var(--container-xl);
+      margin: 0 auto;
+    }
+
+    .work-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: var(--s-4);
+    }
+
+    @media (max-width: 480px) {
+      .work-grid { grid-template-columns: 1fr; }
+    }
+
+    /* Empty / loading states */
+    .work-empty {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: var(--s-24) var(--s-8);
+      font-family: var(--font-mono);
+      font-size: var(--text-sm);
+      color: var(--gray-3);
+    }
+
+    .work-loading {
+      display: flex;
+      align-items: center;
+      gap: var(--s-3);
+      color: var(--gray-3);
+      font-family: var(--font-mono);
+      font-size: var(--text-sm);
+    }
+
+    .work-loading::before {
+      content: '';
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--green);
+      animation: blink 1s ease infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.2; }
+    }
+
+    /* ── Project Card (full version) ── */
+    .work-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+      cursor: pointer;
+      position: relative;
+      transition: border-color 0.25s ease, transform 0.25s ease;
+    }
+
+    .work-card:hover {
+      border-color: var(--green-dim);
+      transform: translateY(-4px);
+    }
+
+    .work-card:hover .work-card-arrow {
+      transform: translate(4px, -4px);
+      color: var(--green);
+    }
+
+    .work-card-image {
+      width: 100%;
+      aspect-ratio: 16/9;
+      object-fit: cover;
+      display: block;
+      filter: grayscale(10%);
+      transition: filter 0.3s ease;
+    }
+
+    .work-card:hover .work-card-image {
+      filter: grayscale(0%);
+    }
+
+    .work-card-placeholder {
+      width: 100%;
+      aspect-ratio: 16/9;
+      background: var(--surface-2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 3rem;
+      font-weight: 800;
+      color: var(--green-dim);
+    }
+
+    .work-card-body {
+      padding: var(--s-5) var(--s-5) var(--s-6);
+    }
+
+    .work-card-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--s-3);
+    }
+
+    .work-card-category {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      color: var(--green);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .work-card-year {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      color: var(--gray-3);
+    }
+
+    .work-card-title {
+      font-family: var(--font-display);
+      font-size: var(--text-xl);
+      font-weight: 700;
+      color: var(--white);
+      margin: 0 0 var(--s-2);
+    }
+
+    .work-card-desc {
+      font-family: var(--font-body);
+      font-size: var(--text-sm);
+      color: var(--gray-3);
+      line-height: var(--lead-relaxed);
+      margin: 0 0 var(--s-4);
+    }
+
+    .work-card-tools {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-1);
+    }
+
+    .work-card-arrow {
+      position: absolute;
+      top: var(--s-5);
+      right: var(--s-5);
+      font-size: 1.1rem;
+      color: var(--gray-3);
+      transition: transform 0.25s ease, color 0.25s ease;
+    }
+
+    /* ── Cinematic Modal ── */
+    .vault-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.92);
+      z-index: var(--z-modal);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--s-8);
+    }
+
+    .vault-modal-overlay.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .vault-modal {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      max-width: 900px;
+      width: 100%;
+      max-height: 90svh;
+      overflow-y: auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      transform: scale(0.95) translateY(20px);
+      transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+      position: relative;
+    }
+
+    @media (max-width: 640px) {
+      .vault-modal { grid-template-columns: 1fr; }
+    }
+
+    .vault-modal-overlay.open .vault-modal {
+      transform: scale(1) translateY(0);
+    }
+
+    .vault-modal-image {
+      position: relative;
+      aspect-ratio: 4/5;
+      overflow: hidden;
+    }
+
+    @media (max-width: 640px) {
+      .vault-modal-image { aspect-ratio: 16/9; }
+    }
+
+    .vault-modal-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .vault-modal-image-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to right, transparent 60%, var(--surface));
+    }
+
+    @media (max-width: 640px) {
+      .vault-modal-image-overlay {
+        background: linear-gradient(to bottom, transparent 60%, var(--surface));
+      }
+    }
+
+    .vault-modal-content {
+      padding: var(--s-10) var(--s-8);
+      display: flex;
+      flex-direction: column;
+      gap: var(--s-4);
+      overflow-y: auto;
+    }
+
+    .vault-modal-close {
+      position: absolute;
+      top: var(--s-4);
+      right: var(--s-4);
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      color: var(--white);
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 14px;
+      transition: border-color 0.2s ease;
+      z-index: 10;
+    }
+
+    .vault-modal-close:hover {
+      border-color: var(--green);
+      color: var(--green);
+    }
+
+    .vault-modal-title {
+      font-family: var(--font-display);
+      font-size: var(--text-3xl);
+      font-weight: 800;
+      color: var(--white);
+      line-height: 1.1;
+      margin: var(--s-4) 0 0;
+    }
+  </style>
 </head>
 <body>
+  <div id="page">
 
+    <!-- ── HERO ── -->
+    <section class="work-hero">
+      <div class="work-hero-inner">
+        <p class="section-label" id="wh-label" style="opacity:0">The Vault</p>
+        <h1 class="headline-xl" id="wh-title" style="opacity:0; transform: translateY(60px)">
+          Proof of<br><span class="text-green">what I build.</span>
+        </h1>
+        <p style="font-family:var(--font-body); font-size:var(--text-lg); color:var(--gray-2); max-width:480px; line-height:var(--lead-relaxed); opacity:0;" id="wh-sub">
+          Every project here is a statement. A problem solved. A world made more functional, more beautiful, more powerful.
+        </p>
+      </div>
+      <div class="work-hero-count" id="wh-count" aria-hidden="true">00</div>
+    </section>
 
-
-  <!-- Navigation -->
-  <nav class="nav" id="nav">
-    <div class="nav-logo">
-      <svg class="jx-logo" viewBox="0 0 72 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="JX"><path class="jx-stroke jx-j" d="M8 2H22V22Q22 30 14 30Q6 30 6 22"/><path class="jx-stroke jx-x1" d="M36 2L60 30"/><path class="jx-stroke jx-x2" d="M60 2L36 30"/></svg>
-      <span class="logo-text">Design &amp; Dev</span>
-    </div>
-    <ul class="nav-links">
-      <li><a href="index.html" class="nav-link">Home</a></li>
-      <li><a href="work.html" class="nav-link active">Work</a></li>
-      <li><a href="about.html" class="nav-link">About</a></li>
-      <li><a href="services.html" class="nav-link">Services</a></li>
-      <li><a href="contact.html" class="nav-link cta-link">Let's Talk</a></li>
-    </ul>
-    <button class="theme-toggle" id="theme-toggle">
-      <span class="theme-icon">◐</span>
-    </button>
-    <div class="nav-menu" id="nav-menu">
-      <span></span><span></span><span></span>
-    </div>
-  </nav>
-
-  <!-- Mobile Menu Overlay -->
-  <div class="mobile-menu" id="mobile-menu">
-    <ul class="mobile-menu-links">
-      <li><a href="index.html" class="mobile-link">Home</a></li>
-      <li><a href="work.html" class="mobile-link active">Work</a></li>
-      <li><a href="about.html" class="mobile-link">About</a></li>
-      <li><a href="services.html" class="mobile-link">Services</a></li>
-      <li><a href="contact.html" class="mobile-link">Let's Talk</a></li>
-    </ul>
-  </div>
-
-  <!-- Portfolio Page Content -->
-  <section class="portfolio-page">
-    <div class="portfolio-header">
-      <span class="section-label">Portfolio</span>
-      <h1 class="section-title">
-        Things I've<br/>
-        <span class="title-stroke">Built ✦</span>
-      </h1>
-      <p class="portfolio-subtext">Product Design · No-Code · Automation · Security</p>
+    <!-- ── FILTERS ── -->
+    <div class="work-filters" id="work-filters">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="design">Product Design</button>
+      <button class="filter-btn" data-filter="dev">Development</button>
+      <button class="filter-btn" data-filter="automation">Automation</button>
+      <button class="filter-btn" data-filter="security">Security</button>
     </div>
 
-    <!-- Filter Tabs -->
-    <div class="filter-tabs">
-      <!-- Injected dynamically by work.js -->
-    </div>
-
-    <!-- Portfolio Grid -->
-    <div class="portfolio-grid">
-      <!-- Injected dynamically by work.js -->
-    </div>
-  </section>
-
-  <!-- Footer -->
-  <footer class="footer">
-    <div class="footer-top">
-      <div class="footer-left">
-        <div class="footer-logo">
-          <svg class="jx-logo" viewBox="0 0 72 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="JX"><path class="jx-stroke jx-j" d="M8 2H22V22Q22 30 14 30Q6 30 6 22"/><path class="jx-stroke jx-x1" d="M36 2L60 30"/><path class="jx-stroke jx-x2" d="M60 2L36 30"/></svg>
-          <span class="logo-text">Design &amp; Dev</span>
+    <!-- ── GRID ── -->
+    <section class="work-grid-section">
+      <div class="work-grid" id="work-grid">
+        <div class="work-empty">
+          <div class="work-loading">Loading projects from the vault…</div>
         </div>
-        <p class="footer-tagline">
-          System Designer &amp; Builder
-        </p>
-        <p class="footer-copy">
-          © 2025 Okezie Ferdinand.<br/>
-          All rights reserved.
-        </p>
       </div>
-      <div class="footer-center">
-        <p class="footer-label">Navigation</p>
-        <ul class="footer-links">
-          <li><a href="index.html">Home</a></li>
-          <li><a href="work.html">Work</a></li>
-          <li><a href="about.html">About</a></li>
-          <li><a href="services.html">Services</a></li>
-          <li><a href="contact.html">Contact</a></li>
-        </ul>
-      </div>
-      <div class="footer-right">
-        <p class="footer-label">Connect</p>
-        <ul class="footer-links">
-          <li><a href="https://www.linkedin.com/in/okezie-ferdinand" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
-          <li><a href="https://x.com/JX_Design_Dev" target="_blank" rel="noopener noreferrer">Twitter/X</a></li>
-          <li><a href="https://github.com/jxdesigndev" target="_blank" rel="noopener noreferrer">GitHub</a></li>
-        </ul>
-        <p class="footer-easter-egg">
-          Built with passion, code ✦<br/>
-          and a dream of being an astronaut 🚀
-        </p>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <span>JX Design &amp; Dev — Nigeria 🇳🇬</span>
-      <span>Designed &amp; Built by Okezie Ferdinand</span>
-    </div>
-  </footer>
+    </section>
 
-  <!-- Scroll To Top -->
-  <button class="scroll-top" id="scroll-top">↑</button>
+    <!-- ── FOOTER ── -->
+    <footer style="border-top:1px solid var(--border); padding:var(--s-8) var(--s-8); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:var(--s-4);">
+      <span style="font-family:var(--font-mono); font-size:var(--text-xs); color:var(--gray-3);">
+        © 2026 JX. Lagos, Nigeria.
+      </span>
+      <a href="contact.html" class="btn btn-ghost btn-sm" data-nav-link>Work With Me →</a>
+    </footer>
 
-  <!-- Custom Cursor -->
-  <div class="cursor" id="cursor"></div>
-  <div class="cursor-follower" id="cursor-follower"></div>
+  </div><!-- /#page -->
 
+  <!-- ── MODAL (injected by JS) ── -->
+
+  <script src="nav.js" defer></script>
+  <script src="work.js" defer></script>
 </body>
 </html>

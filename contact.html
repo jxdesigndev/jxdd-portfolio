@@ -3,233 +3,403 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Contact Okezie Ferdinand for Product Design, No-Code Development, and Automation. Reach out via WhatsApp or Email.">
-  <meta name="author" content="Okezie Ferdinand">
+  <meta name="description" content="The Signal: Contact JX. Let's build something legendary together. Lagos, Nigeria.">
   <meta name="theme-color" content="#000000">
-  <title>Contact — JX Design & Dev | Let's Build</title>
+  <title>The Signal | Contact | JX Design & Dev</title>
 
-  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&family=Playfair+Display:ital,wght@1,900&display=swap" rel="stylesheet">
 
-  <!-- Stylesheet -->
-  <link rel="stylesheet" href="style.css?v=1.4">
-
-  <!-- GSAP 3 -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
-  <!-- Lenis Smooth Scroll -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js" defer></script>
-
-  <!-- Scripts -->
-  <script src="nav.js" defer></script>
-  <script src="page.js" defer></script>
-  <script src="contact.js" defer></script>
-  <!-- Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="supabase.js"></script>
+
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    #page { opacity: 0; }
+
+    /* ── Contact Hero ── */
+    .contact-hero {
+      min-height: 70svh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 140px var(--s-8) var(--s-16);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .contact-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 50% 60% at 50% 100%, rgba(0,255,204,0.04) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .contact-hero-inner {
+      max-width: var(--container-xl);
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    /* ── Signal Main ── */
+    .contact-main {
+      padding: var(--s-12) var(--s-8) var(--s-20);
+      max-width: var(--container-xl);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 480px;
+      gap: var(--s-16);
+      align-items: start;
+    }
+
+    @media (max-width: 900px) {
+      .contact-main { grid-template-columns: 1fr; }
+    }
+
+    /* ── Form ── */
+    .contact-form {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: var(--s-10);
+      display: flex;
+      flex-direction: column;
+      gap: var(--s-5);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--s-4);
+    }
+
+    @media (max-width: 560px) {
+      .form-row { grid-template-columns: 1fr; }
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: var(--s-2);
+    }
+
+    .form-label {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      color: var(--green);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .form-input,
+    .form-select,
+    .form-textarea {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      color: var(--white);
+      font-family: var(--font-body);
+      font-size: var(--text-base);
+      padding: var(--s-3) var(--s-4);
+      width: 100%;
+      box-sizing: border-box;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      outline: none;
+      appearance: none;
+    }
+
+    .form-input:focus,
+    .form-select:focus,
+    .form-textarea:focus {
+      border-color: var(--green);
+      box-shadow: 0 0 0 2px rgba(0, 255, 65, 0.08);
+    }
+
+    .form-input::placeholder,
+    .form-textarea::placeholder {
+      color: var(--gray-3);
+    }
+
+    .form-select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2300FF41' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      padding-right: 36px;
+      cursor: pointer;
+    }
+
+    .form-select option {
+      background: #111;
+      color: var(--white);
+    }
+
+    .form-textarea {
+      resize: vertical;
+      min-height: 140px;
+      line-height: var(--lead-relaxed);
+    }
+
+    .form-submit {
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Status message */
+    .form-status {
+      font-family: var(--font-mono);
+      font-size: var(--text-sm);
+      padding: var(--s-3) var(--s-4);
+      border-radius: 2px;
+      display: none;
+    }
+
+    .form-status.success {
+      display: block;
+      color: var(--green);
+      background: rgba(0,255,65,0.06);
+      border: 1px solid rgba(0,255,65,0.2);
+    }
+
+    .form-status.error {
+      display: block;
+      color: #ff4444;
+      background: rgba(255,68,68,0.06);
+      border: 1px solid rgba(255,68,68,0.2);
+    }
+
+    /* ── Left info panel ── */
+    .contact-info {
+      display: flex;
+      flex-direction: column;
+      gap: var(--s-10);
+    }
+
+    .contact-info-item {
+      border-bottom: 1px solid var(--border);
+      padding-bottom: var(--s-8);
+    }
+
+    .contact-info-item:last-child { border-bottom: none; }
+
+    .contact-info-label {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      color: var(--green);
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      margin-bottom: var(--s-3);
+    }
+
+    .contact-info-value {
+      font-family: var(--font-display);
+      font-size: var(--text-2xl);
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1.2;
+    }
+
+    .contact-info-sub {
+      font-family: var(--font-body);
+      font-size: var(--text-sm);
+      color: var(--gray-3);
+      margin-top: var(--s-2);
+      line-height: var(--lead-relaxed);
+    }
+
+    /* Availability badge */
+    .contact-avail {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--s-2);
+      padding: var(--s-2) var(--s-4);
+      border: 1px solid var(--green);
+      border-radius: 100px;
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      color: var(--green);
+      letter-spacing: 0.12em;
+      margin-top: var(--s-3);
+    }
+
+    .contact-avail-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--green);
+      animation: pulse-avail 2s ease infinite;
+    }
+
+    @keyframes pulse-avail {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: 0.5; transform: scale(0.8); }
+    }
+
+    /* Social links */
+    .contact-socials {
+      display: flex;
+      flex-direction: column;
+      gap: var(--s-2);
+    }
+
+    .contact-social-link {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--s-3) var(--s-4);
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      color: var(--gray-2);
+      font-family: var(--font-body);
+      font-size: var(--text-sm);
+      text-decoration: none;
+      transition: border-color 0.2s ease, color 0.2s ease;
+    }
+
+    .contact-social-link:hover {
+      border-color: var(--green);
+      color: var(--green);
+    }
+
+    .contact-social-link span { font-size: 0.85rem; }
+  </style>
 </head>
 <body>
+  <div id="page">
 
-  <!-- Navigation -->
-  <nav class="nav" id="nav">
-    <div class="nav-logo">
-      <svg class="jx-logo" viewBox="0 0 72 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="JX"><path class="jx-stroke jx-j" d="M8 2H22V22Q22 30 14 30Q6 30 6 22"/><path class="jx-stroke jx-x1" d="M36 2L60 30"/><path class="jx-stroke jx-x2" d="M60 2L36 30"/></svg>
-      <span class="logo-text">Design &amp; Dev</span>
-    </div>
-    <ul class="nav-links">
-      <li><a href="index.html" class="nav-link">Home</a></li>
-      <li><a href="work.html" class="nav-link">Work</a></li>
-      <li><a href="about.html" class="nav-link">About</a></li>
-      <li><a href="services.html" class="nav-link">Services</a></li>
-      <li><a href="contact.html" class="nav-link active cta-link">Let's Talk</a></li>
-    </ul>
-    <button class="theme-toggle" id="theme-toggle">
-      <span class="theme-icon">◐</span>
-    </button>
-    <div class="nav-menu" id="nav-menu">
-      <span></span><span></span><span></span>
-    </div>
-  </nav>
-
-  <!-- Mobile Menu Overlay -->
-  <div class="mobile-menu" id="mobile-menu">
-    <ul class="mobile-menu-links">
-      <li><a href="index.html" class="mobile-link">Home</a></li>
-      <li><a href="work.html" class="mobile-link">Work</a></li>
-      <li><a href="about.html" class="mobile-link">About</a></li>
-      <li><a href="services.html" class="mobile-link">Services</a></li>
-      <li><a href="contact.html" class="mobile-link active">Let's Talk</a></li>
-    </ul>
-  </div>
-
-  <main class="cp-page-wrap">
-    
-    <div class="cp-hero">
-      <span class="cp-label">Get In Touch</span>
-      <h1 class="cp-heading">
-        <span>Let's Build Something ✦</span>
-        <span class="accent">Together.</span>
-      </h1>
-    </div>
-
-    <div class="cp-content">
-      
-      <!-- Left: Contact Form -->
-      <div>
-        <form id="contact-form" class="cp-form">
-          <!-- Honeypot -->
-          <div style="display:none;">
-            <label for="bot-field">Don't fill this out if you're human:</label>
-            <input type="text" id="bot-field" name="bot-field" tabindex="-1">
-          </div>
-
-          <div class="cp-form-row">
-            <div class="cp-form-group">
-              <label for="name">Name *</label>
-              <input type="text" id="name" required placeholder="John Doe">
-            </div>
-            <div class="cp-form-group">
-              <label for="email">Email *</label>
-              <input type="email" id="email" required placeholder="john@example.com">
-            </div>
-          </div>
-
-          <div class="cp-form-row">
-            <div class="cp-form-group">
-              <label for="subject">How can I help you?</label>
-              <select id="subject">
-                <option value="UI/UX Design">I need a UI/UX Design</option>
-                <option value="No-Code Product">I need a No-Code Product Built</option>
-                <option value="Automation">I need Automation Setup</option>
-                <option value="Template">I want to buy a template</option>
-                <option value="Other">Other</option>
-              </select>
-            </div>
-            <div class="cp-form-group">
-              <label for="budget">Budget Range</label>
-              <select id="budget">
-                <option value="< $500">&lt; $500</option>
-                <option value="$500 - $1,000">$500 - $1,000</option>
-                <option value="$1,000 - $3,000">$1,000 - $3,000</option>
-                <option value="$3,000+">$3,000+</option>
-                <option value="Let's discuss">Let's discuss</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="cp-form-group">
-            <label for="message">Message *</label>
-            <textarea id="message" required placeholder="Tell me about your project..."></textarea>
-          </div>
-
-          <div id="form-msg" class="cp-message-box"></div>
-
-          <button type="submit" id="submit-btn" class="cp-submit-btn">
-            <span class="cp-spinner"></span>
-            <span id="btn-text">Send Message →</span>
-          </button>
-        </form>
-
-        <!-- Template Sale Section below form -->
-        <div class="cp-glass-card" style="margin-top: 40px;">
-          <h3 class="cp-template-title">💼 Want this website as a template?</h3>
-          <p class="cp-template-desc">Get the full source code, customized for your brand. Includes instructions for managing content easily without breaking the animations.</p>
-          <a href="#" class="cp-submit-btn" style="background: transparent; border: 1px solid var(--border-medium); color: var(--white); width: fit-content; padding: 12px 24px;">Get Template — $49 →</a>
-          <p class="cp-template-subtext">Includes: full code, admin panel, n8n automation setup guide.</p>
-        </div>
-      </div>
-
-      <!-- Right: Direct Contact & Sidebar -->
-      <div class="cp-sidebar">
-        
-        <!-- Availability -->
-        <div class="cp-glass-card">
-          <div class="cp-avail-row">
-            <div class="cp-pulse-dot"></div>
-            <span>Currently Available</span>
-          </div>
-          <p class="cp-avail-info">Response time: &lt; 24hrs on WhatsApp<br>Based in Nigeria 🇳🇬</p>
-        </div>
-
-        <a href="https://wa.me/2349028821109" target="_blank" rel="noopener noreferrer" class="cp-wa-btn">
-          <span>Chat on WhatsApp</span>
-          <span>→</span>
-        </a>
-
-        <div class="cp-divider">or reach me on</div>
-
-        <div class="cp-socials">
-          <a href="https://www.linkedin.com/in/okezie-ferdinand" target="_blank" rel="noopener noreferrer" class="cp-social-link">
-            <span>↳ LinkedIn</span>
-          </a>
-          <a href="https://x.com/JX_Design_Dev" target="_blank" rel="noopener noreferrer" class="cp-social-link">
-            <span>↳ Twitter/X</span>
-          </a>
-          <a href="mailto:justxaviers@icloud.com" class="cp-social-link">
-            <span>↳ Email</span>
-          </a>
-          <a href="https://github.com/jxdesigndev" target="_blank" rel="noopener noreferrer" class="cp-social-link">
-            <span>↳ GitHub</span>
-          </a>
-        </div>
-
-      </div>
-
-    </div>
-  </main>
-
-  <!-- Footer -->
-  <footer class="footer">
-    <div class="footer-top">
-      <div class="footer-left">
-        <div class="footer-logo">
-          <svg class="jx-logo" viewBox="0 0 72 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="JX"><path class="jx-stroke jx-j" d="M8 2H22V22Q22 30 14 30Q6 30 6 22"/><path class="jx-stroke jx-x1" d="M36 2L60 30"/><path class="jx-stroke jx-x2" d="M60 2L36 30"/></svg>
-          <span class="logo-text">Design &amp; Dev</span>
-        </div>
-        <p class="footer-tagline">
-          System Designer &amp; Builder
-        </p>
-        <p class="footer-copy">
-          © 2025 Okezie Ferdinand.<br/>
-          All rights reserved.
+    <!-- ── HERO ── -->
+    <section class="contact-hero">
+      <div class="contact-hero-inner">
+        <p class="section-label" id="ch-label" style="opacity:0">The Signal</p>
+        <h1 class="headline-xl" id="ch-title" style="opacity:0; transform:translateY(60px)">
+          Let's build<br><span class="text-green">something legendary.</span>
+        </h1>
+        <p id="ch-sub" style="font-family:var(--font-body); font-size:var(--text-lg); color:var(--gray-2); max-width:520px; line-height:var(--lead-relaxed); opacity:0; margin-top:var(--s-6)">
+          Have an idea? A project? A vision that deserves to exist? Send the signal. I read every message.
         </p>
       </div>
-      <div class="footer-center">
-        <p class="footer-label">Navigation</p>
-        <ul class="footer-links">
-          <li><a href="index.html">Home</a></li>
-          <li><a href="work.html">Work</a></li>
-          <li><a href="about.html">About</a></li>
-          <li><a href="services.html">Services</a></li>
-          <li><a href="contact.html">Contact</a></li>
-        </ul>
+    </section>
+
+    <!-- ── MAIN CONTENT ── -->
+    <section class="contact-main">
+
+      <!-- Left info -->
+      <div class="contact-info reveal">
+
+        <div class="contact-info-item">
+          <p class="contact-info-label">Base of Operations</p>
+          <p class="contact-info-value">Lagos, Nigeria</p>
+          <p class="contact-info-sub">Working globally, rooted in Africa.</p>
+        </div>
+
+        <div class="contact-info-item">
+          <p class="contact-info-label">Current Status</p>
+          <div class="contact-avail" id="contact-avail">
+            <div class="contact-avail-dot"></div>
+            <span id="contact-avail-text">Available for Work</span>
+          </div>
+          <p class="contact-info-sub" style="margin-top:var(--s-3)">
+            Open to product design, full-stack dev, and automation projects. Response time: 24–48 hours.
+          </p>
+        </div>
+
+        <div class="contact-info-item">
+          <p class="contact-info-label">Connect</p>
+          <div class="contact-socials">
+            <a href="#" class="contact-social-link" target="_blank" rel="noopener">
+              Twitter / X <span>↗</span>
+            </a>
+            <a href="#" class="contact-social-link" target="_blank" rel="noopener">
+              LinkedIn <span>↗</span>
+            </a>
+            <a href="#" class="contact-social-link" target="_blank" rel="noopener">
+              GitHub <span>↗</span>
+            </a>
+            <a href="#" class="contact-social-link" target="_blank" rel="noopener">
+              Dribbble <span>↗</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="contact-info-item">
+          <p class="contact-info-label">Direct</p>
+          <p class="contact-info-sub">
+            Or email directly: <a href="mailto:hello@jxdesigndev.com" style="color:var(--green); text-decoration:none;">hello@jxdesigndev.com</a>
+          </p>
+        </div>
+
       </div>
-      <div class="footer-right">
-        <p class="footer-label">Connect</p>
-        <ul class="footer-links">
-          <li><a href="https://www.linkedin.com/in/okezie-ferdinand" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
-          <li><a href="https://x.com/JX_Design_Dev" target="_blank" rel="noopener noreferrer">Twitter/X</a></li>
-          <li><a href="https://github.com/jxdesigndev" target="_blank" rel="noopener noreferrer">GitHub</a></li>
-        </ul>
-        <p class="footer-easter-egg">
-          Built with passion, code ✦<br/>
-          and a dream of being an astronaut 🚀
+
+      <!-- Form -->
+      <form class="contact-form reveal" id="contact-form" novalidate>
+        <p style="font-family:var(--font-mono); font-size:var(--text-xs); color:var(--gray-3); letter-spacing:0.12em; margin-bottom:var(--s-2);">
+          // TRANSMIT YOUR SIGNAL
         </p>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <span>JX Design &amp; Dev — Nigeria 🇳🇬</span>
-      <span>Designed &amp; Built by Okezie Ferdinand</span>
-    </div>
-  </footer>
 
-  <!-- Scroll To Top -->
-  <button class="scroll-top" id="scroll-top">↑</button>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="cf-name">Name</label>
+            <input class="form-input" id="cf-name" name="name" type="text" placeholder="Your name" autocomplete="name" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="cf-email">Email</label>
+            <input class="form-input" id="cf-email" name="email" type="email" placeholder="your@email.com" autocomplete="email" required>
+          </div>
+        </div>
 
-  <!-- Custom Cursor -->
-  <div class="cursor" id="cursor"></div>
-  <div class="cursor-follower" id="cursor-follower"></div>
+        <div class="form-group">
+          <label class="form-label" for="cf-type">Project Type</label>
+          <select class="form-select" id="cf-type" name="project_type">
+            <option value="" disabled selected>Select a service…</option>
+            <option value="Product Design">Product Design</option>
+            <option value="Full-Stack Development">Full-Stack Development</option>
+            <option value="N8N Automation">N8N Automation</option>
+            <option value="Security Review">Security Review</option>
+            <option value="Full Build (Design + Dev)">Full Build (Design + Dev)</option>
+            <option value="Other">Something else</option>
+          </select>
+        </div>
 
+        <div class="form-group">
+          <label class="form-label" for="cf-budget">Budget Range</label>
+          <select class="form-select" id="cf-budget" name="budget">
+            <option value="" disabled selected>Select a range…</option>
+            <option value="Under $500">Under $500</option>
+            <option value="$500 – $2,000">$500 – $2,000</option>
+            <option value="$2,000 – $5,000">$2,000 – $5,000</option>
+            <option value="$5,000 – $10,000">$5,000 – $10,000</option>
+            <option value="$10,000+">$10,000+</option>
+            <option value="Let's discuss">Let's discuss</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="cf-message">Message</label>
+          <textarea class="form-textarea" id="cf-message" name="message" placeholder="Tell me about your project, your goals, and your timeline…" required></textarea>
+        </div>
+
+        <div class="form-status" id="form-status" role="alert"></div>
+
+        <button class="btn btn-primary" type="submit" id="form-submit" style="width:100%; justify-content:center;">
+          Transmit Signal ↗
+        </button>
+      </form>
+
+    </section>
+
+    <!-- ── FOOTER ── -->
+    <footer style="border-top:1px solid var(--border); padding:var(--s-8) var(--s-8); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:var(--s-4);">
+      <span style="font-family:var(--font-mono); font-size:var(--text-xs); color:var(--gray-3);">© 2026 JX. Lagos, Nigeria.</span>
+      <span style="font-family:var(--font-mono); font-size:var(--text-xs); color:var(--cyan);">SIGNAL_OPEN / WAITING_FOR_INPUT</span>
+    </footer>
+
+  </div><!-- /#page -->
+
+  <script src="nav.js" defer></script>
+  <script src="contact.js" defer></script>
 </body>
 </html>

@@ -3,137 +3,459 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Services by JX Design & Dev — Product Design, No-Code Development, Automation, and Security Systems.">
-  <meta name="author" content="Okezie Ferdinand">
+  <meta name="description" content="The Forge: JX Services. Product Design, Full-Stack Development, N8N Automation, Cybersecurity.">
   <meta name="theme-color" content="#000000">
-  <title>Services — JX Design & Dev | Okezie Ferdinand</title>
+  <title>The Forge | Services | JX Design & Dev</title>
 
-  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&family=Playfair+Display:ital,wght@1,900&display=swap" rel="stylesheet">
 
-  <!-- Stylesheet -->
-  <link rel="stylesheet" href="style.css?v=1.3">
-
-  <!-- GSAP 3 -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
-  <!-- Lenis Smooth Scroll -->
   <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js" defer></script>
 
-  <!-- Shared Nav Script -->
-  <script src="nav.js" defer></script>
-  <!-- Page Utilities (cursor, scroll-top) -->
-  <script src="page.js" defer></script>
-  <!-- Services specific script -->
-  <script src="services.js" defer></script>
-  <!-- Supabase -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="supabase.js"></script>
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    #page { opacity: 0; }
+
+    /* ── Services Hero ── */
+    .services-hero {
+      min-height: 70svh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 140px var(--s-8) var(--s-16);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .services-hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 60% 50% at 100% 100%, rgba(255, 184, 0, 0.04) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .services-hero-inner {
+      max-width: var(--container-xl);
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    /* ── Service Cards (deep) ── */
+    .services-deep {
+      padding: var(--s-20) var(--s-8);
+      max-width: var(--container-xl);
+      margin: 0 auto;
+    }
+
+    .service-deep {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--s-16);
+      padding: var(--s-16) 0;
+      border-bottom: 1px solid var(--border);
+      align-items: start;
+    }
+
+    .service-deep:last-child { border-bottom: none; }
+
+    .service-deep:nth-child(even) .service-deep-right {
+      order: -1;
+    }
+
+    @media (max-width: 768px) {
+      .service-deep { grid-template-columns: 1fr; }
+      .service-deep:nth-child(even) .service-deep-right { order: 0; }
+    }
+
+    .service-deep-num {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      color: var(--green);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin-bottom: var(--s-4);
+    }
+
+    .service-deep-title {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 4vw, 3.5rem);
+      font-weight: 800;
+      color: var(--white);
+      line-height: 1.05;
+      margin: 0 0 var(--s-5);
+    }
+
+    .service-deep-body {
+      font-family: var(--font-body);
+      font-size: var(--text-base);
+      color: var(--gray-2);
+      line-height: var(--lead-relaxed);
+      margin-bottom: var(--s-6);
+    }
+
+    .service-deep-deliverables {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: var(--s-2);
+    }
+
+    .service-deep-deliverables li {
+      display: flex;
+      align-items: center;
+      gap: var(--s-3);
+      font-family: var(--font-body);
+      font-size: var(--text-sm);
+      color: var(--gray-2);
+    }
+
+    .service-deep-deliverables li::before {
+      content: '◆';
+      color: var(--green);
+      font-size: 0.5rem;
+      flex-shrink: 0;
+    }
+
+    .service-deep-visual {
+      aspect-ratio: 4/3;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.3s ease;
+    }
+
+    .service-deep-visual:hover { border-color: var(--green-dim); }
+
+    .service-deep-icon {
+      font-size: 5rem;
+      opacity: 0.15;
+      position: absolute;
+    }
+
+    .service-deep-label {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      color: var(--green);
+      letter-spacing: 0.15em;
+      position: relative;
+      z-index: 1;
+    }
+
+    .service-deep-tools {
+      position: absolute;
+      bottom: var(--s-4);
+      left: var(--s-4);
+      right: var(--s-4);
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-1);
+    }
+
+    /* ── Process Section ── */
+    .process-section {
+      padding: var(--s-20) var(--s-8);
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .process-inner {
+      max-width: var(--container-xl);
+      margin: 0 auto;
+    }
+
+    .process-steps {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: var(--s-4);
+      margin-top: var(--s-12);
+    }
+
+    @media (max-width: 768px) {
+      .process-steps { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 480px) {
+      .process-steps { grid-template-columns: 1fr; }
+    }
+
+    .process-step {
+      padding: var(--s-6);
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      position: relative;
+    }
+
+    .process-step-num {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      color: var(--green);
+      letter-spacing: 0.15em;
+      margin-bottom: var(--s-3);
+    }
+
+    .process-step-name {
+      font-family: var(--font-display);
+      font-size: var(--text-lg);
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: var(--s-2);
+    }
+
+    .process-step-desc {
+      font-family: var(--font-body);
+      font-size: var(--text-sm);
+      color: var(--gray-3);
+      line-height: var(--lead-relaxed);
+    }
+
+    /* ── CTA ── */
+    .services-cta {
+      padding: var(--s-24) var(--s-8);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .services-cta::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 50% 60% at 50% 50%, rgba(0,255,65,0.05) 0%, transparent 70%);
+      pointer-events: none;
+    }
+  </style>
 </head>
 <body>
+  <div id="page">
 
-  <!-- Navigation -->
-  <nav class="nav" id="nav">
-    <div class="nav-logo">
-      <svg class="jx-logo" viewBox="0 0 72 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="JX"><path class="jx-stroke jx-j" d="M8 2H22V22Q22 30 14 30Q6 30 6 22"/><path class="jx-stroke jx-x1" d="M36 2L60 30"/><path class="jx-stroke jx-x2" d="M60 2L36 30"/></svg>
-      <span class="logo-text">Design &amp; Dev</span>
-    </div>
-    <ul class="nav-links">
-      <li><a href="index.html" class="nav-link">Home</a></li>
-      <li><a href="work.html" class="nav-link">Work</a></li>
-      <li><a href="about.html" class="nav-link">About</a></li>
-      <li><a href="services.html" class="nav-link active">Services</a></li>
-      <li><a href="contact.html" class="nav-link cta-link">Let's Talk</a></li>
-    </ul>
-    <button class="theme-toggle" id="theme-toggle">
-      <span class="theme-icon">◐</span>
-    </button>
-    <div class="nav-menu" id="nav-menu">
-      <span></span><span></span><span></span>
-    </div>
-  </nav>
-
-  <!-- Mobile Menu Overlay -->
-  <div class="mobile-menu" id="mobile-menu">
-    <ul class="mobile-menu-links">
-      <li><a href="index.html" class="mobile-link">Home</a></li>
-      <li><a href="work.html" class="mobile-link">Work</a></li>
-      <li><a href="about.html" class="mobile-link">About</a></li>
-      <li><a href="services.html" class="mobile-link active">Services</a></li>
-      <li><a href="contact.html" class="mobile-link">Let's Talk</a></li>
-    </ul>
-  </div>
-
-  <main class="sp-page-wrap">
-    <!-- Header -->
-    <div class="sp-hero">
-      <span class="sp-label">What I Do</span>
-      <h1 class="sp-title">Four Disciplines. ✦</h1>
-      <p class="sp-subtitle">Click any service to see my full process.</p>
-    </div>
-
-    <!-- Services List -->
-    <div class="sp-list" id="services-list-container">
-      <div style="text-align: center; margin: 80px 0; color: var(--text-muted);">
-        <span class="badge-dot" style="display:inline-block; animation: pulse 1.5s infinite; background: var(--neon-green)"></span>
-        Loading services...
+    <!-- ── HERO ── -->
+    <section class="services-hero">
+      <div class="services-hero-inner">
+        <p class="section-label" id="sh-label" style="opacity:0">The Forge</p>
+        <h1 class="headline-xl" id="sh-title" style="opacity:0; transform:translateY(60px)">
+          Where ideas<br><span class="text-green">become reality.</span>
+        </h1>
+        <p id="sh-sub" style="font-family:var(--font-body); font-size:var(--text-lg); color:var(--gray-2); max-width:520px; line-height:var(--lead-relaxed); opacity:0; margin-top:var(--s-6)">
+          Four disciplines. One builder. I don't just understand your vision; I execute it, from first sketch to live system.
+        </p>
       </div>
-    </div>
-  </main>
+    </section>
 
-  <!-- Footer -->
-  <footer class="footer">
-    <div class="footer-top">
-      <div class="footer-left">
-        <div class="footer-logo">
-          <svg class="jx-logo" viewBox="0 0 72 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="JX"><path class="jx-stroke jx-j" d="M8 2H22V22Q22 30 14 30Q6 30 6 22"/><path class="jx-stroke jx-x1" d="M36 2L60 30"/><path class="jx-stroke jx-x2" d="M60 2L36 30"/></svg>
-          <span class="logo-text">Design &amp; Dev</span>
+    <!-- ── SERVICE DEEP-DIVE ── -->
+    <section class="services-deep">
+
+      <!-- 01 · Product Design -->
+      <div class="service-deep">
+        <div class="service-deep-left reveal">
+          <p class="service-deep-num">01 / Product Design</p>
+          <h2 class="service-deep-title">The Experience<br>That Feels Right</h2>
+          <p class="service-deep-body">
+            I think in systems. I design in experiences. From deep user research to pixel-perfect
+            Figma files, I craft interfaces that aren't just beautiful: they're intuitive, purposeful,
+            and built to scale. Whether you need a full design system or a product from zero, I bring
+            both the artist and the engineer to the table.
+          </p>
+          <ul class="service-deep-deliverables">
+            <li>User Research & Competitive Analysis</li>
+            <li>Wireframing & Low/High Fidelity Prototypes</li>
+            <li>Complete Design Systems in Figma</li>
+            <li>UI Design: Web & Mobile</li>
+            <li>Usability Testing & Iteration</li>
+            <li>Handoff-ready Component Libraries</li>
+          </ul>
         </div>
-        <p class="footer-tagline">
-          System Designer &amp; Builder
-        </p>
-        <p class="footer-copy">
-          © 2025 Okezie Ferdinand.<br/>
-          All rights reserved.
-        </p>
+        <div class="service-deep-right reveal-scale">
+          <div class="service-deep-visual">
+            <span class="service-deep-icon">◈</span>
+            <span class="service-deep-label">// DESIGN_SYSTEM_LOADED</span>
+            <div class="service-deep-tools">
+              <span class="tag">Figma</span>
+              <span class="tag">FigJam</span>
+              <span class="tag">Framer</span>
+              <span class="tag">Notion</span>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="footer-center">
-        <p class="footer-label">Navigation</p>
-        <ul class="footer-links">
-          <li><a href="index.html">Home</a></li>
-          <li><a href="work.html">Work</a></li>
-          <li><a href="about.html">About</a></li>
-          <li><a href="services.html">Services</a></li>
-          <li><a href="contact.html">Contact</a></li>
-        </ul>
+
+      <!-- 02 · Full-Stack Dev -->
+      <div class="service-deep">
+        <div class="service-deep-left reveal">
+          <p class="service-deep-num">02 / Full-Stack Development</p>
+          <h2 class="service-deep-title">The Product<br>That Actually Ships</h2>
+          <p class="service-deep-body">
+            I code the way I design, with intention and craft. Full-stack development that moves
+            at the speed of vision. From interactive 3D experiences to production-ready web apps
+            connected to real databases, I build things that work and feel alive. Not templates.
+            Not boilerplate. Custom, from scratch.
+          </p>
+          <ul class="service-deep-deliverables">
+            <li>Custom Web Applications (React / Next.js)</li>
+            <li>Interactive 3D Experiences (Three.js / WebGL)</li>
+            <li>GSAP Animations & Micro-interactions</li>
+            <li>Backend & APIs (Node.js / Supabase)</li>
+            <li>Database Design (PostgreSQL)</li>
+            <li>Deployment & Performance Optimisation</li>
+          </ul>
+        </div>
+        <div class="service-deep-right reveal-scale">
+          <div class="service-deep-visual">
+            <span class="service-deep-icon">⬡</span>
+            <span class="service-deep-label">// BUILD_SEQUENCE_ACTIVE</span>
+            <div class="service-deep-tools">
+              <span class="tag">React</span>
+              <span class="tag">Next.js</span>
+              <span class="tag">Three.js</span>
+              <span class="tag">Supabase</span>
+              <span class="tag">GSAP</span>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="footer-right">
-        <p class="footer-label">Connect</p>
-        <ul class="footer-links">
-          <li><a href="https://www.linkedin.com/in/okezie-ferdinand" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
-          <li><a href="https://x.com/JX_Design_Dev" target="_blank" rel="noopener noreferrer">Twitter/X</a></li>
-          <li><a href="https://github.com/jxdesigndev" target="_blank" rel="noopener noreferrer">GitHub</a></li>
-        </ul>
-        <p class="footer-easter-egg">
-          Built with passion, code ✦<br/>
-          and a dream of being an astronaut 🚀
-        </p>
+
+      <!-- 03 · N8N Automation -->
+      <div class="service-deep">
+        <div class="service-deep-left reveal">
+          <p class="service-deep-num">03 / N8N Automations</p>
+          <h2 class="service-deep-title">The System<br>That Works For You</h2>
+          <p class="service-deep-body">
+            Manual processes are a tax on your time and your team. I build automation workflows
+            in N8N that connect your tools, eliminate repetitive tasks, and let your business
+            run smarter. Lead generation, content pipelines, onboarding flows, data sync:
+            if it can be automated, I'll build it.
+          </p>
+          <ul class="service-deep-deliverables">
+            <li>Workflow Mapping & Process Audit</li>
+            <li>N8N Pipeline Build & Deployment</li>
+            <li>CRM / Notion / Airtable Integration</li>
+            <li>Email / Slack / WhatsApp Automation</li>
+            <li>API Integration & Custom Webhooks</li>
+            <li>Monitoring & Maintenance</li>
+          </ul>
+        </div>
+        <div class="service-deep-right reveal-scale">
+          <div class="service-deep-visual">
+            <span class="service-deep-icon">⬡</span>
+            <span class="service-deep-label">// WORKFLOW_RUNNING</span>
+            <div class="service-deep-tools">
+              <span class="tag">N8N</span>
+              <span class="tag">Webhooks</span>
+              <span class="tag">REST APIs</span>
+              <span class="tag">Make</span>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-    <div class="footer-bottom">
-      <span>JX Design &amp; Dev — Nigeria 🇳🇬</span>
-      <span>Designed &amp; Built by Okezie Ferdinand</span>
-    </div>
-  </footer>
 
-  <!-- Scroll To Top -->
-  <button class="scroll-top" id="scroll-top">↑</button>
+      <!-- 04 · Security -->
+      <div class="service-deep">
+        <div class="service-deep-left reveal">
+          <p class="service-deep-num">04 / Security & Hardening</p>
+          <h2 class="service-deep-title">The Shield<br>That Holds</h2>
+          <p class="service-deep-body">
+            Building something powerful means securing it. I'm actively expanding my cybersecurity
+            skills (ethical hacking, penetration testing, system hardening) because the best
+            builder is also the hardest to break. I apply a security-first mindset to every
+            product I build, and I'm available for security reviews and basic pen-testing engagements.
+          </p>
+          <ul class="service-deep-deliverables">
+            <li>Web Application Security Review</li>
+            <li>Basic Penetration Testing [ACTIVE LEARNING]</li>
+            <li>Security-first Development Practices</li>
+            <li>Vulnerability Assessment</li>
+            <li>Secure Authentication Implementation</li>
+          </ul>
+        </div>
+        <div class="service-deep-right reveal-scale">
+          <div class="service-deep-visual">
+            <span class="service-deep-icon">⬟</span>
+            <span class="service-deep-label">// SCANNING_FOR_VULNERABILITIES</span>
+            <div class="service-deep-tools">
+              <span class="tag">OWASP</span>
+              <span class="tag">Burp Suite</span>
+              <span class="tag">Linux</span>
+              <span class="tag">[GROWING]</span>
+            </div>
+          </div>
+        </div>
+      </div>
 
-  <!-- Custom Cursor -->
-  <div class="cursor" id="cursor"></div>
-  <div class="cursor-follower" id="cursor-follower"></div>
+    </section>
 
+    <!-- ── PROCESS ── -->
+    <section class="process-section">
+      <div class="process-inner">
+        <div class="section-label reveal">How It Works</div>
+        <h2 class="headline-lg reveal" style="margin-top: var(--s-3)">
+          From idea to impact:<br>a proven process.
+        </h2>
+        <div class="process-steps">
+          <div class="process-step reveal">
+            <p class="process-step-num">01</p>
+            <p class="process-step-name">Discover</p>
+            <p class="process-step-desc">Deep dive into your goals, your users, and the problem we're solving.</p>
+          </div>
+          <div class="process-step reveal">
+            <p class="process-step-num">02</p>
+            <p class="process-step-name">Design</p>
+            <p class="process-step-desc">Wireframes, flows, and full visual design: your feedback at every step.</p>
+          </div>
+          <div class="process-step reveal">
+            <p class="process-step-num">03</p>
+            <p class="process-step-name">Build</p>
+            <p class="process-step-desc">Clean, performant code. No shortcuts. Built to last and easy to scale.</p>
+          </div>
+          <div class="process-step reveal">
+            <p class="process-step-num">04</p>
+            <p class="process-step-name">Deploy</p>
+            <p class="process-step-desc">Launch, test, refine. We don't ship and disappear; we make sure it works.</p>
+          </div>
+          <div class="process-step reveal">
+            <p class="process-step-num">05</p>
+            <p class="process-step-name">Scale</p>
+            <p class="process-step-desc">Ongoing support, iterations, and new features as you grow.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── CTA ── -->
+    <section class="services-cta">
+      <p class="section-label reveal">Ready?</p>
+      <h2 class="headline-lg reveal" style="margin: var(--s-4) 0 var(--s-6); max-width: 600px; margin-left: auto; margin-right: auto;">
+        Let's build something<br><span class="text-green">legendary.</span>
+      </h2>
+      <p class="reveal" style="font-family:var(--font-body); color:var(--gray-2); max-width:480px; margin:0 auto var(--s-10); line-height:var(--lead-relaxed);">
+        Whether you have a clear brief or just an idea that won't leave you alone, I want to hear it.
+      </p>
+      <div class="reveal">
+        <a href="contact.html" class="btn btn-primary" data-nav-link>Send the Signal ↗</a>
+        <a href="work.html" class="btn btn-ghost" style="margin-left: var(--s-4);" data-nav-link>See My Work</a>
+      </div>
+    </section>
+
+    <!-- ── FOOTER ── -->
+    <footer style="border-top:1px solid var(--border); padding:var(--s-8) var(--s-8); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:var(--s-4);">
+      <span style="font-family:var(--font-mono); font-size:var(--text-xs); color:var(--gray-3);">© 2026 JX. Lagos, Nigeria.</span>
+      <span style="font-family:var(--font-mono); font-size:var(--text-xs); color:var(--green);">THE_FORGE / OPEN_FOR_WORK</span>
+    </footer>
+
+  </div><!-- /#page -->
+
+  <script src="nav.js" defer></script>
+  <script src="services.js" defer></script>
 </body>
 </html>

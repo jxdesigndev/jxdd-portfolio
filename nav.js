@@ -1,406 +1,481 @@
-/* =========================================
-   JX Design & Dev — Shared Navigation
-   nav.js — Handles nav behavior across all pages
-   ========================================= */
+/* ================================================================
+   JX UNIVERSE — nav.js v3.0
+   Shared Navigation + Consciousness Shift Transitions
+   ================================================================ */
+
+'use strict';
 
 (function () {
-  'use strict';
 
-  /* ---- Active Link Highlighting ---- */
-  function highlightActiveLink() {
-    const path = window.location.pathname;
-    const currentPage = path.substring(path.lastIndexOf('/') + 1) || 'index.html';
+  /* ────────────────────────────────────────────────────────────────
+     CONFIG
+     ──────────────────────────────────────────────────────────────── */
+  const NAV_LINKS = [
+    { href: 'index.html',    label: 'Home' },
+    { href: 'about.html',   label: 'About' },
+    { href: 'work.html',    label: 'Work' },
+    { href: 'services.html',label: 'Services' },
+    { href: 'contact.html', label: 'Contact' },
+  ];
 
-    // Map filenames to their nav link href
-    const pageToHref = {
-      'index.html': 'index.html',
-      '': 'index.html',
-      'work.html': 'work.html',
-      'about.html': 'about.html',
-      'services.html': 'services.html',
-      'contact.html': 'contact.html',
-    };
+  const JX_LOGO_SVG = `
+    <svg class="nav-logo" viewBox="0 0 72 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path class="jx-j"  d="M8 2H22V22Q22 30 14 30Q6 30 6 22"/>
+      <path class="jx-x1" d="M36 2L60 30"/>
+      <path class="jx-x2" d="M60 2L36 30"/>
+    </svg>`;
 
-    const activeHref = pageToHref[currentPage];
-    if (!activeHref) return;
+  const JX_LOGO_LARGE_SVG = `
+    <svg viewBox="0 0 120 54" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path class="jx-stroke jx-j"  d="M14 4H38V38Q38 52 24 52Q10 52 10 38"/>
+      <path class="jx-stroke jx-x1" d="M58 4L104 52"/>
+      <path class="jx-stroke jx-x2" d="M104 4L58 52"/>
+    </svg>`;
 
-    // Desktop nav links
-    const navLinks = document.querySelectorAll('.nav-link');
-    navLinks.forEach((link) => {
-      link.classList.remove('active');
-      const linkHref = link.getAttribute('href');
-      if (linkHref === activeHref) {
-        link.classList.add('active');
-      }
-    });
-
-    // Mobile nav links
-    const mobileLinks = document.querySelectorAll('.mobile-link');
-    mobileLinks.forEach((link) => {
-      link.classList.remove('active');
-      const linkHref = link.getAttribute('href');
-      if (linkHref === activeHref) {
-        link.classList.add('active');
-      }
-    });
+  /* ────────────────────────────────────────────────────────────────
+     DETECT ACTIVE PAGE
+     ──────────────────────────────────────────────────────────────── */
+  function getActivePage () {
+    const path = window.location.pathname.split('/').pop() || 'index.html';
+    return path;
   }
 
-  /* ---- Navigation Scroll Effect (glass background) ---- */
-  function initNavScroll() {
-    const nav = document.getElementById('nav');
-    if (!nav) return;
+  /* ────────────────────────────────────────────────────────────────
+     BUILD NAVIGATION HTML
+     ──────────────────────────────────────────────────────────────── */
+  function buildNav () {
+    if (document.getElementById('nav')) return;
+    const activePage = getActivePage();
 
-    window.addEventListener('scroll', () => {
-      if (window.scrollY > 60) {
-        nav.classList.add('scrolled');
-      } else {
-        nav.classList.remove('scrolled');
-      }
-    });
-  }
+    const linksHtml = NAV_LINKS.map(link => {
+      const isActive = activePage === link.href ||
+        (activePage === '' && link.href === 'index.html');
+      return `<li>
+        <a href="${link.href}" class="nav-link${isActive ? ' active' : ''}"
+           data-nav-link>${link.label}</a>
+      </li>`;
+    }).join('');
 
-  /* ---- Mobile Hamburger Menu ---- */
-  function initMobileMenu() {
-    const navMenu = document.getElementById('nav-menu');
-    const mobileMenu = document.getElementById('mobile-menu');
-    const mobileLinks = document.querySelectorAll('.mobile-link');
-    if (!navMenu || !mobileMenu) return;
+    const mobileLinkHtml = NAV_LINKS.map(link =>
+      `<a href="${link.href}" class="mobile-nav-link" data-nav-link>${link.label}</a>`
+    ).join('');
 
-    let isOpen = false;
+    const nav = document.createElement('nav');
+    nav.className = 'nav';
+    nav.id = 'nav';
+    nav.setAttribute('role', 'navigation');
+    nav.setAttribute('aria-label', 'Main navigation');
+    nav.innerHTML = `
+      <a href="index.html" class="nav-brand" aria-label="JX Design & Dev — Home">
+        ${JX_LOGO_SVG}
+        <span class="nav-wordmark">JX</span>
+      </a>
 
-    navMenu.addEventListener('click', () => {
-      isOpen = !isOpen;
-      navMenu.classList.toggle('open', isOpen);
-      mobileMenu.classList.toggle('open', isOpen);
+      <ul class="nav-links" role="list">
+        ${linksHtml}
+      </ul>
 
-      if (isOpen && typeof gsap !== 'undefined') {
-        gsap.fromTo(mobileLinks,
-          { opacity: 0, y: 30 },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.5,
-            stagger: 0.08,
-            ease: 'power3.out',
-            delay: 0.15,
-          }
-        );
-      } else if (!isOpen && typeof gsap !== 'undefined') {
-        gsap.set(mobileLinks, { opacity: 0, y: 30 });
-      }
-    });
-
-    // Close menu when a link is clicked
-    mobileLinks.forEach((link) => {
-      link.addEventListener('click', () => {
-        isOpen = false;
-        navMenu.classList.remove('open');
-        mobileMenu.classList.remove('open');
-        if (typeof gsap !== 'undefined') {
-          gsap.set(mobileLinks, { opacity: 0, y: 30 });
-        }
-      });
-    });
-  }
-
-  /* ---- Light/Dark Mode Toggle ---- */
-  function initThemeToggle() {
-    const themeBtn = document.getElementById('theme-toggle');
-    if (!themeBtn) return;
-
-    const themeIcon = themeBtn.querySelector('.theme-icon');
-
-    function updateIcon(isLight) {
-      if (themeIcon) {
-        themeIcon.textContent = isLight ? '☀' : '◐';
-      }
-    }
-
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'light') {
-      document.body.classList.add('light');
-      updateIcon(true);
-    }
-
-    themeBtn.addEventListener('click', () => {
-      document.body.classList.toggle('light');
-      const isLight = document.body.classList.contains('light');
-      localStorage.setItem('theme', isLight ? 'light' : 'dark');
-      updateIcon(isLight);
-    });
-  }
-
-  /* ---- Make nav visible on non-home pages (no loader) ---- */
-  function showNavImmediately() {
-    const nav = document.getElementById('nav');
-    if (!nav) return;
-
-    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
-    // On non-home pages, make nav visible immediately (no loader animation)
-    if (currentPage !== 'index.html' && currentPage !== '') {
-      nav.style.opacity = '1';
-      nav.style.transform = 'translateY(0)';
-    }
-  }
-
-
-  /* ---- Global Styles (Injected Dynamically) ---- */
-  async function initGlobalStyles() {
-    if (!window.initSupabase || !window.supabaseClient) return;
-    await window.initSupabase();
-
-    try {
-      const { data, error } = await window.supabaseClient
-        .from('site_settings')
-        .select('global_styles, navigation_settings')
-        .limit(1)
-        .single();
-      
-      if (data) {
-        if (data.global_styles) applyGlobalStyles(data.global_styles);
-        if (data.navigation_settings) applyNavigationSettings(data.navigation_settings);
-      }
-    } catch (err) {
-      console.warn("Could not load global styles:", err);
-    }
-  }
-
-  
-  function applyNavigationSettings(nav) {
-    if (!nav) return;
-    
-    // 1. Header Navigation Links
-    const deskNav = document.querySelector('.nav-links');
-    const mobNav = document.querySelector('.mobile-nav-links');
-    
-    const linksHtml = (nav.links || [])
-      .filter(l => l.visible)
-      .map(l => `<li><a href="${l.url}" class="nav-link">${l.label}</a></li>`)
-      .join('');
-      
-    if (deskNav) deskNav.innerHTML = linksHtml;
-    if (mobNav) mobNav.innerHTML = linksHtml;
-    
-    // 2. CTA Button
-    if (nav.cta) {
-      const ctas = document.querySelectorAll('.nav-cta, .mobile-cta');
-      ctas.forEach(btn => {
-        btn.textContent = nav.cta.label;
-        btn.href = nav.cta.url;
-        btn.className = btn.classList.contains('mobile-cta') ? 'btn-neon mobile-cta' : 'btn-neon nav-cta'; // Reset
-        if (nav.cta.style === 'ghost') {
-          btn.classList.remove('btn-neon');
-          btn.classList.add('btn-outline');
-        }
-      });
-    }
-    
-    // 3. Footer
-    if (nav.footer) {
-      const tagline = document.querySelector('.footer-tagline');
-      const copy = document.querySelector('.footer-copy');
-      const easter = document.querySelector('.footer-easter-egg');
-      const socContainer = document.getElementById('footer-social-links');
-      const footerNav = document.querySelector('.footer-center .footer-links');
-      
-      if (tagline) tagline.textContent = nav.footer.tagline || '';
-      if (copy) copy.innerHTML = (nav.footer.copyright || '').replace(/\n/g, '<br/>');
-      if (easter) easter.innerHTML = (nav.footer.builtWith || '').replace(/\n/g, '<br/>');
-      
-      if (socContainer && nav.footer.social) {
-        socContainer.innerHTML = nav.footer.social
-          .filter(s => s.visible)
-          .map(s => `<li><a href="${s.url}" target="_blank" rel="noopener noreferrer">${s.platform}</a></li>`)
-          .join('');
-      }
-      
-      if (footerNav) {
-        footerNav.innerHTML = (nav.links || [])
-          .filter(l => l.visible)
-          .map(l => `<li><a href="${l.url}">${l.label}</a></li>`)
-          .join('');
-      }
-    }
-    
-    // 4. Pages (SEO & Coming Soon)
-    if (nav.pages) {
-      const currentPath = window.location.pathname;
-      let matchedPage = nav.pages.find(p => currentPath.endsWith(p.slug) || (p.slug === '/' && currentPath.endsWith('index.html')));
-      
-      // Fallback for root "/"
-      if (!matchedPage && (currentPath === '/' || currentPath === '')) {
-         matchedPage = nav.pages.find(p => p.slug === '/');
-      }
-      
-      if (matchedPage) {
-        // SEO Updates
-        if (matchedPage.title) document.title = matchedPage.title;
-        
-        if (matchedPage.desc) {
-          let metaDesc = document.querySelector('meta[name="description"]');
-          if (!metaDesc) {
-            metaDesc = document.createElement('meta');
-            metaDesc.name = 'description';
-            document.head.appendChild(metaDesc);
-          }
-          metaDesc.content = matchedPage.desc;
-        }
-        
-        if (matchedPage.image) {
-          let metaOg = document.querySelector('meta[property="og:image"]');
-          if (!metaOg) {
-            metaOg = document.createElement('meta');
-            metaOg.setAttribute('property', 'og:image');
-            document.head.appendChild(metaOg);
-          }
-          metaOg.content = matchedPage.image;
-        }
-        
-        // Coming Soon Overlay
-        if (matchedPage.comingSoon && !window.location.pathname.includes('admin')) {
-          const overlay = document.createElement('div');
-          overlay.style.position = 'fixed';
-          overlay.style.top = '0';
-          overlay.style.left = '0';
-          overlay.style.width = '100vw';
-          overlay.style.height = '100vh';
-          overlay.style.backgroundColor = 'rgba(0,0,0,0.85)';
-          overlay.style.backdropFilter = 'blur(15px)';
-          overlay.style.zIndex = '999999';
-          overlay.style.display = 'flex';
-          overlay.style.flexDirection = 'column';
-          overlay.style.alignItems = 'center';
-          overlay.style.justifyContent = 'center';
-          overlay.style.color = 'white';
-          overlay.style.fontFamily = 'var(--font-mono, monospace)';
-          
-          overlay.innerHTML = `
-            <h1 style="font-size:3rem; margin-bottom:1rem; color:var(--neon, #39ff14);">${matchedPage.name}</h1>
-            <p style="font-size:1.2rem; opacity:0.7;">This page is currently under construction.</p>
-            <a href="index.html" style="margin-top:2rem; padding:10px 20px; border:1px solid var(--neon, #39ff14); color:var(--neon, #39ff14); text-decoration:none; border-radius:4px;">Return Home</a>
-          `;
-          
-          document.body.appendChild(overlay);
-          document.body.style.overflow = 'hidden';
-        }
-      }
-    }
-    
-    // Re-highlight active links after dynamic injection
-    highlightActiveLink();
-  }
-
-  function applyGlobalStyles(styles) {
-    if (!styles || typeof styles !== 'object') return;
-    
-    // 1. Dynamic CSS Variables
-    let styleTag = document.getElementById('dynamic-global-styles');
-    if (!styleTag) {
-      styleTag = document.createElement('style');
-      styleTag.id = 'dynamic-global-styles';
-      document.head.appendChild(styleTag);
-    }
-
-    const cssVars = `
-      :root {
-        ${styles.primary_color ? `--neon: ${styles.primary_color};` : ''}
-        ${styles.primary_color ? `--cursor-color: ${styles.primary_color};` : ''}
-        ${styles.bg_color ? `--black: ${styles.bg_color};` : ''}
-        ${styles.bg_color ? `--footer-bg: ${styles.bg_color};` : ''}
-        ${styles.bg_secondary ? `--dark: ${styles.bg_secondary};` : ''}
-        ${styles.font_heading ? `--font-display: '${styles.font_heading}', sans-serif;` : ''}
-        ${styles.font_body ? `--font-body: '${styles.font_body}', sans-serif;` : ''}
-        ${styles.font_mono ? `--font-mono: '${styles.font_mono}', monospace;` : ''}
-      }
-      
-      body {
-        ${styles.bg_color ? `background: ${styles.bg_color};` : ''}
-      }
-
-      .hero {
-        ${styles.bg_color ? `background: ${styles.bg_color};` : ''}
-      }
-
-      section {
-        ${styles.section_padding ? `padding: ${styles.section_padding}px 60px;` : ''}
-      }
-      
-      @media (max-width: 768px) {
-        section {
-          ${styles.section_padding ? `padding: ${Math.floor(styles.section_padding * 0.6)}px 20px;` : ''}
-        }
-      }
-      
-      .work-card, .service-card, .stat, .ap-card {
-        ${styles.border_radius ? `border-radius: ${styles.border_radius}px;` : ''}
-      }
-
-      ${styles.cursor_style === 'None' ? `
-        #cursor, #cursor-follower { display: none !important; }
-        body, a, button, input, textarea, select, label { cursor: auto !important; }
-      ` : ''}
-      
-      ${styles.cursor_style === 'Ring only' ? `
-        #cursor { display: none !important; }
-      ` : ''}
+      <div class="nav-right">
+        <div class="nav-availability" id="nav-availability">
+          <div class="nav-dot" id="nav-dot"></div>
+          <span class="nav-availability-text" id="nav-availability-text">Available</span>
+        </div>
+        <a href="contact.html" class="nav-cta" data-nav-link>Hire Me</a>
+        <button class="nav-hamburger" id="nav-hamburger" aria-label="Toggle menu"
+                aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
     `;
 
-    styleTag.innerHTML = cssVars;
+    /* Mobile Menu */
+    const mobile = document.createElement('div');
+    mobile.className = 'mobile-menu';
+    mobile.id = 'mobile-menu';
+    mobile.setAttribute('aria-hidden', 'true');
+    mobile.innerHTML = `
+      <nav class="mobile-nav-links" role="list">
+        ${mobileLinkHtml}
+      </nav>
+      <div class="mobile-menu-footer">
+        <div class="mobile-menu-socials">
+          <a href="https://twitter.com/jxdesigndev" target="_blank" rel="noopener"
+             class="mobile-menu-social">Twitter</a>
+          <a href="https://linkedin.com/in/jxdesigndev" target="_blank" rel="noopener"
+             class="mobile-menu-social">LinkedIn</a>
+          <a href="https://github.com/jxdesigndev" target="_blank" rel="noopener"
+             class="mobile-menu-social">GitHub</a>
+        </div>
+        <p class="mobile-menu-location">Lagos, Nigeria · NGT UTC+01:00</p>
+      </div>
+    `;
 
-    // 2. Google Fonts Injection
-    injectGoogleFont(styles.font_heading);
-    injectGoogleFont(styles.font_body);
-    injectGoogleFont(styles.font_mono);
-
-    // 3. Effects & State
-    if (styles.default_mode === 'Light' && !localStorage.getItem('theme')) {
-       document.body.classList.add('light');
-    }
-    
-    const themeBtn = document.getElementById('theme-toggle');
-    if (themeBtn && styles.allow_visitor_toggle === false) {
-      themeBtn.style.display = 'none';
-    }
-
-    // 4. Expose styles to global window for other scripts to use (like particles)
-    window.jxGlobalStyles = styles;
-    
-    // Update active cursor visually if needed
-    if (styles.primary_color) {
-       const cursor = document.getElementById('cursor');
-       const follower = document.getElementById('cursor-follower');
-       if (cursor) cursor.style.background = styles.primary_color;
-       if (follower) follower.style.borderColor = styles.primary_color;
-    }
+    document.body.prepend(mobile);
+    document.body.prepend(nav);
   }
 
-  function injectGoogleFont(fontName) {
-    if (!fontName) return;
-    const fontId = 'font-' + fontName.replace(/\s+/g, '-').toLowerCase();
-    if (document.getElementById(fontId)) return; // Already injected
-    
-    const url = `https://fonts.googleapis.com/css2?family=${fontName.replace(/\s+/g, '+')}:ital,wght@0,400;0,700;0,800;0,900;1,400;1,700&display=swap`;
-    const link = document.createElement('link');
-    link.id = fontId;
-    link.rel = 'stylesheet';
-    link.href = url;
-    document.head.appendChild(link);
+  /* ────────────────────────────────────────────────────────────────
+     BUILD CURSOR
+     ──────────────────────────────────────────────────────────────── */
+  function buildCursor () {
+    if (document.querySelector('.cursor')) return;
+    if (window.matchMedia('(hover: none)').matches) return; // no cursor on touch
+
+    const dot  = document.createElement('div');
+    const ring = document.createElement('div');
+    dot.className  = 'cursor';
+    ring.className = 'cursor-ring';
+    ring.innerHTML = '<span class="ring-label"></span>';
+    document.body.append(dot, ring);
+
+    let mouseX = 0, mouseY = 0;
+    let ringX  = 0, ringY  = 0;
+    let dotX   = 0, dotY   = 0;
+
+    document.addEventListener('mousemove', e => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      dot.classList.remove('hidden');
+      ring.classList.remove('hidden');
+    });
+
+    document.addEventListener('mouseleave', () => {
+      dot.classList.add('hidden');
+      ring.classList.add('hidden');
+    });
+
+    document.addEventListener('mousedown', () => dot.classList.add('click'));
+    document.addEventListener('mouseup', () => dot.classList.remove('click'));
+
+    /* Hover states */
+    function addHoverListeners () {
+      const hoverEls = document.querySelectorAll(
+        'a, button, [data-cursor], input, textarea, select, label'
+      );
+      hoverEls.forEach(el => {
+        el.addEventListener('mouseenter', () => {
+          dot.classList.add('hover');
+          ring.classList.add('hover');
+          const label = el.dataset.cursorLabel || '';
+          ring.querySelector('.ring-label').textContent = label;
+          if (label) ring.classList.add('labeled');
+          else ring.classList.remove('labeled');
+        });
+        el.addEventListener('mouseleave', () => {
+          dot.classList.remove('hover');
+          ring.classList.remove('hover');
+          ring.classList.remove('labeled');
+        });
+      });
+    }
+
+    addHoverListeners();
+    // Re-run after dynamic content loads
+    window.JX = window.JX || {};
+    window.JX.refreshCursor = addHoverListeners;
+
+    /* Smooth ring follow */
+    const lerp = (a, b, t) => a + (b - a) * t;
+
+    const raf = () => {
+      dotX  = lerp(dotX,  mouseX, 0.85);
+      dotY  = lerp(dotY,  mouseY, 0.85);
+      ringX = lerp(ringX, mouseX, 0.12);
+      ringY = lerp(ringY, mouseY, 0.12);
+
+      dot.style.left  = dotX  + 'px';
+      dot.style.top   = dotY  + 'px';
+      ring.style.left = ringX + 'px';
+      ring.style.top  = ringY + 'px';
+
+      requestAnimationFrame(raf);
+    };
+    requestAnimationFrame(raf);
   }
 
-  /* ---- Init ---- */
+  /* ────────────────────────────────────────────────────────────────
+     BUILD TRANSITION DOM
+     ──────────────────────────────────────────────────────────────── */
+  function buildTransitionDOM () {
+    if (document.getElementById('ct-wrap')) return document.getElementById('ct-wrap');
+    const wrap = document.createElement('div');
+    wrap.id = 'ct-wrap';
+    wrap.innerHTML = `
+      <div class="ct-panel ct-panel-1"></div>
+      <div class="ct-panel ct-panel-2"></div>
+      <div class="ct-panel ct-panel-3"></div>
+      <div class="ct-grid"></div>
+      <div class="ct-sigil">
+        ${JX_LOGO_LARGE_SVG}
+      </div>
+    `;
+    document.body.append(wrap);
+    return wrap;
+  }
 
-    async function initNav() {
-    highlightActiveLink();
+  /* ────────────────────────────────────────────────────────────────
+     CONSCIOUSNESS SHIFT TRANSITION
+     ──────────────────────────────────────────────────────────────── */
+  let isTransitioning = false;
+
+  function consciousnessShift (destination) {
+    if (isTransitioning) return;
+    if (!window.gsap) {
+      window.location.href = destination;
+      return;
+    }
+
+    isTransitioning = true;
+
+    const wrap   = document.getElementById('ct-wrap');
+    const panels = wrap.querySelectorAll('.ct-panel');
+    const grid   = wrap.querySelector('.ct-grid');
+    const sigil  = wrap.querySelector('.ct-sigil');
+    const strokes = sigil.querySelectorAll('.jx-stroke');
+
+    /* Make clickable during transition */
+    wrap.style.pointerEvents = 'all';
+
+    const tl = gsap.timeline({
+      onComplete: () => { window.location.href = destination; }
+    });
+
+    /* 0 – 0.2s: panels slam in from left */
+    tl.set(panels, { scaleX: 0, transformOrigin: 'left center' })
+      .to(panels[0], { scaleX: 1, duration: 0.5, ease: 'expo.inOut' }, 0)
+      .to(panels[1], { scaleX: 1, duration: 0.5, ease: 'expo.inOut' }, 0.04)
+      .to(panels[2], { scaleX: 1, duration: 0.5, ease: 'expo.inOut' }, 0.08)
+
+    /* Grid + sigil reveal */
+      .to(grid,  { opacity: 1, duration: 0.3, ease: 'power2.out' }, 0.35)
+      .to(sigil, { opacity: 1, scale: 1, duration: 0.4, ease: 'back.out(1.4)' }, 0.4)
+
+    /* Stroke-draw the JX sigil */
+      .to(strokes, {
+        strokeDashoffset: 0,
+        duration: 0.5,
+        ease: 'power3.inOut',
+        stagger: 0.06,
+      }, 0.45)
+
+    /* Hold — we navigate here */
+      .to({}, { duration: 0.2 }, 0.85);
+
+    return tl;
+  }
+
+  /* Page-in reveal (panels wipe out when page loads) */
+  function pageRevealIn () {
+    if (!window.gsap) return;
+
+    const wrap = document.getElementById('ct-wrap');
+    if (!wrap) return;
+
+    const panels = wrap.querySelectorAll('.ct-panel');
+    const grid   = wrap.querySelector('.ct-grid');
+    const sigil  = wrap.querySelector('.ct-sigil');
+    const strokes = sigil ? sigil.querySelectorAll('.jx-stroke') : [];
+
+    /* If panels already at scaleX = 1 (came from a transition), wipe them out */
+    const fromPanel = sessionStorage.getItem('ct-active');
+    if (!fromPanel) return;
+    sessionStorage.removeItem('ct-active');
+
+    gsap.set(panels, { scaleX: 1, transformOrigin: 'right center' });
+    gsap.set(grid, { opacity: 1 });
+    gsap.set(sigil, { opacity: 1, scale: 1 });
+    gsap.set(strokes, { strokeDashoffset: 0 });
+
+    const tl = gsap.timeline();
+    tl.to(strokes, { strokeDashoffset: 200, duration: 0.3, ease: 'power2.in', stagger: 0.03 }, 0)
+      .to([sigil, grid], { opacity: 0, duration: 0.25, ease: 'power2.in' }, 0.1)
+      .to(panels[2], { scaleX: 0, duration: 0.55, ease: 'expo.inOut' }, 0.3)
+      .to(panels[1], { scaleX: 0, duration: 0.55, ease: 'expo.inOut' }, 0.35)
+      .to(panels[0], { scaleX: 0, duration: 0.55, ease: 'expo.inOut' }, 0.40)
+      .set(wrap, { pointerEvents: 'none' })
+      .call(() => { isTransitioning = false; });
+  }
+
+  /* ────────────────────────────────────────────────────────────────
+     NAV SCROLL BEHAVIOUR
+     ──────────────────────────────────────────────────────────────── */
+  function initNavScroll () {
+    const nav = document.getElementById('nav');
+    if (!nav) return;
+
+    let lastY = 0;
+    const THRESHOLD = 60;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => nav.classList.toggle('scrolled', !entry.isIntersecting),
+      { rootMargin: '-80px 0px 0px 0px' }
+    );
+
+    const sentinel = document.createElement('div');
+    sentinel.style.cssText = 'position:absolute;top:0;left:0;width:1px;height:1px;pointer-events:none;';
+    document.body.prepend(sentinel);
+    observer.observe(sentinel);
+  }
+
+  /* ────────────────────────────────────────────────────────────────
+     HAMBURGER MENU
+     ──────────────────────────────────────────────────────────────── */
+  function initHamburger () {
+    const btn  = document.getElementById('nav-hamburger');
+    const menu = document.getElementById('mobile-menu');
+    if (!btn || !menu) return;
+
+    let open = false;
+
+    btn.addEventListener('click', () => {
+      open = !open;
+      btn.classList.toggle('open', open);
+      menu.classList.toggle('open', open);
+      btn.setAttribute('aria-expanded', String(open));
+      menu.setAttribute('aria-hidden', String(!open));
+      document.body.style.overflow = open ? 'hidden' : '';
+
+      if (open && window.gsap) {
+        gsap.fromTo('.mobile-nav-link',
+          { y: 30, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.5, ease: 'power3.out', stagger: 0.06, delay: 0.05 }
+        );
+      }
+    });
+
+    menu.querySelectorAll('.mobile-nav-link').forEach(link => {
+      link.addEventListener('click', () => {
+        open = false;
+        btn.classList.remove('open');
+        menu.classList.remove('open');
+        btn.setAttribute('aria-expanded', 'false');
+        menu.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+      });
+    });
+  }
+
+  /* ────────────────────────────────────────────────────────────────
+     INTERCEPT NAV CLICKS
+     ──────────────────────────────────────────────────────────────── */
+  function interceptNavLinks () {
+    document.querySelectorAll('[data-nav-link]').forEach(link => {
+      link.addEventListener('click', e => {
+        const href = link.getAttribute('href');
+        if (!href || href.startsWith('#') || href.startsWith('http')) return;
+
+        /* Same page? Do nothing */
+        const current = getActivePage();
+        if (href === current || (href === 'index.html' && current === '')) return;
+
+        e.preventDefault();
+        sessionStorage.setItem('ct-active', '1');
+        consciousnessShift(href);
+      });
+    });
+  }
+
+  /* ────────────────────────────────────────────────────────────────
+     AVAILABILITY STATUS (from Supabase)
+     ──────────────────────────────────────────────────────────────── */
+  async function loadAvailability () {
+    const dot  = document.getElementById('nav-dot');
+    const text = document.getElementById('nav-availability-text');
+    if (!dot || !text) return;
+
+    try {
+      if (typeof supabase === 'undefined') return;
+
+      const { data } = await supabase
+        .from('site_settings')
+        .select('value')
+        .eq('key', 'availability_status')
+        .maybeSingle();
+
+      if (!data) return;
+      const status = data.value;
+
+      if (status === 'available') {
+        dot.className  = 'nav-dot';
+        text.textContent = 'Available';
+      } else if (status === 'limited') {
+        dot.className  = 'nav-dot amber';
+        text.textContent = 'Limited';
+      } else {
+        dot.className  = 'nav-dot';
+        dot.style.background = 'var(--gray-3)';
+        dot.style.boxShadow  = 'none';
+        dot.style.animation  = 'none';
+        text.textContent = 'Unavailable';
+      }
+    } catch (_) { /* silently fail */ }
+  }
+
+  /* ────────────────────────────────────────────────────────────────
+     CLOCK (Lagos Time)
+     ──────────────────────────────────────────────────────────────── */
+  function startClock (el) {
+    if (!el) return;
+    const update = () => {
+      const now = new Date().toLocaleTimeString('en-GB', {
+        timeZone: 'Africa/Lagos',
+        hour: '2-digit', minute: '2-digit', second: '2-digit'
+      });
+      el.textContent = `LOS ${now}`;
+    };
+    update();
+    setInterval(update, 1000);
+  }
+
+  /* ────────────────────────────────────────────────────────────────
+     SCROLL TO TOP
+     ──────────────────────────────────────────────────────────────── */
+  function initScrollTop () {
+    const btn = document.querySelector('.scroll-top');
+    if (!btn) return;
+
+    window.addEventListener('scroll', () => {
+      btn.classList.toggle('visible', window.scrollY > 400);
+    }, { passive: true });
+
+    btn.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }
+
+  /* ────────────────────────────────────────────────────────────────
+     INIT — runs on every page
+     ──────────────────────────────────────────────────────────────── */
+  function init () {
+    buildNav();
+    buildCursor();
+    buildTransitionDOM();
     initNavScroll();
-    initMobileMenu();
-    initThemeToggle();
-    showNavImmediately();
-    await initGlobalStyles();
+    initHamburger();
+    interceptNavLinks();
+    loadAvailability();
+    initScrollTop();
+
+    /* Page-in reveal if we came from a transition */
+    if (document.readyState === 'complete') {
+      pageRevealIn();
+    } else {
+      window.addEventListener('load', pageRevealIn);
+    }
+
+    /* Expose helpers globally */
+    window.JX = window.JX || {};
+    window.JX.nav = {
+      startClock,
+      loadAvailability,
+    };
   }
 
+  /* Run immediately when DOM is ready */
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initNav);
+    document.addEventListener('DOMContentLoaded', init);
   } else {
-    initNav();
+    init();
   }
+
 })();

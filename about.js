@@ -1,215 +1,195 @@
-/* =========================================
-   JX Design & Dev — About Page Script
-   about.js — Photo Shuffle Animations
-   ========================================= */
+/* ================================================================
+   JX UNIVERSE — about.js v3.0
+   The Story - Page specific logic & Living Portrait Fragmentation
+   ================================================================ */
 
-document.addEventListener('DOMContentLoaded', () => {
-  // --- Dynamic Content Fetch ---
-  async function initDynamicAboutPage() {
-    if (!window.initSupabase || !window.supabaseClient) return;
-    await window.initSupabase();
-    
-    try {
-      const { data, error } = await window.supabaseClient
-        .from('site_settings')
-        .select('about_content')
-        .limit(1)
-        .single();
-        
-      if (data && data.about_content && Object.keys(data.about_content).length > 0) {
-        const a = data.about_content;
-        
-        const heading = document.getElementById('about-page-heading');
-        if (heading) {
-          heading.innerHTML = `<span>${a.h1 || ''} <span class="accent">✦</span></span>
-          <span>${a.h2 || ''}</span>
-          <span>${a.h3 || ''}</span>`;
-        }
-        
-        const subtext = document.getElementById('about-page-subtext');
-        if (subtext && a.desc) {
-          subtext.innerHTML = a.desc.replace(/\n/g, '<br/>');
-        }
-        
-        const expGrid = document.getElementById('about-page-exp-grid');
-        if (expGrid && a.experience && Array.isArray(a.experience)) {
-          // Keep existing innerHTML or replace? Admin panel overwrites the whole array.
-          // Let's replace the whole grid content with dynamic.
-          expGrid.innerHTML = '';
-          a.experience.forEach(exp => {
-            const card = document.createElement('div');
-            card.className = 'ap-exp-card';
-            
-            // Format bullet points
-            const bullets = exp.desc.split('\n').filter(s => s.trim()).map(s => `<li>${s.trim()}</li>`).join('');
-            
-            card.innerHTML = `
-              <div class="ap-exp-header">
-                <div>
-                  <div class="ap-exp-role">${exp.role}</div>
-                  <div class="ap-exp-company">${exp.company}</div>
-                </div>
-                <div class="ap-exp-date">${exp.dateRange}</div>
-              </div>
-              <ul class="ap-exp-list">
-                ${bullets}
-              </ul>
-            `;
-            expGrid.appendChild(card);
-          });
-        }
-      }
-    } catch (err) {
-      console.warn("Could not load dynamic about page content:", err);
+'use strict';
+
+(function () {
+
+  /* Page reveal */
+  function revealPage () {
+    const page = document.getElementById('page');
+    if (!page) return;
+
+    if (window.gsap) {
+      gsap.to(page, { opacity: 1, duration: 0.7, ease: 'power2.out' });
+
+      /* Hero cascade */
+      const tl = gsap.timeline({ delay: 0.1 });
+      tl.to('#ah-label', { opacity: 1, duration: 0.6, ease: 'power3.out' })
+        .to('#ah-title',  { y: 0, opacity: 1, duration: 1, ease: 'expo.out' }, '-=0.3')
+        .to('#ah-tag',    { opacity: 1, duration: 0.7, ease: 'power2.out' }, '-=0.5');
+
+    } else {
+      page.style.opacity = '1';
     }
   }
 
-  // Fire dynamic fetch immediately
-  initDynamicAboutPage();
+  /* Scroll animations */
+  function initScrollAnimations () {
+    if (!window.gsap || !window.ScrollTrigger) return;
+    gsap.registerPlugin(ScrollTrigger);
 
-  if (typeof gsap === 'undefined') return;
+    document.querySelectorAll('.reveal, .reveal-scale, .reveal-left, .reveal-right').forEach(el => {
+      const isScale = el.classList.contains('reveal-scale');
+      const from = isScale ? { opacity: 0, scale: 0.94 } : { opacity: 0, y: 40 };
+      const to   = isScale ? { opacity: 1, scale: 1 }     : { opacity: 1, y: 0 };
 
-  const deck = document.querySelector('.ap-deck');
-  if (!deck) return;
-
-  const cards = Array.from(deck.querySelectorAll('.ap-card'));
-  if (cards.length === 0) return;
-
-  // Track the visual order: [front, second, third, back]
-  let order = [...cards];
-  let isHovered = false;
-  let isAnimating = false;
-
-  // Smaller spread so it doesn't leave the hero area
-  const spreadConfigs = [
-    { x: -45, rotation: -8 }, 
-    { x: -15, rotation: -3 },
-    { x: 15, rotation: 3 },
-    { x: 45, rotation: 8 }
-  ];
-
-  function updateZIndex() {
-    order.forEach((card, idx) => {
-      card.style.zIndex = order.length - idx;
-    });
-  }
-  updateZIndex(); // initial setup
-
-  function applyHoverState(duration = 0.5) {
-    order.forEach((card, i) => {
-      const configIdx = order.length <= 2 ? i + 1 : (i % spreadConfigs.length);
-      const conf = spreadConfigs[configIdx];
-      
-      gsap.to(card, {
-        x: conf.x,
-        y: -10 + Math.abs(conf.rotation),
-        rotation: conf.rotation,
-        scale: 1,
-        duration: duration,
-        ease: 'back.out(1.5)',
-        overwrite: true
+      gsap.fromTo(el, from, {
+        ...to, duration: 0.9, ease: 'power3.out',
+        scrollTrigger: { trigger: el, start: 'top 88%', once: true }
       });
     });
   }
 
-  function applyCollapsedState(duration = 0.4) {
-    order.forEach((card) => {
-      // Very slight random organic rotation when collapsed
-      const randomRot = (Math.random() - 0.5) * 4;
-      gsap.to(card, {
-        x: 0,
-        y: 0,
-        rotation: randomRot,
-        scale: 1,
-        duration: duration,
-        ease: 'power3.out',
-        overwrite: true
-      });
-    });
-  }
+  /* Living Portrait: Canvas2D Particle Fragmentation (WOW #4) */
+  function initLivingPortrait () {
+    const wrap   = document.getElementById('portrait-wrap');
+    const img    = document.getElementById('portrait-img');
+    const canvas = document.getElementById('portrait-canvas');
+    if (!canvas || !img) return;
 
-  // Initial organic settled state
-  applyCollapsedState(0);
+    // We keep the setup in a function to handle window resizing
+    const setup = () => {
+      const W = wrap.offsetWidth;
+      const H = wrap.offsetHeight;
+      canvas.width  = W;
+      canvas.height = H;
+      const ctx = canvas.getContext('2d', { willReadFrequently: true });
 
-  deck.addEventListener('mouseenter', () => {
-    isHovered = true;
-    if (!isAnimating) applyHoverState();
-  });
+      /* Off-screen source */
+      const src = document.createElement('canvas');
+      src.width  = W;
+      src.height = H;
+      const sctx = src.getContext('2d');
+      sctx.drawImage(img, 0, 0, W, H);
+      const srcData = sctx.getImageData(0, 0, W, H).data;
 
-  deck.addEventListener('mouseleave', () => {
-    isHovered = false;
-    if (!isAnimating) applyCollapsedState();
-  });
-
-  // Perform a shuffle action
-  deck.addEventListener('click', () => {
-    if (isAnimating) return;
-    isAnimating = true;
-
-    // Grab the current top card
-    const frontCard = order[0];
-
-    // 1. Throw it to the right
-    gsap.to(frontCard, {
-      x: 180,           // push out right
-      y: 40,            // drop down slightly
-      rotation: 25,
-      scale: 0.95,
-      duration: 0.35,
-      ease: 'power2.in',
-      onComplete: () => {
-        // 2. Mathematically send to back
-        order.push(order.shift());
-        updateZIndex();
-
-        // 3. Bring everything back to normal 
-        if (isHovered) {
-          applyHoverState(0.4);
-        } else {
-          applyCollapsedState(0.4);
-        }
-
-        // Release animation lock slightly before it visually finishes
-        setTimeout(() => { isAnimating = false; }, 300);
-      }
-    });
-
-    // Also adjust the remaining cards immediately while front card flies out
-    // They shift up to fill the visual space. We shift a temporary array to calculate.
-    let tempArray = [...order];
-    tempArray.push(tempArray.shift());
-    
-    // Animate the remaining cards to their NEW positions slightly early for fluidity
-    for (let i = 0; i < tempArray.length - 1; i++) {
-        const c = tempArray[i];
-        if (isHovered) {
-            const conf = spreadConfigs[i % spreadConfigs.length];
-            gsap.to(c, { x: conf.x, y: -10 + Math.abs(conf.rotation), rotation: conf.rotation, duration: 0.4, ease: 'power2.out' });
-        } else {
-            const randomRot = (Math.random() - 0.5) * 4;
-            gsap.to(c, { x: 0, y: 0, rotation: randomRot, duration: 0.4, ease: 'power2.out' });
-        }
-    }
-  });
-
-  // Fade in elements on scroll
-  if (typeof ScrollTrigger !== 'undefined') {
-    const fadeElements = document.querySelectorAll('.ap-timeline-item, .ap-exp-card, .ap-acc-line');
-    fadeElements.forEach((el) => {
-      gsap.fromTo(el, 
-        { opacity: 0, y: 30 },
-        {
-          opacity: 1, 
-          y: 0, 
-          duration: 0.8,
-          ease: 'power2.out',
-          scrollTrigger: {
-            trigger: el,
-            start: 'top 85%',
-            once: true
+      // Create particles based on resolution density
+      const step = 4; // Lower is higher density but slower
+      const particles = [];
+      for (let y = 0; y < H; y += step) {
+        for (let x = 0; x < W; x += step) {
+          const i = (y * W + x) * 4;
+          const r = srcData[i];
+          const g = srcData[i + 1];
+          const b = srcData[i + 2];
+          const a = srcData[i + 3];
+          if (a > 10) { // only create particles for non-transparent pixels
+            particles.push({
+              ox: x, oy: y,      // original
+              x: x, y: y,        // current
+              vx: 0, vy: 0,      // velocity
+              color: `rgba(${r},${g},${b},${a/255})`,
+              size: step
+            });
           }
         }
-      );
-    });
+      }
+
+      let mx = -1000, my = -1000;
+      let active = false;
+
+      wrap.addEventListener('mousemove', e => {
+        const r  = wrap.getBoundingClientRect();
+        mx = e.clientX - r.left;
+        my = e.clientY - r.top;
+        active = true;
+      });
+      wrap.addEventListener('mouseleave', () => { 
+        active = false;
+        mx = -1000;
+        my = -1000;
+      });
+
+      let mouseRadius = 80;
+      let friction = 0.85;
+      let ease = 0.1;
+      let isRunning = true;
+
+      function draw () {
+        if (!isRunning) return;
+        requestAnimationFrame(draw);
+        ctx.clearRect(0, 0, W, H);
+
+        for (let i = 0; i < particles.length; i++) {
+          const p = particles[i];
+          
+          let dx = mx - p.x;
+          let dy = my - p.y;
+          let dist = Math.sqrt(dx * dx + dy * dy);
+          
+          let forceX = 0;
+          let forceY = 0;
+
+          // If mouse is near, repel particles
+          if (active && dist < mouseRadius) {
+            let force = (mouseRadius - dist) / mouseRadius;
+            let angle = Math.atan2(dy, dx);
+            forceX = -Math.cos(angle) * force * 15;
+            forceY = -Math.sin(angle) * force * 15;
+          }
+
+          p.vx += forceX;
+          p.vy += forceY;
+          
+          // Return to original position
+          p.vx += (p.ox - p.x) * ease;
+          p.vy += (p.oy - p.y) * ease;
+
+          // Apply friction
+          p.vx *= friction;
+          p.vy *= friction;
+
+          p.x += p.vx;
+          p.y += p.vy;
+
+          ctx.fillStyle = p.color;
+          ctx.fillRect(p.x, p.y, p.size, p.size);
+        }
+      }
+
+      draw();
+
+      /* Handle basic resize by completely re-initializing */
+      let resizeTimer;
+      window.addEventListener('resize', () => {
+        isRunning = false; // Stop current loop
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+          setup(); 
+        }, 300);
+      }, { once: true });
+    };
+
+    if (img.complete) { setup(); } else { img.onload = setup; }
   }
-});
+
+  /* Lenis smooth scroll */
+  function initLenis () {
+    if (!window.Lenis) return;
+    const lenis = new Lenis({ duration: 1.4, smoothWheel: true });
+    const raf = t => { lenis.raf(t); requestAnimationFrame(raf); };
+    requestAnimationFrame(raf);
+    if (window.ScrollTrigger) {
+      lenis.on('scroll', ScrollTrigger.update);
+      if (window.gsap) gsap.ticker.lagSmoothing(0);
+    }
+  }
+
+  /* Boot */
+  function init () {
+    revealPage();
+    initScrollAnimations();
+    initLivingPortrait();
+    initLenis();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+
+})();

@@ -3,431 +3,504 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="About Okezie Ferdinand — Profile, Journey, and Professional Experience.">
-  <meta name="author" content="Okezie Ferdinand">
+  <meta name="description" content="The Story of Okezie Ferdinand, JX. Artist, technologist, designer, builder. From Lagos to the future.">
   <meta name="theme-color" content="#000000">
-  <title>About — JX Design & Dev | Okezie Ferdinand</title>
+  <title>The Story | Okezie Ferdinand | JX Design & Dev</title>
 
-  <!-- Google Fonts -->
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&family=Playfair+Display:ital,wght@1,900&display=swap" rel="stylesheet">
 
-  <!-- Stylesheet -->
-  <link rel="stylesheet" href="style.css?v=1.2">
-
-  <!-- GSAP 3 -->
+  <!-- GSAP -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
-  <!-- GSAP ScrollTrigger (required for about.js fade ins) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
-  <!-- Lenis Smooth Scroll -->
+  <!-- Lenis -->
   <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js" defer></script>
-
-  <!-- Shared Nav Script -->
-  <script src="nav.js" defer></script>
-  <!-- Page Utilities -->
-  <script src="page.js" defer></script>
-  <!-- About Specific Interactions -->
-  <script src="about.js" defer></script>
   <!-- Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="supabase.js"></script>
+
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    /* ── Page wrapper ── */
+    #page { opacity: 0; }
+
+    /* ── About Hero ── */
+    .about-hero {
+      min-height: 80svh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 0 var(--s-8) var(--s-20);
+      padding-top: 140px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .about-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 60% 60% at 80% 20%, rgba(0,255,65,0.04) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .about-hero-chapter {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      letter-spacing: 0.2em;
+      color: var(--green);
+      text-transform: uppercase;
+      margin-bottom: var(--s-4);
+      opacity: 0;
+    }
+
+    .about-hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(4rem, 12vw, 10rem);
+      font-weight: 800;
+      line-height: 0.9;
+      color: var(--white);
+      margin: 0 0 var(--s-8);
+      opacity: 0;
+      transform: translateY(60px);
+    }
+
+    .about-hero-title em {
+      font-style: italic;
+      color: var(--green);
+      font-family: 'Playfair Display', serif;
+    }
+
+    .about-hero-tagline {
+      font-family: var(--font-body);
+      font-size: var(--text-lg);
+      color: var(--gray-2);
+      max-width: 480px;
+      line-height: var(--lead-relaxed);
+      opacity: 0;
+    }
+
+    /* ── Portrait Section ── */
+    .portrait-section {
+      padding: var(--s-20) var(--s-8);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--s-16);
+      align-items: center;
+      max-width: var(--container-xl);
+      margin: 0 auto;
+    }
+
+    @media (max-width: 768px) {
+      .portrait-section { grid-template-columns: 1fr; }
+    }
+
+    .portrait-wrapper {
+      position: relative;
+      aspect-ratio: 4/5;
+      max-width: 420px;
+    }
+
+    .portrait-wrapper canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: 2px;
+      cursor: none;
+    }
+
+    .portrait-wrapper img.portrait-base {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 2px;
+      display: block;
+      filter: grayscale(20%) contrast(1.05);
+    }
+
+    .portrait-frame {
+      position: absolute;
+      inset: -12px;
+      border: 1px solid var(--green-dim);
+      border-radius: 4px;
+      pointer-events: none;
+    }
+
+    .portrait-frame::before {
+      content: '';
+      position: absolute;
+      top: -1px;
+      left: 20px;
+      right: 20px;
+      height: 2px;
+      background: var(--green);
+      box-shadow: 0 0 20px var(--green);
+    }
+
+    .portrait-label {
+      position: absolute;
+      bottom: -36px;
+      left: 0;
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      color: var(--green);
+      letter-spacing: 0.15em;
+    }
+
+    .portrait-text {
+      display: flex;
+      flex-direction: column;
+      gap: var(--s-6);
+    }
+
+    .portrait-text blockquote {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: clamp(1.5rem, 3vw, 2.2rem);
+      color: var(--white);
+      line-height: 1.4;
+      border-left: 2px solid var(--green);
+      padding-left: var(--s-6);
+      margin: 0 0 var(--s-4);
+    }
+
+    .portrait-text p {
+      font-family: var(--font-body);
+      font-size: var(--text-base);
+      color: var(--gray-2);
+      line-height: var(--lead-relaxed);
+    }
+
+    /* ── Stats Bar ── */
+    .stats-bar {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      margin: var(--s-8) 0;
+    }
+
+    @media (max-width: 600px) {
+      .stats-bar { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    .stat-item {
+      padding: var(--s-8) var(--s-6);
+      background: var(--bg);
+      text-align: center;
+    }
+
+    .stat-num {
+      font-family: var(--font-display);
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 800;
+      color: var(--green);
+      line-height: 1;
+      display: block;
+    }
+
+    .stat-label {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      color: var(--gray-3);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-top: var(--s-2);
+      display: block;
+    }
+
+    /* ── Chapters ── */
+    .chapters-section {
+      padding: var(--s-20) var(--s-8);
+      max-width: var(--container-xl);
+      margin: 0 auto;
+    }
+
+    .chapter {
+      display: grid;
+      grid-template-columns: 80px 1fr;
+      gap: var(--s-10);
+      padding: var(--s-12) 0;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+    }
+
+    @media (max-width: 600px) {
+      .chapter { grid-template-columns: 1fr; gap: var(--s-4); }
+    }
+
+    .chapter:last-child { border-bottom: none; }
+
+    .chapter-num {
+      font-family: var(--font-mono);
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 500;
+      color: var(--green-dim);
+      line-height: 1;
+      position: relative;
+      top: 4px;
+    }
+
+    .chapter-content {}
+
+    .chapter-era {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      color: var(--amber);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin-bottom: var(--s-3);
+    }
+
+    .chapter-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.8rem, 4vw, 3rem);
+      font-weight: 800;
+      color: var(--white);
+      line-height: 1.1;
+      margin: 0 0 var(--s-4);
+    }
+
+    .chapter-body {
+      font-family: var(--font-body);
+      font-size: var(--text-base);
+      color: var(--gray-2);
+      line-height: var(--lead-relaxed);
+      max-width: 620px;
+    }
+
+    .chapter-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-2);
+      margin-top: var(--s-5);
+    }
+
+    /* ── Philosophy Section ── */
+    .philosophy-section {
+      padding: var(--s-24) var(--s-8);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .philosophy-section::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 50% 60% at 50% 50%, rgba(0,255,65,0.05) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .philosophy-quote {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: clamp(2rem, 5vw, 4rem);
+      color: var(--white);
+      line-height: 1.3;
+      max-width: 900px;
+      margin: 0 auto var(--s-8);
+      position: relative;
+      z-index: 1;
+    }
+
+    .philosophy-quote span {
+      color: var(--green);
+    }
+
+    .philosophy-by {
+      font-family: var(--font-mono);
+      font-size: var(--text-sm);
+      color: var(--gray-3);
+      letter-spacing: 0.15em;
+      position: relative;
+      z-index: 1;
+    }
+  </style>
 </head>
 <body>
+  <div id="page">
 
-  <!-- Navigation -->
-  <nav class="nav" id="nav">
-    <div class="nav-logo">
-      <svg class="jx-logo" viewBox="0 0 72 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="JX"><path class="jx-stroke jx-j" d="M8 2H22V22Q22 30 14 30Q6 30 6 22"/><path class="jx-stroke jx-x1" d="M36 2L60 30"/><path class="jx-stroke jx-x2" d="M60 2L36 30"/></svg>
-      <span class="logo-text">Design &amp; Dev</span>
-    </div>
-    <ul class="nav-links">
-      <li><a href="index.html" class="nav-link">Home</a></li>
-      <li><a href="work.html" class="nav-link">Work</a></li>
-      <li><a href="about.html" class="nav-link active">About</a></li>
-      <li><a href="services.html" class="nav-link">Services</a></li>
-      <li><a href="contact.html" class="nav-link cta-link">Let's Talk</a></li>
-    </ul>
-    <button class="theme-toggle" id="theme-toggle">
-      <span class="theme-icon">◐</span>
-    </button>
-    <div class="nav-menu" id="nav-menu">
-      <span></span><span></span><span></span>
-    </div>
-  </nav>
-
-  <!-- Mobile Menu Overlay -->
-  <div class="mobile-menu" id="mobile-menu">
-    <ul class="mobile-menu-links">
-      <li><a href="index.html" class="mobile-link">Home</a></li>
-      <li><a href="work.html" class="mobile-link">Work</a></li>
-      <li><a href="about.html" class="mobile-link active">About</a></li>
-      <li><a href="services.html" class="mobile-link">Services</a></li>
-      <li><a href="contact.html" class="mobile-link">Let's Talk</a></li>
-    </ul>
-  </div>
-
-  <div class="about-page-wrap">
-    
-    <!-- SECTION 1 — HERO BIO -->
-    <section class="ap-hero">
-      <div class="ap-hero-left">
-        <h1 class="ap-heading" id="about-page-heading">
-          <span>I'm Okezie. <span class="accent">✦</span></span>
-          <span>System Designer.</span>
-          <span>Builder of Things.</span>
+    <!-- ── HERO ── -->
+    <section class="about-hero" id="about-hero">
+      <div class="container" style="max-width: var(--container-xl); margin: 0 auto;">
+        <p class="about-hero-chapter" id="ah-label">The Story: Chapter One through Four</p>
+        <h1 class="about-hero-title" id="ah-title">
+          I didn't just<br>grow up.<br>I <em>leveled up.</em>
         </h1>
-        <p class="ap-subtext" id="about-page-subtext">
-          Product Designer & No-Code Developer based in Nigeria. I design interfaces, build products, automate workflows, and I'm learning to secure them. My mission: make life easier, smarter and better through systems.
+        <p class="about-hero-tagline" id="ah-tag">
+          Artist. Technologist. Designer. Builder. From Lagos, with a vision that has no ceiling.
         </p>
       </div>
-      <div class="ap-hero-right">
-        <div class="ap-deck" id="hero-deck" style="box-shadow: 0 0 80px var(--neon-dim); border-radius: 12px;">
-          <!-- Using DOM order for z-index initially, JS will take over inline styles -->
-          <div class="ap-card" style="background-image: url('assets/images/okezie-1.png'); z-index: 4;"></div>
-          <div class="ap-card" style="background-image: url('assets/images/okezie-designer.png'); z-index: 3;"></div>
-          <div class="ap-card" style="background-image: url('assets/images/okezie-coder.png'); background-color: #111; z-index: 2;"></div>
-          <div class="ap-card" style="background-image: url('assets/images/okezie-security.png'); background-color: #000; z-index: 1;"></div>
-          <div class="ap-deck-hint">Click to shuffle deck</div>
-        </div>
-      </div>
     </section>
 
-    <!-- SECTION 3 — MY STORY -->
-    <section class="ap-section ap-story">
-      <div class="ap-section-header">
-        <h2 class="ap-section-title">The Journey ✦</h2>
-      </div>
-      <div class="ap-timeline">
-        
-        <div class="ap-timeline-item">
-          <div class="ap-tl-year">2020</div>
-          <div class="ap-tl-content">
-            <h3 class="tl-title">Started JX Designs (cartoon art era)</h3>
-            <p class="tl-desc">Transforming photos into cartoon art using MediBang and Adobe on mobile. Brand colors: Red & Black.</p>
-          </div>
-        </div>
-
-        <div class="ap-timeline-item">
-          <div class="ap-tl-year">2023</div>
-          <div class="ap-tl-content">
-            <h3 class="tl-title">Discovered UI/UX Design</h3>
-            <p class="tl-desc">Enrolled in UI/UX for Beginners. Started Figma. Everything changed.</p>
-          </div>
-        </div>
-
-        <div class="ap-timeline-item">
-          <div class="ap-tl-year">May 2024</div>
-          <div class="ap-tl-content">
-            <h3 class="tl-title">Went Freelance</h3>
-            <p class="tl-desc">Launched as Product Designer & No-Code Developer. Delivered 7+ MVPs, SaaS dashboards and landing pages for startups across 5 countries.</p>
-          </div>
-        </div>
-
-        <div class="ap-timeline-item">
-          <div class="ap-tl-year">Aug 2024</div>
-          <div class="ap-tl-content">
-            <h3 class="tl-title">Became a Tutor</h3>
-            <p class="tl-desc">Joined Team Xcel / De-Clavem Empire. Trained 10+ students in UI/UX, Figma, Bubble.io and design thinking.</p>
-          </div>
-        </div>
-
-        <div class="ap-timeline-item">
-          <div class="ap-tl-year">Nov 2024</div>
-          <div class="ap-tl-content">
-            <h3 class="tl-title">JX Design & Dev Rebranded</h3>
-            <p class="tl-desc">New brand. Neon Green & Black. Expanded into automation and systems.</p>
-          </div>
-        </div>
-
-        <div class="ap-timeline-item">
-          <div class="ap-tl-year">Dec 2024</div>
-          <div class="ap-tl-content">
-            <h3 class="tl-title">Joined Rendr Web Solutions</h3>
-            <p class="tl-desc">UI/UX Design Correction Specialist. Handoff-ready Figma files for dev teams.</p>
-          </div>
-        </div>
-
-        <div class="ap-timeline-item">
-          <div class="ap-tl-year">May 2025</div>
-          <div class="ap-tl-content">
-            <h3 class="tl-title">Interned at GettyVersity</h3>
-            <p class="tl-desc">Redesigned ClickEarn dashboard and UX corrections for main learning platform.</p>
-          </div>
-        </div>
-
-        <div class="ap-timeline-item">
-          <div class="ap-tl-year">2025+</div>
-          <div class="ap-tl-content">
-            <h3 class="tl-title">Building Toward Systems</h3>
-            <p class="tl-desc">Actively learning Cybersecurity. Automating with n8n. Building JX into a full systems design & build studio.</p>
-          </div>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- SECTION 4 — WORK EXPERIENCE -->
-    <section class="ap-section ap-experience">
-      <div class="ap-section-header">
-        <h2 class="ap-section-title">Experience ✦</h2>
-      </div>
-      <div class="ap-exp-grid" id="about-page-exp-grid">
-
-        <div class="ap-exp-card">
-          <div class="ap-exp-header">
-            <div>
-              <div class="ap-exp-role">Freelance Product Designer & No-Code Developer</div>
-              <div class="ap-exp-company">JX Design & Dev</div>
-            </div>
-            <div class="ap-exp-date">May 2024 — Present</div>
-          </div>
-          <ul class="ap-exp-list">
-            <li>7+ MVPs, SaaS dashboards, landing pages</li>
-            <li>Cut development costs by 60% for clients</li>
-            <li>25-30% engagement improvement</li>
-            <li>CRM + Airtable + Email automation</li>
-            <li>Clients across Australia, SA, India, Nigeria, US</li>
-          </ul>
-        </div>
-
-        <div class="ap-exp-card">
-          <div class="ap-exp-header">
-            <div>
-              <div class="ap-exp-role">Product Design Tutor</div>
-              <div class="ap-exp-company">Team Xcel / De-Clavem Empire</div>
-            </div>
-            <div class="ap-exp-date">Aug 2024 — Present</div>
-          </div>
-          <ul class="ap-exp-list">
-            <li>Trained 10+ students in UI/UX</li>
-            <li>Figma, Canva, Bubble.io curriculum</li>
-            <li>Wireframes, portfolios, prototyping</li>
-          </ul>
-        </div>
-
-        <div class="ap-exp-card">
-          <div class="ap-exp-header">
-            <div>
-              <div class="ap-exp-role">Freelance Designer</div>
-              <div class="ap-exp-company">Rendr Web Solutions</div>
-            </div>
-            <div class="ap-exp-date">Dec 2024 — May 2025</div>
-          </div>
-          <ul class="ap-exp-list">
-            <li>UI/UX Design Correction Specialist</li>
-            <li>Design systems, handoff-ready files</li>
-            <li>Visual consistency across products</li>
-          </ul>
-        </div>
-
-        <div class="ap-exp-card">
-          <div class="ap-exp-header">
-            <div>
-              <div class="ap-exp-role">Product Design Intern</div>
-              <div class="ap-exp-company">GettyVersity</div>
-            </div>
-            <div class="ap-exp-date">May 2025 — Aug 2025</div>
-          </div>
-          <ul class="ap-exp-list">
-            <li>Redesigned ClickEarn dashboard</li>
-            <li>UX corrections for learning platform</li>
-            <li>Collaborated with dev team</li>
-          </ul>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- SECTION 5 — EDUCATION & CERTIFICATIONS -->
-    <section class="ap-section ap-education">
-      <div class="ap-section-header">
-        <h2 class="ap-section-title">Academics ✦</h2>
-      </div>
-      <div class="ap-split">
-        <div class="ap-split-col">
-          <h3>Education</h3>
-          <div class="ap-edu-item">
-            <div class="ap-edu-school">Federal University of Technology Owerri</div>
-            <div class="ap-edu-degree">Bachelor of Science</div>
-            <div class="ap-edu-date">Jan 2019 — May 2024</div>
-          </div>
-        </div>
-        <div class="ap-split-col">
-          <h3>Certifications</h3>
-          <div class="ap-edu-item">
-            <div class="ap-edu-school">Webflow 101</div>
-            <div class="ap-edu-degree">Webflow University</div>
-            <div class="ap-edu-date">Nov 2024</div>
-          </div>
-          <div class="ap-edu-item">
-            <div class="ap-edu-school">UI/UX for Beginners</div>
-            <div class="ap-edu-degree">Great Learning</div>
-            <div class="ap-edu-date">Jul 2023</div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- SECTION 6 — TOOL STACK -->
-    <section class="ap-section ap-tools">
-      <div class="ap-section-header">
-        <h2 class="ap-section-title">Tool Stack ✦</h2>
-      </div>
-      
-      <div class="ap-tools-group">
-        <div class="ap-tools-label">Design Tools</div>
-        <div class="ap-tools-grid">
-          <div class="ap-tool-icon-wrap" title="Figma">
-            <img src="https://www.google.com/s2/favicons?domain=figma.com&sz=128" alt="Figma" class="ap-tool-logo">
-          </div>
-          <div class="ap-tool-icon-wrap" title="Framer">
-            <img src="https://www.google.com/s2/favicons?domain=framer.com&sz=128" alt="Framer" class="ap-tool-logo">
-          </div>
-          <div class="ap-tool-icon-wrap" title="Canva">
-            <img src="https://www.google.com/s2/favicons?domain=canva.com&sz=128" alt="Canva" class="ap-tool-logo">
-          </div>
-        </div>
+    <!-- ── LIVING PORTRAIT ── -->
+    <section class="portrait-section">
+      <div class="portrait-wrapper reveal-scale" id="portrait-wrap">
+        <img src="assets/images/okezie-2.png" alt="Okezie Ferdinand" class="portrait-base" id="portrait-img" crossorigin="anonymous">
+        <canvas id="portrait-canvas"></canvas>
+        <div class="portrait-frame"></div>
+        <span class="portrait-label">// OKEZIE.FERDINAND | IDENTITY_SCAN_COMPLETE</span>
       </div>
 
-      <div class="ap-tools-group">
-        <div class="ap-tools-label">Build / No-Code</div>
-        <div class="ap-tools-grid">
-          <div class="ap-tool-icon-wrap" title="Webflow">
-            <img src="https://www.google.com/s2/favicons?domain=webflow.com&sz=128" alt="Webflow" class="ap-tool-logo">
-          </div>
-          <div class="ap-tool-icon-wrap" title="Replit">
-            <img src="https://www.google.com/s2/favicons?domain=replit.com&sz=128" alt="Replit" class="ap-tool-logo">
-          </div>
-          <div class="ap-tool-icon-wrap" title="Bubble">
-            <img src="https://www.google.com/s2/favicons?domain=bubble.io&sz=128" alt="Bubble" class="ap-tool-logo">
-          </div>
-          <div class="ap-tool-icon-wrap" title="Lovable">
-            <img src="https://www.google.com/s2/favicons?domain=lovable.dev&sz=128" alt="Lovable" class="ap-tool-logo">
-          </div>
-          <div class="ap-tool-icon-wrap" title="Bolt">
-            <img src="https://www.google.com/s2/favicons?domain=bolt.new&sz=128" alt="Bolt" class="ap-tool-logo">
-          </div>
-          <div class="ap-tool-icon-wrap" title="Antigravity">
-            <!-- Representing Antigravity as a neat 3D rocket emoji fallback since it doesn't have a public domain logo -->
-            <img src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f680/512.webp" alt="Antigravity" class="ap-tool-logo">
-          </div>
-        </div>
-      </div>
-
-      <div class="ap-tools-group">
-        <div class="ap-tools-label">Automation</div>
-        <div class="ap-tools-grid">
-          <div class="ap-tool-icon-wrap" title="n8n">
-            <img src="https://www.google.com/s2/favicons?domain=n8n.io&sz=128" alt="n8n" class="ap-tool-logo">
-          </div>
-          <div class="ap-tool-icon-wrap" title="Airtable">
-            <img src="https://www.google.com/s2/favicons?domain=airtable.com&sz=128" alt="Airtable" class="ap-tool-logo">
-          </div>
-          <div class="ap-tool-icon-wrap" title="Zapier">
-            <img src="https://www.google.com/s2/favicons?domain=zapier.com&sz=128" alt="Zapier" class="ap-tool-logo">
-          </div>
-        </div>
-      </div>
-
-      <div class="ap-tools-group">
-        <div class="ap-tools-label">Security / Systems</div>
-        <div class="ap-tools-grid">
-          <div class="ap-tool-icon-wrap" title="Linux">
-            <img src="https://www.google.com/s2/favicons?domain=linux.org&sz=128" alt="Linux" class="ap-tool-logo">
-          </div>
-          <div class="ap-tool-icon-wrap" title="Kali Linux">
-            <img src="https://www.google.com/s2/favicons?domain=kali.org&sz=128" alt="Kali Linux" class="ap-tool-logo">
-          </div>
-        </div>
-      </div>
-
-      <div class="ap-tools-group">
-        <div class="ap-tools-label">AI Tools</div>
-        <div class="ap-tools-grid">
-          <div class="ap-tool-icon-wrap" title="Claude">
-            <img src="https://www.google.com/s2/favicons?domain=claude.ai&sz=128" alt="Claude" class="ap-tool-logo">
-          </div>
-          <div class="ap-tool-icon-wrap" title="ChatGPT">
-            <img src="https://www.google.com/s2/favicons?domain=chatgpt.com&sz=128" alt="ChatGPT" class="ap-tool-logo">
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- SECTION 7 — ACCOMPLISHMENTS -->
-    <section class="ap-section">
-      <div class="ap-accomplishments">
-        <div class="ap-acc-line">Delivered Clara AI MVP in 3 days ✦</div>
-        <div class="ap-acc-line">10+ SaaS, fintech & booking projects shipped ✦</div>
-        <div class="ap-acc-line">Clients across 5 countries ✦</div>
-        <div class="ap-acc-line">10+ students trained in UI/UX ✦</div>
-        <div class="ap-acc-line">Saving clients 5-10 hours weekly with automation ✦</div>
-      </div>
-    </section>
-
-    <!-- SECTION 8 — CTA -->
-    <section class="ap-cta-section">
-      <h2 class="ap-cta-title">Ready to work together?</h2>
-      <div class="ap-cta-buttons">
-        <a href="contact.html" class="btn btn-primary">Start a Project →</a>
-        <a href="work.html" class="btn btn-ghost">View My Work →</a>
-      </div>
-    </section>
-
-  </div>
-
-  <!-- Footer -->
-  <footer class="footer">
-    <div class="footer-top">
-      <div class="footer-left">
-        <div class="footer-logo">
-          <svg class="jx-logo" viewBox="0 0 72 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="JX"><path class="jx-stroke jx-j" d="M8 2H22V22Q22 30 14 30Q6 30 6 22"/><path class="jx-stroke jx-x1" d="M36 2L60 30"/><path class="jx-stroke jx-x2" d="M60 2L36 30"/></svg>
-          <span class="logo-text">Design &amp; Dev</span>
-        </div>
-        <p class="footer-tagline">
-          System Designer &amp; Builder
+      <div class="portrait-text reveal">
+        <blockquote>
+          "I don't just build websites. I build worlds."
+        </blockquote>
+        <p>
+          My name is Okezie Ferdinand. JX. I coined that name because I wanted
+          a brand that was purely me: no mask, no pretense. Just what I can do, what I dream,
+          and where I'm going.
         </p>
-        <p class="footer-copy">
-          © 2025 Okezie Ferdinand.<br/>
-          All rights reserved.
+        <p>
+          I'm a Nigerian System Designer and Builder. What does that mean? I design the experience.
+          I code the product. I automate the workflow. I secure the system. I build the game.
+          All of it, one person, one mission.
         </p>
-      </div>
-      <div class="footer-center">
-        <p class="footer-label">Navigation</p>
-        <ul class="footer-links">
-          <li><a href="index.html">Home</a></li>
-          <li><a href="work.html">Work</a></li>
-          <li><a href="about.html">About</a></li>
-          <li><a href="services.html">Services</a></li>
-          <li><a href="contact.html">Contact</a></li>
-        </ul>
-      </div>
-      <div class="footer-right">
-        <p class="footer-label">Connect</p>
-        <ul class="footer-links">
-          <li><a href="https://www.linkedin.com/in/okezie-ferdinand" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
-          <li><a href="https://x.com/JX_Design_Dev" target="_blank" rel="noopener noreferrer">Twitter/X</a></li>
-          <li><a href="https://github.com/jxdesigndev" target="_blank" rel="noopener noreferrer">GitHub</a></li>
-        </ul>
-        <p class="footer-easter-egg">
-          Built with passion, code ✦<br/>
-          and a dream of being an astronaut 🚀
-        </p>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <span>JX Design &amp; Dev — Nigeria 🇳🇬</span>
-      <span>Designed &amp; Built by Okezie Ferdinand</span>
-    </div>
-  </footer>
 
-  <!-- Scroll To Top -->
-  <button class="scroll-top" id="scroll-top">↑</button>
+        <!-- Stats -->
+        <div class="stats-bar">
+          <div class="stat-item">
+            <span class="stat-num">4+</span>
+            <span class="stat-label">Disciplines</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-num">∞</span>
+            <span class="stat-label">Ambition</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-num">1</span>
+            <span class="stat-label">Universe</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-num">NG</span>
+            <span class="stat-label">Origin</span>
+          </div>
+        </div>
+      </div>
+    </section>
 
-  <!-- Custom Cursor -->
-  <div class="cursor" id="cursor"></div>
-  <div class="cursor-follower" id="cursor-follower"></div>
+    <!-- ── CHAPTERS ── -->
+    <section class="chapters-section">
+      <div class="section-label reveal">Origin Sequence</div>
+      <h2 class="headline-lg reveal" style="margin-bottom: var(--s-16); max-width: 560px;">
+        Four chapters.<br>One relentless arc.
+      </h2>
 
+      <!-- Chapter 01 -->
+      <div class="chapter reveal">
+        <div class="chapter-num">01</div>
+        <div class="chapter-content">
+          <p class="chapter-era">The Early Years: The Artist</p>
+          <h3 class="chapter-title">Born to Create</h3>
+          <p class="chapter-body">
+            Before code, before computers, there was art. A younger Okezie who wanted to draw,
+            who taught himself by tracing, line by line, character by character. Physics class
+            became a love affair: technical drawing, architectural plans, the geometry of the
+            perfect building. I wanted to design world-class structures. Not just buildings,
+            experiences that people would walk into and feel something.
+          </p>
+          <div class="chapter-tags">
+            <span class="tag">Drawing</span>
+            <span class="tag">Technical Drawing</span>
+            <span class="tag">Physics</span>
+            <span class="tag">Architecture</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chapter 02 -->
+      <div class="chapter reveal">
+        <div class="chapter-num">02</div>
+        <div class="chapter-content">
+          <p class="chapter-era">The Discovery: The Technologist</p>
+          <h3 class="chapter-title">Then I Found Computers</h3>
+          <p class="chapter-body">
+            A machine that could do anything. I was fascinated, not just by what it could do,
+            but by <em>how</em> it worked. So I learned. First as a student, watching everything.
+            Then under a computer technician, hands inside machines, wires and circuits making
+            sense where they hadn't before. I wasn't just using computers anymore. I was building
+            with them.
+          </p>
+          <div class="chapter-tags">
+            <span class="tag">Computer Hardware</span>
+            <span class="tag">Systems Thinking</span>
+            <span class="tag">Self-Teaching</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chapter 03 -->
+      <div class="chapter reveal">
+        <div class="chapter-num">03</div>
+        <div class="chapter-content">
+          <p class="chapter-era">The Canvas: Digital Art & Animation</p>
+          <h3 class="chapter-title">Digital Creations & Animation</h3>
+          <p class="chapter-body">
+            My passion for drawing never left me. It evolved. I transitioned from pencil and paper to becoming a digital artist, creating cartoon pictures directly on my phone and sharing my creations with the world. This was my digital playground, and it sparked my desire to go into animation—bringing those static cartoon frames to life through motion and code.
+          </p>
+          <div class="chapter-tags">
+            <span class="tag">Digital Art</span>
+            <span class="tag">Cartooning</span>
+            <span class="tag">Mobile Creation</span>
+            <span class="tag">Animation</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chapter 04 -->
+      <div class="chapter reveal">
+        <div class="chapter-num">04</div>
+        <div class="chapter-content">
+          <p class="chapter-era">The Convergence: JX</p>
+          <h3 class="chapter-title">JX</h3>
+          <p class="chapter-body">
+            All these paths—the artist, the computer technician, the architect, the digital creator—converged into a single identity: <strong>JX</strong>. It was coined because I wanted to showcase myself—my true self. I wanted to show people who I am, what I can do, provide exceptional services, and grow immensely. JX is my identity. It is the culmination of every pixel drawn, every system built, and every world designed.
+          </p>
+          <div class="chapter-tags">
+            <span class="tag">JX</span>
+            <span class="tag">Identity</span>
+            <span class="tag">Brand</span>
+            <span class="tag">Growth</span>
+            <span class="tag">Service</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── PHILOSOPHY ── -->
+    <section class="philosophy-section">
+      <p class="philosophy-quote reveal-scale">
+        "I wanted to showcase myself. To show people who I am and what I can do. JX isn't a brand; it's a <span>universe</span>."
+      </p>
+      <p class="philosophy-by reveal">- Okezie Ferdinand, JX</p>
+
+      <div style="margin-top: var(--s-12);" class="reveal">
+        <a href="work.html" class="btn btn-primary" data-nav-link>View My Work ↗</a>
+        <a href="contact.html" class="btn btn-ghost" style="margin-left: var(--s-4);" data-nav-link>Work With Me</a>
+      </div>
+    </section>
+
+    <!-- ── FOOTER ── -->
+    <footer style="border-top: 1px solid var(--border); padding: var(--s-8) var(--s-8); display:flex; justify-content:space-between; align-items:center; flex-wrap: wrap; gap: var(--s-4);">
+      <span style="font-family: var(--font-mono); font-size: var(--text-xs); color: var(--gray-3);">
+        © 2026 JX. Lagos, Nigeria.
+      </span>
+      <span style="font-family: var(--font-mono); font-size: var(--text-xs); color: var(--green);">
+        CHAPTER_04 / ONGOING
+      </span>
+    </footer>
+
+  </div><!-- /#page -->
+
+  <script src="nav.js" defer></script>
+
+  <script src="about.js" defer></script>
 </body>
 </html>

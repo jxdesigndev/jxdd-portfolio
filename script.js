@@ -266,6 +266,51 @@ const JXUniverse = {
 
     const mainAlpha  = new Float32Array(MAIN_COUNT);
 
+    /* ── Phase 4: Build Pong Arena Target (aTarget7) ── */
+    const buildPongArena = (count) => {
+      const arr = new Float32Array(count * 3);
+      const W = 60, H = 40; // arena half-dimensions in scene units
+      const PADDLE_H = 12;
+
+      for (let i = 0; i < count; i++) {
+        const roll = i / count;
+        let x = 0, y = 0, z = 0;
+
+        if (roll < 0.25) {
+          /* Top wall */
+          x = (Math.random() * 2 - 1) * W;
+          y = H + Math.random() * 1.0;
+        } else if (roll < 0.50) {
+          /* Bottom wall */
+          x = (Math.random() * 2 - 1) * W;
+          y = -H - Math.random() * 1.0;
+        } else if (roll < 0.625) {
+          /* Left paddle */
+          x = -W + (Math.random() - 0.5) * 2;
+          y = (Math.random() * 2 - 1) * PADDLE_H;
+        } else if (roll < 0.75) {
+          /* Right paddle */
+          x = W - (Math.random() - 0.5) * 2;
+          y = (Math.random() * 2 - 1) * PADDLE_H;
+        } else if (roll < 0.875) {
+          /* Ball dot */
+          const br = Math.random() * 3;
+          const ba = Math.random() * Math.PI * 2;
+          x = Math.cos(ba) * br;
+          y = Math.sin(ba) * br;
+        } else {
+          /* Scattered arena dust */
+          x = (Math.random() * 2 - 1) * W * 0.9;
+          y = (Math.random() * 2 - 1) * H * 0.9;
+          z = (Math.random() - 0.5) * 10;
+        }
+        arr[i * 3]     = x;
+        arr[i * 3 + 1] = y;
+        arr[i * 3 + 2] = z;
+      }
+      return arr;
+    };
+
     for (let i = 0; i < MAIN_COUNT; i++) {
       const r_rand = 80 + Math.random() * 150;
       const theta_rand = Math.random() * Math.PI * 2;
@@ -273,10 +318,10 @@ const JXUniverse = {
       mainPos[i*3]   = r_rand * Math.sin(phi_rand) * Math.cos(theta_rand);
       mainPos[i*3+1] = r_rand * Math.sin(phi_rand) * Math.sin(theta_rand);
       mainPos[i*3+2] = r_rand * Math.cos(phi_rand);
-      
+
       const setTarget = (arr, tp, colorArr, cp) => {
         if (arr.length > 0) {
-          const idx = Math.floor((i / MAIN_COUNT) * arr.length); // Uniform sampling across full portrait height
+          const idx = Math.floor((i / MAIN_COUNT) * arr.length);
           const fp = arr[idx];
           tp[i*3]   = fp.x;
           tp[i*3+1] = fp.y;
@@ -290,7 +335,7 @@ const JXUniverse = {
           if (cp) { cp[i*3] = 0; cp[i*3+1] = 1; cp[i*3+2] = 0; }
         }
       };
-      
+
       setTarget(pOkezie1, target1, cOkezie1, col1);
       setTarget(pHero2, target2, cHero2, col2);
       setTarget(pText, targetText, null, null);
@@ -301,6 +346,10 @@ const JXUniverse = {
       mainAlpha[i] = 0.1 + Math.random() * 0.9;
     }
 
+    /* Build and store pong target (done after loop) */
+    const target7 = buildPongArena(MAIN_COUNT);
+    this._pongArena = target7; // store for potential runtime updates
+
     mainGeo.setAttribute('position',   new THREE.BufferAttribute(mainPos, 3));
     mainGeo.setAttribute('aTarget1',   new THREE.BufferAttribute(target1, 3));
     mainGeo.setAttribute('aTarget2',   new THREE.BufferAttribute(target2, 3));
@@ -308,6 +357,7 @@ const JXUniverse = {
     mainGeo.setAttribute('aTarget4',   new THREE.BufferAttribute(target4, 3));
     mainGeo.setAttribute('aTarget5',   new THREE.BufferAttribute(target5, 3));
     mainGeo.setAttribute('aTarget6',   new THREE.BufferAttribute(target6, 3));
+    mainGeo.setAttribute('aTarget7',   new THREE.BufferAttribute(target7, 3)); /* Phase 4 Pong */
     mainGeo.setAttribute('aColor1',    new THREE.BufferAttribute(col1, 3));
     mainGeo.setAttribute('aColor2',    new THREE.BufferAttribute(col2, 3));
     mainGeo.setAttribute('aColor4',    new THREE.BufferAttribute(col4, 3));
@@ -317,17 +367,25 @@ const JXUniverse = {
 
     const mainMat = new THREE.ShaderMaterial({
       uniforms: {
-        uTime:     { value: 0 },
-        uAlpha:    { value: 0 },
-        uProgress1:{ value: 0 },
-        uProgress2:{ value: 0 },
-        uProgress3:{ value: 0 },
-        uProgress4:{ value: 0 },
-        uProgress5:{ value: 0 },
-        uProgress6:{ value: 0 },
-        uGreenMix: { value: 0 },
-        uMouse:    { value: new THREE.Vector2(9999, 9999) }, // Offscreen by default so no bald hole in center
-        uSize:     { value: window.innerWidth < 768 ? 1.5 : 2.5 },
+        uTime:          { value: 0 },
+        uAlpha:         { value: 0 },
+        uProgress1:     { value: 0 },
+        uProgress2:     { value: 0 },
+        uProgress3:     { value: 0 },
+        uProgress4:     { value: 0 },
+        uProgress5:     { value: 0 },
+        uProgress6:     { value: 0 },
+        uGreenMix:      { value: 0 },
+        uMouse:         { value: new THREE.Vector2(9999, 9999) },
+        uSize:          { value: window.innerWidth < 768 ? 1.5 : 2.5 },
+        /* Phase 2 — Scroll Consciousness */
+        uScrollVelocity:{ value: 0 },
+        uScrollColor:   { value: 0 },
+        /* Phase 3 — Particle Sculpting */
+        uMouseForce:    { value: new THREE.Vector3(9999, 9999, 0) },
+        uExplosion:     { value: new THREE.Vector3(9999, 9999, 0) },
+        /* Phase 4 — Pong */
+        uProgress7:     { value: 0 },
       },
       vertexShader: `
         attribute vec3 aTarget1;
@@ -336,6 +394,7 @@ const JXUniverse = {
         attribute vec3 aTarget4;
         attribute vec3 aTarget5;
         attribute vec3 aTarget6;
+        attribute vec3 aTarget7;
         attribute vec3 aColor1;
         attribute vec3 aColor2;
         attribute vec3 aColor4;
@@ -350,67 +409,112 @@ const JXUniverse = {
         uniform float uProgress4;
         uniform float uProgress5;
         uniform float uProgress6;
+        uniform float uProgress7;
         uniform float uGreenMix;
-        uniform vec2 uMouse;
+        uniform vec2  uMouse;
         uniform float uSize;
+        uniform float uScrollVelocity;
+        uniform float uScrollColor;
+        uniform vec3  uMouseForce;
+        uniform vec3  uExplosion;
 
         varying float vAlpha;
-        varying vec3 vColor;
+        varying vec3  vColor;
+
+        /* Simplex-like hash for per-particle variation */
+        float hash(float n) { return fract(sin(n) * 43758.5453); }
 
         void main () {
           vAlpha = aAlpha;
-          
+
           vec3 pos = mix(position, aTarget1, uProgress1);
           pos = mix(pos, aTarget2, uProgress2);
           pos = mix(pos, aTarget3, uProgress3);
           pos = mix(pos, aTarget4, uProgress4);
           pos = mix(pos, aTarget5, uProgress5);
           pos = mix(pos, aTarget6, uProgress6);
+          pos = mix(pos, aTarget7, uProgress7); /* Phase 4: Pong arena */
 
-          vec3 color = vec3(0.0, 1.0, 0.25); // base green
+          /* ── Color morphing ── */
+          vec3 color = vec3(0.0, 1.0, 0.25);
           vec3 c1 = clamp(aColor1 * 1.25, 0.0, 1.0);
           vec3 c2 = clamp(aColor2 * 1.25, 0.0, 1.0);
           vec3 c4 = clamp(aColor4 * 1.25, 0.0, 1.0);
           vec3 c5 = clamp(aColor5 * 1.25, 0.0, 1.0);
           vec3 c6 = clamp(aColor6 * 1.25, 0.0, 1.0);
-
           color = mix(color, c1, uProgress1);
           color = mix(color, c2, uProgress2);
-          color = mix(color, vec3(1.0), uProgress3); // Text is pure white
+          color = mix(color, vec3(1.0), uProgress3);
           color = mix(color, c4, uProgress4);
           color = mix(color, c5, uProgress5);
           color = mix(color, c6, uProgress6);
-          // Subtle holographic sheen instead of heavy green wash
           float holoGlow = clamp((uProgress1 + uProgress2) * 0.4, 0.0, 1.0);
-          color = mix(color, vec3(0.0, 1.0, 0.3), max(uGreenMix, holoGlow * 0.15)); 
-
+          color = mix(color, vec3(0.0, 1.0, 0.3), max(uGreenMix, holoGlow * 0.15));
+          /* Phase 2: section-aware color shift — green → amber → cyan */
+          vec3 sectionAmber = vec3(1.0, 0.72, 0.0);
+          vec3 sectionCyan  = vec3(0.0, 1.0, 0.8);
+          float sc = uScrollColor;
+          color = mix(color, mix(sectionAmber, sectionCyan, smoothstep(0.5, 1.0, sc)), sc * 0.25);
           vColor = color;
-          
+
+          /* ── Drift (ambient nebula motion) ── */
           float totalProg = max(max(max(uProgress1, uProgress2), max(uProgress3, uProgress4)), max(uProgress5, uProgress6));
-          float drift = 1.0 - (totalProg * 0.9); 
-          pos.x += sin(uTime * 0.3 + position.y * 0.05) * 0.6 * drift;
-          pos.y += cos(uTime * 0.2 + position.x * 0.05) * 0.6 * drift;
-          pos.z += sin(uTime * 0.25 + position.z * 0.05) * 0.4 * drift;
-          
-          // Subtle Mouse Repulsion Ripple
-          vec2 m = uMouse * vec2(150.0, 150.0);
-          float d = distance(pos.xy, m);
-          if (d < 10.0) {
-            vec2 dir = normalize(pos.xy - m);
-            float force = (10.0 - d) * 0.25;
-            pos.xy += dir * force;
-            pos.z += force * 0.6;
+          float drift = 1.0 - totalProg * 0.9;
+          float pid = hash(position.x + position.y * 13.7);
+          pos.x += sin(uTime * 0.3 + position.y * 0.05 + pid) * 0.6 * drift;
+          pos.y += cos(uTime * 0.2 + position.x * 0.05 + pid) * 0.6 * drift;
+          pos.z += sin(uTime * 0.25 + position.z * 0.05 + pid) * 0.4 * drift;
+
+          /* ── Phase 2: Scroll velocity stretch ── */
+          /* Particles stretch along Y axis as you scroll fast */
+          float stretchY = uScrollVelocity * 3.5;
+          pos.y += stretchY * (pid - 0.5) * (1.0 - totalProg * 0.8);
+          /* Z-depth parallax layers — slower particles drift back on scroll */
+          pos.z -= uScrollVelocity * pid * 4.0;
+
+          /* ── Phase 3A: Fluid mouse force field (large radius) ── */
+          if (uMouseForce.z > 0.0) {
+            vec2 mf = uMouseForce.xy * vec2(130.0, 130.0);
+            vec2 toMouse = pos.xy - mf;
+            float dist = length(toMouse);
+            float radius = 28.0; /* much larger than old 10.0 */
+            if (dist < radius && dist > 0.001) {
+              vec2 dir    = normalize(toMouse);
+              float falloff = 1.0 - smoothstep(0.0, radius, dist);
+              float force   = falloff * falloff * uMouseForce.z * 6.0;
+              pos.xy += dir * force;
+              pos.z  += falloff * uMouseForce.z * 2.5;
+              vAlpha  = clamp(vAlpha + falloff * 0.4, 0.0, 1.0);
+            }
+          }
+
+          /* ── Phase 3B: Explosion shockwave ── */
+          if (uExplosion.z > 0.0) {
+            vec2 ec = uExplosion.xy * vec2(130.0, 130.0);
+            vec2 fromBoom = pos.xy - ec;
+            float eDist   = length(fromBoom);
+            float eRadius = 60.0;
+            if (eDist < eRadius && eDist > 0.001) {
+              vec2  eDir     = normalize(fromBoom);
+              float eFalloff = 1.0 - smoothstep(0.0, eRadius, eDist);
+              float eForce   = eFalloff * uExplosion.z * 18.0;
+              pos.xy += eDir * eForce;
+              pos.z  += eFalloff * uExplosion.z * 8.0;
+              /* Explosion colors flash amber/white */
+              vColor = mix(vColor, vec3(1.0, 0.8, 0.2), eFalloff * uExplosion.z * 0.9);
+              vAlpha = clamp(vAlpha + eFalloff * uExplosion.z, 0.0, 1.0);
+            }
           }
 
           gl_Position  = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
-          float pSize = uSize * (180.0 / -gl_Position.z); 
-          gl_PointSize = clamp(pSize, 1.0, 25.0); 
+          float pSize  = uSize * (180.0 / -gl_Position.z);
+          gl_PointSize = clamp(pSize, 1.0, 25.0);
         }
       `,
       fragmentShader: `
         uniform float uAlpha;
         varying float vAlpha;
-        varying vec3 vColor;
+        varying vec3  vColor;
 
         void main () {
           float dist = distance(gl_PointCoord, vec2(0.5));
@@ -482,40 +586,122 @@ const JXUniverse = {
       renderer.setSize(W2, H2);
     });
 
-    /* ── Mouse parallax & Shader Uniform ── */
+    /* ── Phase 1: Mouse from JX.cursor bus ── */
+    /* Phase 3: Force field tracking ── */
     let mouseX = 0, mouseY = 0;
-    window.addEventListener('mousemove', e => {
+    let isMouseOnCanvas = false;
+
+    document.addEventListener('mousemove', e => {
       mouseX = (e.clientX / window.innerWidth  - 0.5);
       mouseY = (e.clientY / window.innerHeight - 0.5);
+      isMouseOnCanvas = true;
       if (this.threeCtx && this.threeCtx.mainMat) {
-         this.threeCtx.mainMat.uniforms.uMouse.value.set(mouseX * 2, -mouseY * 2); 
+        const u = this.threeCtx.mainMat.uniforms;
+        u.uMouse.value.set(mouseX * 2, -mouseY * 2);
+        /* Phase 3: Force field follows cursor with moderate strength */
+        u.uMouseForce.value.set(mouseX * 2, -mouseY * 2, 0.55);
       }
     }, { passive: true });
-    window.addEventListener('mouseleave', () => {
+
+    document.addEventListener('mouseleave', () => {
+      isMouseOnCanvas = false;
       if (this.threeCtx && this.threeCtx.mainMat) {
-         this.threeCtx.mainMat.uniforms.uMouse.value.set(9999, 9999); 
+        const u = this.threeCtx.mainMat.uniforms;
+        u.uMouse.value.set(9999, 9999);
+        u.uMouseForce.value.set(9999, 9999, 0);
       }
     });
 
+    /* ── Phase 3: Click explosion ── */
+    document.addEventListener('click', e => {
+      if (!this.threeCtx || this.threeCtx.is2D) return;
+      const nx = (e.clientX / window.innerWidth  - 0.5) * 2;
+      const ny = (e.clientY / window.innerHeight - 0.5) * -2;
+      const u  = this.threeCtx.mainMat.uniforms;
+      /* Trigger explosion, then decay */
+      u.uExplosion.value.set(nx, ny, 1.0);
+      setTimeout(() => {
+        if (this.threeCtx && this.threeCtx.mainMat)
+          this.threeCtx.mainMat.uniforms.uExplosion.value.set(9999, 9999, 0);
+      }, 400);
+    });
+
+    /* ── Phase 3: Mobile touch sculpt ── */
+    document.addEventListener('touchmove', e => {
+      if (!this.threeCtx || this.threeCtx.is2D) return;
+      const t  = e.touches[0];
+      const nx = (t.clientX / window.innerWidth  - 0.5) * 2;
+      const ny = (t.clientY / window.innerHeight - 0.5) * -2;
+      this.threeCtx.mainMat.uniforms.uMouseForce.value.set(nx, ny, 0.7);
+    }, { passive: true });
+    document.addEventListener('touchend', () => {
+      if (this.threeCtx && this.threeCtx.mainMat)
+        this.threeCtx.mainMat.uniforms.uMouseForce.value.set(9999, 9999, 0);
+    });
+
+    /* ── Phase 3: Shake to explode (mobile) ── */
+    let lastShake = 0;
+    if (window.DeviceMotionEvent) {
+      window.addEventListener('devicemotion', e => {
+        const a = e.acceleration;
+        if (!a) return;
+        const mag = Math.sqrt((a.x||0)**2 + (a.y||0)**2 + (a.z||0)**2);
+        if (mag > 18 && Date.now() - lastShake > 1200) {
+          lastShake = Date.now();
+          if (this.threeCtx && this.threeCtx.mainMat) {
+            const u = this.threeCtx.mainMat.uniforms;
+            u.uExplosion.value.set(0, 0, 1.0);
+            setTimeout(() => {
+              if (this.threeCtx && this.threeCtx.mainMat)
+                u.uExplosion.value.set(9999, 9999, 0);
+            }, 600);
+          }
+        }
+      }, { passive: true });
+    }
+
+    /* ── Phase 2: Scroll velocity tracking ── */
+    let lastScrollY  = window.scrollY;
+    let scrollVel    = 0;
+    let scrollSection = 0; // 0..1 normalized through page
+
     /* ── Tick ── */
     let clock = 0;
-    const tick = () => {
+    const tick = (now) => {
       requestAnimationFrame(tick);
       clock += 0.016;
 
-      const scrollY = window.scrollY;
-      // Parallax zoom IN on scroll, clamped so particles never get too close or obstruct text/UI
+      const scrollY    = window.scrollY;
+      const rawVel     = (scrollY - lastScrollY);
+      lastScrollY      = scrollY;
+      /* Smooth the velocity so it doesn't snap */
+      scrollVel        = scrollVel * 0.85 + rawVel * 0.15;
+
+      /* Scroll section 0=hero, 1=bottom */
+      const docH = document.body.scrollHeight - window.innerHeight;
+      scrollSection    = docH > 0 ? Math.min(scrollY / docH, 1) : 0;
+
+      /* Phase 2: Camera Z parallax */
       camera.position.z = Math.max(55.0, 80 - scrollY * 0.006);
-      
-      // Slight mouse parallax, absolutely NO spinning or scroll rotation
+      /* Phase 2: tiny Y drift on scroll for depth sensation */
+      camera.position.y = scrollVel * 0.04;
+
+      /* Mouse parallax rotation (no spinning) */
       mainParticles.rotation.y = mouseX * 0.15;
       mainParticles.rotation.x = mouseY * 0.15;
-      
-      ambParticles.rotation.y = mouseX * 0.1;
-      ambParticles.rotation.x = mouseY * 0.1;
+      ambParticles.rotation.y  = mouseX * 0.10;
+      ambParticles.rotation.x  = mouseY * 0.10;
 
-      mainMat.uniforms.uTime.value = clock;
-      ambMat.uniforms.uTime.value  = clock;
+      mainMat.uniforms.uTime.value          = clock;
+      mainMat.uniforms.uScrollVelocity.value = scrollVel / 60.0; // normalize to ~0..±1
+      mainMat.uniforms.uScrollColor.value    = scrollSection;
+      ambMat.uniforms.uTime.value            = clock;
+
+      /* Phase 3: Smoothly decay explosion */
+      const exp = mainMat.uniforms.uExplosion.value;
+      if (exp.z > 0.001 && exp.x !== 9999) {
+        exp.z = Math.max(0, exp.z - 0.025);
+      }
 
       renderer.render(scene, camera);
     };
@@ -867,6 +1053,222 @@ const JXUniverse = {
   },
 
   /* ────────────────────────────────────────────────────────────────
+     7b. PONG GAME ENGINE — Phase 4
+     ──────────────────────────────────────────────────────────────── */
+  initPong () {
+    if (this._pongActive) return; // already running
+    if (!this.threeCtx || this.threeCtx.is2D) {
+      console.warn('JX Pong: WebGL required');
+      return;
+    }
+
+    this._pongActive = true;
+    const mats = this.threeCtx.mainMat.uniforms;
+
+    /* Transition particles to pong arena */
+    this.tweenUniform(mats.uProgress7, 0, 1, 1200);
+    /* Fade out portrait / section morphs while in game */
+    const savedP4 = mats.uProgress4.value;
+    const savedP5 = mats.uProgress5.value;
+    const savedP6 = mats.uProgress6.value;
+    this.tweenUniform(mats.uProgress4, mats.uProgress4.value, 0, 800);
+    this.tweenUniform(mats.uProgress5, mats.uProgress5.value, 0, 800);
+    this.tweenUniform(mats.uProgress6, mats.uProgress6.value, 0, 800);
+    /* Camera pull back */
+    if (window.gsap && this.threeCtx.mainParticles) {
+      gsap.to(this.threeCtx.mainParticles.position, { z: -20, duration: 1.2, ease: 'power2.inOut' });
+    }
+
+    /* \u2500\u2500 Build HUD overlay \u2500\u2500 */
+    const hud = document.createElement('div');
+    hud.id = 'pong-hud';
+    hud.innerHTML = `
+      <div class="pong-score">
+        <span id="pong-score-l">00</span>
+        <span class="pong-sep">·</span>
+        <span id="pong-score-r">00</span>
+      </div>
+      <div class="pong-title">PARTICLE PONG</div>
+      <div class="pong-hint">Move mouse · Esc to exit</div>
+    `;
+    document.body.append(hud);
+
+    /* Inject pong HUD CSS if not already there */
+    if (!document.getElementById('pong-css')) {
+      const s = document.createElement('style');
+      s.id = 'pong-css';
+      s.textContent = `
+        #pong-hud {
+          position: fixed; inset: 0; z-index: 9998;
+          display: flex; flex-direction: column;
+          align-items: center; justify-content: flex-start;
+          pointer-events: none;
+          padding-top: 32px;
+          animation: pong-fadein 0.6s ease;
+        }
+        @keyframes pong-fadein { from { opacity: 0; } to { opacity: 1; } }
+        .pong-score {
+          font-family: var(--font-mono, monospace);
+          font-size: clamp(36px, 6vw, 72px);
+          font-weight: 700;
+          color: var(--green, #00ff41);
+          text-shadow: 0 0 20px rgba(0,255,65,0.8), 0 0 50px rgba(0,255,65,0.4);
+          letter-spacing: 0.2em;
+          line-height: 1;
+        }
+        .pong-sep { color: rgba(0,255,65,0.3); margin: 0 0.3em; }
+        .pong-title {
+          font-family: var(--font-mono, monospace);
+          font-size: 11px;
+          letter-spacing: 0.3em;
+          color: rgba(0,255,65,0.4);
+          margin-top: 8px;
+          text-transform: uppercase;
+        }
+        .pong-hint {
+          font-family: var(--font-mono, monospace);
+          font-size: 11px;
+          letter-spacing: 0.2em;
+          color: rgba(255,255,255,0.25);
+          margin-top: 4px;
+        }
+      `;
+      document.head.append(s);
+    }
+
+    /* \u2500\u2500 Game state \u2500\u2500 */
+    const ARENA_W = 60, ARENA_H = 40, PADDLE_H = 12;
+    let ballX = 0, ballY = 0;
+    let ballVX = 0.5, ballVY = 0.3;
+    let paddleLY = 0, paddleRY = 0;
+    let scoreL = 0, scoreR = 0;
+    let mouseNY = 0; // player (left) paddle
+    const SPEED_BASE = 0.45;
+    const AI_SPEED   = 0.06;
+
+    ballVX = SPEED_BASE * (Math.random() > 0.5 ? 1 : -1);
+    ballVY = SPEED_BASE * (Math.random() * 0.8 - 0.4);
+
+    const scoreElL = document.getElementById('pong-score-l');
+    const scoreElR = document.getElementById('pong-score-r');
+
+    /* Mouse/touch control for left paddle */
+    const onMove = (e) => {
+      const cy = e.touches ? e.touches[0].clientY : e.clientY;
+      mouseNY = -(cy / window.innerHeight - 0.5) * 2; // -1..1
+    };
+    document.addEventListener('mousemove', onMove);
+    document.addEventListener('touchmove', onMove, { passive: true });
+
+    /* \u2500\u2500 Game loop \u2500\u2500 */
+    let pongRAF;
+    const step = () => {
+      if (!this._pongActive) return;
+      pongRAF = requestAnimationFrame(step);
+
+      /* Player paddle (left) follows mouse */
+      paddleLY += (mouseNY * (ARENA_H - PADDLE_H) - paddleLY) * 0.12;
+      paddleLY  = Math.max(-ARENA_H + PADDLE_H, Math.min(ARENA_H - PADDLE_H, paddleLY));
+
+      /* AI paddle (right) tracks ball */
+      const aiTarget = ballY;
+      paddleRY += (aiTarget - paddleRY) * AI_SPEED;
+      paddleRY  = Math.max(-ARENA_H + PADDLE_H, Math.min(ARENA_H - PADDLE_H, paddleRY));
+
+      /* Ball movement */
+      ballX += ballVX;
+      ballY += ballVY;
+
+      /* Top/bottom wall bounce */
+      if (ballY > ARENA_H - 1 || ballY < -ARENA_H + 1) {
+        ballVY *= -1;
+        ballY   = Math.sign(ballY) * (ARENA_H - 1);
+        /* Explosion on wall hit */
+        if (mats.uExplosion) {
+          mats.uExplosion.value.set(ballX / 130, ballY / 130, 0.5);
+          setTimeout(() => { if (mats.uExplosion) mats.uExplosion.value.set(9999, 9999, 0); }, 200);
+        }
+      }
+
+      /* Left paddle collision */
+      if (ballX < -ARENA_W + 3 && Math.abs(ballY - paddleLY) < PADDLE_H) {
+        ballVX = Math.abs(ballVX) * 1.03; // speed up slightly
+        ballVY += (ballY - paddleLY) * 0.04;
+        if (mats.uExplosion) {
+          mats.uExplosion.value.set(-1, paddleLY / 130, 0.6);
+          setTimeout(() => { if (mats.uExplosion) mats.uExplosion.value.set(9999, 9999, 0); }, 200);
+        }
+      }
+
+      /* Right paddle collision */
+      if (ballX > ARENA_W - 3 && Math.abs(ballY - paddleRY) < PADDLE_H) {
+        ballVX = -Math.abs(ballVX) * 1.03;
+        ballVY += (ballY - paddleRY) * 0.04;
+        if (mats.uExplosion) {
+          mats.uExplosion.value.set(1, paddleRY / 130, 0.6);
+          setTimeout(() => { if (mats.uExplosion) mats.uExplosion.value.set(9999, 9999, 0); }, 200);
+        }
+      }
+
+      /* Cap speed */
+      const speed = Math.sqrt(ballVX**2 + ballVY**2);
+      if (speed > 1.4) { ballVX /= speed / 1.4; ballVY /= speed / 1.4; }
+
+      /* Scoring: ball exits arena */
+      if (ballX > ARENA_W + 2) {
+        scoreL = Math.min(scoreL + 1, 99);
+        if (scoreElL) scoreElL.textContent = String(scoreL).padStart(2, '0');
+        ballX = 0; ballY = 0;
+        ballVX = -SPEED_BASE; ballVY = (Math.random() - 0.5) * SPEED_BASE;
+        mats.uExplosion.value.set(0.5, 0, 1.0);
+        setTimeout(() => { if (mats.uExplosion) mats.uExplosion.value.set(9999, 9999, 0); }, 500);
+      }
+      if (ballX < -ARENA_W - 2) {
+        scoreR = Math.min(scoreR + 1, 99);
+        if (scoreElR) scoreElR.textContent = String(scoreR).padStart(2, '0');
+        ballX = 0; ballY = 0;
+        ballVX = SPEED_BASE; ballVY = (Math.random() - 0.5) * SPEED_BASE;
+        mats.uExplosion.value.set(-0.5, 0, 1.0);
+        setTimeout(() => { if (mats.uExplosion) mats.uExplosion.value.set(9999, 9999, 0); }, 500);
+      }
+
+      /* Push ball position to shader as mouse force */
+      if (mats.uMouseForce) {
+        mats.uMouseForce.value.set(ballX / 130, ballY / 130, 0.9);
+      }
+    };
+    requestAnimationFrame(step);
+
+    /* \u2500\u2500 Exit handler \u2500\u2500 */\
+    const exitPong = (e) => {
+      if (e && e.key !== 'Escape') return;
+      this._pongActive = false;
+      cancelAnimationFrame(pongRAF);
+      document.removeEventListener('mousemove', onMove);
+      document.removeEventListener('touchmove', onMove);
+      document.removeEventListener('keydown', exitPong);
+
+      /* Restore uniforms */
+      mats.uMouseForce.value.set(9999, 9999, 0);
+      this.tweenUniform(mats.uProgress7, 1, 0, 1000);
+      this.tweenUniform(mats.uProgress4, 0, savedP4, 800);
+      this.tweenUniform(mats.uProgress5, 0, savedP5, 800);
+      this.tweenUniform(mats.uProgress6, 0, savedP6, 800);
+      if (window.gsap && this.threeCtx.mainParticles) {
+        gsap.to(this.threeCtx.mainParticles.position, { z: 0, duration: 1.2, ease: 'power2.inOut' });
+      }
+
+      /* Remove HUD */
+      const hudEl = document.getElementById('pong-hud');
+      if (hudEl) { hudEl.style.opacity = '0'; setTimeout(() => hudEl.remove(), 600); }
+    };
+    document.addEventListener('keydown', exitPong);
+
+    /* Expose exit for UI use */
+    this._exitPong = exitPong;
+  },
+
+  /* ────────────────────────────────────────────────────────────────
      8. HUD WIDGETS
      ──────────────────────────────────────────────────────────────── */
   initHUD () {
@@ -1113,6 +1515,7 @@ const JXUniverse = {
         { text: '│  services  → The Forge               │' },
         { text: '│  contact   → Get in touch            │' },
         { text: '│  hire me   → Let\'s build together    │' },
+        { text: '│  pong      → Play Particle Pong      │', class: 'amber' },
         { text: '│  clear     → Clear terminal          │' },
         { text: '│  status    → System vitals           │' },
         { text: '└─────────────────────────────────────┘', class: 'green' },
@@ -1182,6 +1585,15 @@ const JXUniverse = {
         { text: '' },
         { text: "  Let's build something historic.", class: 'green' },
       ],
+      pong: [
+        { text: '> INITIATING PARTICLE PONG...', class: 'green' },
+        { text: '' },
+        { text: '  55,000 particles are rearranging...', class: 'dim' },
+        { text: '  Move your mouse to control the left paddle.', class: 'amber' },
+        { text: '  Press ESC to return to the universe.', class: 'dim' },
+        { text: '' },
+        { text: '  May the best consciousness win.', class: 'green' },
+      ],
     };
 
     const print = (lines, delay = 0) => {
@@ -1249,6 +1661,8 @@ const JXUniverse = {
           if (cmd === 'work')     setTimeout(() => { sessionStorage.setItem('ct-active','1'); window.location.href = 'work.html'; }, 1500);
           if (cmd === 'services') setTimeout(() => { sessionStorage.setItem('ct-active','1'); window.location.href = 'services.html'; }, 1500);
           if (cmd === 'contact' || cmd === 'hire me') setTimeout(() => { sessionStorage.setItem('ct-active','1'); window.location.href = 'contact.html'; }, 2200);
+          /* Phase 4: Pong launch */
+          if (cmd === 'pong') setTimeout(() => { close(); this.initPong(); }, 1600);
         } else {
           print([
             { text: `Command not found: '${cmd}'`, class: 'error' },

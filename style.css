@@ -198,47 +198,127 @@ svg { display: block; }
 /* ----------------------------------------------------------------
    3. CUSTOM CURSOR
    ---------------------------------------------------------------- */
+
+/* ── Core dot ── */
 .cursor {
   position: fixed;
+  top: 0; left: 0;
   width: 8px;
   height: 8px;
   background: var(--green);
   border-radius: 50%;
   pointer-events: none;
   z-index: var(--z-cursor);
-  transform: translate(-50%, -50%);
+  transform: translate(-999px, -999px); /* JS handles real position */
   transition: width 0.2s var(--ease-snap), height 0.2s var(--ease-snap),
-              background 0.2s ease, opacity 0.3s ease;
-  will-change: left, top;
+              background 0.25s ease, box-shadow 0.25s ease, opacity 0.3s ease;
+  will-change: transform;
+  box-shadow: 0 0 10px rgba(0, 255, 65, 0.7), 0 0 20px rgba(0, 255, 65, 0.3);
+  /* center on coordinate */
+  margin-left: -4px;
+  margin-top: -4px;
 }
 
+/* ── Outer ring ── */
 .cursor-ring {
   position: fixed;
-  width: 36px;
-  height: 36px;
+  top: 0; left: 0;
+  width: 38px;
+  height: 38px;
   border: 1.5px solid rgba(0, 255, 65, 0.5);
   border-radius: 50%;
   pointer-events: none;
-  z-index: var(--z-cursor);
-  transform: translate(-50%, -50%);
-  transition: width 0.35s var(--ease-snap), height 0.35s var(--ease-snap),
-              border-color 0.3s ease, opacity 0.3s ease;
-  will-change: left, top;
+  z-index: calc(var(--z-cursor) - 1);
+  transform: translate(-999px, -999px);
+  transition: border-color 0.3s ease, opacity 0.3s ease;
+  will-change: transform;
+  margin-left: -19px;
+  margin-top: -19px;
 }
 
+/* ── Aura glow cloud ── */
+.cursor-aura {
+  position: fixed;
+  top: 0; left: 0;
+  width: 220px;
+  height: 220px;
+  background: radial-gradient(
+    circle,
+    rgba(0, 255, 65, 0.10) 0%,
+    rgba(0, 255, 204, 0.05) 40%,
+    transparent 70%
+  );
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: calc(var(--z-cursor) - 2);
+  transform: translate(-999px, -999px);
+  will-change: transform, opacity;
+  margin-left: -110px;
+  margin-top: -110px;
+  opacity: 0.12;
+  transition: opacity 0.4s ease;
+}
+
+/* ── Velocity trail ── */
+.cursor-trail {
+  position: fixed;
+  top: 0; left: 0;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: calc(var(--z-cursor) - 3);
+  transform: translate(-999px, -999px);
+  will-change: transform;
+  margin-left: -2.5px;
+  margin-top: -2.5px;
+  background: var(--green);
+  opacity: 0;
+  transition: opacity 0.18s ease;
+}
+.cursor-trail.active {
+  opacity: calc(0.55 - var(--trail-i, 0) * 0.06);
+}
+.cursor-trail.hidden { opacity: 0; }
+
+/* ── Hidden states ── */
 .cursor.hidden,
-.cursor-ring.hidden { opacity: 0; }
+.cursor-ring.hidden,
+.cursor-aura.hidden { opacity: 0; }
 
-.cursor.hover { width: 14px; height: 14px; }
+/* ── Hover mode: expand ring, pulse dot ── */
+.cursor.hover {
+  width: 14px;
+  height: 14px;
+  margin-left: -7px;
+  margin-top: -7px;
+  background: var(--green);
+  box-shadow: 0 0 18px rgba(0, 255, 65, 0.9), 0 0 40px rgba(0, 255, 65, 0.4);
+}
 .cursor-ring.hover {
-  width: 56px;
-  height: 56px;
+  width: 54px;
+  height: 54px;
+  margin-left: -27px;
+  margin-top: -27px;
   border-color: var(--green);
+  border-width: 1.5px;
 }
 
-.cursor.click { transform: translate(-50%, -50%) scale(0.6); }
+/* ── Click mode ── */
+.cursor[data-mode="click"] {
+  transform: translate(var(--cx, 0), var(--cy, 0)) scale(0.55) !important;
+  background: var(--amber);
+  box-shadow: 0 0 20px rgba(255, 184, 0, 0.8), 0 0 50px rgba(255, 184, 0, 0.4);
+}
+.cursor-ring[data-mode="click"] {
+  border-color: var(--amber);
+  width: 46px;
+  height: 46px;
+  margin-left: -23px;
+  margin-top: -23px;
+}
 
-/* Cursor label */
+/* ── Cursor label ── */
 .cursor-ring .ring-label {
   position: absolute;
   top: 50%;
@@ -246,13 +326,20 @@ svg { display: block; }
   transform: translate(-50%, -50%);
   font-family: var(--font-mono);
   font-size: 9px;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
   color: var(--green);
   white-space: nowrap;
   opacity: 0;
   transition: opacity 0.2s;
 }
 .cursor-ring.labeled .ring-label { opacity: 1; }
+
+/* ── Reduced motion: disable custom cursor entirely ── */
+@media (prefers-reduced-motion: reduce) {
+  .cursor, .cursor-ring, .cursor-aura, .cursor-trail { display: none !important; }
+  body { cursor: auto !important; }
+}
 
 /* ----------------------------------------------------------------
    4. NAVIGATION
@@ -543,7 +630,7 @@ svg { display: block; }
   will-change: transform;
 }
 
-.ct-panel-1 { background: var(--green);   z-index: 3; }
+.ct-panel-1 { background: var(--surface);   z-index: 3; }
 .ct-panel-2 { background: var(--surface); z-index: 2; }
 .ct-panel-3 {
   background: var(--void);

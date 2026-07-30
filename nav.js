@@ -19,11 +19,7 @@
   ];
 
   const JX_LOGO_SVG = `
-    <svg class="nav-logo" viewBox="0 0 72 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <path class="jx-j"  d="M8 2H22V22Q22 30 14 30Q6 30 6 22"/>
-      <path class="jx-x1" d="M36 2L60 30"/>
-      <path class="jx-x2" d="M60 2L36 30"/>
-    </svg>`;
+    <img src="assets/images/jx-logo.jpeg" class="nav-logo-img" alt="JX Logo" style="height: 32px; width: auto; border-radius: 50%;">`;
 
   const JX_LOGO_LARGE_SVG = `
     <svg viewBox="0 0 120 54" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -115,78 +111,207 @@
   }
 
   /* ────────────────────────────────────────────────────────────────
-     BUILD CURSOR
+     BUILD CURSOR — Neural Cursor System v2.0
      ──────────────────────────────────────────────────────────────── */
   function buildCursor () {
     if (document.querySelector('.cursor')) return;
-    if (window.matchMedia('(hover: none)').matches) return; // no cursor on touch
+    if (window.matchMedia('(hover: none)').matches) return;
 
-    const dot  = document.createElement('div');
-    const ring = document.createElement('div');
-    dot.className  = 'cursor';
-    ring.className = 'cursor-ring';
-    ring.innerHTML = '<span class="ring-label"></span>';
-    document.body.append(dot, ring);
+    /* ── DOM Elements ── */
+    const dot   = document.createElement('div');
+    const ring  = document.createElement('div');
+    const aura  = document.createElement('div');
+    dot.className   = 'cursor';
+    ring.className  = 'cursor-ring';
+    aura.className  = 'cursor-aura';
+    ring.innerHTML  = '<span class="ring-label"></span>';
+    document.body.append(aura, dot, ring);
 
-    let mouseX = 0, mouseY = 0;
-    let ringX  = 0, ringY  = 0;
-    let dotX   = 0, dotY   = 0;
+    /* ── Trail particles pool (8 ghosts) ── */
+    const TRAIL_COUNT = 8;
+    const trail = [];
+    for (let i = 0; i < TRAIL_COUNT; i++) {
+      const t = document.createElement('div');
+      t.className = 'cursor-trail';
+      t.style.setProperty('--trail-i', i);
+      document.body.append(t);
+      trail.push({ el: t, x: -999, y: -999 });
+    }
 
+    /* ── State ── */
+    let mouseX = -999, mouseY = -999;
+    let prevX  = -999, prevY  = -999;
+    let dotX   = 0,    dotY   = 0;
+    let ringX  = 0,    ringY  = 0;
+    let auraX  = 0,    auraY  = 0;
+    let velX   = 0,    velY   = 0;
+    let speed  = 0;
+    let mode   = 'default'; // 'default' | 'hover' | 'click' | 'text' | 'explore'
+    let isVisible = false;
+    let magnetTarget = null;
+    let magnetStrength = 0; // 0..1
+
+    /* ── Global cursor bus ── */
+    window.JX       = window.JX || {};
+    window.JX.cursor = { x: 0, y: 0, vx: 0, vy: 0, speed: 0, mode: 'default' };
+
+    /* ── Mouse tracking ── */
     document.addEventListener('mousemove', e => {
       mouseX = e.clientX;
       mouseY = e.clientY;
-      dot.classList.remove('hidden');
-      ring.classList.remove('hidden');
+      if (!isVisible) {
+        isVisible = true;
+        dot.classList.remove('hidden');
+        ring.classList.remove('hidden');
+        aura.classList.remove('hidden');
+      }
     });
 
     document.addEventListener('mouseleave', () => {
+      isVisible = false;
       dot.classList.add('hidden');
       ring.classList.add('hidden');
+      aura.classList.add('hidden');
+      trail.forEach(t => t.el.classList.add('hidden'));
     });
 
-    document.addEventListener('mousedown', () => dot.classList.add('click'));
-    document.addEventListener('mouseup', () => dot.classList.remove('click'));
+    document.addEventListener('mousedown', () => setMode('click'));
+    document.addEventListener('mouseup',   () => {
+      setMode(ring.classList.contains('hover') ? 'hover' : 'default');
+    });
 
-    /* Hover states */
+    /* ── Mode setter ── */
+    function setMode (newMode) {
+      if (mode === newMode) return;
+      mode = newMode;
+      dot.dataset.mode  = newMode;
+      ring.dataset.mode = newMode;
+      aura.dataset.mode = newMode;
+      window.JX.cursor.mode = newMode;
+    }
+
+    /* ── Hover interaction ── */
     function addHoverListeners () {
-      const hoverEls = document.querySelectorAll(
-        'a, button, [data-cursor], input, textarea, select, label'
+      const interactEls = document.querySelectorAll(
+        'a, button, [data-cursor], input, textarea, select, label, [role="button"]'
       );
-      hoverEls.forEach(el => {
+      interactEls.forEach(el => {
+        if (el._jxCursor) return; // already bound
+        el._jxCursor = true;
+
+        const cursorType  = el.dataset.cursor || 'hover';
+        const cursorLabel = el.dataset.cursorLabel || '';
+
         el.addEventListener('mouseenter', () => {
-          dot.classList.add('hover');
           ring.classList.add('hover');
-          const label = el.dataset.cursorLabel || '';
-          ring.querySelector('.ring-label').textContent = label;
-          if (label) ring.classList.add('labeled');
-          else ring.classList.remove('labeled');
+          dot.classList.add('hover');
+          setMode(cursorType === 'text' ? 'text' : 'hover');
+          if (cursorLabel) {
+            ring.querySelector('.ring-label').textContent = cursorLabel;
+            ring.classList.add('labeled');
+          }
+          /* Magnetic snap setup */
+          magnetTarget = el;
         });
+
         el.addEventListener('mouseleave', () => {
+          ring.classList.remove('hover', 'labeled');
           dot.classList.remove('hover');
-          ring.classList.remove('hover');
-          ring.classList.remove('labeled');
+          ring.querySelector('.ring-label').textContent = '';
+          setMode('default');
+          magnetTarget = null;
+          magnetStrength = 0;
         });
       });
     }
 
     addHoverListeners();
-    // Re-run after dynamic content loads
-    window.JX = window.JX || {};
     window.JX.refreshCursor = addHoverListeners;
 
-    /* Smooth ring follow */
+    /* ── Lerp helper ── */
     const lerp = (a, b, t) => a + (b - a) * t;
 
-    const raf = () => {
-      dotX  = lerp(dotX,  mouseX, 0.85);
-      dotY  = lerp(dotY,  mouseY, 0.85);
-      ringX = lerp(ringX, mouseX, 0.12);
-      ringY = lerp(ringY, mouseY, 0.12);
+    /* ── Main animation loop ── */
+    let lastTime = 0;
+    let trailIdx = 0;
+    const raf = (now) => {
+      const dt = Math.min((now - lastTime) / 16.67, 3); // normalised to 60fps
+      lastTime = now;
 
-      dot.style.left  = dotX  + 'px';
-      dot.style.top   = dotY  + 'px';
-      ring.style.left = ringX + 'px';
-      ring.style.top  = ringY + 'px';
+      /* Velocity */
+      velX = lerp(velX, (mouseX - prevX) * 60, 0.15 * dt);
+      velY = lerp(velY, (mouseY - prevY) * 60, 0.15 * dt);
+      speed = Math.sqrt(velX * velX + velY * velY);
+      prevX = mouseX;
+      prevY = mouseY;
+
+      /* Magnetic pull */
+      let targetX = mouseX;
+      let targetY = mouseY;
+      if (magnetTarget) {
+        const r = magnetTarget.getBoundingClientRect();
+        const cx = r.left + r.width / 2;
+        const cy = r.top  + r.height / 2;
+        const dx = cx - mouseX;
+        const dy = cy - mouseY;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        const maxDist = Math.max(r.width, r.height) * 1.2;
+        if (dist < maxDist) {
+          magnetStrength = lerp(magnetStrength, 1 - dist / maxDist, 0.1 * dt);
+          targetX = lerp(mouseX, cx, magnetStrength * 0.35);
+          targetY = lerp(mouseY, cy, magnetStrength * 0.35);
+        } else {
+          magnetStrength = lerp(magnetStrength, 0, 0.1 * dt);
+        }
+      }
+
+      /* Dot — snaps almost instantly */
+      dotX = lerp(dotX, targetX, 0.88);
+      dotY = lerp(dotY, targetY, 0.88);
+
+      /* Ring — follows lazily */
+      const ringLerp = magnetTarget ? 0.08 : 0.10;
+      ringX = lerp(ringX, targetX, ringLerp);
+      ringY = lerp(ringY, targetY, ringLerp);
+
+      /* Aura — very slow, large follow */
+      auraX = lerp(auraX, targetX, 0.04);
+      auraY = lerp(auraY, targetY, 0.04);
+
+      /* Apply positions */
+      dot.style.transform  = `translate(${dotX}px, ${dotY}px)`;
+      ring.style.transform = `translate(${ringX}px, ${ringY}px)`;
+      aura.style.transform = `translate(${auraX}px, ${auraY}px)`;
+
+      /* Ring scale/deform based on velocity */
+      const speedNorm = Math.min(speed / 1200, 1);
+      const scaleX = 1 + speedNorm * 0.55;
+      const scaleY = 1 - speedNorm * 0.18;
+      const angle  = Math.atan2(velY, velX) * (180 / Math.PI);
+      ring.style.transform += ` rotate(${angle}deg) scaleX(${scaleX}) scaleY(${scaleY})`;
+
+      /* Aura glow size based on speed */
+      const auraScale = 1 + speedNorm * 0.6;
+      aura.style.transform += ` scale(${auraScale})`;
+      aura.style.opacity    = 0.12 + speedNorm * 0.18;
+
+      /* Trail — update one slot per frame for staggered fade */
+      if (speed > 15) {
+        const t = trail[trailIdx % TRAIL_COUNT];
+        t.x = dotX; t.y = dotY;
+        t.el.style.transform = `translate(${t.x}px, ${t.y}px)`;
+        t.el.classList.remove('hidden');
+        t.el.classList.add('active');
+        setTimeout(() => { t.el.classList.remove('active'); }, 180);
+        trailIdx++;
+      }
+
+      /* Update global bus */
+      window.JX.cursor.x     = mouseX;
+      window.JX.cursor.y     = mouseY;
+      window.JX.cursor.vx    = velX;
+      window.JX.cursor.vy    = velY;
+      window.JX.cursor.speed = speed;
 
       requestAnimationFrame(raf);
     };

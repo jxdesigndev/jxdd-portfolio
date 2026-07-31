@@ -219,7 +219,8 @@ const JXUniverse = {
 
     /* Extract Text Pixels */
     let pText = [];
-    const createTextCanvas = () => {
+    const createTextCanvas = (line1, line2) => {
+      pText = []; /* reset on each call */
       const c = document.createElement('canvas');
       const cw = 400, ch = 200;
       c.width = cw; c.height = ch;
@@ -228,9 +229,15 @@ const JXUniverse = {
       ctx.font = 'bold 45px "Space Grotesk", sans-serif';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      ctx.fillText('OKEZIE', cw/2, ch/2 - 25);
-      ctx.fillText('FERDINAND', cw/2, ch/2 + 25);
-      
+      const l1 = line1 !== undefined ? line1 : 'OKEZIE';
+      const l2 = line2 !== undefined ? line2 : 'FERDINAND';
+      if (l2) {
+        ctx.fillText(l1, cw/2, ch/2 - 25);
+        ctx.fillText(l2, cw/2, ch/2 + 25);
+      } else {
+        ctx.fillText(l1, cw/2, ch/2);
+      }
+
       const imgData = ctx.getImageData(0, 0, cw, ch).data;
       for (let y = 0; y < ch; y+=2) {
         for (let x = 0; x < cw; x+=2) {
@@ -245,7 +252,11 @@ const JXUniverse = {
         }
       }
     };
-    createTextCanvas();
+    createTextCanvas(); /* initial call — keeps existing name text */
+
+    /* 3C: expose to initTypeToForm (which lives outside this closure) */
+    this._pText            = () => pText;
+    this._createTextCanvas = createTextCanvas;
 
     /* ── Main particle field (55,000) ── */
     const MAIN_COUNT = window.innerWidth < 768 ? 28000 : 55000;
@@ -968,6 +979,105 @@ const JXUniverse = {
     tl.to('#hero-scroll', { opacity: 1, duration: 0.5, ease: 'power2.out' }, '-=0.2');
   },
 
+  /* ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+     3C. TYPE-TO-FORM
+     Keystrokes rewrite aTarget3 via createTextCanvas(), tweening
+     uProgress3 to 1 so particles sculpt the typed text in real time.
+     After 3 s of silence they return to 0 (name formation restores).
+     ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── */
+  initTypeToForm () {
+    /* Requires WebGL path — no-op on Canvas2D fallback */
+    if (!this.threeCtx || this.threeCtx.is2D) return;
+    if (!this._createTextCanvas || !this._pText) return;
+
+    const THROTTLE_MS  = 100;
+    const HOLD_MS      = 3000;
+    const TWEEN_IN_MS  = 500;
+    const TWEEN_OUT_MS = 800;
+    const MAX_CHARS    = 18; /* keep it legible on the canvas */
+
+    let typed       = '';
+    let lastWrite   = 0;
+    let idleTimer   = null;
+
+    const rewrite = () => {
+      const ctx = this.threeCtx;
+      if (!ctx || ctx.is2D) return;
+
+      const mats    = ctx.mainMat.uniforms;
+      const geo     = ctx.mainParticles.geometry;
+      const attr    = geo.getAttribute('aTarget3');
+      if (!attr) return;
+
+      /* Rebuild pText with typed string */
+      const display = typed.toUpperCase().trim() || 'OKEZIE';
+      /* Split at midpoint for two-line layout if long enough */
+      let l1, l2;
+      if (display.length <= 8) {
+        l1 = display; l2 = '';
+      } else {
+        const mid = Math.ceil(display.length / 2);
+        l1 = display.slice(0, mid);
+        l2 = display.slice(mid);
+      }
+      this._createTextCanvas(l1, l2);
+
+      /* Write new positions into the existing BufferAttribute */
+      const pts    = this._pText();
+      const count  = attr.count;
+      for (let i = 0; i < count; i++) {
+        const idx = Math.floor((i / count) * pts.length);
+        const p   = pts[idx] || { x: 0, y: 0, z: 0 };
+        attr.setXYZ(i, p.x, p.y, p.z);
+      }
+      attr.needsUpdate = true;
+
+      /* Tween uProgress3 to 1 */
+      this.tweenUniform(mats.uProgress3, mats.uProgress3.value, 1, TWEEN_IN_MS);
+
+      /* Schedule idle fade-out */
+      clearTimeout(idleTimer);
+      idleTimer = setTimeout(() => {
+        this.tweenUniform(mats.uProgress3, mats.uProgress3.value, 0, TWEEN_OUT_MS);
+        typed = '';
+      }, HOLD_MS);
+    };
+
+    document.addEventListener('keydown', e => {
+      /* Guard 1: pong active */
+      if (this._pongActive) return;
+
+      /* Guard 2: an input / textarea / contenteditable or the CLI is focused */
+      const active = document.activeElement;
+      if (
+        active &&
+        (active.tagName === 'INPUT' ||
+         active.tagName === 'TEXTAREA' ||
+         active.isContentEditable ||
+         active.closest('#cli-panel'))
+      ) return;
+
+      /* Guard 3: only printable single characters; skip modifiers */
+      if (e.key.length !== 1 || e.ctrlKey || e.metaKey || e.altKey) {
+        /* Backspace support */
+        if (e.key === 'Backspace') {
+          typed = typed.slice(0, -1);
+        } else {
+          return;
+        }
+      } else {
+        typed = (typed + e.key).slice(-MAX_CHARS);
+      }
+
+      /* Guard 4: throttle to at most one buffer rewrite per 100 ms */
+      const now = performance.now();
+      if (now - lastWrite < THROTTLE_MS) return;
+      lastWrite = now;
+
+      rewrite();
+    });
+  },
+
   /* ────────────────────────────────────────────────────────────────
      6. AFTER REVEAL — all remaining system boots
      ──────────────────────────────────────────────────────────────── */
@@ -979,6 +1089,7 @@ const JXUniverse = {
     this.initHUD();
     this.initTicker();
     this.initCLI();
+    this.initTypeToForm();
     this.loadFeaturedProjects();
   },
 

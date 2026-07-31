@@ -205,7 +205,12 @@
         el.addEventListener('mouseenter', () => {
           ring.classList.add('hover');
           dot.classList.add('hover');
-          setMode(cursorType === 'text' ? 'text' : 'hover');
+          /* 1C: data-cursor-mode takes priority; fall back to data-cursor logic */
+          const cursorMode = el.dataset.cursorMode;
+          const resolvedMode = cursorMode
+            ? cursorMode
+            : (cursorType === 'text' ? 'text' : 'hover');
+          setMode(resolvedMode);
           if (cursorLabel) {
             ring.querySelector('.ring-label').textContent = cursorLabel;
             ring.classList.add('labeled');

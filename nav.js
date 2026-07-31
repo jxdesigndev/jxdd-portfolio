@@ -574,6 +574,76 @@
   }
 
   /* ────────────────────────────────────────────────────────────────
+     1D. CURSOR PARALLAX
+     Subtle translate(dx, dy) on card/image elements driven by cursor
+     proximity. Uses gsap.quickTo() for smooth, GPU-composited motion.
+     ──────────────────────────────────────────────────────────────── */
+  function initCursorParallax () {
+    if (!window.gsap) return;
+
+    const SELECTOR = '.project-card, .service-card, .about-strip-image-wrap';
+    const MAX_PX   = 8;    // maximum displacement in pixels
+    const RADIUS   = 400;  // influence radius in pixels
+    const VELOCITY = 0.06; // quickTo lag — lower = more sluggish
+
+    /* Build quickTo setters for every matching element */
+    const bindElements = () => {
+      document.querySelectorAll(SELECTOR).forEach(el => {
+        if (el._jxParallax) return; // already bound
+        el._jxParallax = {
+          x: gsap.quickTo(el, 'x', { duration: VELOCITY, ease: 'power1.out' }),
+          y: gsap.quickTo(el, 'y', { duration: VELOCITY, ease: 'power1.out' }),
+        };
+      });
+    };
+
+    bindElements();
+
+    /* Re-bind when new cards are injected (e.g. infinite scroll / AJAX) */
+    window.JX = window.JX || {};
+    const _prev = window.JX.refreshCursor;
+    window.JX.refreshCursor = () => { _prev && _prev(); bindElements(); };
+
+    document.addEventListener('mousemove', e => {
+      const cx = e.clientX;
+      const cy = e.clientY;
+
+      document.querySelectorAll(SELECTOR).forEach(el => {
+        const p = el._jxParallax;
+        if (!p) return;
+
+        const r  = el.getBoundingClientRect();
+        /* Distance from cursor to element centre */
+        const ex = r.left + r.width  / 2;
+        const ey = r.top  + r.height / 2;
+        const dx = cx - ex;
+        const dy = cy - ey;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+
+        if (dist < RADIUS) {
+          /* Normalised 0..1, inverted so closer = stronger */
+          const strength = (1 - dist / RADIUS);
+          p.x(dx * strength * MAX_PX / RADIUS * 10);
+          p.y(dy * strength * MAX_PX / RADIUS * 10);
+        } else {
+          /* Outside radius — gently return to zero */
+          p.x(0);
+          p.y(0);
+        }
+      });
+    }, { passive: true });
+
+    /* Reset all on mouse leave */
+    document.addEventListener('mouseleave', () => {
+      document.querySelectorAll(SELECTOR).forEach(el => {
+        if (!el._jxParallax) return;
+        el._jxParallax.x(0);
+        el._jxParallax.y(0);
+      });
+    });
+  }
+
+  /* ────────────────────────────────────────────────────────────────
      INIT — runs on every page
      ──────────────────────────────────────────────────────────────── */
   function init () {
@@ -585,6 +655,7 @@
     interceptNavLinks();
     loadAvailability();
     initScrollTop();
+    initCursorParallax();
 
     /* Page-in reveal if we came from a transition */
     if (document.readyState === 'complete') {

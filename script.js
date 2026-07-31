@@ -1526,11 +1526,13 @@ const JXUniverse = {
 
       /* Bind card clicks */
       grid.querySelectorAll('.project-card').forEach((card, i) => {
-        card.addEventListener('click', () => this.openModal(projects[i]));
-        card.addEventListener('keydown', e => { if (e.key === 'Enter') this.openModal(projects[i]); });
+        const p = projects[i];
+        if (!p) return;
+        card.addEventListener('click', () => this.openModal(p));
+        card.addEventListener('keydown', e => { if (e.key === 'Enter') this.openModal(p); });
         card.setAttribute('tabindex', '0');
         card.setAttribute('role', 'button');
-        card.setAttribute('aria-label', `View project: ${projects[i].title}`);
+        card.setAttribute('aria-label', `View project: ${p.title || 'Untitled'}`);
       });
 
       /* Refresh cursor hover states */

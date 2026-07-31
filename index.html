@@ -785,6 +785,7 @@
   </style>
 </head>
 <body>
+  <a href="#page" class="skip-to-content">Skip to content</a>
 
   <!-- LOADER — injected by script.js, not nav.js on this page -->
   <div id="loader">
@@ -806,7 +807,7 @@
   </div>
 
   <!-- CANVAS — WebGL particle universe -->
-  <canvas id="hero-canvas" aria-hidden="true"></canvas>
+  <canvas id="hero-canvas" role="img" aria-label="Particle universe animation"></canvas>
 
   <!-- NAV is injected by nav.js -->
 
@@ -1069,7 +1070,7 @@
       </div>
       <button class="cli-close" id="cli-close" aria-label="Close terminal">✕</button>
     </div>
-    <div class="cli-output" id="cli-output"></div>
+    <div class="cli-output" id="cli-output" aria-live="polite" aria-atomic="false"></div>
     <div class="cli-input-row">
       <span class="cli-prompt">jx@universe:~$</span>
       <input class="cli-input" id="cli-input" type="text"

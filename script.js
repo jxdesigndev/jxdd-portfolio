@@ -1215,7 +1215,7 @@ const JXUniverse = {
     const hud = document.createElement('div');
     hud.id = 'pong-hud';
     hud.innerHTML = `
-      <div class="pong-score">
+      <div class="pong-score" aria-live="polite" aria-atomic="true">
         <span id="pong-score-l">00</span>
         <span class="pong-sep">·</span>
         <span id="pong-score-r">00</span>

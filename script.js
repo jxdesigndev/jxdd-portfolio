@@ -1204,6 +1204,7 @@ const JXUniverse = {
     }
 
     this._pongActive = true;
+    document.body.classList.add('pong-active');
     const mats = this.threeCtx.mainMat.uniforms;
 
     /* Transition particles to pong arena */
@@ -1239,6 +1240,15 @@ const JXUniverse = {
       const s = document.createElement('style');
       s.id = 'pong-css';
       s.textContent = `
+        body.pong-active #page {
+          opacity: 0;
+          pointer-events: none;
+          transition: opacity 0.5s ease;
+        }
+        body.pong-active #hero-canvas {
+          background-color: var(--bg, #030508);
+          z-index: 50;
+        }
         #pong-hud {
           position: fixed; inset: 0; z-index: 9998;
           display: flex; flex-direction: column;
@@ -1384,6 +1394,7 @@ const JXUniverse = {
     const exitPong = (e) => {
       if (e && e.key !== 'Escape') return;
       this._pongActive = false;
+      document.body.classList.remove('pong-active');
       cancelAnimationFrame(pongRAF);
       document.removeEventListener('mousemove', onMove);
       document.removeEventListener('touchmove', onMove);

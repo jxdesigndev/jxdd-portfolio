@@ -1471,12 +1471,41 @@ const JXUniverse = {
         .order('priority', { ascending: true })
         .limit(3);
 
+      let renderList = projects;
       if (error || !projects || projects.length === 0) {
-        grid.innerHTML = '<p class="featured-empty" style="text-align:center;color:var(--gray-3);font-family:var(--font-mono);font-size:var(--text-sm);padding:60px;">No featured projects yet — add them in the admin panel.</p>';
-        return;
+        /* Local fallback project data (concept flag added) */
+        renderList = [
+          {
+            id: 'fallback-1',
+            title: 'Neural Cursor Engine',
+            category: 'Experiment',
+            year: '2026',
+            description: 'A study in cursor tracking, particle morphing, and reactive WebGL aesthetics.',
+            tools: ['WebGL', 'GLSL', 'GSAP'],
+            concept: true
+          },
+          {
+            id: 'fallback-2',
+            title: 'Particle Pong',
+            category: 'Interactive',
+            year: '2026',
+            description: 'Classic arcade mechanics recreated using fluid simulations and 55,000 points.',
+            tools: ['Three.js', 'Physics'],
+            concept: true
+          },
+          {
+            id: 'fallback-3',
+            title: 'Audio Synesthesia',
+            category: 'Sound Design',
+            year: '2026',
+            description: 'Procedural audio generation reacting to scroll velocity and particle interactions.',
+            tools: ['Web Audio API'],
+            concept: true
+          }
+        ];
       }
 
-      grid.innerHTML = projects.map((p, i) => this.renderProjectCard(p, i)).join('');
+      grid.innerHTML = renderList.map((p, i) => this.renderProjectCard(p, i)).join('');
 
       /* Animate cards in */
       if (window.gsap) {
@@ -1509,6 +1538,7 @@ const JXUniverse = {
       : `<div class="project-card-placeholder">${(p.title || 'JX').slice(0,2).toUpperCase()}</div>`;
 
     const tools = (p.tools || []).slice(0, 4).map(t => `<span class="tag">${t}</span>`).join('');
+    const conceptBadge = p.concept ? `<span class="badge concept-badge" style="font-size:0.65em; letter-spacing:0.1em; background:var(--accent); color:var(--bg); padding:2px 6px; border-radius:4px; margin-left:12px; vertical-align:middle; font-weight:700;">CONCEPT</span>` : '';
 
     return `
       <article class="project-card" data-id="${p.id}">
@@ -1518,7 +1548,7 @@ const JXUniverse = {
             <span class="project-card-category">${p.category || 'Project'}</span>
             <span class="project-card-year">${p.year || ''}</span>
           </div>
-          <h3 class="project-card-title">${p.title}</h3>
+          <h3 class="project-card-title" style="display:flex; align-items:center;">${p.title}${conceptBadge}</h3>
           <p class="project-card-desc">${(p.description || '').slice(0, 100)}${(p.description || '').length > 100 ? '…' : ''}</p>
           <div class="project-card-tools">${tools}</div>
         </div>

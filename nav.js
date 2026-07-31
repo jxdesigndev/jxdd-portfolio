@@ -76,6 +76,20 @@
           <div class="nav-dot" id="nav-dot"></div>
           <span class="nav-availability-text" id="nav-availability-text">Available</span>
         </div>
+        <button class="nav-audio-toggle" id="nav-audio-toggle"
+                aria-label="Enable audio" title="Enable audio"
+                onclick="window.JXAudio && window.JXAudio.toggle()">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path class="jx-audio-wave jx-audio-wave-1"
+                  d="M10 4v8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            <path class="jx-audio-wave jx-audio-wave-2"
+                  d="M12.5 2.5v11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M7.5 6v4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M5 7v2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            <path class="jx-audio-mute-line"
+                  d="M2 2L14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </button>
         <a href="contact.html" class="nav-cta" data-nav-link>Hire Me</a>
         <button class="nav-hamburger" id="nav-hamburger" aria-label="Toggle menu"
                 aria-expanded="false">

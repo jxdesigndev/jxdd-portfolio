@@ -74,7 +74,16 @@ const JXUniverse = {
       const load = (src) => {
         const img = new Image();
         img.onload = tick; img.onerror = tick;
-        img.src = src;
+        if (src.startsWith('data:image/svg+xml;base64,')) {
+          fetch(src)
+            .then(res => res.blob())
+            .then(blob => {
+              img.src = URL.createObjectURL(blob);
+            })
+            .catch(tick);
+        } else {
+          img.src = src;
+        }
         return img;
       };
 
@@ -1371,7 +1380,7 @@ const JXUniverse = {
     };
     requestAnimationFrame(step);
 
-    /* \u2500\u2500 Exit handler \u2500\u2500 */\
+    /* ─── Exit handler ─── */
     const exitPong = (e) => {
       if (e && e.key !== 'Escape') return;
       this._pongActive = false;

@@ -131,6 +131,8 @@
     if (document.querySelector('.cursor')) return;
     if (window.matchMedia('(hover: none)').matches) return;
 
+    const _mqlRM = window.matchMedia('(prefers-reduced-motion: reduce)');
+
     /* ── DOM Elements ── */
     const dot   = document.createElement('div');
     const ring  = document.createElement('div');
@@ -302,17 +304,19 @@
       ring.style.transform = `translate(${ringX}px, ${ringY}px)`;
       aura.style.transform = `translate(${auraX}px, ${auraY}px)`;
 
-      /* Ring scale/deform based on velocity */
-      const speedNorm = Math.min(speed / 1200, 1);
-      const scaleX = 1 + speedNorm * 0.55;
-      const scaleY = 1 - speedNorm * 0.18;
-      const angle  = Math.atan2(velY, velX) * (180 / Math.PI);
-      ring.style.transform += ` rotate(${angle}deg) scaleX(${scaleX}) scaleY(${scaleY})`;
+      if (!_mqlRM.matches) {
+        /* Ring scale/deform based on velocity */
+        const speedNorm = Math.min(speed / 1200, 1);
+        const scaleX = 1 + speedNorm * 0.55;
+        const scaleY = 1 - speedNorm * 0.18;
+        const angle  = Math.atan2(velY, velX) * (180 / Math.PI);
+        ring.style.transform += ` rotate(${angle}deg) scaleX(${scaleX}) scaleY(${scaleY})`;
 
-      /* Aura glow size based on speed */
-      const auraScale = 1 + speedNorm * 0.6;
-      aura.style.transform += ` scale(${auraScale})`;
-      aura.style.opacity    = 0.12 + speedNorm * 0.18;
+        /* Aura glow size based on speed */
+        const auraScale = 1 + speedNorm * 0.6;
+        aura.style.transform += ` scale(${auraScale})`;
+        aura.style.opacity    = 0.12 + speedNorm * 0.18;
+      }
 
       /* Trail — update one slot per frame for staggered fade */
       if (speed > 15) {
@@ -593,7 +597,7 @@
      proximity. Uses gsap.quickTo() for smooth, GPU-composited motion.
      ──────────────────────────────────────────────────────────────── */
   function initCursorParallax () {
-    if (!window.gsap) return;
+    if (!window.gsap || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
     const SELECTOR = '.project-card, .service-card, .about-strip-image-wrap';
     const MAX_PX   = 8;    // maximum displacement in pixels

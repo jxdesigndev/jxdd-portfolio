@@ -678,9 +678,10 @@ const JXUniverse = {
 
     /* ── Tick ── */
     let clock = 0;
+    const _mqlRM = window.matchMedia('(prefers-reduced-motion: reduce)');
     const tick = (now) => {
       requestAnimationFrame(tick);
-      clock += 0.016;
+      if (!_mqlRM.matches) clock += 0.016;
 
       const scrollY    = window.scrollY;
       const rawVel     = (scrollY - lastScrollY);
@@ -695,13 +696,20 @@ const JXUniverse = {
       /* Phase 2: Camera Z parallax */
       camera.position.z = Math.max(55.0, 80 - scrollY * 0.006);
       /* Phase 2: tiny Y drift on scroll for depth sensation */
-      camera.position.y = scrollVel * 0.04;
+      camera.position.y = !_mqlRM.matches ? scrollVel * 0.04 : 0;
 
       /* Mouse parallax rotation (no spinning) */
-      mainParticles.rotation.y = mouseX * 0.15;
-      mainParticles.rotation.x = mouseY * 0.15;
-      ambParticles.rotation.y  = mouseX * 0.10;
-      ambParticles.rotation.x  = mouseY * 0.10;
+      if (!_mqlRM.matches) {
+        mainParticles.rotation.y = mouseX * 0.15;
+        mainParticles.rotation.x = mouseY * 0.15;
+        ambParticles.rotation.y  = mouseX * 0.10;
+        ambParticles.rotation.x  = mouseY * 0.10;
+      } else {
+        mainParticles.rotation.y = 0;
+        mainParticles.rotation.x = 0;
+        ambParticles.rotation.y  = 0;
+        ambParticles.rotation.x  = 0;
+      }
 
       mainMat.uniforms.uTime.value          = clock;
       mainMat.uniforms.uScrollVelocity.value = scrollVel / 60.0; // normalize to ~0..±1
@@ -812,6 +820,10 @@ const JXUniverse = {
 
   /* ── Uniform tweener (WebGL fade-in helper) ── */
   tweenUniform (uniform, from, to, duration) {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      uniform.value = to;
+      return;
+    }
     const start = performance.now();
     uniform.value = from;
     const step = now => {
@@ -826,7 +838,7 @@ const JXUniverse = {
      3. LENIS SMOOTH SCROLL
      ──────────────────────────────────────────────────────────────── */
   initLenis () {
-    if (!window.Lenis) return;
+    if (!window.Lenis || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     this.lenis = new Lenis({
       duration: 1.4,
       easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -1098,7 +1110,8 @@ const JXUniverse = {
      ──────────────────────────────────────────────────────────────── */
   initScrollAnimations () {
     /* Particle Morphing ScrollTriggers */
-    if (this.threeCtx && !this.threeCtx.is2D && window.gsap && window.ScrollTrigger) {
+    const prefsRM = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (this.threeCtx && !this.threeCtx.is2D && window.gsap && window.ScrollTrigger && !prefsRM) {
       const mats = this.threeCtx.mainMat.uniforms;
       
       // About Section -> Portrait (Target 4)
@@ -1144,23 +1157,31 @@ const JXUniverse = {
                : isBlur            ? { opacity: 1, filter: 'blur(0px)' }
                : { opacity: 1, y: 0 };
 
-      gsap.fromTo(el, from, {
-        ...to,
-        duration: 0.9,
-        ease: 'power3.out',
-        scrollTrigger: {
-          trigger: el,
-          start: 'top 88%',
-          once: true,
-        }
-      });
+      if (prefsRM) {
+        gsap.set(el, to);
+      } else {
+        gsap.fromTo(el, from, {
+          ...to,
+          duration: 0.9,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: el,
+            start: 'top 88%',
+            once: true,
+          }
+        });
+      }
     });
 
     /* Service cards stagger */
-    gsap.fromTo('.service-card', { opacity: 0, y: 30 }, {
-      opacity: 1, y: 0, duration: 0.7, ease: 'power3.out', stagger: 0.1,
-      scrollTrigger: { trigger: '.services-grid', start: 'top 85%', once: true }
-    });
+    if (prefsRM) {
+      gsap.set('.service-card', { opacity: 1, y: 0 });
+    } else {
+      gsap.fromTo('.service-card', { opacity: 0, y: 30 }, {
+        opacity: 1, y: 0, duration: 0.7, ease: 'power3.out', stagger: 0.1,
+        scrollTrigger: { trigger: '.services-grid', start: 'top 85%', once: true }
+      });
+    }
   },
 
   /* ────────────────────────────────────────────────────────────────

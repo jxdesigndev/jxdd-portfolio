@@ -1247,7 +1247,12 @@ const JXUniverse = {
         }
         body.pong-active #hero-canvas {
           background-color: var(--bg, #030508);
-          z-index: 50;
+          z-index: 201;
+        }
+        body.pong-active nav {
+          opacity: 0;
+          pointer-events: none;
+          transition: opacity 0.3s ease;
         }
         #pong-hud {
           position: fixed; inset: 0; z-index: 9998;
@@ -1583,6 +1588,11 @@ const JXUniverse = {
      10. CINEMATIC MODAL
      ──────────────────────────────────────────────────────────────── */
   openModal (p) {
+    /* If Pong is running, exit it first so the modal z-index stack is clean */
+    if (this._pongActive && this._exitPong) {
+      this._exitPong(null);
+    }
+
     /* Remove any existing modal */
     document.getElementById('jx-modal-overlay')?.remove();
 

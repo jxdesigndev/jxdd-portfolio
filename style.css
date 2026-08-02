@@ -69,7 +69,7 @@
   --text-3xl:  clamp(2rem,    6vw,   3.5rem);
   --text-4xl:  clamp(2.8rem,  8vw,   5.5rem);
   --text-5xl:  clamp(3.5rem,  11vw,  9rem);
-  --text-hero: clamp(4rem, 9.5vw, 11rem);
+  --text-hero: clamp(4rem, 9.5vw, 10.5rem);
 
   /* ── Letter Spacing ── */
   --track-tight:  -0.03em;
@@ -160,6 +160,7 @@ body {
   font-size: var(--text-base);
   line-height: var(--lead-normal);
   overflow-x: hidden;
+  scrollbar-gutter: stable; /* reserve scrollbar width so 100vw == usable width */
   cursor: none; /* Custom cursor takes over */
 }
 

@@ -296,23 +296,23 @@ const JXUniverse = {
         const roll = i / count;
         let x = 0, y = 0, z = 0;
 
-        if (roll < 0.25) {
+        if (roll < 0.20) {
           /* Top wall */
           x = (Math.random() * 2 - 1) * W;
           y = H + Math.random() * 1.0;
-        } else if (roll < 0.50) {
+        } else if (roll < 0.40) {
           /* Bottom wall */
           x = (Math.random() * 2 - 1) * W;
           y = -H - Math.random() * 1.0;
-        } else if (roll < 0.625) {
+        } else if (roll < 0.60) {
           /* Left paddle */
           x = -W + (Math.random() - 0.5) * 2;
           y = (Math.random() * 2 - 1) * PADDLE_H;
-        } else if (roll < 0.75) {
+        } else if (roll < 0.80) {
           /* Right paddle */
           x = W - (Math.random() - 0.5) * 2;
           y = (Math.random() * 2 - 1) * PADDLE_H;
-        } else if (roll < 0.875) {
+        } else if (roll < 0.95) {
           /* Ball dot */
           const br = Math.random() * 3;
           const ba = Math.random() * Math.PI * 2;
@@ -445,7 +445,7 @@ const JXUniverse = {
         float hash(float n) { return fract(sin(n) * 43758.5453); }
 
         void main () {
-          vAlpha = aAlpha;
+          vAlpha = mix(aAlpha, 1.0, uProgress7); // Force solid alpha in Pong mode
 
           vec3 pos = mix(position, aTarget1, uProgress1);
           pos = mix(pos, aTarget2, uProgress2);
@@ -475,10 +475,11 @@ const JXUniverse = {
           vec3 sectionCyan  = vec3(0.0, 1.0, 0.8);
           float sc = uScrollColor;
           color = mix(color, mix(sectionAmber, sectionCyan, smoothstep(0.5, 1.0, sc)), sc * 0.25);
+          color = mix(color, vec3(1.0, 1.0, 1.0), uProgress7); // Force bright white in Pong mode
           vColor = color;
 
           /* ── Drift (ambient nebula motion) ── */
-          float totalProg = max(max(max(uProgress1, uProgress2), max(uProgress3, uProgress4)), max(uProgress5, uProgress6));
+          float totalProg = max(max(max(max(uProgress1, uProgress2), max(uProgress3, uProgress4)), max(uProgress5, uProgress6)), uProgress7);
           float drift = 1.0 - totalProg * 0.9;
           float pid = hash(position.x + position.y * 13.7);
           pos.x += sin(uTime * 0.3 + position.y * 0.05 + pid) * 0.6 * drift;

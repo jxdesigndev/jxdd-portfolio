@@ -192,6 +192,16 @@
       position: fixed; top: 50%; transform: translateY(-50%); right: 32px; z-index: 999; transition: opacity 0.4s ease, visibility 0.4s ease;
     }
 
+    .hero-hud.hud-hidden {
+      opacity: 0 !important;
+      visibility: hidden;
+    }
+
+    .hero-hud.hud-force-show {
+      opacity: 1 !important;
+      visibility: visible;
+    }
+
     /* Orbital HUD Widget */
     .hud-widget {
       background: rgba(10, 10, 15, 0.7);

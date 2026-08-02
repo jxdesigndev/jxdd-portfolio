@@ -189,6 +189,7 @@
       gap: var(--s-5);
       opacity: 0;
       padding-bottom: var(--s-12);
+      margin-right: 24px; /* Proper right-edge spacing */
     }
 
     /* Orbital HUD Widget */
@@ -198,6 +199,8 @@
       border-radius: var(--radius-md);
       padding: var(--s-4) var(--s-5);
       min-width: 200px;
+      max-width: 260px; /* Sensible max-width so they never overflow */
+      overflow-wrap: break-word;
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       position: relative;
@@ -767,9 +770,12 @@
     }
 
     /* ── RESPONSIVE ── */
+    @media (max-width: 1400px) {
+      .hero-hud { display: none !important; }
+    }
+
     @media (max-width: 1024px) {
       .hero-inner    { grid-template-columns: 1fr; }
-      .hero-hud      { flex-direction: row; flex-wrap: wrap; justify-content: flex-start; }
       .featured-grid { grid-template-columns: 1fr 1fr; }
       .featured-grid .project-card:first-child { grid-column: span 2; }
       .services-grid { grid-template-columns: 1fr 1fr; }

@@ -1901,3 +1901,18 @@ if ('serviceWorker' in navigator) {
     });
   });
 }
+
+/* ── HUD Scroll Logic ── */
+document.addEventListener('DOMContentLoaded', () => {
+  const heroHud = document.getElementById('hero-hud');
+  if (heroHud) {
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > window.innerHeight * 0.7) {
+        heroHud.classList.add('hud-hidden');
+      } else {
+        heroHud.classList.remove('hud-hidden');
+        heroHud.classList.remove('hud-force-show');
+      }
+    });
+  }
+});

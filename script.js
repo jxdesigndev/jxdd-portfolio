@@ -1906,12 +1906,25 @@ if ('serviceWorker' in navigator) {
 document.addEventListener('DOMContentLoaded', () => {
   const heroHud = document.getElementById('hero-hud');
   if (heroHud) {
+    let isPastHero = false;
+
     window.addEventListener('scroll', () => {
-      if (window.scrollY > window.innerHeight * 0.7) {
+      isPastHero = window.scrollY > window.innerHeight * 0.7;
+      if (isPastHero) {
         heroHud.classList.add('hud-hidden');
       } else {
         heroHud.classList.remove('hud-hidden');
         heroHud.classList.remove('hud-force-show');
+      }
+    });
+
+    window.addEventListener('mousemove', (e) => {
+      if (isPastHero) {
+        if (e.clientX > window.innerWidth - 350) {
+          heroHud.classList.add('hud-force-show');
+        } else {
+          heroHud.classList.remove('hud-force-show');
+        }
       }
     });
   }

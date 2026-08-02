@@ -189,7 +189,7 @@
       gap: var(--s-5);
       opacity: 0;
       padding-bottom: var(--s-12);
-      position: absolute; right: 32px; z-index: 50;
+      position: fixed; top: 50%; transform: translateY(-50%); right: 32px; z-index: 999; transition: opacity 0.4s ease, visibility 0.4s ease;
     }
 
     /* Orbital HUD Widget */

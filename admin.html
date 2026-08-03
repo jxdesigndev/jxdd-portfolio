@@ -36,7 +36,7 @@
           <label class="form-label" for="login-password">Passphrase</label>
           <input type="password" id="login-password" class="form-input" required autocomplete="current-password">
         </div>
-        <div id="login-error" class="form-status error" style="display:none; margin-top:var(--s-2);"></div>
+        <div id="login-error" class="form-status error" role="alert" style="display:none; margin-top:var(--s-2);"></div>
         <button type="submit" class="btn btn-primary" style="margin-top:var(--s-6); width:100%; justify-content:center;">INITIATE_HANDSHAKE ↗</button>
       </form>
     </div>
@@ -123,6 +123,7 @@
           <h3 style="font-family:var(--font-display); font-size:var(--text-lg); margin-bottom:var(--s-4);">Availability Status</h3>
           <form id="settings-form">
             <div class="form-group">
+              <label class="form-label" for="setting-availability">Availability</label>
               <select id="setting-availability" class="form-select">
                 <option value="available">Available for Work</option>
                 <option value="limited">Limited Availability</option>
@@ -137,31 +138,31 @@
           <h3 style="font-family:var(--font-display); font-size:var(--text-lg); margin-bottom:var(--s-4);">Social Links</h3>
           <form id="socials-form">
             <div class="form-group">
-              <label class="form-label">Twitter</label>
+              <label class="form-label" for="setting-social-twitter">Twitter</label>
               <input type="url" id="setting-social-twitter" class="form-input">
             </div>
             <div class="form-group">
-              <label class="form-label">LinkedIn</label>
+              <label class="form-label" for="setting-social-linkedin">LinkedIn</label>
               <input type="url" id="setting-social-linkedin" class="form-input">
             </div>
             <div class="form-group">
-              <label class="form-label">GitHub</label>
+              <label class="form-label" for="setting-social-github">GitHub</label>
               <input type="url" id="setting-social-github" class="form-input">
             </div>
             <div class="form-group">
-              <label class="form-label">Dribbble</label>
+              <label class="form-label" for="setting-social-dribbble">Dribbble</label>
               <input type="url" id="setting-social-dribbble" class="form-input">
             </div>
             <div class="form-group">
-              <label class="form-label">Instagram</label>
+              <label class="form-label" for="setting-social-instagram">Instagram</label>
               <input type="url" id="setting-social-instagram" class="form-input">
             </div>
             <div class="form-group">
-              <label class="form-label">Contra</label>
+              <label class="form-label" for="setting-social-contra">Contra</label>
               <input type="url" id="setting-social-contra" class="form-input">
             </div>
             <div class="form-group">
-              <label class="form-label">Upwork</label>
+              <label class="form-label" for="setting-social-upwork">Upwork</label>
               <input type="url" id="setting-social-upwork" class="form-input">
             </div>
             <button type="submit" class="btn btn-primary btn-sm" style="margin-top:var(--s-4);">Save Social Links</button>

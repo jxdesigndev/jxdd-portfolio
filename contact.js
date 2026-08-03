@@ -44,25 +44,39 @@
     if (window.ScrollTrigger) lenis.on('scroll', ScrollTrigger.update);
   }
 
-  /* Load availability from Supabase */
-  async function loadAvailability () {
+  /* Load settings from Supabase */
+  async function loadSettings () {
     const textEl = document.getElementById('contact-avail-text');
     const badgeEl = document.getElementById('contact-avail');
-    if (!textEl || typeof supabase === 'undefined') return;
+    if (typeof supabase === 'undefined') return;
 
     try {
-      const { data } = await supabase
-        .from('site_settings').select('value').eq('key', 'availability_status').maybeSingle();
+      const { data } = await supabase.from('site_settings').select('key, value');
       if (data) {
-        if (data.value === 'available') {
-          textEl.textContent = 'Available for Work';
-        } else if (data.value === 'limited') {
-          textEl.textContent = 'Limited Availability';
-          if (badgeEl) badgeEl.style.borderColor = 'var(--amber)';
-        } else {
-          textEl.textContent = 'Currently Unavailable';
-          if (badgeEl) badgeEl.style.borderColor = 'var(--gray-3)';
-        }
+        data.forEach(row => {
+          if (row.key === 'availability_status' && textEl) {
+            if (row.value === 'available') {
+              textEl.textContent = 'Available for Work';
+            } else if (row.value === 'limited') {
+              textEl.textContent = 'Limited Availability';
+              if (badgeEl) badgeEl.style.borderColor = 'var(--amber)';
+            } else {
+              textEl.textContent = 'Currently Unavailable';
+              if (badgeEl) badgeEl.style.borderColor = 'var(--gray-3)';
+            }
+          } else if (row.key.startsWith('social_')) {
+            const platform = row.key.replace('social_', '');
+            const linkEl = document.getElementById(`link-social-${platform}`);
+            if (linkEl) {
+              if (row.value && row.value.trim() !== '') {
+                linkEl.href = row.value;
+                linkEl.style.display = '';
+              } else {
+                linkEl.style.display = 'none';
+              }
+            }
+          }
+        });
       }
     } catch (_) {}
   }
@@ -136,7 +150,7 @@
     revealPage();
     initScrollAnimations();
     initLenis();
-    loadAvailability();
+    loadSettings();
     initForm();
   }
 

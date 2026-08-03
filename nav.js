@@ -64,7 +64,6 @@
     nav.innerHTML = `
       <a href="index.html" class="nav-brand" aria-label="JX Design & Dev — Home">
         ${JX_LOGO_SVG}
-        <span class="nav-wordmark">JX</span>
       </a>
 
       <ul class="nav-links" role="list">

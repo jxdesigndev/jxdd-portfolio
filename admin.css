@@ -134,7 +134,7 @@
   background: var(--surface-1);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
-  overflow: hidden;
+  overflow-x: auto;
 }
 
 .admin-table {
@@ -228,4 +228,23 @@
   margin-top: var(--s-8);
   padding-top: var(--s-4);
   border-top: 1px solid var(--border);
+}
+
+/* ── RESPONSIVE — MOBILE ── */
+@media (max-width: 768px) {
+  .admin-layout {
+    flex-direction: column;
+  }
+  .admin-sidebar {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+    padding: var(--s-4) 0;
+  }
+  .admin-nav {
+    flex: none;
+  }
+  .admin-tab-content {
+    padding: var(--s-6) var(--s-4);
+  }
 }

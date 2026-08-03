@@ -105,6 +105,7 @@
     mobile.innerHTML = `
       <nav class="mobile-nav-links" role="list">
         ${mobileLinkHtml}
+        <a class="mobile-nav-link" role="button" tabindex="0" onclick="window.JXAudio && window.JXAudio.toggle()" style="cursor: pointer;">Audio</a>
       </nav>
       <div class="mobile-menu-footer">
         <div class="mobile-menu-socials">

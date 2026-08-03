@@ -34,6 +34,10 @@
   --cyan:        #00FFCC;
   --cyan-dim:    rgba(0, 255, 204, 0.08);
 
+  /* ── Red (Destructive / Error) ── */
+  --red:         #FF5F57;
+  --red-dim:     rgba(255, 95, 87, 0.10);
+
   /* ── Purple (Depth Accent) ── */
   --purple:      #8B5CF6;
   --purple-dim:  rgba(139, 92, 246, 0.10);
@@ -1626,6 +1630,28 @@ svg { display: block; }
   resize: vertical;
   min-height: 140px;
   font-family: var(--font-body);
+}
+
+.form-status {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  padding: var(--s-3) var(--s-4);
+  border-radius: var(--radius-sm);
+  display: none;
+}
+
+.form-status.success {
+  display: block;
+  color: var(--green);
+  background: var(--green-glow-md);
+  border: 1px solid rgba(0, 255, 65, 0.2);
+}
+
+.form-status.error {
+  display: block;
+  color: var(--red);
+  background: var(--red-dim);
+  border: 1px solid rgba(255, 95, 87, 0.2);
 }
 
 /* ----------------------------------------------------------------

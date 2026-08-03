@@ -145,7 +145,7 @@
 
 .admin-table th {
   background: var(--surface-2);
-  color: var(--gray-3);
+  color: var(--gray-2);
   font-family: var(--font-mono);
   font-size: var(--text-xs);
   text-transform: uppercase;

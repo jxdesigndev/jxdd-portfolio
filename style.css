@@ -520,7 +520,7 @@ svg { display: block; }
   font-size: var(--text-xs);
   letter-spacing: var(--track-wider);
   text-transform: uppercase;
-  color: var(--gray-3);
+  color: var(--gray-2);
   position: relative;
   transition: color 0.3s ease;
 }
@@ -583,7 +583,7 @@ svg { display: block; }
   font-size: var(--text-2xs);
   letter-spacing: var(--track-wide);
   text-transform: uppercase;
-  color: var(--gray-3);
+  color: var(--gray-2);
 }
 
 /* Nav CTA */
@@ -739,7 +739,7 @@ svg { display: block; }
 .jx-audio-toast-dismiss {
   background: none;
   border: none;
-  color: var(--gray-3);
+  color: var(--gray-2);
   cursor: pointer;
   font-size: var(--text-sm);
   line-height: 1;
@@ -810,7 +810,7 @@ svg { display: block; }
   font-size: var(--text-xs);
   letter-spacing: var(--track-wider);
   text-transform: uppercase;
-  color: var(--gray-3);
+  color: var(--gray-2);
   transition: color 0.3s;
 }
 
@@ -982,7 +982,7 @@ svg { display: block; }
 .loader-pct {
   font-family: var(--font-mono);
   font-size: var(--text-2xs);
-  color: var(--gray-3);
+  color: var(--gray-2);
   letter-spacing: var(--track-wide);
   opacity: 0;
   animation: fade-in 0.5s ease 1s forwards;
@@ -1109,7 +1109,7 @@ svg { display: block; }
   font-size: var(--text-2xs);
   letter-spacing: var(--track-wide);
   text-transform: uppercase;
-  color: var(--gray-3);
+  color: var(--gray-2);
   padding: var(--s-1) var(--s-4);
   border: 1px solid var(--border);
   border-radius: var(--radius-full);
@@ -1290,7 +1290,7 @@ svg { display: block; }
 .project-card-year {
   font-family: var(--font-mono);
   font-size: var(--text-2xs);
-  color: var(--gray-3);
+  color: var(--gray-2);
 }
 
 .project-card-title {
@@ -1495,7 +1495,7 @@ svg { display: block; }
 
 .footer-tagline {
   font-size: var(--text-sm);
-  color: var(--gray-3);
+  color: var(--gray-2);
   line-height: var(--lead-relaxed);
   max-width: 280px;
 }
@@ -1505,7 +1505,7 @@ svg { display: block; }
   font-size: var(--text-xs);
   letter-spacing: var(--track-widest);
   text-transform: uppercase;
-  color: var(--gray-3);
+  color: var(--gray-2);
   margin-bottom: var(--s-5);
 }
 
@@ -1513,7 +1513,7 @@ svg { display: block; }
 
 .footer-nav-link {
   font-size: var(--text-sm);
-  color: var(--gray-3);
+  color: var(--gray-2);
   transition: color 0.3s;
 }
 
@@ -1601,7 +1601,7 @@ svg { display: block; }
   font-size: var(--text-xs);
   letter-spacing: var(--track-wide);
   text-transform: uppercase;
-  color: var(--gray-3);
+  color: var(--gray-2);
 }
 
 .form-input,
@@ -1616,6 +1616,11 @@ svg { display: block; }
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
   outline: none;
   width: 100%;
+}
+
+:focus-visible {
+  outline: 2px solid var(--green);
+  outline-offset: 2px;
 }
 
 .form-input::placeholder,

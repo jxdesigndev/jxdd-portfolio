@@ -32,7 +32,16 @@
     messageModalClose: document.getElementById('message-modal-close'),
 
     settingsForm: document.getElementById('settings-form'),
-    settingAvailability: document.getElementById('setting-availability')
+    settingAvailability: document.getElementById('setting-availability'),
+
+    socialsForm: document.getElementById('socials-form'),
+    settingSocialTwitter: document.getElementById('setting-social-twitter'),
+    settingSocialLinkedin: document.getElementById('setting-social-linkedin'),
+    settingSocialGithub: document.getElementById('setting-social-github'),
+    settingSocialDribbble: document.getElementById('setting-social-dribbble'),
+    settingSocialInstagram: document.getElementById('setting-social-instagram'),
+    settingSocialContra: document.getElementById('setting-social-contra'),
+    settingSocialUpwork: document.getElementById('setting-social-upwork')
   };
 
   let session = null;
@@ -279,9 +288,18 @@
 
   /* ── SETTINGS ── */
   async function loadSettings() {
-    const { data, error } = await supabase.from('site_settings').select('*').eq('key', 'availability_status').maybeSingle();
+    const { data, error } = await supabase.from('site_settings').select('*');
     if (data) {
-      DOM.settingAvailability.value = data.value;
+      data.forEach(row => {
+        if (row.key === 'availability_status') DOM.settingAvailability.value = row.value;
+        if (row.key === 'social_twitter') DOM.settingSocialTwitter.value = row.value;
+        if (row.key === 'social_linkedin') DOM.settingSocialLinkedin.value = row.value;
+        if (row.key === 'social_github') DOM.settingSocialGithub.value = row.value;
+        if (row.key === 'social_dribbble') DOM.settingSocialDribbble.value = row.value;
+        if (row.key === 'social_instagram') DOM.settingSocialInstagram.value = row.value;
+        if (row.key === 'social_contra') DOM.settingSocialContra.value = row.value;
+        if (row.key === 'social_upwork') DOM.settingSocialUpwork.value = row.value;
+      });
     }
   }
 
@@ -291,6 +309,25 @@
     const { error } = await supabase.from('site_settings').upsert({ key: 'availability_status', value: val });
     if (!error) {
       alert('Status updated successfully.');
+    }
+  });
+
+  DOM.socialsForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const payload = [
+      { key: 'social_twitter', value: DOM.settingSocialTwitter.value },
+      { key: 'social_linkedin', value: DOM.settingSocialLinkedin.value },
+      { key: 'social_github', value: DOM.settingSocialGithub.value },
+      { key: 'social_dribbble', value: DOM.settingSocialDribbble.value },
+      { key: 'social_instagram', value: DOM.settingSocialInstagram.value },
+      { key: 'social_contra', value: DOM.settingSocialContra.value },
+      { key: 'social_upwork', value: DOM.settingSocialUpwork.value }
+    ];
+    const { error } = await supabase.from('site_settings').upsert(payload);
+    if (!error) {
+      alert('Social links updated successfully.');
+    } else {
+      alert('Error updating social links: ' + error.message);
     }
   });
 

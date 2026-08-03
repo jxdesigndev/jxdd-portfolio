@@ -155,12 +155,20 @@ document.addEventListener('DOMContentLoaded', () => {
   const scoreElL = document.getElementById('pong-score-l');
   const scoreElR = document.getElementById('pong-score-r');
 
+  // Device-aware hint text
+  const isTouch = window.matchMedia('(hover: none)').matches;
+  const hintEl = document.querySelector('.pong-hint');
+  if (hintEl) {
+    hintEl.textContent = isTouch ? 'Drag to play · Tap × to exit' : 'Move mouse · Esc to exit';
+  }
+
   const onMove = (e) => {
     if (e.touches) e.preventDefault(); // Stop iOS Safari pull-to-refresh / rubber-banding
     const cy = e.touches ? e.touches[0].clientY : e.clientY;
     mouseNY = -(cy / window.innerHeight - 0.5) * 2;
   };
   document.addEventListener('mousemove', onMove);
+  document.addEventListener('touchstart', onMove, { passive: false });
   document.addEventListener('touchmove', onMove, { passive: false });
 
   document.addEventListener('keydown', (e) => {

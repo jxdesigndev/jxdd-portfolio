@@ -689,8 +689,42 @@ const JXUniverse = {
     /* ── Tick ── */
     let clock = 0;
     const _mqlRM = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    let rafId = null;
+    let isVisible = !document.hidden;
+    let inViewport = true;
+
+    const startLoop = () => {
+      if (!rafId && isVisible && inViewport) {
+        tick();
+      }
+    };
+    const stopLoop = () => {
+      if (rafId) {
+        cancelAnimationFrame(rafId);
+        rafId = null;
+      }
+    };
+
+    document.addEventListener('visibilitychange', () => {
+      isVisible = !document.hidden;
+      if (isVisible) startLoop();
+      else stopLoop();
+    });
+
+    if ('IntersectionObserver' in window) {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          inViewport = entry.isIntersecting;
+          if (inViewport) startLoop();
+          else stopLoop();
+        });
+      }, { threshold: 0.01 });
+      observer.observe(canvas);
+    }
+
     const tick = (now) => {
-      requestAnimationFrame(tick);
+      rafId = requestAnimationFrame(tick);
       if (!_mqlRM.matches) clock += 0.016;
 
       const scrollY    = window.scrollY;
@@ -735,7 +769,7 @@ const JXUniverse = {
       renderer.render(scene, camera);
     };
 
-    tick();
+    startLoop();
 
     this.threeCtx = { mainMat, ambMat, mainParticles };
   },
@@ -792,8 +826,41 @@ const JXUniverse = {
     this.canvas2DAlpha = () => ga;
     this.canvas2DSetAlpha = v => { ga = v; };
 
+    let rafId = null;
+    let isVisible = !document.hidden;
+    let inViewport = true;
+
+    const startLoop = () => {
+      if (!rafId && isVisible && inViewport) {
+        draw();
+      }
+    };
+    const stopLoop = () => {
+      if (rafId) {
+        cancelAnimationFrame(rafId);
+        rafId = null;
+      }
+    };
+
+    document.addEventListener('visibilitychange', () => {
+      isVisible = !document.hidden;
+      if (isVisible) startLoop();
+      else stopLoop();
+    });
+
+    if ('IntersectionObserver' in window) {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          inViewport = entry.isIntersecting;
+          if (inViewport) startLoop();
+          else stopLoop();
+        });
+      }, { threshold: 0.01 });
+      observer.observe(canvas);
+    }
+
     const draw = () => {
-      requestAnimationFrame(draw);
+      rafId = requestAnimationFrame(draw);
       t += 0.016;
 
       ctx.globalCompositeOperation = 'source-over';
@@ -824,7 +891,7 @@ const JXUniverse = {
       ctx.globalCompositeOperation = 'source-over';
     };
 
-    draw();
+    startLoop();
     this.threeCtx = { is2D: true }; /* mark as active so loader knows */
   },
 

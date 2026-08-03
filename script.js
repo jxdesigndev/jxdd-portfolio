@@ -1393,6 +1393,39 @@ const JXUniverse = {
       if (mats.uMouseForce) {
         mats.uMouseForce.value.set(ballX / 130, ballY / 130, 0.9);
       }
+
+      /* Update visual particle positions */
+      if (!this._pongBase) {
+        this._pongBase = Float32Array.from(this.threeCtx.mainParticles.geometry.attributes.aTarget7.array);
+      }
+      const attr = this.threeCtx.mainParticles.geometry.attributes.aTarget7;
+      const arr = attr.array;
+      const base = this._pongBase;
+      const count = attr.count;
+
+      /* 0.40 - 0.60: Left Paddle */
+      const idxLPStart = Math.floor(0.40 * count);
+      const idxLPEnd   = Math.floor(0.60 * count);
+      for (let i = idxLPStart; i < idxLPEnd; i++) {
+        arr[i*3 + 1] = base[i*3 + 1] + paddleLY;
+      }
+      
+      /* 0.60 - 0.80: Right Paddle */
+      const idxRPStart = Math.floor(0.60 * count);
+      const idxRPEnd   = Math.floor(0.80 * count);
+      for (let i = idxRPStart; i < idxRPEnd; i++) {
+        arr[i*3 + 1] = base[i*3 + 1] + paddleRY;
+      }
+
+      /* 0.80 - 0.95: Ball */
+      const idxBallStart = Math.floor(0.80 * count);
+      const idxBallEnd   = Math.floor(0.95 * count);
+      for (let i = idxBallStart; i < idxBallEnd; i++) {
+        arr[i*3]     = base[i*3]     + ballX;
+        arr[i*3 + 1] = base[i*3 + 1] + ballY;
+      }
+      
+      attr.needsUpdate = true;
     };
     requestAnimationFrame(step);
 

@@ -2030,3 +2030,37 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 });
+
+/* ── Auto-fit Hero Text ── */
+function autoFitHeroText() {
+  const lines = document.querySelectorAll('.hero-name-line');
+  if (!lines.length) return;
+
+  lines.forEach(line => {
+    // Reset inline font size so CSS clamp applies again
+    line.style.fontSize = '';
+    
+    // Check if the text overflows its container
+    if (line.scrollWidth > line.clientWidth) {
+      let currentSize = parseFloat(window.getComputedStyle(line).fontSize);
+      
+      // Reduce font size until it fits, with a 24px floor
+      while (line.scrollWidth > line.clientWidth && currentSize > 24) {
+        currentSize -= 1;
+        line.style.fontSize = currentSize + 'px';
+      }
+    }
+  });
+}
+
+// Run safely after fonts load to ensure accurate measurements
+if (document.fonts && document.fonts.ready) {
+  document.fonts.ready.then(() => {
+    autoFitHeroText();
+    window.addEventListener('resize', autoFitHeroText);
+  });
+} else {
+  // Fallback for older browsers
+  window.addEventListener('load', autoFitHeroText);
+  window.addEventListener('resize', autoFitHeroText);
+}

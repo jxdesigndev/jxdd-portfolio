@@ -1599,7 +1599,7 @@ const JXUniverse = {
       : `<div class="project-card-placeholder">${(p.title || 'JX').slice(0,2).toUpperCase()}</div>`;
 
     const tools = (p.tools || []).slice(0, 4).map(t => `<span class="tag">${t}</span>`).join('');
-    const conceptBadge = p.concept ? `<span class="badge concept-badge" style="font-size:0.65em; letter-spacing:0.1em; background:var(--accent); color:var(--bg); padding:2px 6px; border-radius:4px; margin-left:12px; vertical-align:middle; font-weight:700;">CONCEPT</span>` : '';
+    const conceptBadge = p.concept ? `<span class="badge concept-badge" style="font-size:var(--text-2xs); letter-spacing:0.1em; background:var(--accent); color:var(--bg); padding:2px 6px; border-radius:4px; margin-left:12px; vertical-align:middle; font-weight:700;">CONCEPT</span>` : '';
 
     return `
       <article class="project-card" data-id="${p.id}">

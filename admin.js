@@ -254,7 +254,7 @@
       return `
       <tr>
         <td>${d}</td>
-        <td><strong style="color:var(--white);">${m.name}</strong><br><span style="font-size:12px;">${m.email}</span></td>
+        <td><strong style="color:var(--white);">${m.name}</strong><br><span style="font-size:var(--text-xs);">${m.email}</span></td>
         <td>${m.project_type || 'General'}</td>
         <td>
           <button class="btn btn-ghost btn-sm btn-view-msg" data-id="${m.id}">Read</button>

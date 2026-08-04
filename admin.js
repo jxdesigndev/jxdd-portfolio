@@ -163,6 +163,9 @@
       document.getElementById('pf-title').value = project.title || '';
       document.getElementById('pf-category').value = project.category || '';
       document.getElementById('pf-year').value = project.year || '';
+      document.getElementById('pf-role').value = project.project_role || '';
+      document.getElementById('pf-timeline').value = project.timeline || '';
+      document.getElementById('pf-project-type').value = project.project_type || '';
       document.getElementById('pf-priority').value = project.priority || 0;
       document.getElementById('pf-image').value = project.image_url || '';
       document.getElementById('pf-tools').value = (project.tools || []).join(', ');
@@ -194,6 +197,9 @@
       title: document.getElementById('pf-title').value.trim(),
       category: document.getElementById('pf-category').value.trim(),
       year: document.getElementById('pf-year').value.trim(),
+      project_role: document.getElementById('pf-role').value.trim(),
+      timeline: document.getElementById('pf-timeline').value.trim(),
+      project_type: document.getElementById('pf-project-type').value.trim(),
       priority: parseInt(document.getElementById('pf-priority').value) || 0,
       image_url: document.getElementById('pf-image').value.trim(),
       tools: document.getElementById('pf-tools').value.split(',').map(s => s.trim()).filter(Boolean),

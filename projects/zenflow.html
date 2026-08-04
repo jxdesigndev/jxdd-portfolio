@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Zenflow Case Study - A wellness app concept for women combining yoga and strength training.">
+  <meta name="theme-color" content="#000000">
+  <title>Zenflow Case Study | Okezie Ferdinand | JX Design & Dev</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&family=Playfair+Display:ital,wght@1,900&display=swap" rel="stylesheet">
+
+  <!-- GSAP -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+  <!-- Lenis -->
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js" defer></script>
+
+  <link rel="stylesheet" href="../style.css">
+
+  <style>
+    /* ── Page wrapper ── */
+    #page { opacity: 0; }
+
+    /* Custom styles for case study */
+    .case-study-hero {
+      padding: 160px var(--s-8) var(--s-16);
+      max-width: var(--container-md);
+      margin: 0 auto;
+    }
+    
+    .case-study-meta {
+      font-family: var(--font-mono);
+      font-size: var(--text-sm);
+      color: var(--green);
+      letter-spacing: 0.1em;
+      margin-bottom: var(--s-8);
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-6);
+    }
+    .case-study-meta div {
+      display: flex;
+      flex-direction: column;
+      gap: var(--s-2);
+    }
+    .case-study-meta span {
+      color: var(--white);
+    }
+
+    .case-study-title {
+      font-family: var(--font-display);
+      font-size: clamp(3rem, 8vw, 6rem);
+      font-weight: 800;
+      line-height: 1;
+      color: var(--white);
+      margin: 0 0 var(--s-8);
+    }
+
+    .case-study-content {
+      max-width: var(--container-md);
+      margin: 0 auto;
+      padding: 0 var(--s-8) var(--s-24);
+      font-family: var(--font-body);
+      font-size: var(--text-lg);
+      color: var(--gray-2);
+      line-height: var(--lead-relaxed);
+    }
+
+    .case-study-content h2 {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 700;
+      color: var(--white);
+      margin: var(--s-16) 0 var(--s-6);
+    }
+
+    .case-study-content p {
+      margin-bottom: var(--s-6);
+    }
+    
+    .case-study-content ul {
+      margin-bottom: var(--s-6);
+      padding-left: var(--s-6);
+    }
+    
+    .case-study-content li {
+      margin-bottom: var(--s-2);
+    }
+  </style>
+</head>
+<body>
+  <a href="#page" class="skip-to-content">Skip to content</a>
+  <div id="page">
+
+    <main>
+      <section class="case-study-hero">
+        <a href="../work.html" class="btn btn-ghost" style="margin-bottom: var(--s-12); align-self: flex-start;">← Back to Work</a>
+        <h1 class="case-study-title">Zenflow</h1>
+        
+        <div class="case-study-meta">
+          <div>Role <span>Product Designer (Solo)</span></div>
+          <div>Tools <span>Figma</span></div>
+          <div>Timeline <span>Concept sprint, under 1 week</span></div>
+          <div>Type <span>Self-initiated design exercise</span></div>
+        </div>
+      </section>
+
+      <section class="case-study-content">
+        <h2>Overview</h2>
+        <p>Zenflow is a wellness app concept designed to solve a common friction point in fitness apps built for women: yoga and strength training are almost always treated as separate products, forcing users to juggle two apps, two habits, and two disconnected routines to get a complete wellness experience.</p>
+
+        <h2>The Problem</h2>
+        <p>Most fitness apps optimize for one lane — high-intensity gym tracking, or slow-paced yoga and mindfulness — rarely both. For women who want structured strength training and recovery/mindfulness work in one place, that means stitching together a routine across multiple apps with inconsistent design languages, separate logins, and no unified sense of progress.</p>
+
+        <h2>Designing for Amara</h2>
+        <p>To ground the design decisions, I designed around a practical user persona:</p>
+        <p><strong>Amara, 27</strong> — Marketing coordinator, new to structured fitness. Wants to build strength without the intimidation of traditional gym apps, and values mindfulness as part of her routine, not an afterthought. Short on time — needs a workout library that's fast to browse and easy to commit to, without decision fatigue.</p>
+        <p>This persona shaped two concrete decisions: an onboarding flow that reduces early friction (get her into a workout fast, not a lengthy setup process), and a workout library structured around how much time she has, not just workout type.</p>
+
+        <h2>Design Direction</h2>
+        <p>The visual system deliberately avoids the cold blues and high-energy neon greens most fitness apps default to. Instead, Zenflow uses a warm palette of peach, brown, and nude tones — built to feel calming and approachable rather than clinical or intimidating, reinforcing the yoga-meets-strength positioning at a visual level, not just a functional one.</p>
+
+        <h2>What I Designed</h2>
+        <ul>
+          <li><strong>Onboarding flow</strong> — goal-setting, fitness level, and time-availability capture, designed to get a new user into her first session fast</li>
+          <li><strong>Workout library</strong> — browsable by category and duration, structured around real time constraints rather than a generic exercise catalog</li>
+        </ul>
+
+        <h2>Constraints, Honestly</h2>
+        <p>This was a deliberately scoped concept sprint, not a multi-week engagement — completed in under a week to test moving from concept to high-fidelity screens at speed. It reflects design thinking and execution quality under a tight timeline, not a full end-to-end product research cycle.</p>
+
+        <div style="margin-top: var(--s-16);">
+          <a href="https://www.figma.com/design/39EIzD5d1sAo6u4DCSlFI4/Portfolio--All---Copy-?node-id=44-3840&t=nOn6B8ZYNM0dm1Dp-4" target="_blank" rel="noopener noreferrer" class="btn btn-primary">View Prototype in Figma ↗</a>
+        </div>
+      </section>
+    </main>
+
+    <!-- ── FOOTER ── -->
+    <footer style="border-top: 1px solid var(--border); padding: var(--s-8) var(--s-8); display:flex; justify-content:space-between; align-items:center; flex-wrap: wrap; gap: var(--s-4);">
+      <span style="font-family: var(--font-mono); font-size: var(--text-xs); color: var(--gray-2);">
+        © 2026 JX. Nigeria.
+      </span>
+      <span style="font-family: var(--font-mono); font-size: var(--text-xs); color: var(--green);">
+        ZENFLOW / CASE STUDY
+      </span>
+    </footer>
+
+  </div><!-- /#page -->
+
+  <script src="../nav.js" defer></script>
+  <!-- Basic initialization for page fade-in since we removed about.js/script.js -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      gsap.to('#page', { opacity: 1, duration: 1, ease: 'power2.out' });
+    });
+  </script>
+</body>
+</html>

@@ -1984,9 +1984,9 @@ const JXUniverse = {
         if (response) {
           print(response, 80);
           /* Navigate commands */
-          if (cmd === 'work')     setTimeout(() => { sessionStorage.setItem('ct-active','1'); window.location.href = 'work.html'; }, 1500);
-          if (cmd === 'services') setTimeout(() => { sessionStorage.setItem('ct-active','1'); window.location.href = 'services.html'; }, 1500);
-          if (cmd === 'contact' || cmd === 'hire me') setTimeout(() => { sessionStorage.setItem('ct-active','1'); window.location.href = 'contact.html'; }, 2200);
+          if (cmd === 'work')     setTimeout(() => { sessionStorage.setItem('ct-active','1'); window.location.href = '/work.html'; }, 1500);
+          if (cmd === 'services') setTimeout(() => { sessionStorage.setItem('ct-active','1'); window.location.href = '/services.html'; }, 1500);
+          if (cmd === 'contact' || cmd === 'hire me') setTimeout(() => { sessionStorage.setItem('ct-active','1'); window.location.href = '/contact.html'; }, 2200);
           /* Phase 4: Pong launch */
           if (cmd === 'pong') setTimeout(() => { close(); this.initPong(); }, 1600);
         } else {

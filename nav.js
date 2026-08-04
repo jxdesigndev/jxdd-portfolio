@@ -11,11 +11,11 @@
      CONFIG
      ──────────────────────────────────────────────────────────────── */
   const NAV_LINKS = [
-    { href: 'index.html',    label: 'Home' },
-    { href: 'about.html',   label: 'About' },
-    { href: 'work.html',    label: 'Work' },
-    { href: 'services.html',label: 'Services' },
-    { href: 'contact.html', label: 'Contact' },
+    { href: '/index.html',    label: 'Home' },
+    { href: '/about.html',   label: 'About' },
+    { href: '/work.html',    label: 'Work' },
+    { href: '/services.html',label: 'Services' },
+    { href: '/contact.html', label: 'Contact' },
   ];
 
   const JX_LOGO_SVG = `
@@ -32,7 +32,8 @@
      DETECT ACTIVE PAGE
      ──────────────────────────────────────────────────────────────── */
   function getActivePage () {
-    const path = window.location.pathname.split('/').pop() || 'index.html';
+    const path = window.location.pathname;
+    if (path === '/' || path === '') return '/index.html';
     return path;
   }
 
@@ -44,8 +45,7 @@
     const activePage = getActivePage();
 
     const linksHtml = NAV_LINKS.map(link => {
-      const isActive = activePage === link.href ||
-        (activePage === '' && link.href === 'index.html');
+      const isActive = activePage === link.href;
       return `<li>
         <a href="${link.href}" class="nav-link${isActive ? ' active' : ''}"
            data-nav-link>${link.label}</a>
@@ -62,7 +62,7 @@
     nav.setAttribute('role', 'navigation');
     nav.setAttribute('aria-label', 'Main navigation');
     nav.innerHTML = `
-      <a href="index.html" class="nav-brand" aria-label="JX Design & Dev — Home">
+      <a href="/index.html" class="nav-brand" aria-label="JX Design & Dev — Home">
         ${JX_LOGO_SVG}
       </a>
 
@@ -89,7 +89,7 @@
                   d="M2 2L14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
           </svg>
         </button>
-        <a href="contact.html" class="nav-cta" data-nav-link>Hire Me</a>
+        <a href="/contact.html" class="nav-cta" data-nav-link>Hire Me</a>
         <button class="nav-hamburger" id="nav-hamburger" aria-label="Toggle menu"
                 aria-expanded="false">
           <span></span><span></span><span></span>
@@ -514,7 +514,7 @@
 
         /* Same page? Do nothing */
         const current = getActivePage();
-        if (href === current || (href === 'index.html' && current === '')) return;
+        if (href === current) return;
 
         e.preventDefault();
         sessionStorage.setItem('ct-active', '1');

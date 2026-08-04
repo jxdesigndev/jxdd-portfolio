@@ -213,9 +213,13 @@ const JXUniverse = {
     let pCoder = [], cCoder = [];
     let pDesigner = [], cDesigner = [];
 
-    // Phase 2 & Phase 3 Hero: centered, crisp, scale=0.6
-    extractPixels(this.imgOkezie1, pOkezie1, cOkezie1, true, 0, 0, 0, 0.6);
-    extractPixels(this.imgHero2, pHero2, cHero2, true, 0, 0, 0, 0.6);
+    // Phase 2 & Phase 3 Hero: responsive scale and offset
+    const isMobileHero = window.innerWidth < 768;
+    const heroScale = isMobileHero ? 0.45 : 0.72;
+    const heroOffsetX = isMobileHero ? 0.0 : 15.0;
+    
+    extractPixels(this.imgOkezie1, pOkezie1, cOkezie1, true, heroOffsetX, 0, 0, heroScale);
+    extractPixels(this.imgHero2, pHero2, cHero2, true, heroOffsetX, 0, 0, heroScale);
 
     // Target 4 (About): offset to left (-25.0, 0, -10.0, scale=0.5) so it never overlaps or disturbs text on right
     extractPixels(this.imgPortrait, pPortrait, cPortrait, true, -25.0, 0, -10.0, 0.5);

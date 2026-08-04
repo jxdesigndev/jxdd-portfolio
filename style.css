@@ -30,6 +30,9 @@
   --amber:       #FFB800;
   --amber-dim:   rgba(255, 184, 0, 0.10);
   --amber-glow:  rgba(255, 184, 0, 0.25);
+  --gold:        #D4A24E;
+  --gold-dim:    rgba(212, 162, 78, 0.10);
+  --gold-glow:   rgba(212, 162, 78, 0.25);
 
   /* ── Cyan (Tech Highlight) ── */
   --cyan:        #00FFCC;

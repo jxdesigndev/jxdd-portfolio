@@ -1294,6 +1294,7 @@ const JXUniverse = {
     }
 
     /* \u2500\u2500 Build HUD overlay \u2500\u2500 */
+    const isTouch = window.matchMedia('(hover: none)').matches;
     const hud = document.createElement('div');
     hud.id = 'pong-hud';
     hud.innerHTML = `
@@ -1303,7 +1304,8 @@ const JXUniverse = {
         <span id="pong-score-r">00</span>
       </div>
       <div class="pong-title">PARTICLE PONG</div>
-      <div class="pong-hint">Move mouse · Esc to exit</div>
+      <div class="pong-hint">${isTouch ? 'Drag to play · Tap ✕ to exit' : 'Move mouse · Esc to exit'}</div>
+      <button class="pong-close-btn" id="pong-close-btn" aria-label="Exit Pong">✕</button>
     `;
     document.body.append(hud);
 
@@ -1360,6 +1362,29 @@ const JXUniverse = {
           color: rgba(255,255,255,0.25);
           margin-top: 4px;
         }
+        .pong-close-btn {
+          position: absolute;
+          top: var(--s-4, 1rem);
+          right: var(--s-4, 1rem);
+          background: var(--surface-2, #0c0e12);
+          border: 1px solid var(--border, rgba(255,255,255,0.08));
+          color: var(--white, #F0F4F8);
+          width: 36px;
+          height: 36px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          font-size: var(--text-sm, 0.875rem);
+          transition: border-color 0.2s ease, color 0.2s ease;
+          pointer-events: auto;
+          z-index: 10;
+        }
+        .pong-close-btn:hover {
+          border-color: var(--green, #00FF41);
+          color: var(--green, #00FF41);
+        }
       `;
       document.head.append(s);
     }
@@ -1388,7 +1413,7 @@ const JXUniverse = {
     document.addEventListener('mousemove', onMove);
     document.addEventListener('touchmove', onMove, { passive: true });
 
-    /* \u2500\u2500 Game loop \u2500\u2500 */
+    /* ─── Game loop ─── */
     let pongRAF;
     const step = () => {
       if (!this._pongActive) return;
@@ -1502,13 +1527,14 @@ const JXUniverse = {
 
     /* ─── Exit handler ─── */
     const exitPong = (e) => {
-      if (e && e.key !== 'Escape') return;
+      if (e && e.type === 'keydown' && e.key !== 'Escape') return;
       this._pongActive = false;
       document.body.classList.remove('pong-active');
       cancelAnimationFrame(pongRAF);
       document.removeEventListener('mousemove', onMove);
       document.removeEventListener('touchmove', onMove);
       document.removeEventListener('keydown', exitPong);
+      document.getElementById('pong-close-btn')?.removeEventListener('click', exitPong);
 
       /* Restore uniforms */
       mats.uMouseForce.value.set(9999, 9999, 0);
@@ -1525,6 +1551,7 @@ const JXUniverse = {
       if (hudEl) { hudEl.style.opacity = '0'; setTimeout(() => hudEl.remove(), 600); }
     };
     document.addEventListener('keydown', exitPong);
+    document.getElementById('pong-close-btn')?.addEventListener('click', exitPong);
 
     /* Expose exit for UI use */
     this._exitPong = exitPong;

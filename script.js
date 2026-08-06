@@ -1729,9 +1729,35 @@ const JXUniverse = {
     document.getElementById('jx-modal-overlay')?.remove();
 
     const tools = (p.tools || []).map(t => `<span class="tag">${t}</span>`).join('');
+
+    // 1. Meta Grid
+    const roleMeta = p.project_role ? `<div style="display:flex;flex-direction:column;gap:var(--s-1);"><span style="font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:var(--track-widest);text-transform:uppercase;color:var(--green);">Role</span><span style="font-size:var(--text-sm);color:var(--gray-2);">${p.project_role}</span></div>` : '';
+    const timelineMeta = p.timeline ? `<div style="display:flex;flex-direction:column;gap:var(--s-1);"><span style="font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:var(--track-widest);text-transform:uppercase;color:var(--green);">Timeline</span><span style="font-size:var(--text-sm);color:var(--gray-2);">${p.timeline}</span></div>` : '';
+    const typeMeta = p.project_type ? `<div style="display:flex;flex-direction:column;gap:var(--s-1);"><span style="font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:var(--track-widest);text-transform:uppercase;color:var(--green);">Type</span><span style="font-size:var(--text-sm);color:var(--gray-2);">${p.project_type}</span></div>` : '';
+    const toolsMeta = tools ? `<div style="display:flex;flex-direction:column;gap:var(--s-2);"><span style="font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:var(--track-widest);text-transform:uppercase;color:var(--green);">Tools</span><div class="project-card-tools" style="margin-top:0;">${tools}</div></div>` : '';
+    
+    const metaGrid = (roleMeta || timelineMeta || typeMeta || toolsMeta) ? 
+      `<div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(120px, 1fr));gap:var(--s-4);margin-top:var(--s-4);margin-bottom:var(--s-4);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:var(--s-4) 0;">
+        ${roleMeta}
+        ${timelineMeta}
+        ${typeMeta}
+        ${toolsMeta}
+      </div>` : '';
+
+    // 2. Case Study Link
+    let caseStudyContent = '';
+    if (p.case_study) {
+      if (p.case_study.startsWith('http')) {
+        const linkText = p.case_study.includes('figma.com') ? 'View on Figma ↗' : 'Read Case Study ↗';
+        caseStudyContent = `<a href="${p.case_study}" target="_blank" rel="noopener" class="btn btn-ghost" style="align-self:flex-start;margin-top:var(--s-2);">${linkText}</a>`;
+      } else {
+        caseStudyContent = `<p style="font-size:var(--text-sm);color:var(--gray-2);line-height:var(--lead-relaxed);margin-top:var(--s-4);overflow-wrap:anywhere;">${p.case_study}</p>`;
+      }
+    }
+
     const imagePart = p.image_url
-      ? `<div class="modal-image-pane">
-           <img src="${p.image_url}" alt="${p.title}">
+      ? `<div class="modal-image-pane" style="background:var(--surface-2);">
+           <img src="${p.image_url}" alt="${p.title}" style="object-fit:contain;background:var(--surface-2);">
            <div class="modal-image-overlay"></div>
          </div>`
       : `<div class="modal-image-pane" style="background:var(--surface-2);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:5rem;font-weight:800;color:var(--green);">
@@ -1747,15 +1773,18 @@ const JXUniverse = {
     overlay.innerHTML = `
       <div class="modal">
         ${imagePart}
-        <div class="modal-content">
+        <div class="modal-content" style="overflow-wrap: anywhere;">
           <div class="section-label">${p.category || 'Project'}</div>
           <h2 class="modal-title">${p.title}</h2>
-          <p style="font-size:var(--text-sm);color:var(--gray-2);line-height:var(--lead-relaxed);">
+          <p style="font-size:var(--text-sm);color:var(--gray-2);line-height:var(--lead-relaxed);overflow-wrap:anywhere;">
             ${p.description || ''}
           </p>
-          <div class="project-card-tools">${tools}</div>
-          ${p.url ? `<a href="${p.url}" target="_blank" rel="noopener" class="btn btn-primary" style="align-self:flex-start;margin-top:var(--s-4);">View Project ↗</a>` : ''}
-          ${p.case_study ? `<p style="font-size:var(--text-sm);color:var(--gray-2);line-height:var(--lead-relaxed);border-top:1px solid var(--border);padding-top:var(--s-6);margin-top:var(--s-2);">${p.case_study}</p>` : ''}
+          ${metaGrid}
+          <div style="display:flex; gap:var(--s-3); flex-wrap:wrap; margin-top:var(--s-4);">
+            ${p.url ? `<a href="${p.url}" target="_blank" rel="noopener" class="btn btn-primary" style="align-self:flex-start;margin-top:var(--s-2);">View Project ↗</a>` : ''}
+            ${caseStudyContent.includes('<a') ? caseStudyContent : ''}
+          </div>
+          ${caseStudyContent.includes('<p') ? caseStudyContent : ''}
         </div>
         <button class="modal-close" id="modal-close" aria-label="Close modal">✕</button>
       </div>
@@ -1772,6 +1801,7 @@ const JXUniverse = {
         if (e.key === 'Escape') this.closeModal();
       });
       document.body.style.overflow = 'hidden';
+      if (this.lenis) this.lenis.stop();
     });
   },
 
@@ -1780,6 +1810,7 @@ const JXUniverse = {
     if (!overlay) return;
     overlay.classList.remove('open');
     document.body.style.overflow = '';
+    if (this.lenis) this.lenis.start();
     document.removeEventListener('keydown', this._escListener);
     setTimeout(() => overlay.remove(), 500);
   },

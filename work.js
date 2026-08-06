@@ -146,9 +146,33 @@
     document.getElementById('vault-modal-overlay')?.remove();
 
     const tools = (p.tools || []).map(t => `<span class="tag">${t}</span>`).join('');
+
+    const roleMeta = p.project_role ? `<div style="display:flex;flex-direction:column;gap:var(--s-1);"><span style="font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:var(--track-widest);text-transform:uppercase;color:var(--green);">Role</span><span style="font-family:var(--font-body);font-size:var(--text-sm);color:var(--gray-2);">${p.project_role}</span></div>` : '';
+    const timelineMeta = p.timeline ? `<div style="display:flex;flex-direction:column;gap:var(--s-1);"><span style="font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:var(--track-widest);text-transform:uppercase;color:var(--green);">Timeline</span><span style="font-family:var(--font-body);font-size:var(--text-sm);color:var(--gray-2);">${p.timeline}</span></div>` : '';
+    const typeMeta = p.project_type ? `<div style="display:flex;flex-direction:column;gap:var(--s-1);"><span style="font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:var(--track-widest);text-transform:uppercase;color:var(--green);">Type</span><span style="font-family:var(--font-body);font-size:var(--text-sm);color:var(--gray-2);">${p.project_type}</span></div>` : '';
+    const toolsMeta = tools ? `<div style="display:flex;flex-direction:column;gap:var(--s-2);"><span style="font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:var(--track-widest);text-transform:uppercase;color:var(--green);">Tools</span><div class="work-card-tools" style="flex-wrap:wrap;margin-top:0;">${tools}</div></div>` : '';
+    
+    const metaGrid = (roleMeta || timelineMeta || typeMeta || toolsMeta) ? 
+      `<div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(120px, 1fr));gap:var(--s-4);margin-top:var(--s-4);margin-bottom:var(--s-4);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:var(--s-4) 0;">
+        ${roleMeta}
+        ${timelineMeta}
+        ${typeMeta}
+        ${toolsMeta}
+      </div>` : '';
+
+    let caseStudyContent = '';
+    if (p.case_study) {
+      if (p.case_study.startsWith('http')) {
+        const linkText = p.case_study.includes('figma.com') ? 'View on Figma ↗' : 'Read Case Study ↗';
+        caseStudyContent = `<a href="${p.case_study}" target="_blank" rel="noopener" class="btn btn-ghost">${linkText}</a>`;
+      } else {
+        caseStudyContent = `<div style="margin-top:var(--s-4);"><p style="font-family:var(--font-body);font-size:var(--text-sm);color:var(--gray-2);line-height:var(--lead-relaxed);overflow-wrap:anywhere;">${p.case_study}</p></div>`;
+      }
+    }
+
     const imagePart = p.image_url
-      ? `<div class="vault-modal-image">
-           <img src="${p.image_url}" alt="${p.title}">
+      ? `<div class="vault-modal-image" style="background:var(--surface-2);">
+           <img src="${p.image_url}" alt="${p.title}" style="object-fit:contain;width:100%;height:100%;background:var(--surface-2);">
            <div class="vault-modal-image-overlay"></div>
          </div>`
       : `<div class="vault-modal-image" style="background:var(--surface-2); display:flex; align-items:center; justify-content:center; font-family:var(--font-display); font-size:4rem; font-weight:800; color:var(--green);">
@@ -165,20 +189,24 @@
     overlay.innerHTML = `
       <div class="vault-modal">
         ${imagePart}
-        <div class="vault-modal-content">
+        <div class="vault-modal-content" style="overflow-wrap: anywhere;">
           <div class="section-label">${p.category || 'Project'}</div>
           <h2 class="vault-modal-title">${p.title}</h2>
-          <p style="font-family:var(--font-body); font-size:var(--text-sm); color:var(--gray-2); line-height:var(--lead-relaxed);">${p.description || ''}</p>
-          <div class="work-card-tools" style="flex-wrap:wrap;">${tools}</div>
+          <p style="font-family:var(--font-body); font-size:var(--text-sm); color:var(--gray-2); line-height:var(--lead-relaxed);overflow-wrap:anywhere;">${p.description || ''}</p>
           
-          <div style="display: flex; gap: var(--s-3); margin-top: var(--s-4);">
+          ${metaGrid}
+          
+          <div style="display: flex; gap: var(--s-3); margin-top: var(--s-4); flex-wrap: wrap;">
             ${p.url ? `<a href="${p.url}" target="_blank" rel="noopener" class="btn btn-primary">Live ↗</a>` : ''}
             ${p.github_url ? `<a href="${p.github_url}" target="_blank" rel="noopener" class="btn btn-ghost">GitHub ↗</a>` : ''}
+            ${caseStudyContent.includes('<a') ? caseStudyContent : ''}
           </div>
 
           ${p.content ? `<div style="border-top:1px solid var(--border); padding-top:var(--s-6); margin-top:var(--s-4);">
-            <p style="font-family:var(--font-body); font-size:var(--text-sm); color:var(--gray-2); line-height:var(--lead-relaxed);">${p.content.replace(/\n/g, '<br>')}</p>
+            <p style="font-family:var(--font-body); font-size:var(--text-sm); color:var(--gray-2); line-height:var(--lead-relaxed);overflow-wrap:anywhere;">${p.content.replace(/\n/g, '<br>')}</p>
           </div>` : ''}
+          
+          ${caseStudyContent.includes('<div') ? caseStudyContent : ''}
         </div>
         <button class="vault-modal-close" id="vault-modal-close" aria-label="Close modal">✕</button>
       </div>
@@ -186,6 +214,7 @@
 
     document.body.appendChild(overlay);
     document.body.style.overflow = 'hidden';
+    if (workLenis) workLenis.stop();
 
     requestAnimationFrame(() => {
       overlay.classList.add('open');
@@ -202,17 +231,20 @@
     if (!overlay) return;
     overlay.classList.remove('open');
     document.body.style.overflow = '';
+    if (workLenis) workLenis.start();
     if (escListener) document.removeEventListener('keydown', escListener);
     setTimeout(() => overlay.remove(), 450);
   }
 
+  let workLenis = null;
+
   /* Lenis */
   function initLenis () {
     if (!window.Lenis) return;
-    const lenis = new Lenis({ duration: 1.4, smoothWheel: true });
-    const raf = t => { lenis.raf(t); requestAnimationFrame(raf); };
+    workLenis = new Lenis({ duration: 1.4, smoothWheel: true });
+    const raf = t => { workLenis.raf(t); requestAnimationFrame(raf); };
     requestAnimationFrame(raf);
-    if (window.ScrollTrigger) lenis.on('scroll', ScrollTrigger.update);
+    if (window.ScrollTrigger) workLenis.on('scroll', ScrollTrigger.update);
   }
 
   /* Boot */

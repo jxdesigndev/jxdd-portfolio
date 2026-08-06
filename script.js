@@ -727,18 +727,24 @@ const JXUniverse = {
       observer.observe(canvas);
     }
 
+    let cachedScrollY = window.scrollY;
+    let cachedDocH = Math.max(1, document.body.scrollHeight - window.innerHeight);
+
+    window.addEventListener('scroll', () => { cachedScrollY = window.scrollY; }, { passive: true });
+    window.addEventListener('resize', () => { cachedDocH = Math.max(1, document.body.scrollHeight - window.innerHeight); }, { passive: true });
+
     const tick = (now) => {
       rafId = requestAnimationFrame(tick);
       if (!_mqlRM.matches) clock += 0.016;
 
-      const scrollY    = window.scrollY;
+      const scrollY    = cachedScrollY;
       const rawVel     = (scrollY - lastScrollY);
       lastScrollY      = scrollY;
       /* Smooth the velocity so it doesn't snap */
       scrollVel        = scrollVel * 0.85 + rawVel * 0.15;
 
       /* Scroll section 0=hero, 1=bottom */
-      const docH = document.body.scrollHeight - window.innerHeight;
+      const docH = cachedDocH;
       scrollSection    = docH > 0 ? Math.min(scrollY / docH, 1) : 0;
 
       /* Phase 2: Camera Z parallax */

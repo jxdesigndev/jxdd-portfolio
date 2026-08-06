@@ -233,6 +233,7 @@
           }
           /* Magnetic snap setup */
           magnetTarget = el;
+          cachedMagnetRect = el.getBoundingClientRect();
         });
 
         el.addEventListener('mouseleave', () => {
@@ -241,6 +242,7 @@
           ring.querySelector('.ring-label').textContent = '';
           setMode('default');
           magnetTarget = null;
+          cachedMagnetRect = null;
           magnetStrength = 0;
         });
       });
@@ -255,6 +257,13 @@
     /* ── Main animation loop ── */
     let lastTime = 0;
     let trailIdx = 0;
+    let cachedMagnetRect = null;
+
+    window.addEventListener('scroll', () => {
+      if (magnetTarget) {
+        cachedMagnetRect = magnetTarget.getBoundingClientRect();
+      }
+    }, { passive: true });
     const raf = (now) => {
       const dt = Math.min((now - lastTime) / 16.67, 3); // normalised to 60fps
       lastTime = now;
@@ -269,8 +278,8 @@
       /* Magnetic pull */
       let targetX = mouseX;
       let targetY = mouseY;
-      if (magnetTarget) {
-        const r = magnetTarget.getBoundingClientRect();
+      if (magnetTarget && cachedMagnetRect) {
+        const r = cachedMagnetRect;
         const cx = r.left + r.width / 2;
         const cy = r.top  + r.height / 2;
         const dx = cx - mouseX;

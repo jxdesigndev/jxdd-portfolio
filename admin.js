@@ -84,7 +84,7 @@
       DOM.loginErr.style.display = 'block';
       DOM.loginErr.textContent = 'Auth failed: ' + err.message;
     } finally {
-      btn.textContent = oldText;
+      btn.textContent = 'INITIATE_HANDSHAKE ↗';
       btn.disabled = false;
     }
   });
@@ -193,38 +193,48 @@
     e.preventDefault();
     const id = document.getElementById('pf-id').value;
     
-    const payload = {
-      title: document.getElementById('pf-title').value.trim(),
-      category: document.getElementById('pf-category').value.trim(),
-      year: document.getElementById('pf-year').value.trim(),
-      project_role: document.getElementById('pf-role').value.trim(),
-      timeline: document.getElementById('pf-timeline').value.trim(),
-      project_type: document.getElementById('pf-project-type').value.trim(),
-      priority: parseInt(document.getElementById('pf-priority').value) || 0,
-      image_url: document.getElementById('pf-image').value.trim(),
-      tools: document.getElementById('pf-tools').value.split(',').map(s => s.trim()).filter(Boolean),
-      url: document.getElementById('pf-url').value.trim(),
-      github_url: document.getElementById('pf-github').value.trim(),
-      description: document.getElementById('pf-desc').value.trim(),
-      content: document.getElementById('pf-content').value.trim(),
-      case_study: document.getElementById('pf-casestudy').value.trim(),
-      featured: document.getElementById('pf-featured').checked,
-    };
+    const btn = DOM.projectForm.querySelector('button[type="submit"]');
+    const oldText = btn.textContent;
+    btn.textContent = 'Deploying...';
+    btn.disabled = true;
 
-    if (id) {
-      // Update
-      const { error } = await supabase.from('projects').update(payload).eq('id', id);
-      if (!error) {
-        DOM.projectModal.classList.remove('open');
-        loadProjects();
+    try {
+      const payload = {
+        title: document.getElementById('pf-title').value.trim(),
+        category: document.getElementById('pf-category').value.trim(),
+        year: document.getElementById('pf-year').value.trim(),
+        project_role: document.getElementById('pf-role').value.trim(),
+        timeline: document.getElementById('pf-timeline').value.trim(),
+        project_type: document.getElementById('pf-project-type').value.trim(),
+        priority: parseInt(document.getElementById('pf-priority').value) || 0,
+        image_url: document.getElementById('pf-image').value.trim(),
+        tools: document.getElementById('pf-tools').value.split(',').map(s => s.trim()).filter(Boolean),
+        url: document.getElementById('pf-url').value.trim(),
+        github_url: document.getElementById('pf-github').value.trim(),
+        description: document.getElementById('pf-desc').value.trim(),
+        content: document.getElementById('pf-content').value.trim(),
+        case_study: document.getElementById('pf-casestudy').value.trim(),
+        featured: document.getElementById('pf-featured').checked,
+      };
+
+      if (id) {
+        // Update
+        const { error } = await supabase.from('projects').update(payload).eq('id', id);
+        if (error) throw error;
+      } else {
+        // Insert
+        const { error } = await supabase.from('projects').insert([payload]);
+        if (error) throw error;
       }
-    } else {
-      // Insert
-      const { error } = await supabase.from('projects').insert([payload]);
-      if (!error) {
-        DOM.projectModal.classList.remove('open');
-        loadProjects();
-      }
+      
+      DOM.projectModal.classList.remove('open');
+      loadProjects();
+    } catch (err) {
+      console.error('Project deploy error:', err);
+      alert('Failed to deploy project: ' + err.message);
+    } finally {
+      btn.textContent = oldText;
+      btn.disabled = false;
     }
   });
 

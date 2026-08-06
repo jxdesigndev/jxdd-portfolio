@@ -93,17 +93,28 @@
     form.addEventListener('submit', async e => {
       e.preventDefault();
 
-      const name    = document.getElementById('cf-name').value.trim();
-      const email   = document.getElementById('cf-email').value.trim();
-      const message = document.getElementById('cf-message').value.trim();
+      const nameEl    = document.getElementById('cf-name');
+      const emailEl   = document.getElementById('cf-email');
+      const messageEl = document.getElementById('cf-message');
+      
+      const name    = nameEl.value.trim();
+      const email   = emailEl.value.trim();
+      const message = messageEl.value.trim();
+
+      /* Reset accessibility states */
+      [nameEl, emailEl, messageEl].forEach(el => el.removeAttribute('aria-invalid'));
 
       if (!name || !email || !message) {
+        if (!name) nameEl.setAttribute('aria-invalid', 'true');
+        if (!email) emailEl.setAttribute('aria-invalid', 'true');
+        if (!message) messageEl.setAttribute('aria-invalid', 'true');
         showStatus('error', '> Missing fields. Name, email, and message are required.');
         return;
       }
 
       const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRe.test(email)) {
+        emailEl.setAttribute('aria-invalid', 'true');
         showStatus('error', '> Invalid email address.');
         return;
       }
@@ -136,7 +147,7 @@
         showStatus('error', '> Transmission failed. Try emailing hello@jxdesigndev.com directly.');
       } finally {
         submit.disabled = false;
-        submit.textContent = 'Transmit Signal ↗';
+        submit.textContent = 'TRANSMIT_SIGNAL ↗';
       }
     });
 

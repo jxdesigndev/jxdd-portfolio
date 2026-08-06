@@ -187,6 +187,40 @@
     overlay.setAttribute('aria-label', p.title);
 
     overlay.innerHTML = `
+      <style>
+        .vault-modal {
+          display: flex !important;
+          flex-direction: column !important;
+          width: 100% !important;
+          max-width: 900px !important;
+          height: 85vh !important;
+          overflow-y: auto !important;
+          overflow-x: hidden !important;
+          overscroll-behavior: contain !important;
+        }
+        .vault-modal::-webkit-scrollbar { width: 6px; }
+        .vault-modal::-webkit-scrollbar-track { background: transparent; }
+        .vault-modal::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+        .vault-modal::-webkit-scrollbar-thumb:hover { background: var(--gray-3); }
+        .vault-modal-image {
+          width: 100% !important;
+          height: 400px !important;
+          flex-shrink: 0 !important;
+        }
+        .vault-modal-content {
+          overflow-y: visible !important;
+          padding: var(--s-12) var(--s-8) !important;
+        }
+        .vault-modal-close {
+          position: fixed !important;
+          top: var(--s-8) !important;
+          right: var(--s-8) !important;
+          z-index: 1000 !important;
+          width: 48px !important;
+          height: 48px !important;
+        }
+      </style>
+      <button class="vault-modal-close" id="vault-modal-close" aria-label="Close modal">✕</button>
       <div class="vault-modal">
         ${imagePart}
         <div class="vault-modal-content" style="overflow-wrap: anywhere;">
@@ -208,7 +242,6 @@
           
           ${caseStudyContent.includes('<div') ? caseStudyContent : ''}
         </div>
-        <button class="vault-modal-close" id="vault-modal-close" aria-label="Close modal">✕</button>
       </div>
     `;
 

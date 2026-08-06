@@ -926,20 +926,13 @@ const JXUniverse = {
      ──────────────────────────────────────────────────────────────── */
   initLenis () {
     if (!window.Lenis || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    this.lenis = new Lenis({
-      duration: 1.4,
-      easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      orientation: 'vertical',
-      smoothWheel: true,
-      touchMultiplier: 2,
-    });
-    const raf = time => { this.lenis.raf(time); requestAnimationFrame(raf); };
-    requestAnimationFrame(raf);
-    if (window.ScrollTrigger) {
-      this.lenis.on('scroll', ScrollTrigger.update);
-      gsap.ticker.lagSmoothing(0);
-      gsap.ticker.add(time => this.lenis.raf(time * 1000));
+    if (!window.JXLenis) {
+      window.JXLenis = new Lenis({ duration: 1.4, smoothWheel: true });
+      const raf = t => { window.JXLenis.raf(t); requestAnimationFrame(raf); };
+      requestAnimationFrame(raf);
+      if (window.ScrollTrigger) window.JXLenis.on('scroll', ScrollTrigger.update);
     }
+    this.lenis = window.JXLenis;
   },
 
   /* ────────────────────────────────────────────────────────────────
@@ -1978,11 +1971,13 @@ const JXUniverse = {
         print(BOOT_MESSAGES);
       }
       setTimeout(() => input.focus(), 200);
+      if (window.JXLenis) window.JXLenis.stop();
     };
 
     const close = () => {
       panel.classList.remove('open');
       this.cliOpen = false;
+      if (window.JXLenis) window.JXLenis.start();
     };
 
     trigger?.addEventListener('click', () => this.cliOpen ? close() : open());

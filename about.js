@@ -169,12 +169,11 @@
   /* Lenis smooth scroll */
   function initLenis () {
     if (!window.Lenis) return;
-    const lenis = new Lenis({ duration: 1.4, smoothWheel: true });
-    const raf = t => { lenis.raf(t); requestAnimationFrame(raf); };
-    requestAnimationFrame(raf);
-    if (window.ScrollTrigger) {
-      lenis.on('scroll', ScrollTrigger.update);
-      if (window.gsap) gsap.ticker.lagSmoothing(0);
+    if (!window.JXLenis) {
+      window.JXLenis = new Lenis({ duration: 1.4, smoothWheel: true });
+      const raf = t => { window.JXLenis.raf(t); requestAnimationFrame(raf); };
+      requestAnimationFrame(raf);
+      if (window.ScrollTrigger) window.JXLenis.on('scroll', ScrollTrigger.update);
     }
   }
 

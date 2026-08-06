@@ -241,10 +241,13 @@
   /* Lenis */
   function initLenis () {
     if (!window.Lenis) return;
-    workLenis = new Lenis({ duration: 1.4, smoothWheel: true });
-    const raf = t => { workLenis.raf(t); requestAnimationFrame(raf); };
-    requestAnimationFrame(raf);
-    if (window.ScrollTrigger) workLenis.on('scroll', ScrollTrigger.update);
+    if (!window.JXLenis) {
+      window.JXLenis = new Lenis({ duration: 1.4, smoothWheel: true });
+      const raf = t => { window.JXLenis.raf(t); requestAnimationFrame(raf); };
+      requestAnimationFrame(raf);
+      if (window.ScrollTrigger) window.JXLenis.on('scroll', ScrollTrigger.update);
+    }
+    workLenis = window.JXLenis;
   }
 
   /* Boot */

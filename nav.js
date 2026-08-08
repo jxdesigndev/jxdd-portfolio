@@ -19,7 +19,7 @@
   ];
 
   const JX_LOGO_SVG = `
-    <img src="assets/images/jx-logo.jpeg" class="nav-logo-img" alt="JX Logo" style="height: 32px; width: auto; border-radius: 50%;">`;
+    <img src="/assets/images/jx-logo.jpeg" alt="JX Logo" class="nav-logo-img">`;
 
   const JX_LOGO_LARGE_SVG = `
     <svg viewBox="0 0 120 54" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">

@@ -1776,3 +1776,9 @@ svg { display: block; }
 .skip-to-content:focus {
   top: 0;
 }
+
+.nav-logo-img {
+  height: 32px;
+  width: auto;
+  border-radius: 4px;
+}

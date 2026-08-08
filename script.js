@@ -1676,8 +1676,15 @@ const JXUniverse = {
       grid.querySelectorAll('.project-card').forEach((card, i) => {
         const p = projects[i];
         if (!p) return;
-        card.addEventListener('click', () => this.openModal(p));
-        card.addEventListener('keydown', e => { if (e.key === 'Enter') this.openModal(p); });
+        const handleCardClick = () => {
+          if (p.case_study && p.case_study.startsWith('/projects/')) {
+            window.location.href = p.case_study;
+          } else {
+            this.openModal(p);
+          }
+        };
+        card.addEventListener('click', handleCardClick);
+        card.addEventListener('keydown', e => { if (e.key === 'Enter') handleCardClick(); });
         card.setAttribute('tabindex', '0');
         card.setAttribute('role', 'button');
         card.setAttribute('aria-label', `View project: ${p.title || 'Untitled'}`);
@@ -1746,7 +1753,11 @@ const JXUniverse = {
 
     // 2. Case Study Link
     let caseStudyContent = '';
-    if (p.case_study) {
+    let hasDedicatedPage = p.case_study && p.case_study.startsWith('/projects/');
+    
+    if (hasDedicatedPage) {
+      caseStudyContent = `<a href="${p.case_study}" class="btn btn-primary" style="width: 100%; justify-content: center;">Read Full Case Study →</a>`;
+    } else if (p.case_study) {
       if (p.case_study.startsWith('http')) {
         const linkText = p.case_study.includes('figma.com') ? 'View on Figma ↗' : 'Read Case Study ↗';
         caseStudyContent = `<a href="${p.case_study}" target="_blank" rel="noopener" class="btn btn-ghost" style="align-self:flex-start;margin-top:var(--s-2);">${linkText}</a>`;
@@ -1816,9 +1827,9 @@ const JXUniverse = {
           ${metaGrid}
           <div style="display:flex; gap:var(--s-3); flex-wrap:wrap; margin-top:var(--s-4);">
             ${p.url ? `<a href="${p.url}" target="_blank" rel="noopener" class="btn btn-primary" style="align-self:flex-start;margin-top:var(--s-2);">View Project ↗</a>` : ''}
-            ${caseStudyContent.includes('<a') ? caseStudyContent : ''}
+            ${(!hasDedicatedPage && caseStudyContent.includes('<a')) ? caseStudyContent : ''}
           </div>
-          ${caseStudyContent.includes('<p') ? caseStudyContent : ''}
+          ${hasDedicatedPage ? `<div style="margin-top: var(--s-8);">${caseStudyContent}</div>` : (caseStudyContent.includes('<p') ? caseStudyContent : '')}
         </div>
       </div>
     `;

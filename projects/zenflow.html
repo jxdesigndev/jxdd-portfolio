@@ -116,6 +116,35 @@
       padding-left: var(--s-8);
       border-left: 2px solid var(--gold);
     }
+    
+    .image-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--s-8);
+      margin: var(--s-12) 0;
+    }
+    
+    @media (min-width: 768px) {
+      .image-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+    
+    .image-caption {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      color: var(--gray-2);
+      letter-spacing: var(--track-wider);
+      text-transform: uppercase;
+      margin-top: var(--s-2);
+      text-align: center;
+    }
+    
+    .parallax-img {
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+    }
   </style>
 </head>
 <body>
@@ -163,6 +192,31 @@
           <li><strong>Onboarding flow</strong> — goal-setting, fitness level, and time-availability capture, designed to get a new user into her first session fast</li>
           <li><strong>Workout library</strong> — browsable by category and duration, structured around real time constraints rather than a generic exercise catalog</li>
         </ul>
+        
+        <div style="margin: var(--s-16) 0;">
+          <picture>
+            <source srcset="../assets/images/zenflow-placeholder.webp" type="image/webp">
+            <img src="../assets/images/zenflow-placeholder.png" alt="UI Mockup Placeholder" class="parallax-img reveal" loading="lazy">
+          </picture>
+          <div class="image-caption reveal">High-Fidelity UI Mockup</div>
+        </div>
+
+        <div class="image-grid">
+          <div>
+            <picture>
+              <source srcset="../assets/images/zenflow-placeholder.webp" type="image/webp">
+              <img src="../assets/images/zenflow-placeholder.png" alt="Wireframe 1 Placeholder" class="parallax-img reveal" loading="lazy">
+            </picture>
+            <div class="image-caption reveal">Wireframes / Details</div>
+          </div>
+          <div>
+            <picture>
+              <source srcset="../assets/images/zenflow-placeholder.webp" type="image/webp">
+              <img src="../assets/images/zenflow-placeholder.png" alt="Wireframe 2 Placeholder" class="parallax-img reveal" loading="lazy">
+            </picture>
+            <div class="image-caption reveal">Wireframes / Details</div>
+          </div>
+        </div>
 
         <h2 class="reveal">Constraints, Honestly</h2>
         <p class="reveal">This was a deliberately scoped concept sprint, not a multi-week engagement — completed in under a week to test moving from concept to high-fidelity screens at speed. It reflects design thinking and execution quality under a tight timeline, not a full end-to-end product research cycle.</p>
@@ -219,6 +273,20 @@
             trigger: el,
             start: 'top 88%',
             once: true,
+          }
+        });
+      });
+      
+      // Parallax effect for .parallax-img
+      gsap.utils.toArray('.parallax-img').forEach(img => {
+        gsap.to(img, {
+          y: -40,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: img,
+            start: 'top bottom',
+            end: 'bottom top',
+            scrub: true
           }
         });
       });

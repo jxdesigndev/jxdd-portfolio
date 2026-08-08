@@ -56,7 +56,7 @@
         countEl.textContent = String(data.length).padStart(2, '0');
       }
 
-      renderGrid(data);
+      renderGrid(data, true);
       bindFilters();
 
     } catch (err) {
@@ -69,7 +69,7 @@
     grid.innerHTML = `<div class="work-empty">${msg}</div>`;
   }
 
-  function renderGrid (projects) {
+  function renderGrid (projects, isInitialLoad = false) {
     const grid = document.getElementById('work-grid');
     if (!grid) return;
 
@@ -81,11 +81,20 @@
     grid.innerHTML = projects.map(p => renderCard(p)).join('');
 
     /* Animate cards */
-    if (window.gsap && window.ScrollTrigger) {
-      gsap.fromTo('.work-card', { opacity: 0, y: 30 }, {
-        opacity: 1, y: 0, duration: 0.6, ease: 'power3.out', stagger: 0.07,
-        scrollTrigger: { trigger: grid, start: 'top 90%', once: true }
-      });
+    if (window.gsap) {
+      if (isInitialLoad && window.ScrollTrigger) {
+        const existingTrigger = ScrollTrigger.getById('work-grid-trigger');
+        if (existingTrigger) existingTrigger.kill();
+
+        gsap.fromTo('.work-card', { opacity: 0, y: 30 }, {
+          opacity: 1, y: 0, duration: 0.6, ease: 'power3.out', stagger: 0.07,
+          scrollTrigger: { id: 'work-grid-trigger', trigger: grid, start: 'top 90%', once: true }
+        });
+      } else {
+        gsap.fromTo('.work-card', { opacity: 0, y: 30 }, {
+          opacity: 1, y: 0, duration: 0.6, ease: 'power3.out', stagger: 0.07
+        });
+      }
     } else {
       document.querySelectorAll('.work-card').forEach(c => c.style.opacity = '1');
     }

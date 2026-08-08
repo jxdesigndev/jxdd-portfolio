@@ -145,7 +145,8 @@ const JXUniverse = {
       canvas, antialias: false, alpha: true,
       powerPreference: 'high-performance',
     });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    const maxPixelRatio = window.innerWidth < 768 ? 1.5 : 2;
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, maxPixelRatio));
     renderer.setSize(W, H);
     renderer.setClearColor(0x000000, 0);
 

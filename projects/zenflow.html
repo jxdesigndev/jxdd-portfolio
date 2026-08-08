@@ -45,7 +45,7 @@
       font-size: var(--text-sm);
       color: var(--green);
       letter-spacing: 0.1em;
-      margin-bottom: var(--s-8);
+      margin-bottom: var(--s-12);
       display: flex;
       flex-wrap: wrap;
       gap: var(--s-6);
@@ -98,6 +98,24 @@
     .case-study-content li {
       margin-bottom: var(--s-2);
     }
+    
+    .case-study-image-full {
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+      margin: var(--s-12) 0;
+    }
+
+    .pull-quote {
+      font-family: var(--font-display);
+      font-size: clamp(1.5rem, 3vw, 2.5rem);
+      font-weight: 700;
+      color: var(--white);
+      line-height: var(--lead-tight);
+      margin: var(--s-12) 0;
+      padding-left: var(--s-8);
+      border-left: 2px solid var(--gold);
+    }
   </style>
 </head>
 <body>
@@ -107,41 +125,49 @@
     <main>
       <section class="case-study-hero">
         <a href="../work.html" class="btn btn-ghost" style="margin-bottom: var(--s-12); align-self: flex-start;">← Back to Work</a>
-        <h1 class="case-study-title">Zenflow</h1>
+        <h1 class="case-study-title reveal">Zenflow</h1>
         
-        <div class="case-study-meta">
+        <div class="case-study-meta reveal-scale">
           <div>Role <span>Product Designer (Solo)</span></div>
           <div>Tools <span>Figma</span></div>
           <div>Timeline <span>Concept sprint, under 1 week</span></div>
           <div>Type <span>Self-initiated design exercise</span></div>
         </div>
+        
+        <picture>
+          <source srcset="../assets/images/zenflow-cover.webp" type="image/webp">
+          <img src="../assets/images/zenflow-cover.png" alt="Zenflow App Concept" class="case-study-image-full reveal-scale" loading="lazy">
+        </picture>
       </section>
 
       <section class="case-study-content">
-        <h2>Overview</h2>
-        <p>Zenflow is a wellness app concept designed to solve a common friction point in fitness apps built for women: yoga and strength training are almost always treated as separate products, forcing users to juggle two apps, two habits, and two disconnected routines to get a complete wellness experience.</p>
+        <h2 class="reveal">Overview</h2>
+        <p class="reveal">Zenflow is a wellness app concept designed to solve a common friction point in fitness apps built for women: yoga and strength training are almost always treated as separate products, forcing users to juggle two apps, two habits, and two disconnected routines to get a complete wellness experience.</p>
 
-        <h2>The Problem</h2>
-        <p>Most fitness apps optimize for one lane — high-intensity gym tracking, or slow-paced yoga and mindfulness — rarely both. For women who want structured strength training and recovery/mindfulness work in one place, that means stitching together a routine across multiple apps with inconsistent design languages, separate logins, and no unified sense of progress.</p>
+        <h2 class="reveal">The Problem</h2>
+        <p class="reveal">Most fitness apps optimize for one lane — high-intensity gym tracking, or slow-paced yoga and mindfulness — rarely both. For women who want structured strength training and recovery/mindfulness work in one place, that means stitching together a routine across multiple apps with inconsistent design languages, separate logins, and no unified sense of progress.</p>
 
-        <h2>Designing for Amara</h2>
-        <p>To ground the design decisions, I designed around a practical user persona:</p>
-        <p><strong>Amara, 27</strong> — Marketing coordinator, new to structured fitness. Wants to build strength without the intimidation of traditional gym apps, and values mindfulness as part of her routine, not an afterthought. Short on time — needs a workout library that's fast to browse and easy to commit to, without decision fatigue.</p>
-        <p>This persona shaped two concrete decisions: an onboarding flow that reduces early friction (get her into a workout fast, not a lengthy setup process), and a workout library structured around how much time she has, not just workout type.</p>
+        <h2 class="reveal">Designing for Amara</h2>
+        <p class="reveal">To ground the design decisions, I designed around a practical user persona:</p>
+        <p class="reveal"><strong>Amara, 27</strong> — Marketing coordinator, new to structured fitness. Wants to build strength without the intimidation of traditional gym apps, and values mindfulness as part of her routine, not an afterthought. Short on time — needs a workout library that's fast to browse and easy to commit to, without decision fatigue.</p>
+        <p class="reveal">This persona shaped two concrete decisions: an onboarding flow that reduces early friction (get her into a workout fast, not a lengthy setup process), and a workout library structured around how much time she has, not just workout type.</p>
 
-        <h2>Design Direction</h2>
-        <p>The visual system deliberately avoids the cold blues and high-energy neon greens most fitness apps default to. Instead, Zenflow uses a warm palette of peach, brown, and nude tones — built to feel calming and approachable rather than clinical or intimidating, reinforcing the yoga-meets-strength positioning at a visual level, not just a functional one.</p>
+        <h2 class="reveal">Design Direction</h2>
+        <div class="pull-quote reveal-left">
+          The visual system deliberately avoids the cold blues and high-energy neon greens most fitness apps default to.
+        </div>
+        <p class="reveal">Instead, Zenflow uses a warm palette of peach, brown, and nude tones — built to feel calming and approachable rather than clinical or intimidating, reinforcing the yoga-meets-strength positioning at a visual level, not just a functional one.</p>
 
-        <h2>What I Designed</h2>
-        <ul>
+        <h2 class="reveal">What I Designed</h2>
+        <ul class="reveal">
           <li><strong>Onboarding flow</strong> — goal-setting, fitness level, and time-availability capture, designed to get a new user into her first session fast</li>
           <li><strong>Workout library</strong> — browsable by category and duration, structured around real time constraints rather than a generic exercise catalog</li>
         </ul>
 
-        <h2>Constraints, Honestly</h2>
-        <p>This was a deliberately scoped concept sprint, not a multi-week engagement — completed in under a week to test moving from concept to high-fidelity screens at speed. It reflects design thinking and execution quality under a tight timeline, not a full end-to-end product research cycle.</p>
+        <h2 class="reveal">Constraints, Honestly</h2>
+        <p class="reveal">This was a deliberately scoped concept sprint, not a multi-week engagement — completed in under a week to test moving from concept to high-fidelity screens at speed. It reflects design thinking and execution quality under a tight timeline, not a full end-to-end product research cycle.</p>
 
-        <div style="margin-top: var(--s-16);">
+        <div style="margin-top: var(--s-16);" class="reveal-scale">
           <a href="https://www.figma.com/design/39EIzD5d1sAo6u4DCSlFI4/Portfolio--All---Copy-?node-id=44-3840&t=nOn6B8ZYNM0dm1Dp-4" target="_blank" rel="noopener noreferrer" class="btn btn-primary">View Prototype in Figma ↗</a>
         </div>
       </section>
@@ -164,6 +190,38 @@
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       gsap.to('#page', { opacity: 1, duration: 1, ease: 'power2.out' });
+
+      // Recreate the sitewide reveal animations using ScrollTrigger
+      const reveals = document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale, .reveal-blur');
+      
+      reveals.forEach(el => {
+        const isLeft  = el.classList.contains('reveal-left');
+        const isRight = el.classList.contains('reveal-right');
+        const isScale = el.classList.contains('reveal-scale');
+        const isBlur  = el.classList.contains('reveal-blur');
+
+        const from = isLeft  ? { opacity: 0, x: -40 }
+                   : isRight ? { opacity: 0, x: 40  }
+                   : isScale ? { opacity: 0, scale: 0.92 }
+                   : isBlur  ? { opacity: 0, filter: 'blur(12px)' }
+                   : { opacity: 0, y: 40 };
+
+        const to = isLeft || isRight ? { opacity: 1, x: 0 }
+                 : isScale           ? { opacity: 1, scale: 1 }
+                 : isBlur            ? { opacity: 1, filter: 'blur(0px)' }
+                 : { opacity: 1, y: 0 };
+
+        gsap.fromTo(el, from, {
+          ...to,
+          duration: 0.9,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: el,
+            start: 'top 88%',
+            once: true,
+          }
+        });
+      });
     });
   </script>
 </body>

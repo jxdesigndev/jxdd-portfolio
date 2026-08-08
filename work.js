@@ -170,7 +170,11 @@
       </div>` : '';
 
     let caseStudyContent = '';
-    if (p.case_study) {
+    let hasDedicatedPage = p.case_study && p.case_study.startsWith('/projects/');
+    
+    if (hasDedicatedPage) {
+      caseStudyContent = `<a href="${p.case_study}" class="btn btn-primary" style="width: 100%; justify-content: center;">Read Full Case Study →</a>`;
+    } else if (p.case_study) {
       if (p.case_study.startsWith('http')) {
         const linkText = p.case_study.includes('figma.com') ? 'View on Figma ↗' : 'Read Case Study ↗';
         caseStudyContent = `<a href="${p.case_study}" target="_blank" rel="noopener" class="btn btn-ghost">${linkText}</a>`;
@@ -242,14 +246,14 @@
           <div style="display: flex; gap: var(--s-3); margin-top: var(--s-4); flex-wrap: wrap;">
             ${p.url ? `<a href="${p.url}" target="_blank" rel="noopener" class="btn btn-primary">Live ↗</a>` : ''}
             ${p.github_url ? `<a href="${p.github_url}" target="_blank" rel="noopener" class="btn btn-ghost">GitHub ↗</a>` : ''}
-            ${caseStudyContent.includes('<a') ? caseStudyContent : ''}
+            ${(!hasDedicatedPage && caseStudyContent.includes('<a')) ? caseStudyContent : ''}
           </div>
 
-          ${p.content ? `<div style="border-top:1px solid var(--border); padding-top:var(--s-6); margin-top:var(--s-4);">
+          ${hasDedicatedPage ? '' : (p.content ? `<div style="border-top:1px solid var(--border); padding-top:var(--s-6); margin-top:var(--s-4);">
             <p style="font-family:var(--font-body); font-size:var(--text-sm); color:var(--gray-2); line-height:var(--lead-relaxed);overflow-wrap:anywhere;">${p.content.replace(/\n/g, '<br>')}</p>
-          </div>` : ''}
+          </div>` : '')}
           
-          ${caseStudyContent.includes('<div') ? caseStudyContent : ''}
+          ${hasDedicatedPage ? `<div style="margin-top: var(--s-8);">${caseStudyContent}</div>` : (caseStudyContent.includes('<div') ? caseStudyContent : '')}
         </div>
       </div>
     `;

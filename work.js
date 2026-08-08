@@ -102,8 +102,15 @@
     /* Click → modal */
     grid.querySelectorAll('.work-card').forEach((card, i) => {
       const p = projects[i];
-      card.addEventListener('click', () => openModal(p));
-      card.addEventListener('keydown', e => { if (e.key === 'Enter') openModal(p); });
+      const handleCardClick = () => {
+        if (p.case_study && p.case_study.startsWith('/projects/')) {
+          window.location.href = p.case_study;
+        } else {
+          openModal(p);
+        }
+      };
+      card.addEventListener('click', handleCardClick);
+      card.addEventListener('keydown', e => { if (e.key === 'Enter') handleCardClick(); });
       card.setAttribute('tabindex', '0');
       card.setAttribute('role', 'button');
       card.setAttribute('aria-label', `View project: ${p.title}`);

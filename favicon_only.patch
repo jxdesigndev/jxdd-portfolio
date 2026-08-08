@@ -1,0 +1,120 @@
+diff --git a/about.html b/about.html
+index d64427a..5a7941d 100644
+--- a/about.html
++++ b/about.html
+@@ -31,6 +31,7 @@
+   <script src="supabase.js" defer></script>
+ 
+   <link rel="stylesheet" href="style.css">
++  <link rel="icon" type="image/jpeg" href="assets/images/jx-logo.jpeg">
+ 
+   <style>
+     /* ── Page wrapper ── */
+diff --git a/admin.html b/admin.html
+index a9b60f4..0d047c1 100644
+--- a/admin.html
++++ b/admin.html
+@@ -10,6 +10,7 @@
+   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400..900&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+   
+   <link rel="stylesheet" href="style.css">
++  <link rel="icon" type="image/jpeg" href="assets/images/jx-logo.jpeg">
+   <link rel="stylesheet" href="admin.css">
+   
+   <!-- Supabase -->
+diff --git a/contact.html b/contact.html
+index 13ca1b7..d66c3a2 100644
+--- a/contact.html
++++ b/contact.html
+@@ -27,6 +27,7 @@
+   <script src="supabase.js" defer></script>
+ 
+   <link rel="stylesheet" href="style.css">
++  <link rel="icon" type="image/jpeg" href="assets/images/jx-logo.jpeg">
+ 
+   <style>
+     #page { opacity: 0; }
+diff --git a/contact.js b/contact.js
+index e5211ca..da91ca6 100644
+--- a/contact.js
++++ b/contact.js
+@@ -147,7 +147,7 @@
+         showStatus('error', '> Transmission failed. Try emailing hello@jxdesigndev.com directly.');
+       } finally {
+         submit.disabled = false;
+-        submit.textContent = 'TRANSMIT_SIGNAL ↗';
++        submit.textContent = 'Transmit Signal ↗';
+       }
+     });
+ 
+diff --git a/services.html b/services.html
+index 4c7d1ed..194ff90 100644
+--- a/services.html
++++ b/services.html
+@@ -27,6 +27,7 @@
+   <script src="supabase.js" defer></script>
+ 
+   <link rel="stylesheet" href="style.css">
++  <link rel="icon" type="image/jpeg" href="assets/images/jx-logo.jpeg">
+ 
+   <style>
+     #page { opacity: 0; }
+diff --git a/style.css b/style.css
+index a70909e..5684298 100644
+--- a/style.css
++++ b/style.css
+@@ -1758,6 +1758,42 @@ svg { display: block; }
+   .scroll-top { bottom: var(--s-5); right: var(--s-5); }
+ }
+ 
++/* ── 22. ABOUT NARRATIVE ── */
++.about-narrative {
++  max-width: var(--container-md);
++  margin: var(--s-24) auto;
++  padding: 0 var(--s-8);
++}
++.about-narrative-inner {
++  border-left: 2px solid var(--gold);
++  padding-left: var(--s-8);
++}
++.about-narrative h2 {
++  font-family: var(--font-mono);
++  font-size: var(--text-xs);
++  letter-spacing: var(--track-widest);
++  text-transform: uppercase;
++  color: var(--gold);
++  margin-bottom: var(--s-6);
++}
++.about-narrative-lead {
++  font-family: var(--font-display);
++  font-size: clamp(1.5rem, 3vw, 2.5rem);
++  font-weight: 700;
++  color: var(--white);
++  line-height: var(--lead-tight);
++  margin-bottom: var(--s-8);
++}
++.about-narrative-body {
++  font-size: var(--text-lg);
++  color: var(--gray-2);
++  line-height: var(--lead-relaxed);
++  margin-bottom: var(--s-6);
++}
++.about-narrative-body:last-child {
++  margin-bottom: 0;
++}
++
+ /* ── Accessibility ── */
+ .skip-to-content {
+   position: absolute;
+diff --git a/work.html b/work.html
+index ea515bb..e31c937 100644
+--- a/work.html
++++ b/work.html
+@@ -28,6 +28,7 @@
+   <script src="supabase.js" defer></script>
+ 
+   <link rel="stylesheet" href="style.css">
++  <link rel="icon" type="image/jpeg" href="assets/images/jx-logo.jpeg">
+ 
+   <style>
+     #page { opacity: 0; }

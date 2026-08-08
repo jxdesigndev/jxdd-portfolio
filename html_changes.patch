@@ -1,0 +1,350 @@
+diff --git a/about.html b/about.html
+index d64427a..44874eb 100644
+--- a/about.html
++++ b/about.html
+@@ -31,6 +31,7 @@
+   <script src="supabase.js" defer></script>
+ 
+   <link rel="stylesheet" href="style.css">
++  <link rel="icon" type="image/jpeg" href="assets/images/jx-logo.jpeg">
+ 
+   <style>
+     /* ── Page wrapper ── */
+@@ -334,11 +335,11 @@
+   </style>
+ </head>
+ <body>
+-  <a href="#page" class="skip-to-content">Skip to content</a>
+-  <div id="page">
++  <a href="#main-content" class="skip-to-content">Skip to content</a>
++  <main id="main-content">
+ 
+     <!-- ── HERO ── -->
+-    <section class="about-hero" id="about-hero">
++    <section class="about-hero" id="about-hero" aria-label="Hero Introduction">
+       <div class="container" style="max-width: var(--container-xl); margin: 0 auto;">
+         <p class="about-hero-chapter" id="ah-label">The Story: Chapter One through Four</p>
+         <h1 class="about-hero-title" id="ah-title">
+@@ -351,7 +352,7 @@
+     </section>
+ 
+     <!-- ── LIVING PORTRAIT ── -->
+-    <section class="portrait-section">
++    <section class="portrait-section" aria-label="Living Portrait">
+       <div class="portrait-wrapper reveal-scale" id="portrait-wrap">
+         <picture>
+           <source type="image/webp" srcset="assets/images/okezie-2.webp">
+@@ -359,7 +360,7 @@
+         </picture>
+         <canvas id="portrait-canvas" role="img" aria-label="Particle portrait animation"></canvas>
+         <div class="portrait-frame"></div>
+-        <span class="portrait-label">// OKEZIE.FERDINAND | IDENTITY_SCAN_COMPLETE</span>
++        <span class="portrait-label" aria-hidden="true">// OKEZIE.FERDINAND | IDENTITY_SCAN_COMPLETE</span>
+       </div>
+ 
+       <div class="portrait-text reveal">
+@@ -400,25 +401,25 @@
+     </section>
+ 
+     <!-- ── ANCESTRAL FUTURISM NARRATIVE ── -->
+-    <section class="about-narrative" style="max-width: var(--container-md); margin: var(--s-24) auto; padding: 0 var(--s-8);">
+-      <div style="border-left: 2px solid var(--gold); padding-left: var(--s-8);">
+-        <h2 style="font-family: var(--font-mono); font-size: var(--text-xs); letter-spacing: var(--track-widest); text-transform: uppercase; color: var(--gold); margin-bottom: var(--s-6);">
++    <section class="about-narrative" aria-label="Ancestral Futurism Narrative">
++      <div class="about-narrative-inner">
++        <h2>
+           Ancestral Futurism
+         </h2>
+-        <p style="font-family: var(--font-display); font-size: clamp(1.5rem, 3vw, 2.5rem); font-weight: 700; color: var(--white); line-height: var(--lead-tight); margin-bottom: var(--s-8);">
++        <p class="about-narrative-lead">
+           The design of this portfolio is not just an aesthetic choice—it is a cultural bridge.
+         </p>
+-        <p style="font-size: var(--text-lg); color: var(--gray-2); line-height: var(--lead-relaxed); margin-bottom: var(--s-6);">
++        <p class="about-narrative-body">
+           It merges the raw, utilitarian glow of the developer's terminal with the structural elegance of West African geometric traditions. The scattered gold motifs you see are modern abstractions inspired by Nsibidi (an ancient ideographic writing system indigenous to southeastern Nigeria) and the rhythmic patterns of Yoruba textiles.
+         </p>
+-        <p style="font-size: var(--text-lg); color: var(--gray-2); line-height: var(--lead-relaxed);">
++        <p class="about-narrative-body">
+           I don’t see heritage and high-technology as contrasting worlds. Code is simply the newest iteration of an ancient human urge: to shape the future and communicate complex ideas through abstract symbols. Building from Nigeria, my work bridges these ancestral foundations with modern systems architecture to craft digital experiences that feel both deeply grounded and distinctly futuristic.
+         </p>
+       </div>
+     </section>
+ 
+     <!-- ── CHAPTERS ── -->
+-    <section class="chapters-section">
++    <section class="chapters-section" aria-label="Origin Story Chapters">
+       <div class="section-label reveal">Origin Sequence</div>
+       <h2 class="headline-lg reveal" style="margin-bottom: var(--s-16); max-width: 560px;">
+         Four chapters.<br>One relentless arc.
+@@ -426,7 +427,7 @@
+ 
+       <!-- Chapter 01 -->
+       <div class="chapter reveal">
+-        <div class="chapter-num">01</div>
++        <div class="chapter-num" aria-hidden="true">01</div>
+         <div class="chapter-content">
+           <p class="chapter-era">The Early Years: The Artist</p>
+           <h3 class="chapter-title">Born to Create</h3>
+@@ -448,7 +449,7 @@
+ 
+       <!-- Chapter 02 -->
+       <div class="chapter reveal">
+-        <div class="chapter-num">02</div>
++        <div class="chapter-num" aria-hidden="true">02</div>
+         <div class="chapter-content">
+           <p class="chapter-era">The Discovery: The Technologist</p>
+           <h3 class="chapter-title">Then I Found Computers</h3>
+@@ -469,7 +470,7 @@
+ 
+       <!-- Chapter 03 -->
+       <div class="chapter reveal">
+-        <div class="chapter-num">03</div>
++        <div class="chapter-num" aria-hidden="true">03</div>
+         <div class="chapter-content">
+           <p class="chapter-era">The Canvas: Digital Art & Animation</p>
+           <h3 class="chapter-title">Digital Creations & Animation</h3>
+@@ -487,7 +488,7 @@
+ 
+       <!-- Chapter 04 -->
+       <div class="chapter reveal">
+-        <div class="chapter-num">04</div>
++        <div class="chapter-num" aria-hidden="true">04</div>
+         <div class="chapter-content">
+           <p class="chapter-era">The Convergence: JX</p>
+           <h3 class="chapter-title">JX</h3>
+@@ -506,7 +507,7 @@
+     </section>
+ 
+     <!-- ── PHILOSOPHY ── -->
+-    <section class="philosophy-section">
++    <section class="philosophy-section" aria-label="Design Philosophy">
+       <p class="philosophy-quote reveal-scale">
+         "I wanted to showcase myself. To show people who I am and what I can do. JX isn't a brand; it's a <span>universe</span>."
+       </p>
+@@ -528,7 +529,7 @@
+       </span>
+     </footer>
+ 
+-  </div><!-- /#page -->
++  </main><!-- /#main-content -->
+ 
+   <script src="audio.js" defer></script>
+   <script src="nav.js" defer></script>
+diff --git a/admin.html b/admin.html
+index a9b60f4..0d047c1 100644
+--- a/admin.html
++++ b/admin.html
+@@ -10,6 +10,7 @@
+   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400..900&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+   
+   <link rel="stylesheet" href="style.css">
++  <link rel="icon" type="image/jpeg" href="assets/images/jx-logo.jpeg">
+   <link rel="stylesheet" href="admin.css">
+   
+   <!-- Supabase -->
+diff --git a/contact.html b/contact.html
+index 13ca1b7..f533203 100644
+--- a/contact.html
++++ b/contact.html
+@@ -27,6 +27,7 @@
+   <script src="supabase.js" defer></script>
+ 
+   <link rel="stylesheet" href="style.css">
++  <link rel="icon" type="image/jpeg" href="assets/images/jx-logo.jpeg">
+ 
+   <style>
+     #page { opacity: 0; }
+@@ -257,11 +258,11 @@
+   </style>
+ </head>
+ <body>
+-  <a href="#page" class="skip-to-content">Skip to content</a>
+-  <div id="page">
++  <a href="#main-content" class="skip-to-content">Skip to content</a>
++  <main id="main-content">
+ 
+     <!-- ── HERO ── -->
+-    <section class="contact-hero">
++    <section class="contact-hero" aria-label="Contact Hero">
+       <div class="contact-hero-inner">
+         <p class="section-label" id="ch-label" style="opacity:0">The Signal</p>
+         <h1 class="headline-xl" id="ch-title" style="opacity:0; transform:translateY(60px)">
+@@ -274,7 +275,7 @@
+     </section>
+ 
+     <!-- ── MAIN CONTENT ── -->
+-    <section class="contact-main">
++    <section class="contact-main" aria-label="Contact Form and Information">
+ 
+       <!-- Left info -->
+       <div class="contact-info reveal">
+@@ -288,7 +289,7 @@
+         <div class="contact-info-item">
+           <p class="contact-info-label">Current Status</p>
+           <div class="contact-avail" id="contact-avail">
+-            <div class="contact-avail-dot"></div>
++            <div class="contact-avail-dot" aria-hidden="true"></div>
+             <span id="contact-avail-text">Available for Work</span>
+           </div>
+           <p class="contact-info-sub" style="margin-top:var(--s-3)">
+@@ -395,7 +396,7 @@
+       <span style="font-family:var(--font-mono); font-size:var(--text-xs); color:var(--cyan);">SIGNAL_OPEN / WAITING_FOR_INPUT</span>
+     </footer>
+ 
+-  </div><!-- /#page -->
++  </main><!-- /#main-content -->
+ 
+   <script src="audio.js" defer></script>
+   <script src="nav.js" defer></script>
+diff --git a/services.html b/services.html
+index 4c7d1ed..d94ef7b 100644
+--- a/services.html
++++ b/services.html
+@@ -27,6 +27,7 @@
+   <script src="supabase.js" defer></script>
+ 
+   <link rel="stylesheet" href="style.css">
++  <link rel="icon" type="image/jpeg" href="assets/images/jx-logo.jpeg">
+ 
+   <style>
+     #page { opacity: 0; }
+@@ -250,11 +251,11 @@
+   </style>
+ </head>
+ <body>
+-  <a href="#page" class="skip-to-content">Skip to content</a>
+-  <div id="page">
++  <a href="#main-content" class="skip-to-content">Skip to content</a>
++  <main id="main-content">
+ 
+     <!-- ── HERO ── -->
+-    <section class="services-hero">
++    <section class="services-hero" aria-label="Services Hero">
+       <div class="services-hero-inner">
+         <p class="section-label" id="sh-label" style="opacity:0">The Forge</p>
+         <h1 class="headline-xl" id="sh-title" style="opacity:0; transform:translateY(60px)">
+@@ -267,7 +268,7 @@
+     </section>
+ 
+     <!-- ── SERVICE DEEP-DIVE ── -->
+-    <section class="services-deep">
++    <section class="services-deep" aria-label="Service Offerings">
+ 
+       <!-- 01 · Product Design -->
+       <div class="service-deep">
+@@ -291,8 +292,8 @@
+         </div>
+         <div class="service-deep-right reveal-scale">
+           <div class="service-deep-visual">
+-            <span class="service-deep-icon">◈</span>
+-            <span class="service-deep-label">// DESIGN_SYSTEM_LOADED</span>
++            <span class="service-deep-icon" aria-hidden="true">◈</span>
++            <span class="service-deep-label" aria-hidden="true">// DESIGN_SYSTEM_LOADED</span>
+             <div class="service-deep-tools">
+               <span class="tag">Figma</span>
+               <span class="tag">FigJam</span>
+@@ -325,8 +326,8 @@
+         </div>
+         <div class="service-deep-right reveal-scale">
+           <div class="service-deep-visual">
+-            <span class="service-deep-icon">⬡</span>
+-            <span class="service-deep-label">// BUILD_SEQUENCE_ACTIVE</span>
++            <span class="service-deep-icon" aria-hidden="true">⬡</span>
++            <span class="service-deep-label" aria-hidden="true">// BUILD_SEQUENCE_ACTIVE</span>
+             <div class="service-deep-tools">
+               <span class="tag">React</span>
+               <span class="tag">Next.js</span>
+@@ -360,8 +361,8 @@
+         </div>
+         <div class="service-deep-right reveal-scale">
+           <div class="service-deep-visual">
+-            <span class="service-deep-icon">⬡</span>
+-            <span class="service-deep-label">// WORKFLOW_RUNNING</span>
++            <span class="service-deep-icon" aria-hidden="true">⬡</span>
++            <span class="service-deep-label" aria-hidden="true">// WORKFLOW_RUNNING</span>
+             <div class="service-deep-tools">
+               <span class="tag">N8N</span>
+               <span class="tag">Webhooks</span>
+@@ -393,8 +394,8 @@
+         </div>
+         <div class="service-deep-right reveal-scale">
+           <div class="service-deep-visual">
+-            <span class="service-deep-icon">⬟</span>
+-            <span class="service-deep-label">// SCANNING_FOR_VULNERABILITIES</span>
++            <span class="service-deep-icon" aria-hidden="true">⬟</span>
++            <span class="service-deep-label" aria-hidden="true">// SCANNING_FOR_VULNERABILITIES</span>
+             <div class="service-deep-tools">
+               <span class="tag">OWASP</span>
+               <span class="tag">Burp Suite</span>
+@@ -408,7 +409,7 @@
+     </section>
+ 
+     <!-- ── PROCESS ── -->
+-    <section class="process-section">
++    <section class="process-section" aria-label="Design Process">
+       <div class="process-inner">
+         <div class="section-label reveal">How It Works</div>
+         <h2 class="headline-lg reveal" style="margin-top: var(--s-3)">
+@@ -445,7 +446,7 @@
+     </section>
+ 
+     <!-- ── CTA ── -->
+-    <section class="services-cta">
++    <section class="services-cta" aria-label="Call to Action">
+       <p class="section-label reveal">Ready?</p>
+       <h2 class="headline-lg reveal" style="margin: var(--s-4) 0 var(--s-6); max-width: 600px; margin-left: auto; margin-right: auto;">
+         Let's build something<br><span class="text-green">legendary.</span>
+@@ -465,7 +466,7 @@
+       <span style="font-family:var(--font-mono); font-size:var(--text-xs); color:var(--green);">THE_FORGE / OPEN_FOR_WORK</span>
+     </footer>
+ 
+-  </div><!-- /#page -->
++  </main><!-- /#main-content -->
+ 
+   <script src="audio.js" defer></script>
+   <script src="nav.js" defer></script>
+diff --git a/work.html b/work.html
+index ea515bb..2ba57ca 100644
+--- a/work.html
++++ b/work.html
+@@ -28,6 +28,7 @@
+   <script src="supabase.js" defer></script>
+ 
+   <link rel="stylesheet" href="style.css">
++  <link rel="icon" type="image/jpeg" href="assets/images/jx-logo.jpeg">
+ 
+   <style>
+     #page { opacity: 0; }
+@@ -370,11 +371,11 @@
+   </style>
+ </head>
+ <body>
+-  <a href="#page" class="skip-to-content">Skip to content</a>
+-  <div id="page">
++  <a href="#main-content" class="skip-to-content">Skip to content</a>
++  <main id="main-content">
+ 
+     <!-- ── HERO ── -->
+-    <section class="work-hero">
++    <section class="work-hero" aria-label="Work Portfolio Hero">
+       <div class="work-hero-inner">
+         <p class="section-label" id="wh-label" style="opacity:0">The Vault</p>
+         <h1 class="headline-xl" id="wh-title" style="opacity:0; transform: translateY(60px)">
+@@ -397,7 +398,7 @@
+     </div>
+ 
+     <!-- ── GRID ── -->
+-    <section class="work-grid-section">
++    <section class="work-grid-section" aria-label="Project Grid">
+       <div class="work-grid" id="work-grid">
+         <article class="work-card" data-category="product design" style="opacity: 1; transform: translate(0px, 0px);">
+           <div class="work-card-placeholder">ZE</div>
+@@ -423,7 +424,7 @@
+       <a href="contact.html" class="btn btn-ghost btn-sm" data-nav-link>Work With Me →</a>
+     </footer>
+ 
+-  </div><!-- /#page -->
++  </main><!-- /#main-content -->
+ 
+   <!-- ── MODAL (injected by JS) ── -->
+ 

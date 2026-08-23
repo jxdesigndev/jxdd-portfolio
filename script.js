@@ -1617,7 +1617,11 @@ const JXUniverse = {
   async loadFeaturedProjects () {
     const grid = document.getElementById('featured-grid');
     if (!grid) return;
-    if (window.initSupabase) await window.initSupabase();
+    try {
+      if (window.initSupabase) await window.initSupabase();
+    } catch (err) {
+      console.warn("Supabase init failed", err);
+    }
     if (typeof supabase === 'undefined' || !supabase.from) return;
 
     try {

@@ -31,7 +31,11 @@
   async function loadProjects () {
     const grid = document.getElementById('work-grid');
     if (!grid) return;
-    if (window.initSupabase) await window.initSupabase();
+    try {
+      if (window.initSupabase) await window.initSupabase();
+    } catch (err) {
+      console.warn("Supabase init failed", err);
+    }
     if (typeof supabase === 'undefined' || !supabase.from) {
       renderEmpty(grid, 'Database not configured.');
       return;

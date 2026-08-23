@@ -6,8 +6,11 @@ window.initSupabase = async function() {
     if (window.supabaseClient) return window.supabaseClient;
     
     // Poll for the CDN to finish loading
+    let retries = 0;
     while (!window.supabase || !window.supabase.createClient) {
+        if (retries >= 100) throw new Error("Supabase CDN failed to load.");
         await new Promise(r => setTimeout(r, 50));
+        retries++;
     }
     
     const client = window.supabase.createClient(supabaseUrl, supabaseKey);
@@ -18,4 +21,4 @@ window.initSupabase = async function() {
 }
 
 // Boot up immediately
-window.initSupabase();
+window.initSupabase().catch(err => console.error("Supabase initialization failed:", err));

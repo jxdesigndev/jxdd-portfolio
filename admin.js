@@ -6,6 +6,16 @@
 'use strict';
 
 (function () {
+  function escapeHTML(str) {
+    if (!str) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
   const DOM = {
     login: document.getElementById('admin-login'),
     dashboard: document.getElementById('admin-dashboard'),
@@ -51,7 +61,13 @@
   /* ── AUTHENTICATION ── */
 
   async function checkAuth() {
-    if (window.initSupabase) await window.initSupabase();
+    try {
+      if (window.initSupabase) await window.initSupabase();
+    } catch (err) {
+      DOM.loginErr.style.display = 'block';
+      DOM.loginErr.textContent = 'Failed to connect — check your connection and reload';
+      return;
+    }
     if (typeof supabase === 'undefined' || !supabase.auth) {
       DOM.loginErr.style.display = 'block';
       DOM.loginErr.textContent = 'Database offline.';
@@ -270,8 +286,8 @@
       return `
       <tr>
         <td>${d}</td>
-        <td><strong style="color:var(--white);">${m.name}</strong><br><span style="font-size:var(--text-xs);">${m.email}</span></td>
-        <td>${m.project_type || 'General'}</td>
+        <td><strong style="color:var(--white);">${escapeHTML(m.name)}</strong><br><span style="font-size:var(--text-xs);">${escapeHTML(m.email)}</span></td>
+        <td>${escapeHTML(m.project_type || 'General')}</td>
         <td>
           <button class="btn btn-ghost btn-sm btn-view-msg" data-id="${m.id}">Read</button>
         </td>

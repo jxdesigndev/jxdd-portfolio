@@ -9,6 +9,10 @@
    1. DESIGN TOKENS
    ---------------------------------------------------------------- */
 :root {
+  /* ── Core Fallbacks ── */
+  --bg:          #030508;
+  --accent:      var(--green);
+
   /* ── Void (Backgrounds) ── */
   --void:        #000000;
   --deep:        #040406;
@@ -765,6 +769,7 @@ svg { display: block; }
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.4s var(--ease-snap);
+  -webkit-backdrop-filter: blur(20px);
   backdrop-filter: blur(20px);
 }
 

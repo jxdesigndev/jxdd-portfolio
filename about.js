@@ -177,12 +177,99 @@
     }
   }
 
+  /* Supabase Experience Timeline */
+  async function initExperienceTimeline() {
+    const timeline = document.getElementById('experience-timeline');
+    if (!timeline) return;
+
+    try {
+      if (window.initSupabase) await window.initSupabase();
+      if (typeof supabase === 'undefined') throw new Error('Database offline.');
+
+      const { data, error } = await supabase
+        .from('experience')
+        .select('*')
+        .eq('is_active', true)
+        .order('priority', { ascending: false });
+
+      if (error) throw error;
+
+      if (!data || data.length === 0) {
+        timeline.innerHTML = '<div class="work-empty" style="text-align:left; padding:var(--s-6); color:var(--gray-2); font-family:var(--font-mono); font-size:var(--text-sm);">No experience entries found.</div>';
+        return;
+      }
+
+      timeline.innerHTML = '';
+      const newNodes = [];
+
+      data.forEach(exp => {
+        // Build elements safely via DOM API to prevent XSS
+        const item = document.createElement('div');
+        item.className = 'experience-item reveal';
+
+        const meta = document.createElement('div');
+        meta.className = 'exp-meta';
+
+        const dateSpan = document.createElement('span');
+        dateSpan.className = 'exp-date';
+        dateSpan.textContent = exp.date_range;
+
+        const companySpan = document.createElement('span');
+        companySpan.className = 'exp-company';
+        companySpan.textContent = exp.company;
+
+        meta.appendChild(dateSpan);
+        meta.appendChild(companySpan);
+
+        const content = document.createElement('div');
+
+        const roleHead = document.createElement('h3');
+        roleHead.className = 'exp-role';
+        roleHead.textContent = exp.role_title;
+
+        const descP = document.createElement('p');
+        descP.className = 'exp-desc';
+        descP.textContent = exp.description || '';
+
+        content.appendChild(roleHead);
+        content.appendChild(descP);
+
+        item.appendChild(meta);
+        item.appendChild(content);
+
+        timeline.appendChild(item);
+        newNodes.push(item);
+      });
+
+      // Animate newly injected nodes
+      if (window.gsap && window.ScrollTrigger) {
+        newNodes.forEach(el => {
+          gsap.fromTo(el, { opacity: 0, y: 40 }, {
+            opacity: 1, y: 0, duration: 0.9, ease: 'power3.out',
+            scrollTrigger: { trigger: el, start: 'top 88%', once: true }
+          });
+        });
+        ScrollTrigger.refresh();
+      } else {
+        newNodes.forEach(el => {
+          el.style.opacity = '1';
+          el.style.transform = 'none';
+        });
+      }
+
+    } catch (err) {
+      console.error('Failed to load experience:', err);
+      timeline.innerHTML = '<div class="work-empty" style="text-align:left; padding:var(--s-6); color:var(--red); font-family:var(--font-mono); font-size:var(--text-sm);">Error loading experience timeline.</div>';
+    }
+  }
+
   /* Boot */
   function init () {
     revealPage();
     initScrollAnimations();
     initLivingPortrait();
     initLenis();
+    initExperienceTimeline();
   }
 
   if (document.readyState === 'loading') {

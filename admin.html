@@ -57,6 +57,7 @@
         <button class="admin-nav-btn active" data-tab="projects">01 // THE_VAULT (Projects)</button>
         <button class="admin-nav-btn" data-tab="messages">02 // SIGNALS (Messages)</button>
         <button class="admin-nav-btn" data-tab="settings">03 // CORE (Settings)</button>
+        <button class="admin-nav-btn" data-tab="experience">04 // TIMELINE (Experience)</button>
       </nav>
       
       <div class="admin-sidebar-bottom">
@@ -86,6 +87,31 @@
               </tr>
             </thead>
             <tbody id="projects-tbody">
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- EXPERIENCE TAB -->
+      <section id="tab-experience" class="admin-tab-content">
+        <header class="admin-header">
+          <h1 class="headline-md">Timeline (Experience)</h1>
+          <button id="btn-new-experience" class="btn btn-primary btn-sm">+ Add Experience</button>
+        </header>
+
+        <div class="admin-table-container">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Priority</th>
+                <th>Role</th>
+                <th>Company</th>
+                <th>Dates</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="experience-tbody">
               <!-- Rendered via JS -->
             </tbody>
           </table>
@@ -267,6 +293,57 @@
           <button type="button" id="btn-delete-project" class="btn btn-ghost btn-sm" style="color:var(--red); display:none;">Delete_Project</button>
           <div style="flex:1;"></div>
           <button type="submit" class="btn btn-primary btn-sm">Save_To_Vault ↗</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- EXPERIENCE EDIT MODAL -->
+  <div id="experience-modal" class="admin-modal-overlay">
+    <div class="admin-modal">
+      <div class="admin-modal-header">
+        <h2 id="experience-modal-title" class="headline-sm">Add Experience</h2>
+        <button id="experience-modal-close" class="btn btn-ghost btn-sm">✕</button>
+      </div>
+      <form id="experience-form" class="admin-modal-body">
+        <input type="hidden" id="ef-id">
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="ef-role">Role Title *</label>
+            <input type="text" id="ef-role" class="form-input" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="ef-company">Company *</label>
+            <input type="text" id="ef-company" class="form-input" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="ef-date-range">Date Range *</label>
+            <input type="text" id="ef-date-range" class="form-input" placeholder="e.g. 2023 - Present" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="ef-priority">Sort Priority</label>
+            <input type="number" id="ef-priority" class="form-input" value="0">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="ef-desc">Description (1-2 lines)</label>
+          <textarea id="ef-desc" class="form-textarea" rows="2"></textarea>
+        </div>
+
+        <div class="form-group" style="flex-direction:row; align-items:center; gap:var(--s-3);">
+          <input type="checkbox" id="ef-active" style="width:18px; height:18px; accent-color:var(--green); cursor:pointer;" checked>
+          <label class="form-label" for="ef-active" style="margin:0; cursor:pointer;">Is Active (visible on site)</label>
+        </div>
+
+        <div class="admin-modal-actions">
+          <button type="button" id="btn-delete-experience" class="btn btn-ghost btn-sm" style="color:var(--red); display:none;">Delete_Experience</button>
+          <div style="flex:1;"></div>
+          <button type="submit" class="btn btn-primary btn-sm">Save_To_Timeline ↗</button>
         </div>
       </form>
     </div>

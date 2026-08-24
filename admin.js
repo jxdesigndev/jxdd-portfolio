@@ -41,6 +41,14 @@
     messageModal: document.getElementById('message-modal'),
     messageModalClose: document.getElementById('message-modal-close'),
 
+    experienceTbody: document.getElementById('experience-tbody'),
+    btnNewExperience: document.getElementById('btn-new-experience'),
+    experienceModal: document.getElementById('experience-modal'),
+    experienceModalTitle: document.getElementById('experience-modal-title'),
+    experienceModalClose: document.getElementById('experience-modal-close'),
+    experienceForm: document.getElementById('experience-form'),
+    btnDeleteExperience: document.getElementById('btn-delete-experience'),
+
     settingsForm: document.getElementById('settings-form'),
     settingAvailability: document.getElementById('setting-availability'),
 
@@ -57,6 +65,7 @@
   let session = null;
   let allProjects = [];
   let allMessages = [];
+  let allExperience = [];
 
   /* ── AUTHENTICATION ── */
 
@@ -118,6 +127,7 @@
     loadProjects();
     loadMessages();
     loadSettings();
+    loadExperience();
   }
 
   /* ── NAVIGATION ── */
@@ -262,6 +272,122 @@
       if (!error) {
         DOM.projectModal.classList.remove('open');
         loadProjects();
+      }
+    }
+  });
+
+
+  /* ── EXPERIENCE ── */
+  async function loadExperience() {
+    const { data, error } = await supabase.from('experience').select('*').order('priority', { ascending: false });
+    if (error) {
+      console.error(error);
+      return;
+    }
+    allExperience = data;
+    renderExperience();
+  }
+
+  function renderExperience() {
+    if (allExperience.length === 0) {
+      DOM.experienceTbody.innerHTML = `<tr><td colspan="5" style="text-align:center;">No experience found.</td></tr>`;
+      return;
+    }
+    
+    DOM.experienceTbody.innerHTML = allExperience.map(e => `
+      <tr>
+        <td>${e.priority || 0}</td>
+        <td style="color:var(--white);">${escapeHTML(e.role_title)}</td>
+        <td>${escapeHTML(e.company)}</td>
+        <td>${escapeHTML(e.date_range)}</td>
+        <td>
+          <button class="btn btn-ghost btn-sm btn-edit-experience" data-id="${e.id}">Edit</button>
+        </td>
+      </tr>
+    `).join('');
+
+    document.querySelectorAll('.btn-edit-experience').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const id = e.target.dataset.id;
+        const exp = allExperience.find(x => x.id == id);
+        if (exp) openExperienceModal(exp);
+      });
+    });
+  }
+
+  DOM.btnNewExperience.addEventListener('click', () => openExperienceModal(null));
+
+  function openExperienceModal(exp) {
+    DOM.experienceForm.reset();
+    if (exp) {
+      DOM.experienceModalTitle.textContent = 'Edit Experience';
+      document.getElementById('ef-id').value = exp.id;
+      document.getElementById('ef-role').value = exp.role_title || '';
+      document.getElementById('ef-company').value = exp.company || '';
+      document.getElementById('ef-date-range').value = exp.date_range || '';
+      document.getElementById('ef-desc').value = exp.description || '';
+      document.getElementById('ef-priority').value = exp.priority || 0;
+      document.getElementById('ef-active').checked = exp.is_active !== false;
+      DOM.btnDeleteExperience.style.display = 'block';
+    } else {
+      DOM.experienceModalTitle.textContent = 'Add Experience';
+      document.getElementById('ef-id').value = '';
+      document.getElementById('ef-active').checked = true;
+      DOM.btnDeleteExperience.style.display = 'none';
+    }
+    DOM.experienceModal.classList.add('open');
+  }
+
+  DOM.experienceModalClose.addEventListener('click', () => {
+    DOM.experienceModal.classList.remove('open');
+  });
+
+  DOM.experienceForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const id = document.getElementById('ef-id').value;
+    
+    const btn = DOM.experienceForm.querySelector('button[type="submit"]');
+    const oldText = btn.textContent;
+    btn.textContent = 'Saving...';
+    btn.disabled = true;
+
+    try {
+      const payload = {
+        role_title: document.getElementById('ef-role').value.trim(),
+        company: document.getElementById('ef-company').value.trim(),
+        date_range: document.getElementById('ef-date-range').value.trim(),
+        description: document.getElementById('ef-desc').value.trim(),
+        priority: parseInt(document.getElementById('ef-priority').value) || 0,
+        is_active: document.getElementById('ef-active').checked,
+      };
+
+      if (id) {
+        const { error } = await supabase.from('experience').update(payload).eq('id', id);
+        if (error) throw error;
+      } else {
+        const { error } = await supabase.from('experience').insert([payload]);
+        if (error) throw error;
+      }
+      
+      DOM.experienceModal.classList.remove('open');
+      loadExperience();
+    } catch (err) {
+      console.error('Experience save error:', err);
+      alert('Failed to save experience: ' + err.message);
+    } finally {
+      btn.textContent = oldText;
+      btn.disabled = false;
+    }
+  });
+
+  DOM.btnDeleteExperience.addEventListener('click', async () => {
+    const id = document.getElementById('ef-id').value;
+    if (!id) return;
+    if (confirm('Are you sure you want to delete this experience entry permanently?')) {
+      const { error } = await supabase.from('experience').delete().eq('id', id);
+      if (!error) {
+        DOM.experienceModal.classList.remove('open');
+        loadExperience();
       }
     }
   });

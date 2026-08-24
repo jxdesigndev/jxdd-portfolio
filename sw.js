@@ -46,7 +46,12 @@ self.addEventListener('fetch', event => {
     return; // allow default network request
   }
 
-  // Cache-first for CDN, fonts, and local assets
+  // Identify HTML/navigation requests
+  const isHtmlRequest = event.request.mode === 'navigate' || 
+                        url.pathname.endsWith('.html') || 
+                        url.pathname === '/';
+
+  // Identify other cacheable assets (CDN, fonts, local assets)
   const isCachable = 
     url.hostname === 'fonts.googleapis.com' ||
     url.hostname === 'fonts.gstatic.com' ||
@@ -55,29 +60,53 @@ self.addEventListener('fetch', event => {
     url.origin === location.origin;
 
   if (isCachable && event.request.method === 'GET') {
-    event.respondWith(
-      caches.match(event.request).then(cachedResponse => {
-        if (cachedResponse) return cachedResponse;
-
-        return fetch(event.request).then(networkResponse => {
-          // Check if we received a valid response
-          if (!networkResponse || networkResponse.status !== 200 || (networkResponse.type !== 'basic' && networkResponse.type !== 'cors' && networkResponse.type !== 'opaque')) {
+    if (isHtmlRequest) {
+      // Network-first for HTML
+      event.respondWith(
+        fetch(event.request)
+          .then(networkResponse => {
+            if (networkResponse && networkResponse.status === 200 && (networkResponse.type === 'basic' || networkResponse.type === 'cors' || networkResponse.type === 'opaque')) {
+              const responseToCache = networkResponse.clone();
+              caches.open(CACHE_NAME).then(cache => {
+                cache.put(event.request, responseToCache);
+              });
+            }
             return networkResponse;
-          }
-          
-          const responseToCache = networkResponse.clone();
-          caches.open(CACHE_NAME).then(cache => {
-            cache.put(event.request, responseToCache);
+          })
+          .catch(() => {
+            // Offline fallback to cache
+            return caches.match(event.request).then(cachedResponse => {
+              if (cachedResponse) return cachedResponse;
+              // Ultimate fallback for navigation requests
+              if (event.request.mode === 'navigate') {
+                return caches.match('/');
+              }
+            });
+          })
+      );
+    } else {
+      // Cache-first for CSS, JS, images, fonts, etc.
+      event.respondWith(
+        caches.match(event.request).then(cachedResponse => {
+          if (cachedResponse) return cachedResponse;
+
+          return fetch(event.request).then(networkResponse => {
+            // Check if we received a valid response
+            if (!networkResponse || networkResponse.status !== 200 || (networkResponse.type !== 'basic' && networkResponse.type !== 'cors' && networkResponse.type !== 'opaque')) {
+              return networkResponse;
+            }
+            
+            const responseToCache = networkResponse.clone();
+            caches.open(CACHE_NAME).then(cache => {
+              cache.put(event.request, responseToCache);
+            });
+            
+            return networkResponse;
+          }).catch(() => {
+            // Nothing to do for failed non-HTML assets
           });
-          
-          return networkResponse;
-        }).catch(() => {
-          // Offline fallback for navigation requests
-          if (event.request.mode === 'navigate') {
-            return caches.match('/');
-          }
-        });
-      })
-    );
+        })
+      );
+    }
   }
 });

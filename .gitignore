@@ -21,3 +21,4 @@ start-tunnel.bat
 # Gemini AI
 .gemini/
 lh_*.json
+*.log

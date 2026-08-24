@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "scripts": {
     "start": "node serve.js",
-    "dev": "node serve.js"
+    "dev": "node serve.js",
+    "build": "node scripts/bump-sw-cache.js"
   },
   "dependencies": {
     "puppeteer": "^25.3.0"

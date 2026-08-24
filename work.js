@@ -162,7 +162,16 @@
   }
 
   /* ── Cinematic Modal (WOW #5) ── */
+  let vaultEscListener = null;
+  let vaultTabListener = null;
+  let vaultTriggerElement = null;
+
   function openModal (p) {
+    vaultTriggerElement = document.activeElement;
+
+    if (vaultEscListener) document.removeEventListener('keydown', vaultEscListener);
+    if (vaultTabListener) document.removeEventListener('keydown', vaultTabListener);
+
     document.getElementById('vault-modal-overlay')?.remove();
 
     const tools = (p.tools || []).map(t => `<span class="tag">${t}</span>`).join('');
@@ -277,9 +286,30 @@
       overlay.classList.add('open');
       document.getElementById('vault-modal-close')?.addEventListener('click', closeModal);
       overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
-      document.addEventListener('keydown', escListener = e => {
+      document.addEventListener('keydown', vaultEscListener = e => {
         if (e.key === 'Escape') closeModal();
       });
+
+      const focusable = overlay.querySelectorAll('a[href], button, [tabindex]:not([tabindex="-1"])');
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+
+      document.addEventListener('keydown', vaultTabListener = e => {
+        if (e.key === 'Tab') {
+          if (e.shiftKey) {
+            if (document.activeElement === first) {
+              e.preventDefault();
+              last?.focus();
+            }
+          } else {
+            if (document.activeElement === last) {
+              e.preventDefault();
+              first?.focus();
+            }
+          }
+        }
+      });
+      first?.focus();
     });
   }
 
@@ -289,7 +319,12 @@
     overlay.classList.remove('open');
     document.body.style.overflow = '';
     if (workLenis) workLenis.start();
-    if (escListener) document.removeEventListener('keydown', escListener);
+    if (vaultEscListener) document.removeEventListener('keydown', vaultEscListener);
+    if (vaultTabListener) document.removeEventListener('keydown', vaultTabListener);
+    if (vaultTriggerElement) {
+      vaultTriggerElement.focus();
+      vaultTriggerElement = null;
+    }
     setTimeout(() => overlay.remove(), 450);
   }
 

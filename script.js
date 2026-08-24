@@ -1731,6 +1731,11 @@ const JXUniverse = {
      10. CINEMATIC MODAL
      ──────────────────────────────────────────────────────────────── */
   openModal (p) {
+    this._triggerElement = document.activeElement;
+
+    if (this._escListener) document.removeEventListener('keydown', this._escListener);
+    if (this._tabListener) document.removeEventListener('keydown', this._tabListener);
+
     /* If Pong is running, exit it first so the modal z-index stack is clean */
     if (this._pongActive && this._exitPong) {
       this._exitPong(null);
@@ -1848,6 +1853,28 @@ const JXUniverse = {
       document.addEventListener('keydown', this._escListener = e => {
         if (e.key === 'Escape') this.closeModal();
       });
+      
+      const focusable = overlay.querySelectorAll('a[href], button, [tabindex]:not([tabindex="-1"])');
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      
+      document.addEventListener('keydown', this._tabListener = e => {
+        if (e.key === 'Tab') {
+          if (e.shiftKey) {
+            if (document.activeElement === first) {
+              e.preventDefault();
+              last?.focus();
+            }
+          } else {
+            if (document.activeElement === last) {
+              e.preventDefault();
+              first?.focus();
+            }
+          }
+        }
+      });
+      first?.focus();
+      
       document.body.style.overflow = 'hidden';
       if (this.lenis) this.lenis.stop();
     });
@@ -1860,6 +1887,11 @@ const JXUniverse = {
     document.body.style.overflow = '';
     if (this.lenis) this.lenis.start();
     document.removeEventListener('keydown', this._escListener);
+    if (this._tabListener) document.removeEventListener('keydown', this._tabListener);
+    if (this._triggerElement) {
+      this._triggerElement.focus();
+      this._triggerElement = null;
+    }
     setTimeout(() => overlay.remove(), 500);
   },
 

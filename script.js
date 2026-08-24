@@ -113,14 +113,14 @@ const JXUniverse = {
   /* ────────────────────────────────────────────────────────────────
      2. PARTICLE UNIVERSE — WebGL primary, Canvas2D fallback
      ──────────────────────────────────────────────────────────────── */
-  initParticles () {
+  async initParticles () {
     const canvas = this.heroCanvas;
     if (!canvas) return;
 
     /* Try WebGL first */
     if (window.THREE) {
       try {
-        this.initThreeJS(canvas);
+        await this.initThreeJS(canvas);
         return;
       } catch (e) {
         console.warn('JX: WebGL failed, switching to Canvas2D.', e.message);
@@ -132,7 +132,21 @@ const JXUniverse = {
   },
 
   /* ── 2a. THREE.JS WebGL particle universe ── */
-  initThreeJS (canvas) {
+  async initThreeJS (canvas) {
+    if (!this.particleWorker) {
+      this.particleWorker = new Worker('particle-worker.js');
+      this.workerPending = {};
+      this.workerId = 0;
+      this.particleWorker.onmessage = (e) => {
+        const data = e.data;
+        if (this.workerPending[data.id]) {
+          clearTimeout(this.workerPending[data.id].timer);
+          if (data.error) this.workerPending[data.id].reject(new Error(data.error));
+          else this.workerPending[data.id].resolve(data);
+          delete this.workerPending[data.id];
+        }
+      };
+    }
     const W = canvas.width  = window.innerWidth;
     const H = canvas.height = window.innerHeight;
 
@@ -149,8 +163,8 @@ const JXUniverse = {
     renderer.setSize(W, H);
     renderer.setClearColor(0x000000, 0);
 
-    /* Extract Pixel Data for Faces */
-    const extractPixels = (img, posArr, colorArr, useColor=false, offsetX=0, offsetY=0, offsetZ=0, scale=0.6) => {
+    /* Extract Pixel Data for Faces (Fallback Math) */
+    const extractPixelsFallback = (img, posArr, colorArr, useColor=false, offsetX=0, offsetY=0, offsetZ=0, scale=0.6) => {
       if (!img) return;
       const c = document.createElement('canvas');
       const sampleW = 350;
@@ -160,7 +174,6 @@ const JXUniverse = {
       const ctx = c.getContext('2d');
       ctx.drawImage(img, 0, 0, sampleW, sampleH);
       const imgData = ctx.getImageData(0, 0, sampleW, sampleH).data;
-      const bgR = imgData[0], bgG = imgData[1], bgB = imgData[2];
 
       let rawPixels = [];
       let minX = sampleW, maxX = 0, minY = sampleH, maxY = 0;
@@ -206,6 +219,73 @@ const JXUniverse = {
         }
       }
     };
+
+    /* Extract Pixel Data for Faces (Worker Call) */
+    const extractPixels = (img, posArr, colorArr, useColor=false, offsetX=0, offsetY=0, offsetZ=0, scale=0.6) => {
+      return new Promise((resolve) => {
+        if (!img) return resolve();
+        
+        const c = document.createElement('canvas');
+        const sampleW = 350;
+        const sampleH = Math.round(350 * (img.height / img.width));
+        c.width = sampleW;
+        c.height = sampleH;
+        const ctx = c.getContext('2d');
+        ctx.drawImage(img, 0, 0, sampleW, sampleH);
+        const imgData = ctx.getImageData(0, 0, sampleW, sampleH);
+        
+        this.workerId++;
+        const id = this.workerId;
+        
+        const fallback = () => {
+          console.warn(`JX: Worker timed out or failed for id ${id}, falling back to synchronous math.`);
+          extractPixelsFallback(img, posArr, colorArr, useColor, offsetX, offsetY, offsetZ, scale);
+          resolve();
+        };
+
+        const timer = setTimeout(() => {
+          if (this.workerPending[id]) {
+            delete this.workerPending[id];
+            fallback();
+          }
+        }, 3000); // 3s timeout
+
+        this.workerPending[id] = {
+          timer,
+          resolve: (data) => {
+            if (data.posBuffer) {
+              const posFloat = new Float32Array(data.posBuffer);
+              for (let i = 0; i < posFloat.length; i+=3) {
+                posArr.push({ x: posFloat[i], y: posFloat[i+1], z: posFloat[i+2] });
+              }
+            }
+            if (useColor && data.colorBuffer && colorArr) {
+              const colorFloat = new Float32Array(data.colorBuffer);
+              for (let i = 0; i < colorFloat.length; i+=3) {
+                colorArr.push({ r: colorFloat[i], g: colorFloat[i+1], b: colorFloat[i+2] });
+              }
+            }
+            resolve();
+          },
+          reject: (err) => {
+            console.error('Worker error:', err);
+            fallback();
+          }
+        };
+
+        this.particleWorker.postMessage({
+          id,
+          imgDataBuffer: imgData.data.buffer,
+          sampleW,
+          sampleH,
+          useColor,
+          offsetX,
+          offsetY,
+          offsetZ,
+          scale
+        }, [imgData.data.buffer]);
+      });
+    };
     
     let pOkezie1 = [], cOkezie1 = [];
     let pHero2 = [], cHero2 = [];
@@ -218,17 +298,16 @@ const JXUniverse = {
     const heroScale = isMobileHero ? 0.45 : 0.72;
     const heroOffsetX = isMobileHero ? 0.0 : 15.0;
     
-    extractPixels(this.imgOkezie1, pOkezie1, cOkezie1, true, heroOffsetX, 0, 0, heroScale);
-    extractPixels(this.imgHero2, pHero2, cHero2, true, heroOffsetX, 0, 0, heroScale);
-
-    // Target 4 (About): offset to left (-25.0, 0, -10.0, scale=0.5) so it never overlaps or disturbs text on right
-    extractPixels(this.imgPortrait, pPortrait, cPortrait, true, -25.0, 0, -10.0, 0.5);
-
-    // Target 5 (Work): offset to right (+28.0, 5.0, -12.0, scale=0.5) so it never overlaps text on left
-    extractPixels(this.imgCoder, pCoder, cCoder, true, 28.0, 5.0, -12.0, 0.5);
-
-    // Target 6 (Services): offset to left (-28.0, 5.0, -12.0, scale=0.5) so it never overlaps text on right
-    extractPixels(this.imgDesigner, pDesigner, cDesigner, true, -28.0, 5.0, -12.0, 0.5);
+    await Promise.all([
+      extractPixels(this.imgOkezie1, pOkezie1, cOkezie1, true, heroOffsetX, 0, 0, heroScale),
+      extractPixels(this.imgHero2, pHero2, cHero2, true, heroOffsetX, 0, 0, heroScale),
+      // Target 4 (About): offset to left (-25.0, 0, -10.0, scale=0.5) so it never overlaps or disturbs text on right
+      extractPixels(this.imgPortrait, pPortrait, cPortrait, true, -25.0, 0, -10.0, 0.5),
+      // Target 5 (Work): offset to right (+28.0, 5.0, -12.0, scale=0.5) so it never overlaps text on left
+      extractPixels(this.imgCoder, pCoder, cCoder, true, 28.0, 5.0, -12.0, 0.5),
+      // Target 6 (Services): offset to left (-28.0, 5.0, -12.0, scale=0.5) so it never overlaps text on right
+      extractPixels(this.imgDesigner, pDesigner, cDesigner, true, -28.0, 5.0, -12.0, 0.5)
+    ]);
 
     /* Extract Text Pixels */
     let pText = [];
@@ -952,18 +1031,21 @@ const JXUniverse = {
       let si = 0;
       let pct = this.loadProgress;
       let particlesInitDone = false;
+      this.particlesReady = false;
 
       const timer = setInterval(() => {
         pct += (95 - pct) * 0.055 + 0.4;
-        this.setProgress(pct);
+        // Cap visual progress at 99% while waiting for WebGL worker
+        this.setProgress(this.particlesReady ? pct : Math.min(pct, 99));
 
         if (pct > 45  && si === 0) { this.setStatus(statuses[1]); si++; }
 
         if (pct > 50 && !particlesInitDone) {
           particlesInitDone = true;
           requestAnimationFrame(() => {
-            setTimeout(() => {
-              this.initParticles(); /* WebGL or Canvas2D deferred init */
+            setTimeout(async () => {
+              await this.initParticles(); /* WebGL or Canvas2D deferred init */
+              this.particlesReady = true;
             }, 0);
           });
         }
@@ -973,6 +1055,7 @@ const JXUniverse = {
         if (pct > 83  && si === 3) { this.setStatus(statuses[4]); si++; }
 
         if (pct >= 94.5) {
+          if (!this.particlesReady) return; // Wait for WebGL to finish booting before revealing
           clearInterval(timer);
           this.setProgress(100);
           this.setStatus(statuses[5]);

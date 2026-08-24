@@ -496,6 +496,96 @@
       margin-top: var(--s-2);
     }
 
+    /* ── TESTIMONIALS ── */
+    .testimonials-section {
+      padding: var(--s-32) 0;
+      border-top: 1px solid var(--border);
+      position: relative;
+    }
+    .testimonials-inner {
+      max-width: var(--container-xl);
+      margin: 0 auto;
+      padding: 0 var(--s-8);
+    }
+    .logo-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-16);
+      align-items: center;
+      justify-content: center;
+      margin-bottom: var(--s-24);
+      opacity: 0.6;
+    }
+    .logo-strip img {
+      height: 32px;
+      width: auto;
+      filter: grayscale(100%) brightness(0.7);
+      transition: filter 0.3s ease, transform 0.3s ease;
+    }
+    .logo-strip img:hover {
+      filter: grayscale(0%) brightness(1);
+      transform: scale(1.05);
+    }
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--s-8);
+    }
+    @media (min-width: 768px) {
+      .testimonials-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+    .testimonial-card {
+      background: var(--surface-1);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: var(--s-12);
+      display: flex;
+      flex-direction: column;
+      gap: var(--s-8);
+      transition: border-color 0.3s ease, background 0.3s ease;
+    }
+    .testimonial-card:hover {
+      background: var(--surface-2);
+      border-color: var(--border-green);
+    }
+    .testimonial-quote {
+      font-family: var(--font-body);
+      font-size: var(--text-lg);
+      color: var(--gray-1);
+      line-height: var(--lead-relaxed);
+      font-style: italic;
+      flex-grow: 1;
+    }
+    .testimonial-video {
+      width: 100%;
+      border-radius: 8px;
+      background: var(--bg);
+      aspect-ratio: 16/9;
+      object-fit: cover;
+    }
+    .testimonial-meta {
+      display: flex;
+      flex-direction: column;
+      gap: var(--s-1);
+      padding-top: var(--s-6);
+      border-top: 1px solid var(--border);
+    }
+    .testimonial-author {
+      font-family: var(--font-display);
+      font-size: var(--text-base);
+      color: var(--white);
+      font-weight: 700;
+    }
+    .testimonial-role {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      color: var(--green);
+      letter-spacing: var(--track-wide);
+      text-transform: uppercase;
+    }
+
     /* ── SERVICES STRIP ── */
     .services-strip {
       padding: var(--s-32) 0;
@@ -1063,6 +1153,54 @@
             Read My Story →
           </a>
         </div>
+      </div>
+    </section>
+
+    <!-- ── TESTIMONIALS ── -->
+    <section class="testimonials-section" aria-label="Testimonials" data-act="III-b" data-mood="#050505">
+      <div class="testimonials-inner">
+        <div class="section-label">Signal Received</div>
+        <h2 class="headline-lg reveal" style="max-width:600px; margin-bottom: var(--s-16);">
+          Client <span class="text-green">Transmissions</span>
+        </h2>
+        
+        <!-- EDIT_HERE: Replace with real company logos -->
+        <div class="logo-strip reveal">
+          <img src="assets/images/placeholder-logo-1.svg" alt="Company 1" loading="lazy">
+          <img src="assets/images/placeholder-logo-2.svg" alt="Company 2" loading="lazy">
+          <img src="assets/images/placeholder-logo-3.svg" alt="Company 3" loading="lazy">
+          <img src="assets/images/placeholder-logo-4.svg" alt="Company 4" loading="lazy">
+          <img src="assets/images/placeholder-logo-5.svg" alt="Company 5" loading="lazy">
+        </div>
+        <!-- END_EDIT_HERE -->
+
+        <!-- EDIT_HERE: Replace testimonials. Supports either text quote or video -->
+        <div class="testimonials-grid">
+          
+          <!-- Testimonial 1 (Text Pattern Active) -->
+          <div class="testimonial-card reveal-scale">
+            <!-- <video class="testimonial-video" src="..." controls></video> -->
+            <blockquote class="testimonial-quote">
+              "Working with JX was a paradigm shift. The attention to detail and system-level thinking completely transformed our product. Highly recommended for complex challenges."
+            </blockquote>
+            <div class="testimonial-meta">
+              <div class="testimonial-author">Sarah Jenkins</div>
+              <div class="testimonial-role">CTO, TechFlow</div>
+            </div>
+          </div>
+
+          <!-- Testimonial 2 (Video Pattern Active) -->
+          <div class="testimonial-card reveal-scale" style="transition-delay: 0.1s;">
+            <video class="testimonial-video" src="assets/videos/testimonial-placeholder.mp4" poster="assets/images/jx-hero.png" controls preload="metadata"></video>
+            <!-- <blockquote class="testimonial-quote">...</blockquote> -->
+            <div class="testimonial-meta">
+              <div class="testimonial-author">David Chen</div>
+              <div class="testimonial-role">Founder, Nexus</div>
+            </div>
+          </div>
+
+        </div>
+        <!-- END_EDIT_HERE -->
       </div>
     </section>
 

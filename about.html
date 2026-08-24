@@ -226,6 +226,31 @@
       display: block;
     }
 
+    /* ── Showreel Video ── */
+    .showreel-section {
+      padding: var(--s-16) var(--s-8);
+      max-width: var(--container-xl);
+      margin: 0 auto;
+    }
+
+    .video-container {
+      position: relative;
+      width: 100%;
+      border-radius: 12px;
+      overflow: hidden;
+      background: var(--surface-1);
+      border: 1px solid var(--border);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+      aspect-ratio: 16/9;
+    }
+
+    .video-container video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
     /* ── Chapters ── */
     .chapters-section {
       padding: var(--s-20) var(--s-8);
@@ -291,6 +316,93 @@
       flex-wrap: wrap;
       gap: var(--s-2);
       margin-top: var(--s-5);
+    }
+
+    /* ── Experience ── */
+    .experience-section {
+      padding: var(--s-20) var(--s-8);
+      max-width: var(--container-xl);
+      margin: 0 auto;
+    }
+
+    .experience-timeline {
+      display: flex;
+      flex-direction: column;
+      gap: var(--s-10);
+      position: relative;
+    }
+    
+    .experience-timeline::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 10px;
+      width: 1px;
+      background: var(--border);
+    }
+
+    .experience-item {
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: var(--s-6);
+      position: relative;
+      padding-left: var(--s-12);
+    }
+    
+    @media (max-width: 600px) {
+      .experience-item {
+        grid-template-columns: 1fr;
+        gap: var(--s-2);
+      }
+    }
+    
+    .experience-item::before {
+      content: '';
+      position: absolute;
+      top: 6px;
+      left: 7px;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 10px var(--green);
+    }
+
+    .exp-meta {
+      display: flex;
+      flex-direction: column;
+      gap: var(--s-1);
+      margin-top: 2px;
+    }
+
+    .exp-date {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      color: var(--gray-3);
+      letter-spacing: 0.1em;
+    }
+
+    .exp-company {
+      font-family: var(--font-mono);
+      font-size: var(--text-sm);
+      color: var(--green);
+      font-weight: 500;
+    }
+
+    .exp-role {
+      font-family: var(--font-display);
+      font-size: var(--text-xl);
+      color: var(--white);
+      margin: 0 0 var(--s-2);
+    }
+
+    .exp-desc {
+      font-family: var(--font-body);
+      font-size: var(--text-base);
+      color: var(--gray-2);
+      line-height: var(--lead-relaxed);
+      max-width: 600px;
     }
 
     /* ── Philosophy Section ── */
@@ -372,6 +484,18 @@
         <p class="about-hero-tagline" id="ah-tag">
           Artist. Technologist. Designer. Builder. From Nigeria, with a vision that has no ceiling.
         </p>
+      </div>
+    </section>
+
+    <!-- ── SHOWREEL VIDEO ── -->
+    <section class="showreel-section reveal-scale">
+      <div class="video-container">
+        <!-- EDIT_HERE: Needs real video file uploaded to assets/videos/ -->
+        <video 
+          controls 
+          poster="assets/images/jx-hero.png" 
+          src="assets/videos/intro-placeholder.mp4">
+        </video>
       </div>
     </section>
 
@@ -533,6 +657,54 @@
             <span class="tag">Identity</span>
           </div>
         </div>
+      </div>
+    </section>
+
+    <!-- ── EXPERIENCE ── -->
+    <section class="experience-section">
+      <div class="section-label reveal">Professional Journey</div>
+      <h2 class="headline-lg reveal" style="margin-bottom: var(--s-16);">
+        Experience
+      </h2>
+
+      <div class="experience-timeline">
+        <!-- EDIT_HERE: Replace these sample entries with real experience data from admin -->
+        <!-- Sample Entry 1 -->
+        <div class="experience-item reveal">
+          <div class="exp-meta">
+            <span class="exp-date">2024 — Present</span>
+            <span class="exp-company">Company Name</span>
+          </div>
+          <div>
+            <h3 class="exp-role">Senior Product Designer</h3>
+            <p class="exp-desc">Led the end-to-end design of core features, establishing a new design system and improving user retention by 20%.</p>
+          </div>
+        </div>
+
+        <!-- Sample Entry 2 -->
+        <div class="experience-item reveal">
+          <div class="exp-meta">
+            <span class="exp-date">2021 — 2024</span>
+            <span class="exp-company">Agency XYZ</span>
+          </div>
+          <div>
+            <h3 class="exp-role">Full-Stack Developer</h3>
+            <p class="exp-desc">Architected scalable front-end solutions and bridged the gap between design and technical implementation.</p>
+          </div>
+        </div>
+
+        <!-- Sample Entry 3 -->
+        <div class="experience-item reveal">
+          <div class="exp-meta">
+            <span class="exp-date">2018 — 2021</span>
+            <span class="exp-company">Startup Inc</span>
+          </div>
+          <div>
+            <h3 class="exp-role">UI/UX Designer</h3>
+            <p class="exp-desc">Collaborated with engineering to ship multiple MVPs and crafted intuitive, user-centric interfaces.</p>
+          </div>
+        </div>
+        <!-- END_EDIT_HERE -->
       </div>
     </section>
 

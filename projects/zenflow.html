@@ -146,6 +146,61 @@
       height: auto;
       border-radius: 8px;
     }
+
+    .split-section {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--s-12);
+      align-items: center;
+      margin: var(--s-12) 0;
+    }
+    @media (min-width: 768px) {
+      .split-section {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+    
+    .placeholder-card {
+      background: linear-gradient(145deg, var(--surface-1), var(--surface-2));
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 16px;
+      aspect-ratio: 9/16;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: var(--s-4);
+      padding: var(--s-8);
+      text-align: center;
+      box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.4), 0 10px 30px rgba(0, 0, 0, 0.3);
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .placeholder-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 50% 0%, rgba(255,255,255,0.06), transparent 60%);
+      pointer-events: none;
+    }
+    .placeholder-card:hover {
+      transform: translateY(-8px);
+      box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.4), 0 20px 40px rgba(0, 0, 0, 0.5);
+    }
+    .placeholder-icon {
+      font-size: 3rem;
+      filter: drop-shadow(0 4px 12px rgba(0,0,0,0.4));
+      opacity: 0.9;
+    }
+    .placeholder-text {
+      font-family: var(--font-mono);
+      font-size: var(--text-sm);
+      color: var(--gray-3);
+      letter-spacing: var(--track-widest);
+      text-transform: uppercase;
+      line-height: 1.5;
+    }
   </style>
   <script type="application/ld+json">
   {
@@ -198,10 +253,21 @@
         <h2 class="reveal">The Problem</h2>
         <p class="reveal">Most fitness apps optimize for one lane — high-intensity gym tracking, or slow-paced yoga and mindfulness — rarely both. For women who want structured strength training and recovery/mindfulness work in one place, that means stitching together a routine across multiple apps with inconsistent design languages, separate logins, and no unified sense of progress.</p>
 
-        <h2 class="reveal">Designing for Amara</h2>
-        <p class="reveal">To ground the design decisions, I designed around a practical user persona:</p>
-        <p class="reveal"><strong>Amara, 27</strong> — Marketing coordinator, new to structured fitness. Wants to build strength without the intimidation of traditional gym apps, and values mindfulness as part of her routine, not an afterthought. Short on time — needs a workout library that's fast to browse and easy to commit to, without decision fatigue.</p>
-        <p class="reveal">This persona shaped two concrete decisions: an onboarding flow that reduces early friction (get her into a workout fast, not a lengthy setup process), and a workout library structured around how much time she has, not just workout type.</p>
+        <div class="split-section">
+          <div>
+            <h2 class="reveal" style="margin-top: 0;">Designing for Amara</h2>
+            <p class="reveal">To ground the design decisions, I designed around a practical user persona:</p>
+            <p class="reveal"><strong>Amara, 27</strong> — Marketing coordinator, new to structured fitness. Wants to build strength without the intimidation of traditional gym apps, and values mindfulness as part of her routine, not an afterthought. Short on time — needs a workout library that's fast to browse and easy to commit to, without decision fatigue.</p>
+            <p class="reveal">This persona shaped two concrete decisions: an onboarding flow that reduces early friction (get her into a workout fast, not a lengthy setup process), and a workout library structured around how much time she has, not just workout type.</p>
+          </div>
+          <div class="reveal-blur">
+            <picture>
+              <source srcset="../assets/images/zenflow-persona.webp" type="image/webp">
+              <img width="800" height="800" src="../assets/images/zenflow-persona.png" alt="Persona Context: Amara" class="case-study-image-full" loading="lazy" style="margin: 0; box-shadow: 0 20px 40px rgba(0,0,0,0.3);">
+            </picture>
+            <div class="image-caption" style="margin-top: var(--s-4);">User Persona Context</div>
+          </div>
+        </div>
 
         <h2 class="reveal">Design Direction</h2>
         <div class="pull-quote reveal-left">
@@ -217,18 +283,21 @@
         
         <!-- ── SCREENSHOTS: swap these divs for <picture> tags when Figma exports are ready ── -->
         <div style="margin: var(--s-16) 0; display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-8);">
-          <div style="background: var(--surface-2); border: 1px dashed var(--border); border-radius: 8px; aspect-ratio: 9/16; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--s-3); padding: var(--s-6); text-align: center;">
-            <span style="font-size: 2rem;" aria-hidden="true">📱</span>
-            <span style="font-family: var(--font-mono); font-size: var(--text-xs); color: var(--gray-2); letter-spacing: var(--track-wider); text-transform: uppercase;">UI Mockup<br>Coming Soon</span>
+          <div class="placeholder-card reveal-scale">
+            <span class="placeholder-icon" aria-hidden="true">📱</span>
+            <span class="placeholder-text">UI Mockup<br>Coming Soon</span>
           </div>
-          <div style="background: var(--surface-2); border: 1px dashed var(--border); border-radius: 8px; aspect-ratio: 9/16; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--s-3); padding: var(--s-6); text-align: center;">
-            <span style="font-size: 2rem;" aria-hidden="true">🗂</span>
-            <span style="font-family: var(--font-mono); font-size: var(--text-xs); color: var(--gray-2); letter-spacing: var(--track-wider); text-transform: uppercase;">Wireframes<br>Coming Soon</span>
+          <div class="placeholder-card reveal-scale" style="transition-delay: 0.1s;">
+            <span class="placeholder-icon" aria-hidden="true">🗂</span>
+            <span class="placeholder-text">Wireframes<br>Coming Soon</span>
           </div>
         </div>
 
         <h2 class="reveal">Constraints, Honestly</h2>
         <p class="reveal">This was a deliberately scoped concept sprint, not a multi-week engagement — completed in under a week to test moving from concept to high-fidelity screens at speed. It reflects design thinking and execution quality under a tight timeline, not a full end-to-end product research cycle.</p>
+
+        <h2 class="reveal">Outcome / Reflection</h2>
+        <p class="reveal">This project was a rapid exercise in product thinking, demonstrating my ability to move quickly from a high-level persona to concrete, high-fidelity UI constraints. It highlights a pragmatic approach to user flows, prioritizing speed-to-value for the end user while maintaining a polished and cohesive design language.</p>
 
         <div style="margin-top: var(--s-16);" class="reveal-scale">
           <a href="https://www.figma.com/design/39EIzD5d1sAo6u4DCSlFI4/Portfolio--All---Copy-?node-id=44-3840&t=nOn6B8ZYNM0dm1Dp-4" target="_blank" rel="noopener noreferrer" class="btn btn-primary">View Prototype in Figma ↗</a>

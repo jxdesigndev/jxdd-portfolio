@@ -43,7 +43,6 @@ const JXUniverse = {
 
     try {
       await this.preload();
-      this.initParticles(); /* WebGL or Canvas2D */
       this.initLenis();
       await this.runLoader();
       clearTimeout(nuclear);
@@ -952,12 +951,23 @@ const JXUniverse = {
 
       let si = 0;
       let pct = this.loadProgress;
+      let particlesInitDone = false;
 
       const timer = setInterval(() => {
         pct += (95 - pct) * 0.055 + 0.4;
         this.setProgress(pct);
 
         if (pct > 45  && si === 0) { this.setStatus(statuses[1]); si++; }
+
+        if (pct > 50 && !particlesInitDone) {
+          particlesInitDone = true;
+          requestAnimationFrame(() => {
+            setTimeout(() => {
+              this.initParticles(); /* WebGL or Canvas2D deferred init */
+            }, 0);
+          });
+        }
+
         if (pct > 60  && si === 1) { this.setStatus(statuses[2]); si++; }
         if (pct > 72  && si === 2) { this.setStatus(statuses[3]); si++; }
         if (pct > 83  && si === 3) { this.setStatus(statuses[4]); si++; }

@@ -350,24 +350,8 @@ const JXUniverse = {
     this._pText            = () => pText;
     this._createTextCanvas = createTextCanvas;
 
-    /* ── Main particle field (55,000) ── */
-    const MAIN_COUNT = window.innerWidth < 768 ? 28000 : 55000;
-    const mainGeo    = new THREE.BufferGeometry();
-    const mainPos    = new Float32Array(MAIN_COUNT * 3);
-    const target1    = new Float32Array(MAIN_COUNT * 3);
-    const target2    = new Float32Array(MAIN_COUNT * 3);
-    const targetText = new Float32Array(MAIN_COUNT * 3);
-    const target4    = new Float32Array(MAIN_COUNT * 3);
-    const target5    = new Float32Array(MAIN_COUNT * 3);
-    const target6    = new Float32Array(MAIN_COUNT * 3);
-
-    const col1 = new Float32Array(MAIN_COUNT * 3);
-    const col2 = new Float32Array(MAIN_COUNT * 3);
-    const col4 = new Float32Array(MAIN_COUNT * 3);
-    const col5 = new Float32Array(MAIN_COUNT * 3);
-    const col6 = new Float32Array(MAIN_COUNT * 3);
-
-    const mainAlpha  = new Float32Array(MAIN_COUNT);
+    /* ── Main particle field & Dynamic Count ── */
+    let mainParticles; // captured for geometry updates
 
     /* ── Phase 4: Build Pong Arena Target (aTarget7) ── */
     const buildPongArena = (count) => {
@@ -414,59 +398,87 @@ const JXUniverse = {
       return arr;
     };
 
-    for (let i = 0; i < MAIN_COUNT; i++) {
-      const r_rand = 80 + Math.random() * 150;
-      const theta_rand = Math.random() * Math.PI * 2;
-      const phi_rand = Math.acos(2 * Math.random() - 1);
-      mainPos[i*3]   = r_rand * Math.sin(phi_rand) * Math.cos(theta_rand);
-      mainPos[i*3+1] = r_rand * Math.sin(phi_rand) * Math.sin(theta_rand);
-      mainPos[i*3+2] = r_rand * Math.cos(phi_rand);
+    this.rebuildGeometry = (count) => {
+      const geo = new THREE.BufferGeometry();
+      const mainPos    = new Float32Array(count * 3);
+      const target1    = new Float32Array(count * 3);
+      const target2    = new Float32Array(count * 3);
+      const targetText = new Float32Array(count * 3);
+      const target4    = new Float32Array(count * 3);
+      const target5    = new Float32Array(count * 3);
+      const target6    = new Float32Array(count * 3);
 
-      const setTarget = (arr, tp, colorArr, cp) => {
-        if (arr.length > 0) {
-          const idx = Math.floor((i / MAIN_COUNT) * arr.length);
-          const fp = arr[idx];
-          tp[i*3]   = fp.x;
-          tp[i*3+1] = fp.y;
-          tp[i*3+2] = fp.z;
-          if (colorArr && cp) {
-            const fc = colorArr[idx];
-            cp[i*3] = fc.r; cp[i*3+1] = fc.g; cp[i*3+2] = fc.b;
+      const col1 = new Float32Array(count * 3);
+      const col2 = new Float32Array(count * 3);
+      const col4 = new Float32Array(count * 3);
+      const col5 = new Float32Array(count * 3);
+      const col6 = new Float32Array(count * 3);
+
+      const mainAlpha  = new Float32Array(count);
+
+      for (let i = 0; i < count; i++) {
+        const r_rand = 80 + Math.random() * 150;
+        const theta_rand = Math.random() * Math.PI * 2;
+        const phi_rand = Math.acos(2 * Math.random() - 1);
+        mainPos[i*3]   = r_rand * Math.sin(phi_rand) * Math.cos(theta_rand);
+        mainPos[i*3+1] = r_rand * Math.sin(phi_rand) * Math.sin(theta_rand);
+        mainPos[i*3+2] = r_rand * Math.cos(phi_rand);
+
+        const setTarget = (arr, tp, colorArr, cp) => {
+          if (arr.length > 0) {
+            const idx = Math.floor((i / count) * arr.length);
+            const fp = arr[idx];
+            tp[i*3]   = fp.x;
+            tp[i*3+1] = fp.y;
+            tp[i*3+2] = fp.z;
+            if (colorArr && cp) {
+              const fc = colorArr[idx];
+              cp[i*3] = fc.r; cp[i*3+1] = fc.g; cp[i*3+2] = fc.b;
+            }
+          } else {
+            tp[i*3] = mainPos[i*3]*0.5; tp[i*3+1] = mainPos[i*3+1]*0.5; tp[i*3+2] = mainPos[i*3+2]*0.5;
+            if (cp) { cp[i*3] = 0; cp[i*3+1] = 1; cp[i*3+2] = 0; }
           }
-        } else {
-          tp[i*3] = mainPos[i*3]*0.5; tp[i*3+1] = mainPos[i*3+1]*0.5; tp[i*3+2] = mainPos[i*3+2]*0.5;
-          if (cp) { cp[i*3] = 0; cp[i*3+1] = 1; cp[i*3+2] = 0; }
-        }
-      };
+        };
 
-      setTarget(pOkezie1, target1, cOkezie1, col1);
-      setTarget(pHero2, target2, cHero2, col2);
-      setTarget(pText, targetText, null, null);
-      setTarget(pPortrait, target4, cPortrait, col4);
-      setTarget(pCoder, target5, cCoder, col5);
-      setTarget(pDesigner, target6, cDesigner, col6);
+        setTarget(pOkezie1, target1, cOkezie1, col1);
+        setTarget(pHero2, target2, cHero2, col2);
+        setTarget(pText, targetText, null, null);
+        setTarget(pPortrait, target4, cPortrait, col4);
+        setTarget(pCoder, target5, cCoder, col5);
+        setTarget(pDesigner, target6, cDesigner, col6);
 
-      mainAlpha[i] = 0.1 + Math.random() * 0.9;
-    }
+        mainAlpha[i] = 0.1 + Math.random() * 0.9;
+      }
 
-    /* Build and store pong target (done after loop) */
-    const target7 = buildPongArena(MAIN_COUNT);
-    this._pongArena = target7; // store for potential runtime updates
+      /* Build and store pong target (done after loop) */
+      const target7 = buildPongArena(count);
+      this._pongArena = target7; // store for potential runtime updates
 
-    mainGeo.setAttribute('position',   new THREE.BufferAttribute(mainPos, 3));
-    mainGeo.setAttribute('aTarget1',   new THREE.BufferAttribute(target1, 3));
-    mainGeo.setAttribute('aTarget2',   new THREE.BufferAttribute(target2, 3));
-    mainGeo.setAttribute('aTarget3',   new THREE.BufferAttribute(targetText, 3));
-    mainGeo.setAttribute('aTarget4',   new THREE.BufferAttribute(target4, 3));
-    mainGeo.setAttribute('aTarget5',   new THREE.BufferAttribute(target5, 3));
-    mainGeo.setAttribute('aTarget6',   new THREE.BufferAttribute(target6, 3));
-    mainGeo.setAttribute('aTarget7',   new THREE.BufferAttribute(target7, 3)); /* Phase 4 Pong */
-    mainGeo.setAttribute('aColor1',    new THREE.BufferAttribute(col1, 3));
-    mainGeo.setAttribute('aColor2',    new THREE.BufferAttribute(col2, 3));
-    mainGeo.setAttribute('aColor4',    new THREE.BufferAttribute(col4, 3));
-    mainGeo.setAttribute('aColor5',    new THREE.BufferAttribute(col5, 3));
-    mainGeo.setAttribute('aColor6',    new THREE.BufferAttribute(col6, 3));
-    mainGeo.setAttribute('aAlpha',     new THREE.BufferAttribute(mainAlpha, 1));
+      geo.setAttribute('position',   new THREE.BufferAttribute(mainPos, 3));
+      geo.setAttribute('aTarget1',   new THREE.BufferAttribute(target1, 3));
+      geo.setAttribute('aTarget2',   new THREE.BufferAttribute(target2, 3));
+      geo.setAttribute('aTarget3',   new THREE.BufferAttribute(targetText, 3));
+      geo.setAttribute('aTarget4',   new THREE.BufferAttribute(target4, 3));
+      geo.setAttribute('aTarget5',   new THREE.BufferAttribute(target5, 3));
+      geo.setAttribute('aTarget6',   new THREE.BufferAttribute(target6, 3));
+      geo.setAttribute('aTarget7',   new THREE.BufferAttribute(target7, 3)); /* Phase 4 Pong */
+      geo.setAttribute('aColor1',    new THREE.BufferAttribute(col1, 3));
+      geo.setAttribute('aColor2',    new THREE.BufferAttribute(col2, 3));
+      geo.setAttribute('aColor4',    new THREE.BufferAttribute(col4, 3));
+      geo.setAttribute('aColor5',    new THREE.BufferAttribute(col5, 3));
+      geo.setAttribute('aColor6',    new THREE.BufferAttribute(col6, 3));
+      geo.setAttribute('aAlpha',     new THREE.BufferAttribute(mainAlpha, 1));
+
+      if (mainParticles) {
+        mainParticles.geometry.dispose();
+        mainParticles.geometry = geo;
+      }
+      return geo;
+    };
+
+    const initialCount = window.innerWidth < 768 ? 28000 : 55000;
+    const mainGeo = this.rebuildGeometry(initialCount);
 
     const mainMat = new THREE.ShaderMaterial({
       uniforms: {
@@ -632,7 +644,7 @@ const JXUniverse = {
       blending: THREE.NormalBlending,
     });
 
-    const mainParticles = new THREE.Points(mainGeo, mainMat);
+    mainParticles = new THREE.Points(mainGeo, mainMat);
     mainParticles.frustumCulled = false;
     // Start at exactly 1.0 scale so portrait fits perfectly without being blown up or cropped
     mainParticles.scale.set(1.0, 1.0, 1.0);
@@ -812,9 +824,30 @@ const JXUniverse = {
     window.addEventListener('scroll', () => { cachedScrollY = window.scrollY; }, { passive: true });
     window.addEventListener('resize', () => { cachedDocH = Math.max(1, document.body.scrollHeight - window.innerHeight); }, { passive: true });
 
+    this.fpsCheckActive = true;
+    this.fpsStart = 0;
+    this.fpsFrames = 0;
+
     const tick = (now) => {
       rafId = requestAnimationFrame(tick);
       if (!_mqlRM.matches) clock += 0.016;
+
+      if (this.fpsCheckActive && now) {
+        if (!this.fpsStart) {
+          this.fpsStart = now;
+          this.fpsFrames = 0;
+        }
+        this.fpsFrames++;
+        const elapsed = now - this.fpsStart;
+        if (elapsed > 1000) {
+          this.fpsCheckActive = false;
+          const fps = (this.fpsFrames * 1000) / elapsed;
+          if (fps < 30) {
+            console.warn(`JX: Low framerate detected (${fps.toFixed(1)} fps). Reducing particle count for performance.`);
+            this.rebuildGeometry(15000);
+          }
+        }
+      }
 
       const scrollY    = cachedScrollY;
       const rawVel     = (scrollY - lastScrollY);

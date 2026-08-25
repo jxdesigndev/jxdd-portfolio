@@ -331,6 +331,29 @@
           <input type="text" id="pf-casestudy" class="form-input" placeholder="https://...">
         </div>
 
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="pf-slug">URL Slug <span style="font-weight: normal; color: var(--gray-2); font-size: var(--text-2xs);">(used in the project's URL, e.g. 'zenflow')</span></label>
+            <input type="text" id="pf-slug" class="form-input" placeholder="zenflow">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="pf-persona">Persona Image (single)</label>
+            <input type="file" id="pf-persona" class="form-input" accept="image/*">
+            <div id="pf-persona-preview" style="margin-top:var(--s-2); font-size:var(--text-xs); color:var(--gray-2); word-break: break-all;"></div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="pf-screenshots">Screenshots (Multiple)</label>
+          <input type="file" id="pf-screenshots" class="form-input" accept="image/*" multiple>
+          <div id="pf-screenshots-preview" style="margin-top:var(--s-2); font-size:var(--text-xs); color:var(--gray-2); word-break: break-all;"></div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="pf-outcome">Outcome Text</label>
+          <textarea id="pf-outcome" class="form-textarea" rows="3" placeholder="Describe the outcome or results..."></textarea>
+        </div>
+
         <div class="admin-modal-actions">
           <button type="button" id="btn-delete-project" class="btn btn-ghost btn-sm" style="color:var(--red); display:none;">Delete_Project</button>
           <div style="flex:1;"></div>

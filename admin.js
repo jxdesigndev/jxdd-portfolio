@@ -196,8 +196,14 @@
 
   DOM.btnNewProject.addEventListener('click', () => openProjectModal(null));
 
+  let currentEditingProject = null;
+
   function openProjectModal(project) {
+    currentEditingProject = project || null;
     DOM.projectForm.reset();
+    document.getElementById('pf-persona-preview').textContent = '';
+    document.getElementById('pf-screenshots-preview').textContent = '';
+
     if (project) {
       DOM.projectModalTitle.textContent = 'Edit Project';
       document.getElementById('pf-id').value = project.id;
@@ -215,6 +221,16 @@
       document.getElementById('pf-desc').value = project.description || '';
       document.getElementById('pf-content').value = project.content || '';
       document.getElementById('pf-casestudy').value = project.case_study || '';
+      document.getElementById('pf-slug').value = project.slug || '';
+      document.getElementById('pf-outcome').value = project.outcome_text || '';
+      
+      if (project.persona_image_url) {
+        document.getElementById('pf-persona-preview').textContent = `Current: ${project.persona_image_url.split('/').pop()}`;
+      }
+      if (project.screenshot_urls && project.screenshot_urls.length > 0) {
+        document.getElementById('pf-screenshots-preview').textContent = `Current: ${project.screenshot_urls.length} image(s) saved.`;
+      }
+      
       document.getElementById('pf-featured').checked = !!project.featured;
       DOM.btnDeleteProject.style.display = 'block';
     } else {
@@ -240,6 +256,22 @@
     btn.disabled = true;
 
     try {
+      let newPersonaUrl = currentEditingProject ? currentEditingProject.persona_image_url : null;
+      const personaFile = document.getElementById('pf-persona').files[0];
+      if (personaFile) {
+        newPersonaUrl = await uploadCompressedImage(personaFile);
+      }
+
+      let newScreenshots = currentEditingProject ? currentEditingProject.screenshot_urls : [];
+      const screenshotFiles = document.getElementById('pf-screenshots').files;
+      if (screenshotFiles && screenshotFiles.length > 0) {
+        newScreenshots = [];
+        for (let i = 0; i < screenshotFiles.length; i++) {
+          const url = await uploadCompressedImage(screenshotFiles[i]);
+          newScreenshots.push(url);
+        }
+      }
+
       const payload = {
         title: document.getElementById('pf-title').value.trim(),
         category: document.getElementById('pf-category').value.trim(),
@@ -256,6 +288,10 @@
         content: document.getElementById('pf-content').value.trim(),
         case_study: document.getElementById('pf-casestudy').value.trim(),
         featured: document.getElementById('pf-featured').checked,
+        slug: document.getElementById('pf-slug').value.trim(),
+        outcome_text: document.getElementById('pf-outcome').value.trim(),
+        persona_image_url: newPersonaUrl,
+        screenshot_urls: newScreenshots
       };
 
       if (id) {

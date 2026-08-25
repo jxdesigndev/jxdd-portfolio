@@ -263,6 +263,39 @@
     }
   }
 
+  /* Supabase About Video */
+  async function initAboutVideo() {
+    const videoSection = document.getElementById('about-video-section');
+    const videoPlayer = document.getElementById('about-video-player');
+    if (!videoSection || !videoPlayer) return;
+
+    try {
+      if (window.initSupabase) await window.initSupabase();
+      if (typeof supabase === 'undefined') throw new Error('Database offline.');
+
+      const { data, error } = await supabase
+        .from('site_settings')
+        .select('*')
+        .eq('key', 'about_video_url')
+        .single();
+
+      if (error && error.code !== 'PGRST116') throw error; // PGRST116 is "no rows returned"
+
+      if (!data || !data.value) {
+        // Hide section gracefully if no video exists
+        videoSection.style.display = 'none';
+        return;
+      }
+
+      // Update the video src and reveal normally
+      videoPlayer.src = data.value;
+      
+    } catch (err) {
+      console.error('Failed to load about video:', err);
+      videoSection.style.display = 'none';
+    }
+  }
+
   /* Boot */
   function init () {
     revealPage();
@@ -270,6 +303,7 @@
     initLivingPortrait();
     initLenis();
     initExperienceTimeline();
+    initAboutVideo();
   }
 
   if (document.readyState === 'loading') {

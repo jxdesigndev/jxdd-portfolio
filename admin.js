@@ -709,31 +709,6 @@
     });
   }
 
-  // --- TEMPORARY COMPRESSION TEST ---
-  const tempTestInput = document.getElementById('temp-compress-test');
-  if (tempTestInput) {
-    tempTestInput.addEventListener('change', async (e) => {
-      const file = e.target.files[0];
-      if (!file) return;
-      const logEl = document.getElementById('temp-compress-log');
-      const originalKB = (file.size / 1024).toFixed(2);
-      logEl.textContent = `Original size: ${originalKB} KB. Compressing and uploading...`;
-      try {
-        const url = await uploadCompressedImage(file);
-        
-        const headRes = await fetch(url, { method: 'HEAD' });
-        const newSize = headRes.headers.get('content-length');
-        const compressedKB = (newSize / 1024).toFixed(2);
-        const ratio = ((1 - (newSize / file.size)) * 100).toFixed(1);
-        
-        logEl.textContent += `\nSuccess! Public URL: ${url}\nCompressed size: ${compressedKB} KB (Reduced by ${ratio}%)`;
-        console.log("Compressed upload URL:", url, "| Size:", compressedKB + "KB");
-      } catch (err) {
-        logEl.textContent += `\nError: ${err.message}`;
-        console.error("Compression test error:", err);
-      }
-    });
-  }
 
   DOM.videoForm.addEventListener('submit', async (e) => {
     e.preventDefault();

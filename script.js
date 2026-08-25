@@ -1310,6 +1310,7 @@ const JXUniverse = {
     this.initCLI();
     this.initTypeToForm();
     this.loadFeaturedProjects();
+    this.loadTestimonials();
   },
 
   /* ────────────────────────────────────────────────────────────────
@@ -2254,6 +2255,114 @@ const JXUniverse = {
       }
     });
   },
+
+  /* ────────────────────────────────────────────────────────────────
+     13. TESTIMONIALS
+     ──────────────────────────────────────────────────────────────── */
+  async loadTestimonials () {
+    const section = document.getElementById('testimonials-section');
+    const grid = document.getElementById('testimonials-grid');
+    const logoStrip = document.getElementById('logo-strip');
+    
+    if (!section || !grid || !logoStrip) return;
+
+    try {
+      if (window.initSupabase) await window.initSupabase();
+    } catch (err) {
+      console.warn("Supabase init failed", err);
+    }
+    if (typeof supabase === 'undefined' || !supabase.from) return;
+
+    try {
+      const { data: testimonials, error } = await supabase
+        .from('testimonials')
+        .select('*')
+        .eq('is_active', true)
+        .order('priority', { ascending: false });
+
+      if (error) throw error;
+
+      if (!testimonials || testimonials.length === 0) {
+        section.style.display = 'none';
+        return;
+      }
+
+      /* Render logo strip */
+      logoStrip.innerHTML = '';
+      testimonials.forEach(t => {
+        if (t.logo_url) {
+          const img = document.createElement('img');
+          img.src = t.logo_url;
+          img.alt = t.role_company || 'Company Logo';
+          img.loading = 'lazy';
+          logoStrip.appendChild(img);
+        }
+      });
+
+      /* Render testimonials grid */
+      grid.innerHTML = '';
+      testimonials.forEach((t, index) => {
+        const card = document.createElement('div');
+        card.className = 'testimonial-card reveal-scale';
+        if (index > 0) card.style.transitionDelay = (index * 0.1) + 's';
+
+        if (t.video_url) {
+          const video = document.createElement('video');
+          video.className = 'testimonial-video';
+          video.src = t.video_url;
+          if (t.photo_url) video.poster = t.photo_url;
+          video.controls = true;
+          video.preload = 'metadata';
+          card.appendChild(video);
+        } else {
+          const blockquote = document.createElement('blockquote');
+          blockquote.className = 'testimonial-quote';
+          blockquote.textContent = `"${t.quote_text}"`;
+          card.appendChild(blockquote);
+        }
+
+        const meta = document.createElement('div');
+        meta.className = 'testimonial-meta';
+        
+        const author = document.createElement('div');
+        author.className = 'testimonial-author';
+        author.textContent = t.name;
+
+        const role = document.createElement('div');
+        role.className = 'testimonial-role';
+        role.textContent = t.role_company;
+
+        meta.appendChild(author);
+        meta.appendChild(role);
+        card.appendChild(meta);
+
+        grid.appendChild(card);
+      });
+
+      /* Trigger GSAP if ready */
+      if (window.gsap && window.ScrollTrigger) {
+        const reveals = grid.querySelectorAll('.reveal-scale');
+        reveals.forEach(el => {
+          gsap.fromTo(el, { opacity: 0, scale: 0.92 }, {
+            opacity: 1, scale: 1, duration: 0.9, ease: 'power3.out',
+            scrollTrigger: { trigger: el, start: 'top 88%', once: true }
+          });
+        });
+        ScrollTrigger.refresh();
+      } else {
+        /* Fallback to visible if GSAP missing */
+        const reveals = grid.querySelectorAll('.reveal-scale');
+        reveals.forEach(el => {
+          el.style.opacity = '1';
+          el.style.transform = 'none';
+        });
+      }
+
+    } catch (err) {
+      console.error('JX: Testimonials load error:', err);
+      section.style.display = 'none';
+    }
+  }
 
 };
 

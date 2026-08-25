@@ -42,6 +42,16 @@
      ──────────────────────────────────────────────────────────────── */
   function buildNav () {
     if (document.getElementById('nav')) return;
+
+    /* Skip-to-content for keyboard users */
+    if (!document.getElementById('skip-to-content')) {
+      const skip = document.createElement('a');
+      skip.id = 'skip-to-content';
+      skip.href = '#page';
+      skip.className = 'skip-to-content';
+      skip.textContent = 'Skip to content';
+      document.body.prepend(skip);
+    }
     const activePage = getActivePage();
 
     const linksHtml = NAV_LINKS.map(link => {
@@ -122,6 +132,17 @@
 
     document.body.prepend(mobile);
     document.body.prepend(nav);
+
+    /* Fix: audio toggle keyboard accessibility */
+    const audioToggle = document.getElementById('nav-audio-toggle');
+    if (audioToggle) {
+      audioToggle.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          if (window.JXAudio) window.JXAudio.toggle();
+        }
+      });
+    }
   }
 
   /* ────────────────────────────────────────────────────────────────
@@ -671,6 +692,91 @@
   }
 
   /* ────────────────────────────────────────────────────────────────
+     SCROLL PROGRESS BAR
+     A 2px green line at the top of the viewport that fills as the
+     user scrolls the page. Injected on every page.
+     ──────────────────────────────────────────────────────────────── */
+  function buildScrollProgress () {
+    if (document.getElementById('jx-scroll-progress')) return;
+
+    const bar = document.createElement('div');
+    bar.id = 'jx-scroll-progress';
+    bar.setAttribute('role', 'progressbar');
+    bar.setAttribute('aria-label', 'Page scroll progress');
+    bar.setAttribute('aria-valuenow', '0');
+    bar.setAttribute('aria-valuemin', '0');
+    bar.setAttribute('aria-valuemax', '100');
+    bar.style.cssText = [
+      'position:fixed', 'top:0', 'left:0',
+      'height:2px', 'width:0%',
+      'background:linear-gradient(90deg, var(--green) 0%, var(--cyan, #00FFCC) 100%)',
+      'z-index:9999', 'pointer-events:none',
+      'transition:width 0.1s linear',
+      'transform-origin:left',
+    ].join(';');
+    document.body.prepend(bar);
+
+    function updateProgress () {
+      const scrollTop  = window.scrollY || document.documentElement.scrollTop;
+      const docHeight  = document.documentElement.scrollHeight - window.innerHeight;
+      const pct = docHeight > 0 ? Math.min(100, (scrollTop / docHeight) * 100) : 0;
+      bar.style.width = pct + '%';
+      bar.setAttribute('aria-valuenow', Math.round(pct));
+    }
+
+    window.addEventListener('scroll', updateProgress, { passive: true });
+    updateProgress(); // init state
+  }
+
+  /* ────────────────────────────────────────────────────────────────
+     PHASE 6C: MOBILE CLI BUTTON
+     Floating [>_] button shown only on mobile (≤768px) and only on pages
+     that have the JXUniverse CLI panel. Dispatches Ctrl+K so the CLI’s
+     own keydown handler handles open/close without reaching into its closure.
+     ──────────────────────────────────────────────────────────────── */
+  function buildMobileCLIBtn () {
+    /* Only activate on pages that have the CLI panel */
+    if (!document.getElementById('cli-panel')) return;
+    if (document.getElementById('mobile-cli-btn')) return;
+
+    const btn = document.createElement('button');
+    btn.id = 'mobile-cli-btn';
+    btn.setAttribute('aria-label', 'Open terminal');
+    btn.textContent = '[>_]';
+    btn.style.cssText = [
+      'position:fixed', 'bottom:24px', 'right:24px',
+      'background:var(--surface-2,#0a0a0a)', 'border:1px solid var(--green)',
+      'color:var(--green)', 'font-family:var(--font-mono,monospace)', 'font-size:13px',
+      'padding:8px 14px', 'border-radius:4px', 'z-index:900',
+      'cursor:pointer', 'display:none', 'align-items:center', 'letter-spacing:0.1em',
+      'transition:box-shadow 0.2s ease, background 0.2s ease',
+    ].join(';');
+    document.body.append(btn);
+
+    /* Show only on mobile — inject a <style> rather than a media query in JS */
+    const s = document.createElement('style');
+    s.id = 'mobile-cli-btn-css';
+    s.textContent = '@media (max-width:768px) { #mobile-cli-btn { display:flex !important; } }';
+    document.head.append(s);
+
+    btn.addEventListener('click', () => {
+      /* Dispatch the same Ctrl+K the CLI already listens for */
+      document.dispatchEvent(new KeyboardEvent('keydown', {
+        key: 'k', ctrlKey: true, bubbles: true, cancelable: true
+      }));
+    });
+
+    btn.addEventListener('mouseenter', () => {
+      btn.style.boxShadow = '0 0 16px rgba(0,255,65,0.4)';
+      btn.style.background = 'rgba(0,255,65,0.06)';
+    });
+    btn.addEventListener('mouseleave', () => {
+      btn.style.boxShadow = '';
+      btn.style.background = 'var(--surface-2,#0a0a0a)';
+    });
+  }
+
+  /* ────────────────────────────────────────────────────────────────
      INIT — runs on every page
      ──────────────────────────────────────────────────────────────── */
   function init () {
@@ -683,6 +789,9 @@
     loadAvailability();
     initScrollTop();
     initCursorParallax();
+    buildScrollProgress();
+    /* Phase 6C: Mobile CLI button — wired after full load so #cli-panel exists */
+    window.addEventListener('load', buildMobileCLIBtn);
 
     /* Page-in reveal if we came from a transition */
     if (document.readyState === 'complete') {

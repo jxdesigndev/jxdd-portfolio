@@ -13,9 +13,20 @@
     if (window.gsap) {
       gsap.to(page, { opacity: 1, duration: 0.7, ease: 'power2.out' });
       const tl = gsap.timeline({ delay: 0.1 });
-      tl.to('#ch-label', { opacity: 1, duration: 0.6 })
-        .to('#ch-title',  { y: 0, opacity: 1, duration: 1, ease: 'expo.out' }, '-=0.3')
-        .to('#ch-sub',    { opacity: 1, duration: 0.7 }, '-=0.5');
+      const chTitle = document.getElementById('ch-title');
+      if (chTitle && window.SplitText) {
+        gsap.registerPlugin(SplitText);
+        chTitle.style.transform = 'none';
+        chTitle.style.opacity = '1';
+        const split = SplitText.create(chTitle, { type: 'chars', mask: 'chars' });
+        tl.to('#ch-label', { opacity: 1, duration: 0.6 })
+          .from(split.chars, { yPercent: 100, duration: 0.9, ease: 'expo.out', stagger: { each: 0.025 } }, '-=0.3')
+          .to('#ch-sub',    { opacity: 1, duration: 0.7 }, '-=0.5');
+      } else {
+        tl.to('#ch-label', { opacity: 1, duration: 0.6 })
+          .to('#ch-title',  { y: 0, opacity: 1, duration: 1, ease: 'expo.out' }, '-=0.3')
+          .to('#ch-sub',    { opacity: 1, duration: 0.7 }, '-=0.5');
+      }
     } else {
       page.style.opacity = '1';
     }

@@ -12,9 +12,20 @@
     if (window.gsap) {
       gsap.to(page, { opacity: 1, duration: 0.7, ease: 'power2.out' });
       const tl = gsap.timeline({ delay: 0.1 });
-      tl.to('#sh-label', { opacity: 1, duration: 0.6 })
-        .to('#sh-title',  { y: 0, opacity: 1, duration: 1, ease: 'expo.out' }, '-=0.3')
-        .to('#sh-sub',    { opacity: 1, duration: 0.7 }, '-=0.5');
+      const shTitle = document.getElementById('sh-title');
+      if (shTitle && window.SplitText) {
+        gsap.registerPlugin(SplitText);
+        shTitle.style.transform = 'none';
+        shTitle.style.opacity = '1';
+        const split = SplitText.create(shTitle, { type: 'chars', mask: 'chars' });
+        tl.to('#sh-label', { opacity: 1, duration: 0.6 })
+          .from(split.chars, { yPercent: 100, duration: 0.9, ease: 'expo.out', stagger: { each: 0.025 } }, '-=0.3')
+          .to('#sh-sub',    { opacity: 1, duration: 0.7 }, '-=0.5');
+      } else {
+        tl.to('#sh-label', { opacity: 1, duration: 0.6 })
+          .to('#sh-title',  { y: 0, opacity: 1, duration: 1, ease: 'expo.out' }, '-=0.3')
+          .to('#sh-sub',    { opacity: 1, duration: 0.7 }, '-=0.5');
+      }
     } else {
       page.style.opacity = '1';
     }
@@ -23,6 +34,24 @@
   function initScrollAnimations () {
     if (!window.gsap || !window.ScrollTrigger) return;
     gsap.registerPlugin(ScrollTrigger);
+
+    /* SplitText char reveals for h2.headline-lg headings (Phase 4) */
+    if (window.SplitText) {
+      gsap.registerPlugin(SplitText);
+      const prefsRM = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      document.querySelectorAll('h2.headline-lg.reveal').forEach(el => {
+        el.classList.remove('reveal');
+        if (prefsRM) { el.style.opacity = '1'; el.style.transform = 'none'; return; }
+        el.style.opacity = '1';
+        const split = SplitText.create(el, { type: 'chars', mask: 'chars' });
+        gsap.from(split.chars, {
+          yPercent: 100, opacity: 0, duration: 0.7, ease: 'expo.out',
+          stagger: { each: 0.022 },
+          scrollTrigger: { trigger: el, start: 'top 80%', once: true }
+        });
+      });
+    }
+
     document.querySelectorAll('.reveal, .reveal-scale, .reveal-left, .reveal-right').forEach(el => {
       const isScale = el.classList.contains('reveal-scale');
       gsap.fromTo(el,

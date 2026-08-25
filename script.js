@@ -593,7 +593,7 @@ const JXUniverse = {
             vec2 mf = uMouseForce.xy * vec2(130.0, 130.0);
             vec2 toMouse = pos.xy - mf;
             float dist = length(toMouse);
-            float radius = 28.0; /* much larger than old 10.0 */
+            float radius = 42.0; /* Phase 6A: widened for dramatic scatter (was 28.0) */
             if (dist < radius && dist > 0.001) {
               vec2 dir    = normalize(toMouse);
               float falloff = 1.0 - smoothstep(0.0, radius, dist);
@@ -1181,10 +1181,23 @@ const JXUniverse = {
     /* Hero elements cascade */
     tl.to(['#hero-eyebrow'], { opacity: 1, duration: 0.6, ease: 'power3.out' }, '+=0.2');
 
-    tl.to(['#hl-1', '#hl-2'], {
-      y: 0, opacity: 1, duration: 0.9,
-      ease: 'expo.out', stagger: 0.08
-    }, '-=0.3');
+    if (window.SplitText) {
+      /* Phase 4: Char-by-char slide-up from behind mask — signature SOTD effect */
+      gsap.registerPlugin(SplitText);
+      const split1 = SplitText.create('#hl-1', { type: 'chars', mask: 'chars' });
+      const split2 = SplitText.create('#hl-2', { type: 'chars', mask: 'chars' });
+      gsap.set(['#hl-1', '#hl-2'], { opacity: 1 }); // parent spans visible; chars masked
+      tl.from([...split1.chars, ...split2.chars], {
+        yPercent: 100, duration: 0.85, ease: 'expo.out',
+        stagger: { each: 0.032, from: 'start' }
+      }, '-=0.3');
+    } else {
+      /* Fallback: word-level reveal (GSAP loaded but SplitText unavailable) */
+      tl.to(['#hl-1', '#hl-2'], {
+        y: 0, opacity: 1, duration: 0.9,
+        ease: 'expo.out', stagger: 0.08
+      }, '-=0.3');
+    }
 
     tl.to(['#hr-1', '#hr-2', '#hr-3', '.hero-role-separator'], {
       opacity: 1, duration: 0.5, ease: 'power2.out', stagger: 0.06
@@ -1303,6 +1316,7 @@ const JXUniverse = {
   afterReveal () {
     if (window.gsap && window.ScrollTrigger) {
       gsap.registerPlugin(ScrollTrigger);
+      this.initSplitTextReveals(); /* Phase 4: run before generic reveal scan */
       this.initScrollAnimations();
     }
     this.initHUD();
@@ -1311,6 +1325,54 @@ const JXUniverse = {
     this.initTypeToForm();
     this.loadFeaturedProjects();
     this.loadTestimonials();
+  },
+
+  /* ────────────────────────────────────────────────────────────────
+     6b. SPLITTEXT SECTION HEADING REVEALS (Phase 4)
+     Character-level ScrollTrigger reveals for all section h2 headings.
+     Runs before initScrollAnimations() so it can strip the 'reveal' class
+     from elements it owns, preventing double-animation.
+     ──────────────────────────────────────────────────────────────── */
+  initSplitTextReveals () {
+    if (!window.gsap || !window.SplitText || !window.ScrollTrigger) return;
+    const prefsRM = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    gsap.registerPlugin(SplitText, ScrollTrigger);
+
+    /* Targets: section h2 headings outside the hero */
+    const headings = document.querySelectorAll(
+      'h2.featured-title, h2.headline-lg.reveal'
+    );
+
+    if (prefsRM) {
+      headings.forEach(el => {
+        el.classList.remove('reveal');
+        el.style.opacity = '1';
+        el.style.transform = 'none';
+      });
+      return;
+    }
+
+    headings.forEach(el => {
+      /* Remove 'reveal' class so generic initScrollAnimations() skips this element */
+      el.classList.remove('reveal');
+      el.style.opacity = '1'; // parent visible; chars masked by SplitText
+
+      const split = SplitText.create(el, { type: 'words,chars', mask: 'chars' });
+
+      gsap.from(split.chars, {
+        yPercent: 100,
+        opacity: 0,
+        duration: 0.7,
+        ease: 'expo.out',
+        stagger: { each: 0.022 },
+        scrollTrigger: {
+          trigger: el,
+          start: 'top 80%',
+          once: true,
+        }
+      });
+    });
   },
 
   /* ────────────────────────────────────────────────────────────────

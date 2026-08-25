@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="canonical" href="https://jxdesigndev.vercel.app/404.html">
+  <meta name="description" content="Page not found — JX Universe">
+  <meta name="theme-color" content="#000000">
+  <title>404 | JX Universe</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;800&family=Space+Grotesk:wght@400;500&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/jpeg" href="assets/images/jx-logo.jpeg">
+
+  <style>
+    /* ── 404 layout ── */
+    body { overflow: hidden; }
+
+    #page-404 {
+      position: relative;
+      z-index: var(--z-base);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      text-align: center;
+      padding: var(--s-8);
+    }
+
+    /* Particle canvas sits behind everything */
+    #canvas-404 {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .err-code {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: clamp(8rem, 20vw, 20rem);
+      line-height: 1;
+      color: var(--green);
+      text-shadow: 0 0 60px rgba(0, 255, 65, 0.4), 0 0 120px rgba(0, 255, 65, 0.15);
+      opacity: 0;
+    }
+
+    .err-signal {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs, 0.75rem);
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--gold, #D4A24E);
+      margin-top: var(--s-4);
+      opacity: 0;
+    }
+
+    .err-message {
+      font-family: var(--font-body, 'Space Grotesk', sans-serif);
+      font-size: var(--text-lg, 1.125rem);
+      color: var(--gray-2, #888);
+      margin-top: var(--s-6);
+      max-width: 480px;
+      line-height: 1.6;
+      opacity: 0;
+    }
+
+    .err-cta {
+      margin-top: var(--s-8);
+      opacity: 0;
+    }
+
+    /* Scanline overlay */
+    #page-404::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0, 255, 65, 0.012) 2px,
+        rgba(0, 255, 65, 0.012) 4px
+      );
+      pointer-events: none;
+      z-index: 1;
+    }
+  </style>
+</head>
+<body>
+  <!-- Particle background -->
+  <canvas id="canvas-404" aria-hidden="true"></canvas>
+
+  <div id="page-404">
+    <p class="err-code" id="err-code" aria-label="Error 404">404</p>
+    <p class="err-signal" id="err-signal">Signal Lost</p>
+    <p class="err-message" id="err-message">
+      The universe you're looking for doesn't exist in this dimension.
+    </p>
+    <div class="err-cta" id="err-cta">
+      <a href="/index.html" class="btn btn-primary" data-nav-link>&#8592; Return to Universe</a>
+    </div>
+  </div>
+
+  <!-- GSAP 3.13 -->
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js" defer></script>
+  <!-- Lenis -->
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js" defer></script>
+  <!-- Supabase (for nav availability status) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+  <script src="supabase.js" defer></script>
+  <!-- Nav (cursor, CT transition, hamburger) -->
+  <script src="nav.js" defer></script>
+
+  <script>
+    /* ================================================================
+       404 PAGE — Standalone Canvas2D particle field + GSAP entrance
+       No Three.js dependency. ~80 lines of lightweight particle code.
+       ================================================================ */
+
+    (function () {
+      'use strict';
+
+      /* ── Particle system ── */
+      var canvas = document.getElementById('canvas-404');
+      var ctx    = canvas.getContext('2d');
+
+      var COUNT        = 100;
+      var RADIUS       = 1.5;
+      var FRICTION     = 0.96;
+      var REPEL_RADIUS = 80;
+      var REPEL_FORCE  = 0.15;
+
+      var W, H, mx = -9999, my = -9999;
+      var particles = [];
+
+      function resize() {
+        W = canvas.width  = window.innerWidth;
+        H = canvas.height = window.innerHeight;
+      }
+
+      function mkParticle() {
+        return {
+          x:  Math.random() * W,
+          y:  Math.random() * H,
+          vx: (Math.random() - 0.5) * 0.4,
+          vy: (Math.random() - 0.5) * 0.4,
+          a:  Math.random() * 0.5 + 0.25,
+        };
+      }
+
+      function init() {
+        resize();
+        for (var i = 0; i < COUNT; i++) particles.push(mkParticle());
+      }
+
+      function tick() {
+        ctx.clearRect(0, 0, W, H);
+
+        for (var i = 0; i < particles.length; i++) {
+          var p  = particles[i];
+          var dx = p.x - mx;
+          var dy = p.y - my;
+          var dist = Math.sqrt(dx * dx + dy * dy);
+
+          if (dist < REPEL_RADIUS && dist > 0.5) {
+            var f = (1 - dist / REPEL_RADIUS) * REPEL_FORCE;
+            p.vx += (dx / dist) * f;
+            p.vy += (dy / dist) * f;
+          }
+
+          p.vx *= FRICTION;
+          p.vy *= FRICTION;
+          p.x  += p.vx;
+          p.y  += p.vy;
+
+          if (p.x < -4) p.x = W + 4;
+          if (p.x > W + 4) p.x = -4;
+          if (p.y < -4) p.y = H + 4;
+          if (p.y > H + 4) p.y = -4;
+
+          var grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, RADIUS * 4);
+          grad.addColorStop(0, 'rgba(0,255,65,' + p.a + ')');
+          grad.addColorStop(1, 'rgba(0,255,65,0)');
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, RADIUS * 4, 0, Math.PI * 2);
+          ctx.fillStyle = grad;
+          ctx.fill();
+        }
+
+        requestAnimationFrame(tick);
+      }
+
+      window.addEventListener('resize', resize);
+      document.addEventListener('mousemove', function(e) { mx = e.clientX; my = e.clientY; });
+      document.addEventListener('mouseleave', function() { mx = -9999; my = -9999; });
+      document.addEventListener('touchmove', function(e) {
+        mx = e.touches[0].clientX;
+        my = e.touches[0].clientY;
+      }, { passive: true });
+      document.addEventListener('touchend', function() { mx = -9999; my = -9999; });
+
+      init();
+      requestAnimationFrame(tick);
+
+      /* ── GSAP entrance ── */
+      window.addEventListener('load', function() {
+        var els = [
+          document.getElementById('err-code'),
+          document.getElementById('err-signal'),
+          document.getElementById('err-message'),
+          document.getElementById('err-cta'),
+        ].filter(Boolean);
+
+        var prefsRM = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        if (!window.gsap || prefsRM) {
+          els.forEach(function(el) { el.style.opacity = '1'; el.style.transform = 'none'; });
+          return;
+        }
+
+        gsap.from(els, {
+          opacity: 0,
+          y: 28,
+          duration: 0.85,
+          ease: 'power3.out',
+          stagger: 0.15,
+          delay: 0.3,
+          onStart: function() {
+            /* Ensure elements are visible to GSAP (opacity:0 is initial CSS state) */
+          },
+          onComplete: function() {
+            els.forEach(function(el) { el.style.opacity = '1'; });
+          }
+        });
+      });
+
+    })();
+  </script>
+</body>
+</html>

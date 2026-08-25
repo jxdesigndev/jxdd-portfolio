@@ -21,6 +21,9 @@
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+  <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+  <link rel="preload" href="/assets/images/okezie-1.png" as="image" fetchpriority="high">
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&family=Playfair+Display:ital,wght@1,900&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="style.css">
@@ -938,6 +941,20 @@
     ]
   }
   </script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "@id": "https://jxdesigndev.vercel.app/#person",
+  "name": "Okezie Ferdinand",
+  "alternateName": "JX",
+  "url": "https://jxdesigndev.vercel.app/",
+  "image": "https://jxdesigndev.vercel.app/assets/images/okezie-1.png",
+  "jobTitle": "Product Designer & Full-Stack Developer",
+  "nationality": { "@type": "Country", "name": "Nigeria" },
+  "knowsAbout": ["Product Design", "Full-Stack Development", "N8N Automation", "Cybersecurity", "WebGL", "Three.js", "Afrofuturism"]
+}
+</script>
 </head>
 <body>
   <a href="#page" class="skip-to-content">Skip to content</a>
@@ -1297,9 +1314,10 @@
   <!-- Scroll to top -->
   <button class="scroll-top" aria-label="Scroll to top">↑</button>
 
-  <!-- GSAP (animation engine) -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+  <!-- GSAP 3.13 (animation engine — SplitText now free) -->
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js" defer></script>
   <!-- Lenis (smooth scroll) -->
   <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js" defer></script>
   <!-- Three.js (WebGL particle universe) -->

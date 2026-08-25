@@ -19,9 +19,20 @@
     if (window.gsap) {
       gsap.to(page, { opacity: 1, duration: 0.7, ease: 'power2.out' });
       const tl = gsap.timeline({ delay: 0.1 });
-      tl.to('#wh-label', { opacity: 1, duration: 0.6 })
-        .to('#wh-title',  { y: 0, opacity: 1, duration: 1, ease: 'expo.out' }, '-=0.3')
-        .to('#wh-sub',    { opacity: 1, duration: 0.7 }, '-=0.5');
+      const whTitle = document.getElementById('wh-title');
+      if (whTitle && window.SplitText) {
+        gsap.registerPlugin(SplitText);
+        whTitle.style.transform = 'none';
+        whTitle.style.opacity = '1';
+        const split = SplitText.create(whTitle, { type: 'chars', mask: 'chars' });
+        tl.to('#wh-label', { opacity: 1, duration: 0.6 })
+          .from(split.chars, { yPercent: 100, duration: 0.9, ease: 'expo.out', stagger: { each: 0.025 } }, '-=0.3')
+          .to('#wh-sub',    { opacity: 1, duration: 0.7 }, '-=0.5');
+      } else {
+        tl.to('#wh-label', { opacity: 1, duration: 0.6 })
+          .to('#wh-title',  { y: 0, opacity: 1, duration: 1, ease: 'expo.out' }, '-=0.3')
+          .to('#wh-sub',    { opacity: 1, duration: 0.7 }, '-=0.5');
+      }
     } else {
       page.style.opacity = '1';
     }

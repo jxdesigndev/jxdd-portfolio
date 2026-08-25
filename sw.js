@@ -4,13 +4,15 @@ const CACHE_NAME = 'jxdd-cache-[DEPLOY_HASH]';
 const CORE_ASSETS = [
   '/',
   '/index.html',
+  '/404.html',
   '/style.css',
   '/script.js',
   '/nav.js',
   '/audio.js',
   '/assets/images/jx-hero.png',
-  'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js',
-  'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js',
+  'https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js',
+  'https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js',
+  'https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js',
   'https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js',
   'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js'
 ];

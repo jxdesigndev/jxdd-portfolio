@@ -52,6 +52,11 @@
     settingsForm: document.getElementById('settings-form'),
     settingAvailability: document.getElementById('setting-availability'),
 
+    videoForm: document.getElementById('video-form'),
+    settingAboutVideo: document.getElementById('setting-about-video'),
+    settingAboutVideoPreview: document.getElementById('setting-about-video-preview'),
+    btnUploadVideo: document.getElementById('btn-upload-video'),
+
     socialsForm: document.getElementById('socials-form'),
     settingSocialTwitter: document.getElementById('setting-social-twitter'),
     settingSocialLinkedin: document.getElementById('setting-social-linkedin'),
@@ -450,6 +455,7 @@
     if (data) {
       data.forEach(row => {
         if (row.key === 'availability_status') DOM.settingAvailability.value = row.value;
+        if (row.key === 'about_video_url') DOM.settingAboutVideoPreview.value = row.value;
         if (row.key === 'social_twitter') DOM.settingSocialTwitter.value = row.value;
         if (row.key === 'social_linkedin') DOM.settingSocialLinkedin.value = row.value;
         if (row.key === 'social_github') DOM.settingSocialGithub.value = row.value;
@@ -467,6 +473,62 @@
     const { error } = await supabase.from('site_settings').upsert({ key: 'availability_status', value: val });
     if (!error) {
       alert('Status updated successfully.');
+    }
+  });
+
+  async function uploadMedia(file) {
+    if (!file) throw new Error('No file selected.');
+    
+    // Generate unique filename using timestamp
+    const ext = file.name.split('.').pop();
+    const uniqueName = `video_${Date.now()}.${ext}`;
+
+    const { data, error } = await supabase.storage
+      .from('portfolio_media')
+      .upload(uniqueName, file);
+      
+    if (error) {
+      throw error;
+    }
+
+    const { data: publicData } = supabase.storage
+      .from('portfolio_media')
+      .getPublicUrl(uniqueName);
+
+    if (!publicData || !publicData.publicUrl) {
+      throw new Error('Failed to retrieve public URL after upload.');
+    }
+
+    return publicData.publicUrl;
+  }
+
+  DOM.videoForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const file = DOM.settingAboutVideo.files[0];
+    if (!file) {
+      alert('Please select a video file first.');
+      return;
+    }
+
+    const originalText = DOM.btnUploadVideo.textContent;
+    DOM.btnUploadVideo.textContent = 'Uploading...';
+    DOM.btnUploadVideo.disabled = true;
+
+    try {
+      const publicUrl = await uploadMedia(file);
+      
+      const { error } = await supabase.from('site_settings').upsert({ key: 'about_video_url', value: publicUrl });
+      if (error) throw error;
+
+      DOM.settingAboutVideoPreview.value = publicUrl;
+      DOM.settingAboutVideo.value = ''; // clear file input
+      alert('Video uploaded and saved successfully.');
+    } catch (err) {
+      console.error('Upload failed:', err);
+      alert(`Upload failed: ${err.message}`);
+    } finally {
+      DOM.btnUploadVideo.textContent = originalText;
+      DOM.btnUploadVideo.disabled = false;
     }
   });
 

@@ -1808,7 +1808,9 @@ const JXUniverse = {
         const p = projects[i];
         if (!p) return;
         const handleCardClick = () => {
-          if (p.case_study && p.case_study.startsWith('/projects/')) {
+          if (p.slug) {
+            window.location.href = `project.html?slug=${encodeURIComponent(p.slug)}`;
+          } else if (p.case_study && p.case_study.startsWith('/projects/')) {
             window.location.href = p.case_study;
           } else {
             this.openModal(p);

@@ -49,6 +49,14 @@
     experienceForm: document.getElementById('experience-form'),
     btnDeleteExperience: document.getElementById('btn-delete-experience'),
 
+    testimonialsTbody: document.getElementById('testimonials-tbody'),
+    btnNewTestimonial: document.getElementById('btn-new-testimonial'),
+    testimonialModal: document.getElementById('testimonial-modal'),
+    testimonialModalTitle: document.getElementById('testimonial-modal-title'),
+    testimonialModalClose: document.getElementById('testimonial-modal-close'),
+    testimonialForm: document.getElementById('testimonial-form'),
+    btnDeleteTestimonial: document.getElementById('btn-delete-testimonial'),
+
     settingsForm: document.getElementById('settings-form'),
     settingAvailability: document.getElementById('setting-availability'),
 
@@ -71,6 +79,7 @@
   let allProjects = [];
   let allMessages = [];
   let allExperience = [];
+  let allTestimonials = [];
 
   /* ── AUTHENTICATION ── */
 
@@ -133,6 +142,7 @@
     loadMessages();
     loadSettings();
     loadExperience();
+    loadTestimonials();
   }
 
   /* ── NAVIGATION ── */
@@ -393,6 +403,126 @@
       if (!error) {
         DOM.experienceModal.classList.remove('open');
         loadExperience();
+      }
+    }
+  });
+
+
+  /* ── TESTIMONIALS ── */
+  async function loadTestimonials() {
+    const { data, error } = await supabase.from('testimonials').select('*').order('priority', { ascending: false });
+    if (error) {
+      console.error(error);
+      return;
+    }
+    allTestimonials = data;
+    renderTestimonials();
+  }
+
+  function renderTestimonials() {
+    if (allTestimonials.length === 0) {
+      DOM.testimonialsTbody.innerHTML = `<tr><td colspan="5" style="text-align:center;">No testimonials found.</td></tr>`;
+      return;
+    }
+    
+    DOM.testimonialsTbody.innerHTML = allTestimonials.map(t => `
+      <tr>
+        <td>${t.priority || 0}</td>
+        <td style="color:var(--white);">${escapeHTML(t.name)}</td>
+        <td>${escapeHTML(t.role_company)}</td>
+        <td><span style="font-size:var(--text-xs); color:var(--gray-2);">${escapeHTML((t.quote_text || '').substring(0, 40))}...</span></td>
+        <td>
+          <button class="btn btn-ghost btn-sm btn-edit-testimonial" data-id="${t.id}">Edit</button>
+        </td>
+      </tr>
+    `).join('');
+
+    document.querySelectorAll('.btn-edit-testimonial').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const id = e.target.dataset.id;
+        const testm = allTestimonials.find(x => x.id == id);
+        if (testm) openTestimonialModal(testm);
+      });
+    });
+  }
+
+  DOM.btnNewTestimonial.addEventListener('click', () => openTestimonialModal(null));
+
+  function openTestimonialModal(testm) {
+    DOM.testimonialForm.reset();
+    if (testm) {
+      DOM.testimonialModalTitle.textContent = 'Edit Testimonial';
+      document.getElementById('tf-id').value = testm.id;
+      document.getElementById('tf-name').value = testm.name || '';
+      document.getElementById('tf-role').value = testm.role_company || '';
+      document.getElementById('tf-quote').value = testm.quote_text || '';
+      document.getElementById('tf-logo-url').value = testm.logo_url || '';
+      document.getElementById('tf-video-url').value = testm.video_url || '';
+      document.getElementById('tf-photo-url').value = testm.photo_url || '';
+      document.getElementById('tf-priority').value = testm.priority || 0;
+      document.getElementById('tf-active').checked = testm.is_active !== false; // defaults to true
+      DOM.btnDeleteTestimonial.style.display = 'block';
+    } else {
+      DOM.testimonialModalTitle.textContent = 'Add Testimonial';
+      document.getElementById('tf-id').value = '';
+      document.getElementById('tf-active').checked = true;
+      DOM.btnDeleteTestimonial.style.display = 'none';
+    }
+    DOM.testimonialModal.classList.add('open');
+  }
+
+  DOM.testimonialModalClose.addEventListener('click', () => {
+    DOM.testimonialModal.classList.remove('open');
+  });
+
+  DOM.testimonialForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const id = document.getElementById('tf-id').value;
+    
+    const btn = DOM.testimonialForm.querySelector('button[type="submit"]');
+    const oldText = btn.textContent;
+    btn.textContent = 'Saving...';
+    btn.disabled = true;
+
+    try {
+      const payload = {
+        name: document.getElementById('tf-name').value.trim(),
+        role_company: document.getElementById('tf-role').value.trim(),
+        quote_text: document.getElementById('tf-quote').value.trim(),
+        logo_url: document.getElementById('tf-logo-url').value.trim(),
+        video_url: document.getElementById('tf-video-url').value.trim(),
+        photo_url: document.getElementById('tf-photo-url').value.trim(),
+        priority: parseInt(document.getElementById('tf-priority').value) || 0,
+        is_active: document.getElementById('tf-active').checked,
+      };
+
+      if (id) {
+        const { error } = await supabase.from('testimonials').update(payload).eq('id', id);
+        if (error) throw error;
+      } else {
+        const { error } = await supabase.from('testimonials').insert([payload]);
+        if (error) throw error;
+      }
+      
+      DOM.testimonialModal.classList.remove('open');
+      loadTestimonials();
+    } catch (err) {
+      console.error('Testimonial save error:', err);
+      alert('Failed to save testimonial: ' + err.message);
+    } finally {
+      btn.textContent = oldText;
+      btn.disabled = false;
+    }
+  });
+
+  DOM.btnDeleteTestimonial.addEventListener('click', async () => {
+    const id = document.getElementById('tf-id').value;
+    if (!id) return;
+    if (confirm('Are you sure you want to delete this testimonial permanently?')) {
+      const { error } = await supabase.from('testimonials').delete().eq('id', id);
+      if (!error) {
+        DOM.testimonialModal.classList.remove('open');
+        loadTestimonials();
       }
     }
   });

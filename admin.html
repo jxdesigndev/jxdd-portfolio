@@ -58,6 +58,7 @@
         <button class="admin-nav-btn" data-tab="messages">02 // SIGNALS (Messages)</button>
         <button class="admin-nav-btn" data-tab="settings">03 // CORE (Settings)</button>
         <button class="admin-nav-btn" data-tab="experience">04 // TIMELINE (Experience)</button>
+        <button class="admin-nav-btn" data-tab="testimonials">05 // VOICES (Testimonials)</button>
       </nav>
       
       <div class="admin-sidebar-bottom">
@@ -112,6 +113,31 @@
               </tr>
             </thead>
             <tbody id="experience-tbody">
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- TESTIMONIALS TAB -->
+      <section id="tab-testimonials" class="admin-tab-content">
+        <header class="admin-header">
+          <h1 class="headline-md">Voices (Testimonials)</h1>
+          <button id="btn-new-testimonial" class="btn btn-primary btn-sm">+ Add Testimonial</button>
+        </header>
+
+        <div class="admin-table-container">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Priority</th>
+                <th>Name</th>
+                <th>Role/Company</th>
+                <th>Quote Snippet</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="testimonials-tbody">
               <!-- Rendered via JS -->
             </tbody>
           </table>
@@ -359,6 +385,67 @@
           <button type="button" id="btn-delete-experience" class="btn btn-ghost btn-sm" style="color:var(--red); display:none;">Delete_Experience</button>
           <div style="flex:1;"></div>
           <button type="submit" class="btn btn-primary btn-sm">Save_To_Timeline ↗</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- TESTIMONIAL MODAL -->
+  <div id="testimonial-modal" class="admin-modal-overlay">
+    <div class="admin-modal">
+      <div class="admin-modal-header">
+        <h2 id="testimonial-modal-title" class="headline-sm">Add Testimonial</h2>
+        <button id="testimonial-modal-close" class="btn btn-ghost btn-sm">✕</button>
+      </div>
+      <form id="testimonial-form" class="admin-modal-body">
+        <input type="hidden" id="tf-id">
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="tf-name">Name *</label>
+            <input type="text" id="tf-name" class="form-input" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="tf-role">Role/Company *</label>
+            <input type="text" id="tf-role" class="form-input" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="tf-quote">Quote Text *</label>
+          <textarea id="tf-quote" class="form-textarea" rows="3" required></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="tf-logo-url">Logo URL (Plain Text for now)</label>
+          <input type="url" id="tf-logo-url" class="form-input">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="tf-video-url">Video URL (Plain Text for now)</label>
+          <input type="url" id="tf-video-url" class="form-input">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="tf-photo-url">Photo URL (Plain Text for now)</label>
+          <input type="url" id="tf-photo-url" class="form-input">
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="tf-priority">Sort Priority</label>
+            <input type="number" id="tf-priority" class="form-input" value="0">
+          </div>
+          <div class="form-group" style="flex-direction:row; align-items:center; gap:var(--s-3); margin-top:30px;">
+            <input type="checkbox" id="tf-active" style="width:18px; height:18px; accent-color:var(--green); cursor:pointer;" checked>
+            <label class="form-label" for="tf-active" style="margin:0; cursor:pointer;">Is Active</label>
+          </div>
+        </div>
+
+        <div class="admin-modal-actions">
+          <button type="button" id="btn-delete-testimonial" class="btn btn-ghost btn-sm" style="color:var(--red); display:none;">Delete_Testimonial</button>
+          <div style="flex:1;"></div>
+          <button type="submit" class="btn btn-primary btn-sm">Save_To_Voices ↗</button>
         </div>
       </form>
     </div>

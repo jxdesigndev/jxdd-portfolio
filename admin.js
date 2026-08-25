@@ -645,6 +645,96 @@
     return publicData.publicUrl;
   }
 
+  async function uploadCompressedImage(file) {
+    if (!file) throw new Error('No file selected.');
+    if (!file.type.startsWith('image/')) {
+      throw new Error('File is not an image.');
+    }
+
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = async () => {
+          let width = img.width;
+          let height = img.height;
+          const maxDim = 1920;
+
+          if (width > maxDim || height > maxDim) {
+            if (width > height) {
+              height = Math.round((height * maxDim) / width);
+              width = maxDim;
+            } else {
+              width = Math.round((width * maxDim) / height);
+              height = maxDim;
+            }
+          }
+
+          const canvas = document.createElement('canvas');
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+
+          canvas.toBlob(async (blob) => {
+            if (!blob) return reject(new Error('Canvas to Blob failed.'));
+            
+            try {
+              const uniqueName = `image_${Date.now()}_${Math.random().toString(36).substring(2, 8)}.webp`;
+              const { data, error } = await supabase.storage
+                .from('portfolio_media')
+                .upload(uniqueName, blob, { contentType: 'image/webp' });
+                
+              if (error) throw error;
+
+              const { data: publicData } = supabase.storage
+                .from('portfolio_media')
+                .getPublicUrl(uniqueName);
+
+              if (!publicData || !publicData.publicUrl) {
+                throw new Error('Failed to retrieve public URL after upload.');
+              }
+
+              resolve(publicData.publicUrl);
+            } catch (err) {
+              reject(err);
+            }
+          }, 'image/webp', 0.8);
+        };
+        img.onerror = () => reject(new Error('Failed to load image for compression.'));
+        img.src = e.target.result;
+      };
+      reader.onerror = () => reject(new Error('Failed to read file.'));
+      reader.readAsDataURL(file);
+    });
+  }
+
+  // --- TEMPORARY COMPRESSION TEST ---
+  const tempTestInput = document.getElementById('temp-compress-test');
+  if (tempTestInput) {
+    tempTestInput.addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const logEl = document.getElementById('temp-compress-log');
+      const originalKB = (file.size / 1024).toFixed(2);
+      logEl.textContent = `Original size: ${originalKB} KB. Compressing and uploading...`;
+      try {
+        const url = await uploadCompressedImage(file);
+        
+        const headRes = await fetch(url, { method: 'HEAD' });
+        const newSize = headRes.headers.get('content-length');
+        const compressedKB = (newSize / 1024).toFixed(2);
+        const ratio = ((1 - (newSize / file.size)) * 100).toFixed(1);
+        
+        logEl.textContent += `\nSuccess! Public URL: ${url}\nCompressed size: ${compressedKB} KB (Reduced by ${ratio}%)`;
+        console.log("Compressed upload URL:", url, "| Size:", compressedKB + "KB");
+      } catch (err) {
+        logEl.textContent += `\nError: ${err.message}`;
+        console.error("Compression test error:", err);
+      }
+    });
+  }
+
   DOM.videoForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const file = DOM.settingAboutVideo.files[0];

@@ -134,11 +134,56 @@
     .image-caption {
       font-family: var(--font-mono);
       font-size: var(--text-xs);
-      color: var(--gray-2);
+      color: var(--gray-1);
+      font-weight: 500;
       letter-spacing: var(--track-wider);
       text-transform: uppercase;
       margin-top: var(--s-2);
       text-align: center;
+    }
+
+    .screenshot-gallery {
+      display: flex;
+      flex-direction: column;
+      gap: var(--s-16);
+      align-items: center;
+      margin: var(--s-16) 0;
+    }
+
+    .screenshot-frame {
+      background: linear-gradient(145deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 16px;
+      padding: var(--s-8);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.2), 0 10px 30px rgba(0, 0, 0, 0.3);
+      width: 100%;
+    }
+    
+    .screenshot-frame.frame-portrait {
+      max-width: 350px;
+    }
+    
+    .screenshot-frame.frame-landscape {
+      max-width: 100%;
+    }
+    
+    .screenshot-frame picture {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+    }
+
+    .screenshot-frame img {
+      width: 100%;
+      height: auto;
+      object-fit: contain;
+      border-radius: 8px;
+      margin: 0;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
     }
     
     .parallax-img {
@@ -253,9 +298,9 @@
         <h2 class="reveal">The Problem</h2>
         <p class="reveal">Most fitness apps optimize for one lane — high-intensity gym tracking, or slow-paced yoga and mindfulness — rarely both. For women who want structured strength training and recovery/mindfulness work in one place, that means stitching together a routine across multiple apps with inconsistent design languages, separate logins, and no unified sense of progress.</p>
 
-        <div class="split-section">
+        <h2 class="reveal">Designing for Amara</h2>
+        <div class="split-section" style="margin-top: 0;">
           <div>
-            <h2 class="reveal" style="margin-top: 0;">Designing for Amara</h2>
             <p class="reveal">To ground the design decisions, I designed around a practical user persona:</p>
             <p class="reveal"><strong>Amara, 27</strong> — Marketing coordinator, new to structured fitness. Wants to build strength without the intimidation of traditional gym apps, and values mindfulness as part of her routine, not an afterthought. Short on time — needs a workout library that's fast to browse and easy to commit to, without decision fatigue.</p>
             <p class="reveal">This persona shaped two concrete decisions: an onboarding flow that reduces early friction (get her into a workout fast, not a lengthy setup process), and a workout library structured around how much time she has, not just workout type.</p>
@@ -282,20 +327,20 @@
         </ul>
         
         <!-- ── SCREENSHOTS ── -->
-        <div style="margin: var(--s-16) 0; display: flex; flex-direction: column; gap: var(--s-16);">
-          <div>
+        <div class="screenshot-gallery">
+          <div class="screenshot-frame frame-portrait reveal-scale">
             <picture>
               <source srcset="../assets/images/zenflow-courses-screen.webp" type="image/webp">
-              <img src="../assets/images/zenflow-courses-screen.png" alt="Zenflow Courses" class="case-study-image-full parallax-img reveal-scale" loading="lazy" width="750" height="2092">
+              <img src="../assets/images/zenflow-courses-screen.png" alt="Zenflow Courses" loading="lazy" width="750" height="2092">
             </picture>
-            <div class="image-caption" style="margin-top: var(--s-4);">Zenflow Courses</div>
+            <div class="image-caption" style="margin-top: var(--s-6);">Zenflow Courses</div>
           </div>
-          <div>
+          <div class="screenshot-frame frame-landscape reveal-scale" style="transition-delay: 0.1s;">
             <picture>
               <source srcset="../assets/images/zenflow-screen-mocks.webp" type="image/webp">
-              <img src="../assets/images/zenflow-screen-mocks.png" alt="Zenflow screens" class="case-study-image-full parallax-img reveal-scale" loading="lazy" width="4790" height="2424">
+              <img src="../assets/images/zenflow-screen-mocks.png" alt="Zenflow screens" loading="lazy" width="4790" height="2424">
             </picture>
-            <div class="image-caption" style="margin-top: var(--s-4);">Zenflow screens</div>
+            <div class="image-caption" style="margin-top: var(--s-6);">Zenflow screens</div>
           </div>
         </div>
 

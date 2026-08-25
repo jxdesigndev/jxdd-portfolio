@@ -417,18 +417,24 @@
         </div>
 
         <div class="form-group">
-          <label class="form-label" for="tf-logo-url">Logo URL (Plain Text for now)</label>
-          <input type="url" id="tf-logo-url" class="form-input">
+          <label class="form-label" for="tf-logo-file">Logo Upload</label>
+          <input type="file" id="tf-logo-file" class="form-input" accept="image/*">
+          <label class="form-label" for="tf-logo-preview" style="margin-top:var(--s-3);">Current Logo URL</label>
+          <input type="url" id="tf-logo-preview" class="form-input" readonly placeholder="No logo uploaded yet">
         </div>
 
         <div class="form-group">
-          <label class="form-label" for="tf-video-url">Video URL (Plain Text for now)</label>
-          <input type="url" id="tf-video-url" class="form-input">
+          <label class="form-label" for="tf-video-file">Video Upload</label>
+          <input type="file" id="tf-video-file" class="form-input" accept="video/mp4,video/webm">
+          <label class="form-label" for="tf-video-preview" style="margin-top:var(--s-3);">Current Video URL</label>
+          <input type="url" id="tf-video-preview" class="form-input" readonly placeholder="No video uploaded yet">
         </div>
 
         <div class="form-group">
-          <label class="form-label" for="tf-photo-url">Photo URL (Plain Text for now)</label>
-          <input type="url" id="tf-photo-url" class="form-input">
+          <label class="form-label" for="tf-photo-file">Photo Upload</label>
+          <input type="file" id="tf-photo-file" class="form-input" accept="image/*">
+          <label class="form-label" for="tf-photo-preview" style="margin-top:var(--s-3);">Current Photo URL</label>
+          <input type="url" id="tf-photo-preview" class="form-input" readonly placeholder="No photo uploaded yet">
         </div>
 
         <div class="form-row">

@@ -456,9 +456,9 @@
       document.getElementById('tf-name').value = testm.name || '';
       document.getElementById('tf-role').value = testm.role_company || '';
       document.getElementById('tf-quote').value = testm.quote_text || '';
-      document.getElementById('tf-logo-url').value = testm.logo_url || '';
-      document.getElementById('tf-video-url').value = testm.video_url || '';
-      document.getElementById('tf-photo-url').value = testm.photo_url || '';
+      document.getElementById('tf-logo-preview').value = testm.logo_url || '';
+      document.getElementById('tf-video-preview').value = testm.video_url || '';
+      document.getElementById('tf-photo-preview').value = testm.photo_url || '';
       document.getElementById('tf-priority').value = testm.priority || 0;
       document.getElementById('tf-active').checked = testm.is_active !== false; // defaults to true
       DOM.btnDeleteTestimonial.style.display = 'block';
@@ -481,17 +481,30 @@
     
     const btn = DOM.testimonialForm.querySelector('button[type="submit"]');
     const oldText = btn.textContent;
-    btn.textContent = 'Saving...';
+    btn.textContent = 'Uploading...';
     btn.disabled = true;
 
     try {
+      let logoUrl = document.getElementById('tf-logo-preview').value;
+      let videoUrl = document.getElementById('tf-video-preview').value;
+      let photoUrl = document.getElementById('tf-photo-preview').value;
+
+      const logoFile = document.getElementById('tf-logo-file').files[0];
+      const videoFile = document.getElementById('tf-video-file').files[0];
+      const photoFile = document.getElementById('tf-photo-file').files[0];
+
+      // Upload files sequentially, though Promise.all could be faster
+      if (logoFile) logoUrl = await uploadMedia(logoFile);
+      if (videoFile) videoUrl = await uploadMedia(videoFile);
+      if (photoFile) photoUrl = await uploadMedia(photoFile);
+
       const payload = {
         name: document.getElementById('tf-name').value.trim(),
         role_company: document.getElementById('tf-role').value.trim(),
         quote_text: document.getElementById('tf-quote').value.trim(),
-        logo_url: document.getElementById('tf-logo-url').value.trim(),
-        video_url: document.getElementById('tf-video-url').value.trim(),
-        photo_url: document.getElementById('tf-photo-url').value.trim(),
+        logo_url: logoUrl,
+        video_url: videoUrl,
+        photo_url: photoUrl,
         priority: parseInt(document.getElementById('tf-priority').value) || 0,
         is_active: document.getElementById('tf-active').checked,
       };

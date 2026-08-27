@@ -473,6 +473,7 @@ svg { display: block; }
   align-items: center;
   gap: var(--s-3);
   text-decoration: none;
+  padding: 12px 0;
 }
 
 .nav-logo {
@@ -530,12 +531,13 @@ svg { display: block; }
   color: var(--gray-2);
   position: relative;
   transition: color 0.3s ease;
+  padding: 16px 0;
 }
 
 .nav-link::after {
   content: '';
   position: absolute;
-  bottom: -4px;
+  bottom: 12px;
   left: 0;
   width: 0;
   height: 1px;
@@ -1198,6 +1200,8 @@ svg { display: block; }
   font-weight: 800;
   line-height: var(--lead-snug);
   letter-spacing: var(--track-tight);
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .headline-md {

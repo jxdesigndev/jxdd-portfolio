@@ -43,7 +43,7 @@
         el.classList.remove('reveal');
         if (prefsRM) { el.style.opacity = '1'; el.style.transform = 'none'; return; }
         el.style.opacity = '1';
-        const split = SplitText.create(el, { type: 'chars', mask: 'chars' });
+        const split = SplitText.create(el, { type: 'words,chars', mask: 'chars' });
         gsap.from(split.chars, {
           yPercent: 100, opacity: 0, duration: 0.7, ease: 'expo.out',
           stagger: { each: 0.022 },

@@ -1184,8 +1184,8 @@ const JXUniverse = {
     if (window.SplitText) {
       /* Phase 4: Char-by-char slide-up from behind mask — signature SOTD effect */
       gsap.registerPlugin(SplitText);
-      const split1 = SplitText.create('#hl-1', { type: 'chars', mask: 'chars' });
-      const split2 = SplitText.create('#hl-2', { type: 'chars', mask: 'chars' });
+      const split1 = SplitText.create('#hl-1', { type: 'words,chars', mask: 'chars' });
+      const split2 = SplitText.create('#hl-2', { type: 'words,chars', mask: 'chars' });
       gsap.set(['#hl-1', '#hl-2'], { opacity: 1 }); // parent spans visible; chars masked
       tl.from([...split1.chars, ...split2.chars], {
         yPercent: 100, duration: 0.85, ease: 'expo.out',

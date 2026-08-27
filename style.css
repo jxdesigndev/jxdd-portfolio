@@ -54,8 +54,8 @@
   --white:       #FFFFFF;
   --gray-1:      #E8E8F0;  /* Near white — primary text */
   --gray-2:      #A8A8C0;  /* Muted text */
-  --gray-3:      #585870;  /* Dimmer text */
-  --gray-4:      #28283C;  /* Barely visible */
+  --gray-3:      #8A8AB0;  /* Dimmer text, 6:1 contrast */
+  --gray-4:      #767696;  /* Barely visible, 4.52:1 minimum contrast */
 
   /* ── Borders ── */
   --border:      rgba(255, 255, 255, 0.06);

@@ -1186,7 +1186,7 @@ const JXUniverse = {
       gsap.registerPlugin(SplitText);
       const split1 = SplitText.create('#hl-1', { type: 'words,chars', mask: 'chars' });
       const split2 = SplitText.create('#hl-2', { type: 'words,chars', mask: 'chars' });
-      gsap.set(['#hl-1', '#hl-2'], { opacity: 1 }); // parent spans visible; chars masked
+      gsap.set(['#hl-1', '#hl-2'], { opacity: 1, y: 0, yPercent: 0, clearProps: 'transform' }); // parent spans visible; chars masked
       tl.from([...split1.chars, ...split2.chars], {
         yPercent: 100, duration: 0.85, ease: 'expo.out',
         stagger: { each: 0.032, from: 'start' }
@@ -1194,7 +1194,7 @@ const JXUniverse = {
     } else {
       /* Fallback: word-level reveal (GSAP loaded but SplitText unavailable) */
       tl.to(['#hl-1', '#hl-2'], {
-        y: 0, opacity: 1, duration: 0.9,
+        yPercent: 0, opacity: 1, duration: 0.9,
         ease: 'expo.out', stagger: 0.08
       }, '-=0.3');
     }

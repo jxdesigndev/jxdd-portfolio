@@ -86,11 +86,11 @@ const JXUniverse = {
         return img;
       };
 
-      this.imgOkezie1 = load('assets/images/okezie-1.png');
-      this.imgHero2 = load('assets/images/jx-hero-2.jpg');
-      this.imgPortrait = load('assets/images/okezie-2.png');
-      this.imgCoder = load('assets/images/okezie-coder.png');
-      this.imgDesigner = load('assets/images/okezie-designer.png');
+      this.imgOkezie1 = load('assets/images/okezie-1.webp');
+      this.imgHero2 = load('assets/images/jx-hero-2.webp');
+      this.imgPortrait = load('assets/images/okezie-2.webp');
+      this.imgCoder = load('assets/images/okezie-coder.webp');
+      this.imgDesigner = load('assets/images/okezie-designer.webp');
     });
   },
 
@@ -1314,11 +1314,33 @@ const JXUniverse = {
      6. AFTER REVEAL — all remaining system boots
      ──────────────────────────────────────────────────────────────── */
   afterReveal () {
-    if (window.gsap && window.ScrollTrigger) {
-      gsap.registerPlugin(ScrollTrigger);
-      this.initSplitTextReveals(); /* Phase 4: run before generic reveal scan */
-      this.initScrollAnimations();
+    /* Load ScrollTrigger dynamically — it is not needed until after the loader exits,
+       so we defer it entirely from the initial page load to keep the critical path lean.
+       Once loaded: register plugin, wire Lenis integration, run all scroll animations. */
+    const runScrollAnimations = () => {
+      if (window.gsap && window.ScrollTrigger) {
+        gsap.registerPlugin(ScrollTrigger);
+        /* Re-wire Lenis → ScrollTrigger integration (initLenis ran before ST was available) */
+        if (window.JXLenis && !window.JXLenis._stWired) {
+          window.JXLenis.on('scroll', ScrollTrigger.update);
+          window.JXLenis._stWired = true;
+        }
+        this.initSplitTextReveals(); /* Phase 4: run before generic reveal scan */
+        this.initScrollAnimations();
+      }
+    };
+
+    if (window.ScrollTrigger) {
+      /* Already loaded (e.g. cached from previous navigation) */
+      runScrollAnimations();
+    } else {
+      const st = document.createElement('script');
+      st.src = 'https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js';
+      st.onload = runScrollAnimations;
+      st.onerror = () => console.warn('JX: ScrollTrigger failed to load — scroll animations disabled.');
+      document.head.appendChild(st);
     }
+
     this.initHUD();
     this.initTicker();
     this.initCLI();

@@ -1186,7 +1186,7 @@ const JXUniverse = {
       gsap.registerPlugin(SplitText);
       const split1 = SplitText.create('#hl-1', { type: 'words,chars', mask: 'chars' });
       const split2 = SplitText.create('#hl-2', { type: 'words,chars', mask: 'chars' });
-      gsap.set(['#hl-1', '#hl-2'], { opacity: 1, y: 0, yPercent: 0, clearProps: 'transform' }); // parent spans visible; chars masked
+      gsap.set(['#hl-1', '#hl-2'], { opacity: 1, y: 0, yPercent: 0 }); // parent spans visible; inline transform overrides CSS
       tl.from([...split1.chars, ...split2.chars], {
         yPercent: 100, duration: 0.85, ease: 'expo.out',
         stagger: { each: 0.032, from: 'start' }

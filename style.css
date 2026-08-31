@@ -1018,6 +1018,33 @@ svg { display: block; }
   100% { transform: translate(1%, 1%); }
 }
 
+.loader-skip {
+  position: absolute;
+  bottom: var(--s-6);
+  right: var(--s-6);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--gray-3);
+  background: none;
+  border: none;
+  cursor: pointer;
+  letter-spacing: var(--track-wider);
+  opacity: 0;
+  animation: fade-in 0.5s ease 1s forwards;
+  transition: color 0.2s, opacity 0.3s;
+}
+
+.loader-skip:hover {
+  color: var(--green);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loader-skip {
+    animation-duration: 0.1s;
+    transition: none;
+  }
+}
+
 /* Loader exit */
 #loader.hidden {
   pointer-events: none;

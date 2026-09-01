@@ -72,7 +72,15 @@
     settingSocialDribbble: document.getElementById('setting-social-dribbble'),
     settingSocialInstagram: document.getElementById('setting-social-instagram'),
     settingSocialContra: document.getElementById('setting-social-contra'),
-    settingSocialUpwork: document.getElementById('setting-social-upwork')
+    settingSocialUpwork: document.getElementById('setting-social-upwork'),
+
+    toolsTbody: document.getElementById('tools-tbody'),
+    btnNewTool: document.getElementById('btn-new-tool'),
+    toolModal: document.getElementById('tool-modal'),
+    toolModalTitle: document.getElementById('tool-modal-title'),
+    toolModalClose: document.getElementById('tool-modal-close'),
+    toolForm: document.getElementById('tool-form'),
+    btnDeleteTool: document.getElementById('btn-delete-tool')
   };
 
   let session = null;
@@ -80,6 +88,7 @@
   let allMessages = [];
   let allExperience = [];
   let allTestimonials = [];
+  let allTools = [];
 
   /* ── AUTHENTICATION ── */
 
@@ -143,6 +152,7 @@
     loadSettings();
     loadExperience();
     loadTestimonials();
+    loadTools();
   }
 
   /* ── NAVIGATION ── */
@@ -794,6 +804,136 @@
       alert('Error updating social links: ' + error.message);
     }
   });
+
+
+  /* ── TOOLS ── */
+  async function loadTools() {
+    const { data, error } = await supabase.from('tools').select('*').order('priority', { ascending: false });
+    if (error) {
+      console.error(error);
+      return;
+    }
+    allTools = data;
+    renderTools();
+  }
+
+  function renderTools() {
+    if (!DOM.toolsTbody) return;
+    if (allTools.length === 0) {
+      DOM.toolsTbody.innerHTML = `<tr><td colspan="5" style="text-align:center;">No tools found.</td></tr>`;
+      return;
+    }
+
+    DOM.toolsTbody.innerHTML = allTools.map(t => `
+      <tr>
+        <td>${t.priority || 0}</td>
+        <td style="color:var(--white);">${escapeHTML(t.name)}</td>
+        <td>${escapeHTML(t.category || '—')}</td>
+        <td style="color:${t.is_active ? 'var(--green)' : 'var(--gray-3)'};">${t.is_active ? '● On' : '○ Off'}</td>
+        <td>
+          <button class="btn btn-ghost btn-sm btn-edit-tool" data-id="${escapeHTML(t.id)}">Edit</button>
+        </td>
+      </tr>
+    `).join('');
+
+    document.querySelectorAll('.btn-edit-tool').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const id = e.target.dataset.id;
+        const tool = allTools.find(x => x.id === id);
+        if (tool) openToolModal(tool);
+      });
+    });
+  }
+
+  if (DOM.btnNewTool) DOM.btnNewTool.addEventListener('click', () => openToolModal(null));
+
+  function openToolModal(tool) {
+    if (!DOM.toolForm) return;
+    DOM.toolForm.reset();
+    document.getElementById('tlf-logo-preview').value = '';
+
+    if (tool) {
+      DOM.toolModalTitle.textContent = 'Edit Tool';
+      document.getElementById('tlf-id').value = tool.id;
+      document.getElementById('tlf-name').value = tool.name || '';
+      document.getElementById('tlf-category').value = tool.category || '';
+      document.getElementById('tlf-priority').value = tool.priority || 0;
+      document.getElementById('tlf-active').checked = tool.is_active !== false;
+      document.getElementById('tlf-logo-preview').value = tool.logo_url || '';
+      DOM.btnDeleteTool.style.display = 'block';
+    } else {
+      DOM.toolModalTitle.textContent = 'Add Tool';
+      document.getElementById('tlf-id').value = '';
+      document.getElementById('tlf-active').checked = true;
+      DOM.btnDeleteTool.style.display = 'none';
+    }
+    DOM.toolModal.classList.add('open');
+  }
+
+  if (DOM.toolModalClose) {
+    DOM.toolModalClose.addEventListener('click', () => {
+      DOM.toolModal.classList.remove('open');
+    });
+  }
+
+  if (DOM.toolForm) {
+    DOM.toolForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const id = document.getElementById('tlf-id').value;
+
+      const btn = DOM.toolForm.querySelector('button[type="submit"]');
+      const oldText = btn.textContent;
+      btn.textContent = 'Saving...';
+      btn.disabled = true;
+
+      try {
+        let logoUrl = document.getElementById('tlf-logo-preview').value;
+        const logoFile = document.getElementById('tlf-logo-file').files[0];
+        if (logoFile) {
+          logoUrl = await uploadCompressedImage(logoFile);
+        }
+
+        const payload = {
+          name: document.getElementById('tlf-name').value.trim(),
+          category: document.getElementById('tlf-category').value || null,
+          priority: parseInt(document.getElementById('tlf-priority').value) || 0,
+          is_active: document.getElementById('tlf-active').checked,
+          logo_url: logoUrl || null,
+        };
+
+        if (id) {
+          const { error } = await supabase.from('tools').update(payload).eq('id', id);
+          if (error) throw error;
+        } else {
+          const { error } = await supabase.from('tools').insert([payload]);
+          if (error) throw error;
+        }
+
+        DOM.toolModal.classList.remove('open');
+        loadTools();
+      } catch (err) {
+        console.error('Tool save error:', err);
+        alert('Failed to save tool: ' + err.message);
+      } finally {
+        btn.textContent = oldText;
+        btn.disabled = false;
+      }
+    });
+  }
+
+  if (DOM.btnDeleteTool) {
+    DOM.btnDeleteTool.addEventListener('click', async () => {
+      const id = document.getElementById('tlf-id').value;
+      if (!id) return;
+      if (confirm('Are you sure you want to delete this tool permanently?')) {
+        const { error } = await supabase.from('tools').delete().eq('id', id);
+        if (!error) {
+          DOM.toolModal.classList.remove('open');
+          loadTools();
+        }
+      }
+    });
+  }
 
   // Init
   checkAuth();

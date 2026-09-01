@@ -1831,3 +1831,50 @@ svg { display: block; }
   white-space: nowrap;
   border: 0;
 }
+
+/* ── TOOLS / STACK SECTION ── */
+.tools-section {
+  padding: var(--s-24) 0;
+  border-top: 1px solid var(--border);
+}
+.tools-section-inner {
+  max-width: var(--container-xl);
+  margin: 0 auto;
+  padding: 0 var(--s-8);
+}
+.tools-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-6);
+  margin-top: var(--s-12);
+  align-items: center;
+}
+.tool-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--s-3);
+  opacity: 0;
+  transform: scale(0.92);
+}
+.tool-item img {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+  border-radius: var(--radius-md);
+  filter: grayscale(30%) brightness(0.9);
+  transition: filter 0.3s ease, transform 0.3s ease;
+}
+.tool-item:hover img {
+  filter: grayscale(0%) brightness(1);
+  transform: scale(1.1);
+}
+.tool-item-name {
+  font-family: var(--font-mono);
+  font-size: var(--text-2xs);
+  color: var(--gray-3);
+  letter-spacing: var(--track-wide);
+  text-transform: uppercase;
+  transition: color 0.3s ease;
+}
+.tool-item:hover .tool-item-name { color: var(--green); }

@@ -1437,11 +1437,11 @@ const JXUniverse = {
     }
 
     this.initHUD();
-    this.initTicker();
     this.initCLI();
     this.initTypeToForm();
     this.loadFeaturedProjects();
     this.loadTestimonials();
+    this.loadTools();
   },
 
   /* ────────────────────────────────────────────────────────────────
@@ -2204,30 +2204,6 @@ const JXUniverse = {
   },
 
   /* ────────────────────────────────────────────────────────────────
-     11. SKILLS TICKER
-     ──────────────────────────────────────────────────────────────── */
-  initTicker () {
-    const wrap = document.getElementById('ticker-inner');
-    if (!wrap) return;
-
-    const items = [
-      'Product Design', 'Figma', 'UI/UX Research', 'Design Systems',
-      'React', 'Next.js', 'Three.js', 'WebGL', 'GSAP',
-      'Node.js', 'Supabase', 'PostgreSQL',
-      'N8N Automations', 'Workflow Design',
-      'Ethical Hacking', 'Cybersecurity',
-      'Afrofuturism', 'Lagos', '2089',
-    ];
-
-    const makeItem = t =>
-      `<span class="ticker-item"><span class="ticker-diamond">◆</span>${t}</span>`;
-
-    /* Duplicate for infinite loop */
-    const html = [...items, ...items].map(makeItem).join('');
-    wrap.innerHTML = html;
-  },
-
-  /* ────────────────────────────────────────────────────────────────
      12. JX TERMINAL — CLI
      ──────────────────────────────────────────────────────────────── */
   initCLI () {
@@ -2538,10 +2514,106 @@ const JXUniverse = {
           el.style.transform = 'none';
         });
       }
-
     } catch (err) {
       console.error('JX: Testimonials load error:', err);
       section.style.display = 'none';
+    }
+  },
+
+  /* ────────────────────────────────────────────────────────────────
+     14. TOOLS / STACK
+     ──────────────────────────────────────────────────────────────── */
+  async loadTools () {
+    const containers = document.querySelectorAll('.db-tools-container');
+    if (!containers.length) return;
+
+    try {
+      if (window.initSupabase) await window.initSupabase();
+    } catch (err) {
+      console.warn('JX: Supabase init failed (tools)', err);
+    }
+    if (typeof supabase === 'undefined' || !supabase.from) return;
+
+    try {
+      const { data: tools, error } = await supabase
+        .from('tools')
+        .select('*')
+        .eq('is_active', true)
+        .order('priority', { ascending: false });
+
+      if (error) throw error;
+
+      containers.forEach(container => {
+        const category = container.getAttribute('data-tool-category');
+        let filteredTools = tools;
+
+        if (category && category !== 'all') {
+          filteredTools = tools.filter(t => (t.category || '').toLowerCase() === category.toLowerCase());
+        }
+
+        if (filteredTools.length === 0) {
+          // If it's the main section wrapper, hide it
+          const section = container.closest('.tools-section') || container;
+          section.style.display = 'none';
+          return;
+        }
+
+        const section = container.closest('.tools-section');
+        if (section) section.style.display = '';
+
+        container.innerHTML = '';
+        const newNodes = [];
+
+        filteredTools.forEach(tool => {
+          const item = document.createElement('div');
+          item.className = 'tool-item';
+
+          if (tool.logo_url) {
+            const img = document.createElement('img');
+            img.src    = tool.logo_url;
+            img.alt    = tool.name;
+            img.title  = tool.name;
+            img.width  = 48;
+            img.height = 48;
+            img.loading = 'lazy';
+            item.appendChild(img);
+          } else {
+            const label = document.createElement('span');
+            label.className   = 'tool-item-name';
+            label.textContent = tool.name;
+            item.appendChild(label);
+          }
+
+          container.appendChild(item);
+          newNodes.push(item);
+        });
+
+        /* Animate */
+        if (window.gsap && window.ScrollTrigger) {
+          newNodes.forEach((el, i) => {
+            gsap.fromTo(el, { opacity: 0, scale: 0.92 }, {
+              opacity: 1, scale: 1,
+              duration: 0.7,
+              delay: i * 0.04,
+              ease: 'power3.out',
+              scrollTrigger: { trigger: el, start: 'top 90%', once: true }
+            });
+          });
+          ScrollTrigger.refresh();
+        } else {
+          newNodes.forEach(el => {
+            el.style.opacity   = '1';
+            el.style.transform = 'none';
+          });
+        }
+      });
+
+    } catch (err) {
+      console.error('JX: Tools load error:', err);
+      containers.forEach(c => {
+        const section = c.closest('.tools-section') || c;
+        section.style.display = 'none';
+      });
     }
   }
 

@@ -680,68 +680,6 @@
 
     .service-card:hover .service-link { gap: var(--s-4); }
 
-    /* ── SKILLS TICKER ── */
-    .ticker {
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-      padding: var(--s-5) 0;
-      overflow: hidden;
-      white-space: nowrap;
-      position: relative;
-    }
-
-    .ticker::before,
-    .ticker::after {
-      content: '';
-      position: absolute;
-      top: 0; bottom: 0;
-      width: 120px;
-      z-index: 2;
-    }
-
-    .ticker::before {
-      left: 0;
-      background: linear-gradient(to right, var(--void), transparent);
-    }
-
-    .ticker::after {
-      right: 0;
-      background: linear-gradient(to left, var(--void), transparent);
-    }
-
-    .ticker-inner {
-      display: inline-flex;
-      align-items: center;
-      animation: ticker-scroll 30s linear infinite;
-      will-change: transform;
-    }
-
-    .ticker-inner:hover { animation-play-state: paused; }
-
-    @keyframes ticker-scroll {
-      0%   { transform: translateX(0); }
-      100% { transform: translateX(-50%); }
-    }
-
-    .ticker-item {
-      display: flex;
-      align-items: center;
-      gap: var(--s-5);
-      padding: 0 var(--s-6);
-      font-family: var(--font-mono);
-      font-size: var(--text-sm);
-      letter-spacing: var(--track-wide);
-      color: var(--gray-3);
-      white-space: nowrap;
-      transition: color 0.3s;
-    }
-
-    .ticker-item:hover { color: var(--green); }
-
-    .ticker-diamond {
-      color: var(--green);
-      font-size: var(--text-2xs);
-    }
 
     /* ── TERMINAL / CLI ── */
     .cli-trigger {
@@ -1106,11 +1044,6 @@
 
     </section>
 
-    <!-- ── SKILLS TICKER ── -->
-    <div class="ticker" aria-label="Skills" aria-hidden="true">
-      <div class="ticker-inner" id="ticker-inner"></div>
-    </div>
-
     <!-- ── FEATURED WORK ── -->
     <section class="featured-section reveal" id="featured" aria-label="Featured Work" data-act="III" data-mood="#080604">
       <div class="featured-header">
@@ -1236,6 +1169,19 @@
             </p>
             <a href="services.html" class="service-link" data-nav-link>Explore →</a>
           </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── TOOLS / STACK ── -->
+    <section id="tools-section" class="tools-section" aria-label="Tech Stack" style="display:none;">
+      <div class="tools-section-inner">
+        <div class="section-label">Built With</div>
+        <h2 class="headline-lg reveal" style="max-width:600px;">
+          The <span class="text-green">Stack</span>
+        </h2>
+        <div id="tools-grid" class="tools-grid db-tools-container" data-tool-category="all">
+          <!-- Rendered via JS from Supabase -->
         </div>
       </div>
     </section>

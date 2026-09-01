@@ -59,6 +59,7 @@
         <button class="admin-nav-btn" data-tab="settings">03 // CORE (Settings)</button>
         <button class="admin-nav-btn" data-tab="experience">04 // TIMELINE (Experience)</button>
         <button class="admin-nav-btn" data-tab="testimonials">05 // VOICES (Testimonials)</button>
+        <button class="admin-nav-btn" data-tab="tools">06 // STACK (Tools)</button>
       </nav>
       
       <div class="admin-sidebar-bottom">
@@ -139,6 +140,31 @@
               </tr>
             </thead>
             <tbody id="testimonials-tbody">
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- TOOLS TAB -->
+      <section id="tab-tools" class="admin-tab-content">
+        <header class="admin-header">
+          <h1 class="headline-md">Stack (Tools)</h1>
+          <button id="btn-new-tool" class="btn btn-primary btn-sm">+ Add Tool</button>
+        </header>
+
+        <div class="admin-table-container">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Priority</th>
+                <th>Name</th>
+                <th>Category</th>
+                <th>Active</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="tools-tbody">
               <!-- Rendered via JS -->
             </tbody>
           </table>
@@ -476,6 +502,61 @@
           <button type="button" id="btn-delete-testimonial" class="btn btn-ghost btn-sm" style="color:var(--red); display:none;">Delete_Testimonial</button>
           <div style="flex:1;"></div>
           <button type="submit" class="btn btn-primary btn-sm">Save_To_Voices ↗</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- TOOLS EDIT MODAL -->
+  <div id="tool-modal" class="admin-modal-overlay">
+    <div class="admin-modal">
+      <div class="admin-modal-header">
+        <h2 id="tool-modal-title" class="headline-sm">Add Tool</h2>
+        <button id="tool-modal-close" class="btn btn-ghost btn-sm">✕</button>
+      </div>
+      <form id="tool-form" class="admin-modal-body">
+        <input type="hidden" id="tlf-id">
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="tlf-name">Tool Name *</label>
+            <input type="text" id="tlf-name" class="form-input" required placeholder="e.g. Figma">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="tlf-category">Category</label>
+            <select id="tlf-category" class="form-select">
+              <option value="">— Select —</option>
+              <option value="design">Design</option>
+              <option value="dev">Development</option>
+              <option value="automation">Automation</option>
+              <option value="security">Security</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="tlf-logo-file">Logo Image (upload)</label>
+          <input type="file" id="tlf-logo-file" class="form-input" accept="image/*">
+          <label class="form-label" for="tlf-logo-preview" style="margin-top:var(--s-3);">Current Logo URL</label>
+          <input type="url" id="tlf-logo-preview" class="form-input" readonly placeholder="No logo uploaded yet">
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="tlf-priority">Sort Priority</label>
+            <input type="number" id="tlf-priority" class="form-input" value="0">
+          </div>
+          <div class="form-group" style="flex-direction:row; align-items:center; gap:var(--s-3); margin-top:30px;">
+            <input type="checkbox" id="tlf-active" style="width:18px; height:18px; accent-color:var(--green); cursor:pointer;" checked>
+            <label class="form-label" for="tlf-active" style="margin:0; cursor:pointer;">Is Active</label>
+          </div>
+        </div>
+
+        <div class="admin-modal-actions">
+          <button type="button" id="btn-delete-tool" class="btn btn-ghost btn-sm" style="color:var(--red); display:none;">Delete_Tool</button>
+          <div style="flex:1;"></div>
+          <button type="submit" class="btn btn-primary btn-sm">Save_To_Stack ↗</button>
         </div>
       </form>
     </div>

@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" width="800" height="400">
+  <defs>
+    <style>
+      .sketch-line { fill: none; stroke: #333; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+      .sketch-text { font-family: 'Comic Sans MS', 'Chalkboard SE', cursive, sans-serif; fill: #444; font-size: 16px; }
+      .sketch-title { font-family: 'Comic Sans MS', 'Chalkboard SE', cursive, sans-serif; fill: #222; font-size: 20px; font-weight: bold; }
+      .accent { fill: none; stroke: #E07A5F; stroke-width: 2; stroke-dasharray: 4 4; }
+    </style>
+    <filter id="rough" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="2" result="noise" />
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="3" xChannelSelector="R" yChannelSelector="G" />
+    </filter>
+  </defs>
+  
+  <rect width="100%" height="100%" fill="#faf9f7" />
+  
+  <g filter="url(#rough)">
+    <g transform="translate(50, 50)">
+      <path class="sketch-line" d="M0,0 L160,2 L158,300 L2,298 Z" fill="#fff" />
+      <text x="15" y="30" class="sketch-title">1. Goals</text>
+      <path class="sketch-line" d="M15,45 L145,43" />
+      <path class="sketch-line" d="M15,70 L145,72 M15,70 L15,100 L145,100 L145,70" />
+      <text x="25" y="90" class="sketch-text">Strength</text>
+      <path class="sketch-line" d="M15,120 L145,122 M15,120 L15,150 L145,150 L145,120" />
+      <text x="25" y="140" class="sketch-text">Mindfulness</text>
+      <path class="sketch-line" d="M15,260 L145,260 L145,280 L15,280 Z" fill="#eee"/>
+      <text x="60" y="275" class="sketch-text" font-size="14">Next</text>
+    </g>
+
+    <path class="sketch-line" d="M 220 200 Q 250 180 280 200 L 270 190 M 280 200 L 270 210" />
+    
+    <g transform="translate(300, 50)">
+      <path class="sketch-line" d="M0,2 L160,0 L162,300 L-2,298 Z" fill="#fff" />
+      <text x="15" y="30" class="sketch-title">2. Level</text>
+      <path class="sketch-line" d="M15,45 L145,47" />
+      <path class="sketch-line" d="M15,100 L145,98" />
+      <circle cx="50" cy="99" r="6" class="sketch-line" fill="#fff" />
+      <text x="15" y="125" class="sketch-text">Beginner</text>
+      <text x="100" y="125" class="sketch-text">Pro</text>
+      <path class="sketch-line" d="M15,260 L145,258 L143,280 L13,282 Z" fill="#eee"/>
+      <text x="60" y="275" class="sketch-text" font-size="14">Next</text>
+    </g>
+
+    <path class="sketch-line" d="M 470 200 Q 500 220 530 200 L 520 190 M 530 200 L 520 210" />
+
+    <g transform="translate(550, 50)">
+      <path class="sketch-line" d="M2,-2 L158,2 L160,298 L0,302 Z" fill="#fff" />
+      <text x="15" y="30" class="sketch-title">3. Time</text>
+      <path class="sketch-line" d="M15,45 L145,43" />
+      <path class="sketch-line" d="M15,70 L70,72 L70,110 L15,110 Z" />
+      <text x="25" y="95" class="sketch-text">15m</text>
+      <path class="sketch-line" d="M85,68 L145,70 L145,108 L85,110 Z" fill="#ddd" />
+      <text x="95" y="95" class="sketch-text">30m</text>
+      <path class="sketch-line" d="M15,120 L70,122 L70,160 L15,160 Z" />
+      <text x="25" y="145" class="sketch-text">45m</text>
+      <path class="sketch-line" d="M85,118 L145,120 L145,158 L85,160 Z" />
+      <text x="95" y="145" class="sketch-text">60m</text>
+      <path class="sketch-line" d="M15,262 L145,260 L145,280 L15,278 Z" fill="#eee"/>
+      <text x="50" y="275" class="sketch-text" font-size="14">Start</text>
+    </g>
+  </g>
+  
+  <path class="accent" d="M250,70 Q 230 40 180 60" />
+  <text x="220" y="30" class="sketch-text" fill="#E07A5F">Keep this super brief</text>
+  
+  <path class="accent" d="M500,100 Q 520 60 560 90" />
+  <text x="470" y="50" class="sketch-text" fill="#E07A5F">Key metric for persona</text>
+
+  <text x="280" y="380" class="sketch-title" fill="#888">Early Onboarding Flow Concept</text>
+</svg>

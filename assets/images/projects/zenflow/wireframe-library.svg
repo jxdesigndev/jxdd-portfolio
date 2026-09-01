@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" width="800" height="400">
+  <defs>
+    <style>
+      .sketch-line { fill: none; stroke: #333; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+      .sketch-text { font-family: 'Comic Sans MS', 'Chalkboard SE', cursive, sans-serif; fill: #444; font-size: 16px; }
+      .sketch-title { font-family: 'Comic Sans MS', 'Chalkboard SE', cursive, sans-serif; fill: #222; font-size: 20px; font-weight: bold; }
+      .accent { fill: none; stroke: #E07A5F; stroke-width: 2; stroke-dasharray: 4 4; }
+    </style>
+    <filter id="rough" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="2" result="noise" />
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="3" xChannelSelector="R" yChannelSelector="G" />
+    </filter>
+  </defs>
+  
+  <rect width="100%" height="100%" fill="#faf9f7" />
+  
+  <g filter="url(#rough)">
+    <g transform="translate(250, 20)">
+      <path class="sketch-line" d="M0,0 L300,2 L298,340 L2,338 Z" fill="#fff" />
+      
+      <!-- Header -->
+      <text x="20" y="30" class="sketch-title">Workout Library</text>
+      <path class="sketch-line" d="M20,45 L280,43" />
+      
+      <!-- Time Filters -->
+      <path class="sketch-line" d="M20,60 L70,62 L70,80 L20,80 Z" fill="#ddd"/>
+      <text x="30" y="75" class="sketch-text" font-size="12">15 min</text>
+      
+      <path class="sketch-line" d="M80,58 L130,60 L130,78 L80,78 Z" />
+      <text x="90" y="75" class="sketch-text" font-size="12">30 min</text>
+      
+      <!-- Cards -->
+      <!-- Card 1 -->
+      <path class="sketch-line" d="M20,100 L280,98 L280,160 L20,162 Z" />
+      <rect x="25" y="105" width="50" height="50" class="sketch-line" />
+      <path class="sketch-line" d="M25,105 L75,155 M75,105 L25,155" />
+      <text x="90" y="125" class="sketch-title" font-size="16">Morning Flow</text>
+      <text x="90" y="145" class="sketch-text" font-size="12">Strength • 15 min</text>
+
+      <!-- Card 2 -->
+      <path class="sketch-line" d="M20,180 L280,182 L280,240 L20,238 Z" />
+      <rect x="25" y="185" width="50" height="50" class="sketch-line" />
+      <path class="sketch-line" d="M25,185 L75,235 M75,185 L25,235" />
+      <text x="90" y="205" class="sketch-title" font-size="16">Quick Core</text>
+      <text x="90" y="225" class="sketch-text" font-size="12">HIIT • 15 min</text>
+
+      <!-- Card 3 -->
+      <path class="sketch-line" d="M20,260 L280,258 L280,320 L20,322 Z" />
+      <rect x="25" y="265" width="50" height="50" class="sketch-line" />
+      <path class="sketch-line" d="M25,265 L75,315 M75,265 L25,315" />
+      <text x="90" y="285" class="sketch-title" font-size="16">Desk Relief</text>
+      <text x="90" y="305" class="sketch-text" font-size="12">Stretch • 15 min</text>
+    </g>
+  </g>
+  
+  <!-- Annotations -->
+  <path class="accent" d="M200,70 Q 150 70 120 100" />
+  <text x="40" y="110" class="sketch-text" fill="#E07A5F">Time filters</text>
+  <text x="40" y="130" class="sketch-text" fill="#E07A5F">must be persistent!</text>
+  
+  <path class="accent" d="M570,120 Q 620 100 680 140" />
+  <text x="600" y="160" class="sketch-text" fill="#E07A5F">Thumbnail + clear</text>
+  <text x="600" y="180" class="sketch-text" fill="#E07A5F">time indicator</text>
+
+  <text x="280" y="380" class="sketch-title" fill="#888">Library Structure Concept</text>
+</svg>

@@ -8,7 +8,7 @@ const puppeteer = require('puppeteer');
   
   try {
     const page = await browser.newPage();
-    await page.goto('https://jxdesigndev.vercel.app/work.html', { waitUntil: 'networkidle2' });
+    await page.goto('https://www.jxdesign.dev/work.html', { waitUntil: 'networkidle2' });
     
     // Find Zenflow card specifically, or just the first card
     const cardCount = await page.evaluate(() => document.querySelectorAll('.work-card').length);

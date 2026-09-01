@@ -8,7 +8,7 @@ const puppeteer = require('puppeteer');
   
   try {
     const page = await browser.newPage();
-    await page.goto('https://jxdesigndev.vercel.app/work.html', { waitUntil: 'networkidle2' });
+    await page.goto('https://www.jxdesign.dev/work.html', { waitUntil: 'networkidle2' });
     
     // Click the first project card
     console.log("Opening modal...");

@@ -11,7 +11,7 @@ const puppeteer = require('puppeteer');
     page.on('console', msg => console.log('PAGE LOG:', msg.text()));
     page.on('pageerror', err => console.error('PAGE ERROR:', err.message));
 
-    await page.goto('https://jxdesigndev.vercel.app/work.html', { waitUntil: 'networkidle2' });
+    await page.goto('https://www.jxdesign.dev/work.html', { waitUntil: 'networkidle2' });
     
     // Check projects loaded
     const cardCount = await page.evaluate(() => document.querySelectorAll('.work-card').length);

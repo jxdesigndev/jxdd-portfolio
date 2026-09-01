@@ -4,4 +4,4 @@ Disallow: /admin.html
 Disallow: /admin.js
 Disallow: /supabase.js
 
-Sitemap: https://jxdesigndev.vercel.app/sitemap.xml
+Sitemap: https://www.jxdesign.dev/sitemap.xml

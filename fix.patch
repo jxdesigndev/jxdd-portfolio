@@ -1,0 +1,149 @@
+--- script.js
++++ script.js
+@@ -89,5 +89,5 @@
+     return new Promise((resolve) => {
+       const assets = [
+-        'assets/images/okezie-1.png',
+-        'assets/images/okezie-2.png',
+-        'assets/images/okezie-coder.png',
+-        'assets/images/okezie-designer.png',
++        'assets/images/okezie-1.webp',
++        'assets/images/okezie-2.webp',
++        'assets/images/okezie-coder.webp',
++        'assets/images/okezie-designer.webp',
+         'assets/images/jx-hero.webp',
+@@ -1066,2 +1066,77 @@
+       let particlesInitDone = false;
+       this.particlesReady = false;
++
++      let phase2T1, phase2T2, phase2T3, phase2T4;
++      let hasResolved = false;
++
++      const finishLoader = () => {
++        if (hasResolved) return;
++        hasResolved = true;
++        
++        clearInterval(timer);
++        clearTimeout(phase2T1);
++        clearTimeout(phase2T2);
++        clearTimeout(phase2T3);
++        clearTimeout(phase2T4);
++
++        const skipBtn = document.getElementById('loader-skip');
++        if (skipBtn) skipBtn.remove();
++        
++        resolve();
++      };
++
++      const skipIntro = async () => {
++        if (hasResolved) return;
++        
++        clearInterval(timer);
++        clearTimeout(phase2T1);
++        clearTimeout(phase2T2);
++        clearTimeout(phase2T3);
++        clearTimeout(phase2T4);
++        
++        const loader = this.loader;
++        if (loader && window.gsap) {
++          gsap.killTweensOf(loader);
++          gsap.to(loader, {
++            yPercent: -100,
++            duration: 0.8,
++            ease: 'expo.inOut',
++            onComplete: () => { loader.style.display = 'none'; }
++          });
++        } else if (loader) {
++          loader.style.display = 'none';
++        }
++
++        // Initialize particles immediately if not started
++        if (!particlesInitDone) {
++          particlesInitDone = true;
++          await this.initParticles();
++          this.particlesReady = true;
++        }
++
++        // Snap particles to their final cinematic state
++        if (this.threeCtx && !this.threeCtx.is2D) {
++          const mats = this.threeCtx.mainMat.uniforms;
++          mats.uAlpha.value = 1;
++          this.threeCtx.ambMat.uniforms.uAlpha.value = 1;
++          mats.uProgress1.value = 1;
++          mats.uProgress2.value = 1;
++          
++          if (window.gsap && this.threeCtx.mainParticles) {
++            gsap.killTweensOf(this.threeCtx.mainParticles.scale);
++            gsap.killTweensOf(this.threeCtx.mainParticles.rotation);
++            gsap.killTweensOf(mats.uSize);
++            
++            this.threeCtx.mainParticles.scale.set(1.05, 1.05, 1.05);
++            this.threeCtx.mainParticles.rotation.y = 0.08;
++            mats.uSize.value = window.innerWidth < 768 ? 2.5 : 3.5;
++          }
++        }
++        
++        finishLoader();
++      };
++
++      const skipBtn = document.getElementById('loader-skip');
++      if (skipBtn) {
++        skipBtn.addEventListener('click', skipIntro);
++      }
+ 
+@@ -1079,2 +1154,10 @@
+             setTimeout(async () => {
+               await this.initParticles(); /* WebGL or Canvas2D deferred init */
+               this.particlesReady = true;
++              // If skipped while initializing, trigger resolve here
++              if (hasResolved && this.threeCtx) {
++                 const mats = this.threeCtx.mainMat.uniforms;
++                 mats.uAlpha.value = 1;
++                 this.threeCtx.ambMat.uniforms.uAlpha.value = 1;
++                 mats.uProgress1.value = 1;
++                 mats.uProgress2.value = 1;
++              }
+             }, 0);
+@@ -1119,10 +1202,10 @@
+             
+             // 1. Form okezie-1 (Actual colors) immediately as loader slides up
+-            setTimeout(() => {
++            phase2T1 = setTimeout(() => {
+               this.tweenUniform(mats.uProgress1, 0, 1, 2500); // 2.5s duration
+             }, 200);
+             
+             // 2. Direct Morph to jx-hero-2 (Actual colors)
+-            setTimeout(() => {
++            phase2T2 = setTimeout(() => {
+               this.tweenUniform(mats.uProgress2, 0, 1, 2500); // 2.5s duration
+             }, 3000); 
+             
+             // End Phase 2, move to Phase 3 (HTML Reveal)
+-            setTimeout(resolve, 6000);
++            phase2T3 = setTimeout(finishLoader, 6000);
+           } else {
+-            setTimeout(resolve, 1500);
++            phase2T4 = setTimeout(finishLoader, 1500);
+           }
+@@ -1314,6 +1397,18 @@
+     // Re-trigger SplitText if needed, etc.
+     // Also initialize scroll animations
+-    if (this.particlesReady) {
+-      this.initScrollAnimations();
+-    }
++    const initScroll = () => {
++      if (this.particlesReady) {
++        this.initScrollAnimations();
++      }
++    };
++
++    if (!window.ScrollTrigger) {
++      const stScript = document.createElement('script');
++      stScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js';
++      stScript.onload = initScroll;
++      document.body.appendChild(stScript);
++    } else {
++      initScroll();
++    }
+     
+     // Remove loading lock

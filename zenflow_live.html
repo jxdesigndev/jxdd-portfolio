@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="canonical" href="https://www.jxdesign.dev/projects/zenflow.html">
+  <meta name="description" content="Zenflow Case Study - A wellness app concept for women combining yoga and strength training.">
+  <meta name="theme-color" content="#000000">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://www.jxdesign.dev/projects/zenflow.html">
+  <meta property="og:title" content="Zenflow Case Study | Okezie Ferdinand | JX Design &amp; Dev">
+  <meta property="og:description" content="Zenflow Case Study - A wellness app concept for women combining yoga and strength training.">
+  <meta property="og:image" content="https://www.jxdesign.dev/assets/images/zenflow-cover.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Zenflow Case Study | Okezie Ferdinand | JX Design &amp; Dev">
+  <meta name="twitter:description" content="Zenflow Case Study - A wellness app concept for women combining yoga and strength training.">
+  <meta name="twitter:image" content="https://www.jxdesign.dev/assets/images/zenflow-cover.png">
+  <title>Zenflow Case Study | Okezie Ferdinand | JX Design & Dev</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&family=Playfair+Display:ital,wght@1,900&display=swap" rel="stylesheet">
+
+  <!-- GSAP -->
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js" defer></script>
+  <!-- Lenis -->
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js" defer></script>
+
+  <link rel="stylesheet" href="../style.css">
+
+  <style>
+    /* ── Page wrapper ── */
+    #page { opacity: 0; }
+
+    /* Custom styles for case study */
+    .case-study-hero {
+      padding: 160px var(--s-8) var(--s-16);
+      max-width: var(--container-md);
+      margin: 0 auto;
+    }
+    
+    .case-study-meta {
+      font-family: var(--font-mono);
+      font-size: var(--text-sm);
+      color: var(--green);
+      letter-spacing: 0.1em;
+      margin-bottom: var(--s-12);
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-6);
+    }
+    .case-study-meta div {
+      display: flex;
+      flex-direction: column;
+      gap: var(--s-2);
+    }
+    .case-study-meta span {
+      color: var(--white);
+    }
+
+    .case-study-title {
+      font-family: var(--font-display);
+      font-size: clamp(3rem, 8vw, 6rem);
+      font-weight: 800;
+      line-height: 1;
+      color: var(--white);
+      margin: 0 0 var(--s-8);
+    }
+
+    .case-study-content {
+      max-width: var(--container-md);
+      margin: 0 auto;
+      padding: 0 var(--s-8) var(--s-24);
+      font-family: var(--font-body);
+      font-size: var(--text-lg);
+      color: var(--gray-2);
+      line-height: var(--lead-relaxed);
+    }
+
+    .case-study-content h2 {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 700;
+      color: var(--white);
+      margin: var(--s-16) 0 var(--s-6);
+    }
+
+    .case-study-content p {
+      margin-bottom: var(--s-6);
+      font-family: var(--font-body);
+    }
+    
+    .case-study-content ul {
+      margin-bottom: var(--s-6);
+      padding-left: var(--s-6);
+    }
+    
+    .case-study-content li {
+      margin-bottom: var(--s-2);
+    }
+    
+    .case-study-image-full {
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+      margin: var(--s-12) 0;
+    }
+
+    .pull-quote {
+      font-family: var(--font-display);
+      font-size: clamp(1.5rem, 3vw, 2.5rem);
+      font-weight: 700;
+      color: var(--white);
+      line-height: var(--lead-tight);
+      margin: var(--s-12) 0;
+      padding-left: var(--s-8);
+      border-left: 2px solid var(--gold);
+    }
+    
+    .image-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--s-8);
+      margin: var(--s-12) 0;
+    }
+    
+    @media (min-width: 768px) {
+      .image-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+    
+    .image-caption {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      color: var(--gray-1);
+      font-weight: 500;
+      letter-spacing: var(--track-wider);
+      text-transform: uppercase;
+      margin-top: var(--s-2);
+      text-align: center;
+    }
+
+    .screenshot-gallery {
+      display: flex;
+      flex-direction: column;
+      gap: var(--s-16);
+      align-items: center;
+      margin: var(--s-16) 0;
+    }
+
+    .screenshot-frame {
+      background: linear-gradient(145deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 16px;
+      padding: var(--s-8);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.2), 0 10px 30px rgba(0, 0, 0, 0.3);
+      width: 100%;
+    }
+    
+    .screenshot-frame.frame-portrait {
+      max-width: 350px;
+    }
+    
+    .screenshot-frame.frame-landscape {
+      max-width: 100%;
+    }
+    
+    .screenshot-frame picture {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+    }
+
+    .screenshot-frame img {
+      width: 100%;
+      height: auto;
+      object-fit: contain;
+      border-radius: 8px;
+      margin: 0;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    }
+    
+    .parallax-img {
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+    }
+
+    .split-section {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--s-12);
+      align-items: center;
+      margin: var(--s-12) 0;
+    }
+    @media (min-width: 768px) {
+      .split-section {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+    
+    .placeholder-card {
+      background: linear-gradient(145deg, var(--surface-1), var(--surface-2));
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 16px;
+      aspect-ratio: 9/16;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: var(--s-4);
+      padding: var(--s-8);
+      text-align: center;
+      box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.4), 0 10px 30px rgba(0, 0, 0, 0.3);
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .placeholder-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 50% 0%, rgba(255,255,255,0.06), transparent 60%);
+      pointer-events: none;
+    }
+    .placeholder-card:hover {
+      transform: translateY(-8px);
+      box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.4), 0 20px 40px rgba(0, 0, 0, 0.5);
+    }
+    .placeholder-icon {
+      font-size: 3rem;
+      filter: drop-shadow(0 4px 12px rgba(0,0,0,0.4));
+      opacity: 0.9;
+    }
+    .placeholder-text {
+      font-family: var(--font-mono);
+      font-size: var(--text-sm);
+      color: var(--gray-3);
+      letter-spacing: var(--track-widest);
+      text-transform: uppercase;
+      line-height: 1.5;
+    }
+  </style>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "CreativeWork",
+    "@id": "https://www.jxdesign.dev/projects/zenflow.html",
+    "name": "Zenflow",
+    "url": "https://www.jxdesign.dev/projects/zenflow.html",
+    "description": "A wellness app concept designed to solve a common friction point in fitness apps built for women — combining yoga and strength training into a single, unified experience.",
+    "image": "https://www.jxdesign.dev/assets/images/zenflow-cover.png",
+    "author": {
+      "@id": "https://www.jxdesign.dev/#person"
+    },
+    "dateCreated": "2026",
+    "genre": "Product Design",
+    "keywords": ["wellness app", "UX design", "Figma", "product design", "mobile app concept"],
+    "inLanguage": "en",
+    "isPartOf": {
+      "@id": "https://www.jxdesign.dev/work.html"
+    }
+  }
+  </script>
+</head>
+<body>
+  <a href="#page" class="skip-to-content">Skip to content</a>
+  <div id="page">
+
+    <main>
+      <section class="case-study-hero">
+        <a href="../work.html" class="btn btn-ghost" style="margin-bottom: var(--s-12); align-self: flex-start;">← Back to Work</a>
+        <h1 class="case-study-title reveal">Zenflow</h1>
+        
+        <div class="case-study-meta reveal-scale">
+          <div>Role <span>Product Designer (Solo)</span></div>
+          <div>Tools <span>Figma</span></div>
+          <div>Timeline <span>Concept sprint, under 1 week</span></div>
+          <div>Type <span>Self-initiated design exercise</span></div>
+        </div>
+        
+        <picture>
+          <source srcset="../assets/images/zenflow-cover.webp" type="image/webp">
+          <img width="8072" height="5756" src="../assets/images/zenflow-cover.png" alt="Zenflow App Concept" class="case-study-image-full reveal-scale" loading="lazy">
+        </picture>
+      </section>
+
+      <section class="case-study-content">
+        <h2 class="reveal">Overview</h2>
+        <p class="reveal">Zenflow is a wellness app concept designed to solve a common friction point in fitness apps built for women: yoga and strength training are almost always treated as separate products, forcing users to juggle two apps, two habits, and two disconnected routines to get a complete wellness experience.</p>
+
+        <h2 class="reveal">The Problem</h2>
+        <p class="reveal">Most fitness apps optimize for one lane — high-intensity gym tracking, or slow-paced yoga and mindfulness — rarely both. For women who want structured strength training and recovery/mindfulness work in one place, that means stitching together a routine across multiple apps with inconsistent design languages, separate logins, and no unified sense of progress.</p>
+
+        <h2 class="reveal">Designing for Amara</h2>
+        <div class="split-section" style="margin-top: 0;">
+          <div>
+            <p class="reveal">To ground the design decisions, I designed around a practical user persona:</p>
+            <p class="reveal"><strong>Amara, 27</strong> — Marketing coordinator, new to structured fitness. Wants to build strength without the intimidation of traditional gym apps, and values mindfulness as part of her routine, not an afterthought. Short on time — needs a workout library that's fast to browse and easy to commit to, without decision fatigue.</p>
+            <p class="reveal">This persona shaped two concrete decisions: an onboarding flow that reduces early friction (get her into a workout fast, not a lengthy setup process), and a workout library structured around how much time she has, not just workout type.</p>
+          </div>
+          <div class="reveal-blur">
+            <picture>
+              <source srcset="../assets/images/zenflow-amara.webp" type="image/webp">
+              <img width="1536" height="2752" src="../assets/images/zenflow-amara.jpeg" alt="Persona Amara" class="case-study-image-full" loading="lazy" style="margin: 0; box-shadow: 0 20px 40px rgba(0,0,0,0.3);">
+            </picture>
+            <div class="image-caption" style="margin-top: var(--s-4);">Persona Amara</div>
+          </div>
+        </div>
+
+        <h2 class="reveal">Design Direction</h2>
+        <div class="pull-quote reveal-left">
+          The visual system deliberately avoids the cold blues and high-energy neon greens most fitness apps default to.
+        </div>
+        <p class="reveal">Instead, Zenflow uses a warm palette of peach, brown, and nude tones — built to feel calming and approachable rather than clinical or intimidating, reinforcing the yoga-meets-strength positioning at a visual level, not just a functional one.</p>
+
+        <h2 class="reveal">What I Designed</h2>
+        <ul class="reveal">
+          <li><strong>Onboarding flow</strong> — goal-setting, fitness level, and time-availability capture, designed to get a new user into her first session fast</li>
+          <li><strong>Workout library</strong> — browsable by category and duration, structured around real time constraints rather than a generic exercise catalog</li>
+        </ul>
+        
+        <!-- ── SCREENSHOTS ── -->
+        <div class="screenshot-gallery">
+          <div class="screenshot-frame frame-portrait reveal-scale">
+            <picture>
+              <source srcset="../assets/images/zenflow-courses-screen.webp" type="image/webp">
+              <img src="../assets/images/zenflow-courses-screen.png" alt="Zenflow Courses" loading="lazy" width="750" height="2092">
+            </picture>
+            <div class="image-caption" style="margin-top: var(--s-6);">Zenflow Courses</div>
+          </div>
+          <div class="screenshot-frame frame-landscape reveal-scale" style="transition-delay: 0.1s;">
+            <picture>
+              <source srcset="../assets/images/zenflow-screen-mocks.webp" type="image/webp">
+              <img src="../assets/images/zenflow-screen-mocks.png" alt="Zenflow screens" loading="lazy" width="4790" height="2424">
+            </picture>
+            <div class="image-caption" style="margin-top: var(--s-6);">Zenflow screens</div>
+          </div>
+        </div>
+
+        <h2 class="reveal">Constraints, Honestly</h2>
+        <p class="reveal">This was a deliberately scoped concept sprint, not a multi-week engagement — completed in under a week to test moving from concept to high-fidelity screens at speed. It reflects design thinking and execution quality under a tight timeline, not a full end-to-end product research cycle.</p>
+
+        <h2 class="reveal">Outcome / Reflection</h2>
+        <p class="reveal">This project was a rapid exercise in product thinking, demonstrating my ability to move quickly from a high-level persona to concrete, high-fidelity UI constraints. It highlights a pragmatic approach to user flows, prioritizing speed-to-value for the end user while maintaining a polished and cohesive design language.</p>
+
+        <div style="margin-top: var(--s-16);" class="reveal-scale">
+          <a href="https://www.figma.com/design/39EIzD5d1sAo6u4DCSlFI4/Portfolio--All---Copy-?node-id=44-3840&t=nOn6B8ZYNM0dm1Dp-4" target="_blank" rel="noopener noreferrer" class="btn btn-primary">View Prototype in Figma ↗</a>
+        </div>
+      </section>
+    </main>
+
+    <!-- ── FOOTER ── -->
+    <footer style="border-top: 1px solid var(--border); padding: var(--s-8) var(--s-8); display:flex; justify-content:space-between; align-items:center; flex-wrap: wrap; gap: var(--s-4);">
+      <span style="font-family: var(--font-mono); font-size: var(--text-xs); color: var(--gray-2);">
+        © 2026 JX. Nigeria.
+      </span>
+      <span style="font-family: var(--font-mono); font-size: var(--text-xs); color: var(--green);">
+        ZENFLOW / CASE STUDY
+      </span>
+    </footer>
+
+  </div><!-- /#page -->
+
+  <script src="../nav.js" defer></script>
+  <!-- Basic initialization for page fade-in since we removed about.js/script.js -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      gsap.to('#page', { opacity: 1, duration: 1, ease: 'power2.out' });
+
+      // Recreate the sitewide reveal animations using ScrollTrigger
+      const reveals = document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale, .reveal-blur');
+      
+      reveals.forEach(el => {
+        const isLeft  = el.classList.contains('reveal-left');
+        const isRight = el.classList.contains('reveal-right');
+        const isScale = el.classList.contains('reveal-scale');
+        const isBlur  = el.classList.contains('reveal-blur');
+
+        const from = isLeft  ? { opacity: 0, x: -40 }
+                   : isRight ? { opacity: 0, x: 40  }
+                   : isScale ? { opacity: 0, scale: 0.92 }
+                   : isBlur  ? { opacity: 0, filter: 'blur(12px)' }
+                   : { opacity: 0, y: 40 };
+
+        const to = isLeft || isRight ? { opacity: 1, x: 0 }
+                 : isScale           ? { opacity: 1, scale: 1 }
+                 : isBlur            ? { opacity: 1, filter: 'blur(0px)' }
+                 : { opacity: 1, y: 0 };
+
+        gsap.fromTo(el, from, {
+          ...to,
+          duration: 0.9,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: el,
+            start: 'top 88%',
+            once: true,
+          }
+        });
+      });
+      
+      // Parallax effect for .parallax-img
+      gsap.utils.toArray('.parallax-img').forEach(img => {
+        gsap.to(img, {
+          y: -40,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: img,
+            start: 'top bottom',
+            end: 'bottom top',
+            scrub: true
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,7 +1,7 @@
 # Live Audit Part 1: Vercel Production Site
 
 **Date:** 2026-08-08
-**Target:** https://jxdesigndev.vercel.app
+**Target:** https://www.jxdesign.dev
 
 This audit was conducted via a live Puppeteer browser automation script running directly against the production Vercel URL. All findings represent actual executed events, real DOM states, and measured browser performance across both Desktop (1440x900) and Mobile (375x812) simulated viewports.
 

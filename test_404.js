@@ -8,8 +8,8 @@ const puppeteer = require('puppeteer');
   
   try {
     const pagesToTest = [
-      'https://jxdesigndev.vercel.app/',
-      'https://jxdesigndev.vercel.app/work.html'
+      'https://www.jxdesign.dev/',
+      'https://www.jxdesign.dev/work.html'
     ];
 
     for (const url of pagesToTest) {

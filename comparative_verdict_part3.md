@@ -1,6 +1,6 @@
 # Comparative Verdict: JX Design & Dev vs. 2026 Awwwards Winners
 
-Based strictly on the live audit findings (`live_audit_part1.md`) and the 2026 competitive research (`competitive_research_part2.md`), this report evaluates how `jxdesigndev.vercel.app` measures up against current Awwwards SOTD/SOTM standards.
+Based strictly on the live audit findings (`live_audit_part1.md`) and the 2026 competitive research (`competitive_research_part2.md`), this report evaluates how `www.jxdesign.dev` measures up against current Awwwards SOTD/SOTM standards.
 
 ---
 

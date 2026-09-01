@@ -1,7 +1,7 @@
 const puppeteer = require('puppeteer');
 const fs = require('fs');
 
-const BASE_URL = 'https://jxdesigndev.vercel.app';
+const BASE_URL = 'https://www.jxdesign.dev';
 const REPORT_FILE = 'live_audit_results.json';
 
 const report = {

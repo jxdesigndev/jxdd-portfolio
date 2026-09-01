@@ -6,7 +6,7 @@ const puppeteer = require('puppeteer');
     args: ['--no-sandbox']
   });
   const page = await browser.newPage();
-  await page.goto('https://jxdesigndev.vercel.app/work.html', { waitUntil: 'networkidle2' });
+  await page.goto('https://www.jxdesign.dev/work.html', { waitUntil: 'networkidle2' });
   
   async function getGridState() {
     return await page.evaluate(() => {

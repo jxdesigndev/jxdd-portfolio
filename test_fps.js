@@ -38,7 +38,7 @@ const puppeteer = require('puppeteer');
     });
 
     console.log("Loading index.html (Desktop)...");
-    await page.goto('https://jxdesigndev.vercel.app/', { waitUntil: 'networkidle2' });
+    await page.goto('https://www.jxdesign.dev/', { waitUntil: 'networkidle2' });
     
     // Check particle count
     const particleCount = await page.evaluate(() => {

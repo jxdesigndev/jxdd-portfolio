@@ -8,7 +8,7 @@ const puppeteer = require('puppeteer');
   
   try {
     const page = await browser.newPage();
-    await page.goto('https://jxdesigndev.vercel.app/work.html', { waitUntil: 'networkidle2' });
+    await page.goto('https://www.jxdesign.dev/work.html', { waitUntil: 'networkidle2' });
     
     // Test 1: ScrollTrigger instance count
     const stCountBefore = await page.evaluate(() => window.ScrollTrigger ? ScrollTrigger.getAll().length : -1);

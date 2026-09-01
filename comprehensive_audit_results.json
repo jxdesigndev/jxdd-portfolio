@@ -1,0 +1,4620 @@
+{
+  "sectionA": {
+    "index": {
+      "375": {
+        "screenshot": "/home/jx/Documents/JX/jxdd-portfolio/audit_screenshots/index_375.png",
+        "overflow": {
+          "overflow": true,
+          "docW": 521,
+          "winW": 375,
+          "spilling": [
+            "div#loader-noise.loader-noise (l=-4,r=371,winW=375)",
+            "div.about-strip-image-wrap (l=-16,r=311,winW=375)",
+            "picture. (l=-16,r=311,winW=375)",
+            "source. (l=-16,r=-16,winW=375)",
+            "img.about-strip-image (l=-16,r=311,winW=375)",
+            "div.about-strip-image-overlay (l=-16,r=311,winW=375)",
+            "div.about-strip-content (l=64,r=391,winW=375)",
+            "div.section-label (l=64,r=391,winW=375)",
+            "blockquote.about-strip-quote (l=64,r=391,winW=375)",
+            "p.about-strip-text (l=64,r=391,winW=375)",
+            "div.about-strip-stats (l=64,r=391,winW=375)",
+            "div.stat-item (l=298,r=391,winW=375)",
+            "p.stat-number (l=298,r=391,winW=375)",
+            "p.stat-label (l=298,r=391,winW=375)",
+            "span.text-green (l=24,r=521,winW=375)"
+          ]
+        },
+        "wordBreak": [
+          {
+            "selector": "#hl-1",
+            "id": "hl-1",
+            "display": "block",
+            "whiteSpace": "normal",
+            "wordBreak": "keep-all",
+            "overflowWrap": "normal",
+            "childCount": 0,
+            "wordWrapOccurredWithoutWordWrappers": false,
+            "rectW": 327,
+            "rectH": 46
+          },
+          {
+            "selector": "#hl-2",
+            "id": "hl-2",
+            "display": "block",
+            "whiteSpace": "normal",
+            "wordBreak": "keep-all",
+            "overflowWrap": "normal",
+            "childCount": 0,
+            "wordWrapOccurredWithoutWordWrappers": false,
+            "rectW": 327,
+            "rectH": 29
+          },
+          {
+            "selector": ".hero-name-line",
+            "id": "hl-1",
+            "display": "block",
+            "whiteSpace": "normal",
+            "wordBreak": "keep-all",
+            "overflowWrap": "normal",
+            "childCount": 0,
+            "wordWrapOccurredWithoutWordWrappers": false,
+            "rectW": 327,
+            "rectH": 46
+          },
+          {
+            "selector": ".hero-name-line",
+            "id": "hl-2",
+            "display": "block",
+            "whiteSpace": "normal",
+            "wordBreak": "keep-all",
+            "overflowWrap": "normal",
+            "childCount": 0,
+            "wordWrapOccurredWithoutWordWrappers": false,
+            "rectW": 327,
+            "rectH": 29
+          },
+          {
+            "selector": "h2.headline-lg",
+            "id": "",
+            "display": "block",
+            "whiteSpace": "normal",
+            "wordBreak": "normal",
+            "overflowWrap": "normal",
+            "childCount": 1,
+            "wordWrapOccurredWithoutWordWrappers": false,
+            "rectW": 327,
+            "rectH": 108
+          },
+          {
+            "selector": "h2.headline-lg",
+            "id": "",
+            "display": "block",
+            "whiteSpace": "normal",
+            "wordBreak": "normal",
+            "overflowWrap": "normal",
+            "childCount": 2,
+            "wordWrapOccurredWithoutWordWrappers": true,
+            "rectW": 327,
+            "rectH": 108
+          }
+        ],
+        "consoleLogs": [
+          "[WARN] [.WebGL-0x2c94001bec00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels",
+          "[WARN] [.WebGL-0x2c94001bec00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels",
+          "[WARN] [.WebGL-0x2c94001bec00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels",
+          "[WARN] [.WebGL-0x2c94001bec00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)"
+        ],
+        "networkErrors": []
+      },
+      "768": {
+        "screenshot": "/home/jx/Documents/JX/jxdd-portfolio/audit_screenshots/index_768.png",
+        "overflow": {
+          "overflow": false,
+          "docW": 768,
+          "winW": 768,
+          "spilling": [
+            "div#loader-noise.loader-noise (l=-8,r=760,winW=768)",
+            "div.about-strip-image-wrap (l=-16,r=704,winW=768)",
+            "picture. (l=-16,r=704,winW=768)",
+            "source. (l=-16,r=-16,winW=768)",
+            "img.about-strip-image (l=-16,r=704,winW=768)",
+            "div.about-strip-image-overlay (l=-16,r=704,winW=768)",
+            "div.about-strip-content (l=64,r=784,winW=768)",
+            "div.section-label (l=64,r=784,winW=768)",
+            "blockquote.about-strip-quote (l=64,r=784,winW=768)",
+            "p.about-strip-text (l=64,r=784,winW=768)",
+            "div.about-strip-stats (l=64,r=784,winW=768)",
+            "div.stat-item (l=560,r=784,winW=768)",
+            "p.stat-number (l=560,r=784,winW=768)",
+            "p.stat-label (l=560,r=784,winW=768)"
+          ]
+        },
+        "wordBreak": [
+          {
+            "selector": "#hl-1",
+            "id": "hl-1",
+            "display": "block",
+            "whiteSpace": "normal",
+            "wordBreak": "keep-all",
+            "overflowWrap": "normal",
+            "childCount": 0,
+            "wordWrapOccurredWithoutWordWrappers": false,
+            "rectW": 720,
+            "rectH": 97
+          },
+          {
+            "selector": "#hl-2",
+            "id": "hl-2",
+            "display": "block",
+            "whiteSpace": "normal",
+            "wordBreak": "keep-all",
+            "overflowWrap": "normal",
+            "childCount": 0,
+            "wordWrapOccurredWithoutWordWrappers": false,
+            "rectW": 720,
+            "rectH": 65
+          },
+          {
+            "selector": ".hero-name-line",
+            "id": "hl-1",
+            "display": "block",
+            "whiteSpace": "normal",
+            "wordBreak": "keep-all",
+            "overflowWrap": "normal",
+            "childCount": 0,
+            "wordWrapOccurredWithoutWordWrappers": false,
+            "rectW": 720,
+            "rectH": 97
+          },
+          {
+            "selector": ".hero-name-line",
+            "id": "hl-2",
+            "display": "block",
+            "whiteSpace": "normal",
+            "wordBreak": "keep-all",
+            "overflowWrap": "normal",
+            "childCount": 0,
+            "wordWrapOccurredWithoutWordWrappers": false,
+            "rectW": 720,
+            "rectH": 65
+          },
+          {
+            "selector": "h2.headline-lg",
+            "id": "",
+            "display": "block",
+            "whiteSpace": "normal",
+            "wordBreak": "normal",
+            "overflowWrap": "normal",
+            "childCount": 1,
+            "wordWrapOccurredWithoutWordWrappers": false,
+            "rectW": 600,
+            "rectH": 147
+          },
+          {
+            "selector": "h2.headline-lg",
+            "id": "",
+            "display": "block",
+            "whiteSpace": "normal",
+            "wordBreak": "normal",
+            "overflowWrap": "normal",
+            "childCount": 2,
+            "wordWrapOccurredWithoutWordWrappers": true,
+            "rectW": 600,
+            "rectH": 147
+          }
+        ],
+        "consoleLogs": [
+          "[WARN] A preload for 'http://localhost:19090/assets/images/okezie-1.png' is found, but is not used because it is a cross-world service worker resource mismatch.",
+          "[WARN] JX: Low framerate detected (28.5 fps). Reducing particle count for performance."
+        ],
+        "networkErrors": []
+      },
+      "1024": {
+        "screenshot": "/home/jx/Documents/JX/jxdd-portfolio/audit_screenshots/index_1024.png",
+        "overflow": {
+          "overflow": false,
+          "docW": 1024,
+          "winW": 1024,
+          "spilling": [
+            "div#loader-noise.loader-noise (l=-10,r=1014,winW=1024)",
+            "div.about-strip-image-wrap (l=-8,r=952,winW=1024)",
+            "picture. (l=-8,r=952,winW=1024)",
+            "source. (l=-8,r=-8,winW=1024)",
+            "img.about-strip-image (l=-8,r=952,winW=1024)",
+            "div.about-strip-image-overlay (l=-8,r=952,winW=1024)",
+            "div.about-strip-content (l=72,r=1032,winW=1024)",
+            "div.section-label (l=72,r=1032,winW=1024)",
+            "blockquote.about-strip-quote (l=72,r=1032,winW=1024)",
+            "p.about-strip-text (l=72,r=1032,winW=1024)",
+            "div.about-strip-stats (l=72,r=1032,winW=1024)",
+            "div.stat-item (l=728,r=1032,winW=1024)",
+            "p.stat-number (l=728,r=1032,winW=1024)",
+            "p.stat-label (l=728,r=1032,winW=1024)"
+          ]
+        },
+        "wordBreak": [
+          {
+            "selector": "#hl-1",
+            "id": "hl-1",
+            "display": "block",
+            "whiteSpace": "normal",
+            "wordBreak": "keep-all",
+            "overflowWrap": "normal",
+            "childCount": 0,
+            "wordWrapOccurredWithoutWordWrappers": false,
+            "rectW": 960,
+            "rectH": 88
+          },
+          {
+            "selector": "#hl-2",
+            "id": "hl-2",
+            "display": "block",
+            "whiteSpace": "normal",
+            "wordBreak": "keep-all",
+            "overflowWrap": "normal",
+            "childCount": 0,
+            "wordWrapOccurredWithoutWordWrappers": false,
+            "rectW": 960,
+            "rectH": 86
+          },
+          {
+            "selector": ".hero-name-line",
+            "id": "hl-1",
+            "display": "block",
+            "whiteSpace": "normal",
+            "wordBreak": "keep-all",
+            "overflowWrap": "normal",
+            "childCount": 0,
+            "wordWrapOccurredWithoutWordWrappers": false,
+            "rectW": 960,
+            "rectH": 88
+          },
+          {
+            "selector": ".hero-name-line",
+            "id": "hl-2",
+            "display": "block",
+            "whiteSpace": "normal",
+            "wordBreak": "keep-all",
+            "overflowWrap": "normal",
+            "childCount": 0,
+            "wordWrapOccurredWithoutWordWrappers": false,
+            "rectW": 960,
+            "rectH": 86
+          },
+          {
+            "selector": "h2.headline-lg",
+            "id": "",
+            "display": "block",
+            "whiteSpace": "normal",
+            "wordBreak": "normal",
+            "overflowWrap": "normal",
+            "childCount": 1,
+            "wordWrapOccurredWithoutWordWrappers": false,
+            "rectW": 600,
+            "rectH": 197
+          },
+          {
+            "selector": "h2.headline-lg",
+            "id": "",
+            "display": "block",
+            "whiteSpace": "normal",
+            "wordBreak": "normal",
+            "overflowWrap": "normal",
+            "childCount": 2,
+            "wordWrapOccurredWithoutWordWrappers": true,
+            "rectW": 600,
+            "rectH": 197
+          }
+        ],
+        "consoleLogs": [
+          "[WARN] A preload for 'http://localhost:19090/assets/images/okezie-1.png' is found, but is not used because it is a cross-world service worker resource mismatch."
+        ],
+        "networkErrors": []
+      },
+      "1440": {
+        "screenshot": "/home/jx/Documents/JX/jxdd-portfolio/audit_screenshots/index_1440.png",
+        "overflow": {
+          "overflow": false,
+          "docW": 1440,
+          "winW": 1440,
+          "spilling": []
+        },
+        "wordBreak": [
+          {
+            "selector": "#hl-1",
+            "id": "hl-1",
+            "display": "block",
+            "whiteSpace": "normal",
+            "wordBreak": "keep-all",
+            "overflowWrap": "normal",
+            "childCount": 0,
+            "wordWrapOccurredWithoutWordWrappers": false,
+            "rectW": 1232,
+            "rectH": 123
+          },
+          {
+            "selector": "#hl-2",
+            "id": "hl-2",
+            "display": "block",
+            "whiteSpace": "normal",
+            "wordBreak": "keep-all",
+            "overflowWrap": "normal",
+            "childCount": 0,
+            "wordWrapOccurredWithoutWordWrappers": false,
+            "rectW": 1232,
+            "rectH": 111
+          },
+          {
+            "selector": ".hero-name-line",
+            "id": "hl-1",
+            "display": "block",
+            "whiteSpace": "normal",
+            "wordBreak": "keep-all",
+            "overflowWrap": "normal",
+            "childCount": 0,
+            "wordWrapOccurredWithoutWordWrappers": false,
+            "rectW": 1232,
+            "rectH": 123
+          },
+          {
+            "selector": ".hero-name-line",
+            "id": "hl-2",
+            "display": "block",
+            "whiteSpace": "normal",
+            "wordBreak": "keep-all",
+            "overflowWrap": "normal",
+            "childCount": 0,
+            "wordWrapOccurredWithoutWordWrappers": false,
+            "rectW": 1232,
+            "rectH": 111
+          },
+          {
+            "selector": "h2.headline-lg",
+            "id": "",
+            "display": "block",
+            "whiteSpace": "normal",
+            "wordBreak": "normal",
+            "overflowWrap": "normal",
+            "childCount": 1,
+            "wordWrapOccurredWithoutWordWrappers": false,
+            "rectW": 600,
+            "rectH": 211
+          },
+          {
+            "selector": "h2.headline-lg",
+            "id": "",
+            "display": "block",
+            "whiteSpace": "normal",
+            "wordBreak": "normal",
+            "overflowWrap": "normal",
+            "childCount": 2,
+            "wordWrapOccurredWithoutWordWrappers": true,
+            "rectW": 600,
+            "rectH": 211
+          }
+        ],
+        "consoleLogs": [
+          "[WARN] A preload for 'http://localhost:19090/assets/images/okezie-1.png' is found, but is not used because it is a cross-world service worker resource mismatch."
+        ],
+        "networkErrors": []
+      }
+    },
+    "about": {
+      "375": {
+        "screenshot": "/home/jx/Documents/JX/jxdd-portfolio/audit_screenshots/about_375.png",
+        "overflow": {
+          "overflow": false,
+          "docW": 375,
+          "winW": 375,
+          "spilling": []
+        },
+        "wordBreak": [
+          {
+            "selector": "#ah-title",
+            "id": "ah-title",
+            "display": "block",
+            "whiteSpace": "normal",
+            "wordBreak": "normal",
+            "overflowWrap": "normal",
+            "childCount": 23,
+            "wordWrapOccurredWithoutWordWrappers": false,
+            "rectW": 279,
+            "rectH": 358
+          },
+          {
+            "selector": "h2.headline-lg",
+            "id": "",
+            "display": "block",
+            "whiteSpace": "normal",
+            "wordBreak": "normal",
+            "overflowWrap": "normal",
+            "childCount": 6,
+            "wordWrapOccurredWithoutWordWrappers": false,
+            "rectW": 327,
+            "rectH": 269
+          },
+          {
+            "selector": "h2.headline-lg",
+            "id": "",
+            "display": "block",
+            "whiteSpace": "normal",
+            "wordBreak": "normal",
+            "overflowWrap": "normal",
+            "childCount": 1,
+            "wordWrapOccurredWithoutWordWrappers": false,
+            "rectW": 327,
+            "rectH": 108
+          }
+        ],
+        "consoleLogs": [
+          "[ERROR] Failed to load resource: the server responded with a status of 404 (Not Found)",
+          "[WARN] SplitText called before fonts loaded",
+          "[WARN] SplitText called before fonts loaded",
+          "[WARN] SplitText called before fonts loaded"
+        ],
+        "networkErrors": [
+          "HTTP 404:http://localhost:19090/assets/videos/intro-placeholder.mp4",
+          "FAILED:https://ahduvfbpnxmxzijbmteq.supabase.co/storage/v1/object/public/portfolio_media/video_1787618152238.mp4",
+          "FAILED:https://ahduvfbpnxmxzijbmteq.supabase.co/storage/v1/object/public/portfolio_media/video_1787618152238.mp4"
+        ]
+      },
+      "768": {
+        "screenshot": "/home/jx/Documents/JX/jxdd-portfolio/audit_screenshots/about_768.png",
+        "overflow": {
+          "overflow": false,
+          "docW": 768,
+          "winW": 768,
+          "spilling": []
+        },
+        "wordBreak": [
+          {
+            "selector": "#ah-title",
+            "id": "ah-title",
+            "display": "block",
+            "whiteSpace": "normal",
+            "wordBreak": "normal",
+            "overflowWrap": "normal",
+            "childCount": 23,
+            "wordWrapOccurredWithoutWordWrappers": false,
+            "rectW": 672,
+            "rectH": 340
+          },
+          {
+            "selector": "h2.headline-lg",
+            "id": "",
+            "display": "block",
+            "whiteSpace": "normal",
+            "wordBreak": "normal",
+            "overflowWrap": "normal",
+            "childCount": 6,
+            "wordWrapOccurredWithoutWordWrappers": false,
+            "rectW": 560,
+            "rectH": 369
+          },
+          {
+            "selector": "h2.headline-lg",
+            "id": "",
+            "display": "block",
+            "whiteSpace": "normal",
+            "wordBreak": "normal",
+            "overflowWrap": "normal",
+            "childCount": 1,
+            "wordWrapOccurredWithoutWordWrappers": false,
+            "rectW": 720,
+            "rectH": 74
+          }
+        ],
+        "consoleLogs": [
+          "[ERROR] Failed to load resource: the server responded with a status of 404 (Not Found)",
+          "[WARN] SplitText called before fonts loaded",
+          "[WARN] SplitText called before fonts loaded",
+          "[WARN] SplitText called before fonts loaded"
+        ],
+        "networkErrors": [
+          "HTTP 404:http://localhost:19090/assets/videos/intro-placeholder.mp4",
+          "FAILED:https://ahduvfbpnxmxzijbmteq.supabase.co/storage/v1/object/public/portfolio_media/video_1787618152238.mp4"
+        ]
+      },
+      "1024": {
+        "screenshot": "/home/jx/Documents/JX/jxdd-portfolio/audit_screenshots/about_1024.png",
+        "overflow": {
+          "overflow": false,
+          "docW": 1024,
+          "winW": 1024,
+          "spilling": []
+        },
+        "wordBreak": [
+          {
+            "selector": "#ah-title",
+            "id": "ah-title",
+            "display": "block",
+            "whiteSpace": "normal",
+            "wordBreak": "normal",
+            "overflowWrap": "normal",
+            "childCount": 23,
+            "wordWrapOccurredWithoutWordWrappers": false,
+            "rectW": 896,
+            "rectH": 453
+          },
+          {
+            "selector": "h2.headline-lg",
+            "id": "",
+            "display": "block",
+            "whiteSpace": "normal",
+            "wordBreak": "normal",
+            "overflowWrap": "normal",
+            "childCount": 6,
+            "wordWrapOccurredWithoutWordWrappers": false,
+            "rectW": 560,
+            "rectH": 688
+          },
+          {
+            "selector": "h2.headline-lg",
+            "id": "",
+            "display": "block",
+            "whiteSpace": "normal",
+            "wordBreak": "normal",
+            "overflowWrap": "normal",
+            "childCount": 1,
+            "wordWrapOccurredWithoutWordWrappers": false,
+            "rectW": 960,
+            "rectH": 98
+          }
+        ],
+        "consoleLogs": [
+          "[ERROR] Failed to load resource: the server responded with a status of 404 (Not Found)",
+          "[WARN] SplitText called before fonts loaded",
+          "[WARN] SplitText called before fonts loaded",
+          "[WARN] SplitText called before fonts loaded"
+        ],
+        "networkErrors": [
+          "HTTP 404:http://localhost:19090/assets/videos/intro-placeholder.mp4",
+          "FAILED:https://ahduvfbpnxmxzijbmteq.supabase.co/storage/v1/object/public/portfolio_media/video_1787618152238.mp4"
+        ]
+      },
+      "1440": {
+        "screenshot": "/home/jx/Documents/JX/jxdd-portfolio/audit_screenshots/about_1440.png",
+        "overflow": {
+          "overflow": false,
+          "docW": 1440,
+          "winW": 1440,
+          "spilling": []
+        },
+        "wordBreak": [
+          {
+            "selector": "#ah-title",
+            "id": "ah-title",
+            "display": "block",
+            "whiteSpace": "normal",
+            "wordBreak": "normal",
+            "overflowWrap": "normal",
+            "childCount": 23,
+            "wordWrapOccurredWithoutWordWrappers": false,
+            "rectW": 1216,
+            "rectH": 590
+          },
+          {
+            "selector": "h2.headline-lg",
+            "id": "",
+            "display": "block",
+            "whiteSpace": "normal",
+            "wordBreak": "normal",
+            "overflowWrap": "normal",
+            "childCount": 6,
+            "wordWrapOccurredWithoutWordWrappers": false,
+            "rectW": 560,
+            "rectH": 739
+          },
+          {
+            "selector": "h2.headline-lg",
+            "id": "",
+            "display": "block",
+            "whiteSpace": "normal",
+            "wordBreak": "normal",
+            "overflowWrap": "normal",
+            "childCount": 1,
+            "wordWrapOccurredWithoutWordWrappers": false,
+            "rectW": 1216,
+            "rectH": 106
+          }
+        ],
+        "consoleLogs": [
+          "[ERROR] Failed to load resource: the server responded with a status of 404 (Not Found)",
+          "[WARN] SplitText called before fonts loaded",
+          "[WARN] SplitText called before fonts loaded",
+          "[WARN] SplitText called before fonts loaded"
+        ],
+        "networkErrors": [
+          "HTTP 404:http://localhost:19090/assets/videos/intro-placeholder.mp4",
+          "FAILED:https://ahduvfbpnxmxzijbmteq.supabase.co/storage/v1/object/public/portfolio_media/video_1787618152238.mp4"
+        ]
+      }
+    },
+    "work": {
+      "375": {
+        "screenshot": "/home/jx/Documents/JX/jxdd-portfolio/audit_screenshots/work_375.png",
+        "overflow": {
+          "overflow": false,
+          "docW": 375,
+          "winW": 375,
+          "spilling": []
+        },
+        "wordBreak": [],
+        "consoleLogs": [
+          "[WARN] SplitText called before fonts loaded"
+        ],
+        "networkErrors": []
+      },
+      "768": {
+        "screenshot": "/home/jx/Documents/JX/jxdd-portfolio/audit_screenshots/work_768.png",
+        "overflow": {
+          "overflow": false,
+          "docW": 768,
+          "winW": 768,
+          "spilling": []
+        },
+        "wordBreak": [],
+        "consoleLogs": [
+          "[WARN] SplitText called before fonts loaded"
+        ],
+        "networkErrors": []
+      },
+      "1024": {
+        "screenshot": "/home/jx/Documents/JX/jxdd-portfolio/audit_screenshots/work_1024.png",
+        "overflow": {
+          "overflow": false,
+          "docW": 1024,
+          "winW": 1024,
+          "spilling": []
+        },
+        "wordBreak": [],
+        "consoleLogs": [
+          "[WARN] SplitText called before fonts loaded"
+        ],
+        "networkErrors": []
+      },
+      "1440": {
+        "screenshot": "/home/jx/Documents/JX/jxdd-portfolio/audit_screenshots/work_1440.png",
+        "overflow": {
+          "overflow": false,
+          "docW": 1440,
+          "winW": 1440,
+          "spilling": []
+        },
+        "wordBreak": [],
+        "consoleLogs": [
+          "[WARN] SplitText called before fonts loaded"
+        ],
+        "networkErrors": []
+      }
+    },
+    "services": {
+      "375": {
+        "screenshot": "/home/jx/Documents/JX/jxdd-portfolio/audit_screenshots/services_375.png",
+        "overflow": {
+          "overflow": false,
+          "docW": 375,
+          "winW": 375,
+          "spilling": []
+        },
+        "wordBreak": [
+          {
+            "selector": "#sh-title",
+            "id": "sh-title",
+            "display": "block",
+            "whiteSpace": "normal",
+            "wordBreak": "normal",
+            "overflowWrap": "normal",
+            "childCount": 14,
+            "wordWrapOccurredWithoutWordWrappers": false,
+            "rectW": 327,
+            "rectH": 294
+          },
+          {
+            "selector": "h2.headline-lg",
+            "id": "",
+            "display": "block",
+            "whiteSpace": "normal",
+            "wordBreak": "normal",
+            "overflowWrap": "normal",
+            "childCount": 8,
+            "wordWrapOccurredWithoutWordWrappers": false,
+            "rectW": 327,
+            "rectH": 269
+          },
+          {
+            "selector": "h2.headline-lg",
+            "id": "",
+            "display": "block",
+            "whiteSpace": "normal",
+            "wordBreak": "normal",
+            "overflowWrap": "normal",
+            "childCount": 5,
+            "wordWrapOccurredWithoutWordWrappers": false,
+            "rectW": 327,
+            "rectH": 323
+          }
+        ],
+        "consoleLogs": [
+          "[WARN] SplitText called before fonts loaded",
+          "[WARN] SplitText called before fonts loaded",
+          "[WARN] SplitText called before fonts loaded"
+        ],
+        "networkErrors": []
+      },
+      "768": {
+        "screenshot": "/home/jx/Documents/JX/jxdd-portfolio/audit_screenshots/services_768.png",
+        "overflow": {
+          "overflow": false,
+          "docW": 768,
+          "winW": 768,
+          "spilling": []
+        },
+        "wordBreak": [
+          {
+            "selector": "#sh-title",
+            "id": "sh-title",
+            "display": "block",
+            "whiteSpace": "normal",
+            "wordBreak": "normal",
+            "overflowWrap": "normal",
+            "childCount": 14,
+            "wordWrapOccurredWithoutWordWrappers": false,
+            "rectW": 720,
+            "rectH": 355
+          },
+          {
+            "selector": "h2.headline-lg",
+            "id": "",
+            "display": "block",
+            "whiteSpace": "normal",
+            "wordBreak": "normal",
+            "overflowWrap": "normal",
+            "childCount": 8,
+            "wordWrapOccurredWithoutWordWrappers": false,
+            "rectW": 720,
+            "rectH": 295
+          },
+          {
+            "selector": "h2.headline-lg",
+            "id": "",
+            "display": "block",
+            "whiteSpace": "normal",
+            "wordBreak": "normal",
+            "overflowWrap": "normal",
+            "childCount": 5,
+            "wordWrapOccurredWithoutWordWrappers": false,
+            "rectW": 600,
+            "rectH": 221
+          }
+        ],
+        "consoleLogs": [
+          "[WARN] SplitText called before fonts loaded",
+          "[WARN] SplitText called before fonts loaded",
+          "[WARN] SplitText called before fonts loaded"
+        ],
+        "networkErrors": []
+      },
+      "1024": {
+        "screenshot": "/home/jx/Documents/JX/jxdd-portfolio/audit_screenshots/services_1024.png",
+        "overflow": {
+          "overflow": false,
+          "docW": 1024,
+          "winW": 1024,
+          "spilling": []
+        },
+        "wordBreak": [
+          {
+            "selector": "#sh-title",
+            "id": "sh-title",
+            "display": "block",
+            "whiteSpace": "normal",
+            "wordBreak": "normal",
+            "overflowWrap": "normal",
+            "childCount": 14,
+            "wordWrapOccurredWithoutWordWrappers": false,
+            "rectW": 960,
+            "rectH": 473
+          },
+          {
+            "selector": "h2.headline-lg",
+            "id": "",
+            "display": "block",
+            "whiteSpace": "normal",
+            "wordBreak": "normal",
+            "overflowWrap": "normal",
+            "childCount": 8,
+            "wordWrapOccurredWithoutWordWrappers": false,
+            "rectW": 960,
+            "rectH": 393
+          },
+          {
+            "selector": "h2.headline-lg",
+            "id": "",
+            "display": "block",
+            "whiteSpace": "normal",
+            "wordBreak": "normal",
+            "overflowWrap": "normal",
+            "childCount": 5,
+            "wordWrapOccurredWithoutWordWrappers": false,
+            "rectW": 600,
+            "rectH": 590
+          }
+        ],
+        "consoleLogs": [
+          "[WARN] SplitText called before fonts loaded",
+          "[WARN] SplitText called before fonts loaded",
+          "[WARN] SplitText called before fonts loaded"
+        ],
+        "networkErrors": []
+      },
+      "1440": {
+        "screenshot": "/home/jx/Documents/JX/jxdd-portfolio/audit_screenshots/services_1440.png",
+        "overflow": {
+          "overflow": false,
+          "docW": 1440,
+          "winW": 1440,
+          "spilling": []
+        },
+        "wordBreak": [
+          {
+            "selector": "#sh-title",
+            "id": "sh-title",
+            "display": "block",
+            "whiteSpace": "normal",
+            "wordBreak": "normal",
+            "overflowWrap": "normal",
+            "childCount": 14,
+            "wordWrapOccurredWithoutWordWrappers": false,
+            "rectW": 1280,
+            "rectH": 605
+          },
+          {
+            "selector": "h2.headline-lg",
+            "id": "",
+            "display": "block",
+            "whiteSpace": "normal",
+            "wordBreak": "normal",
+            "overflowWrap": "normal",
+            "childCount": 8,
+            "wordWrapOccurredWithoutWordWrappers": false,
+            "rectW": 1280,
+            "rectH": 317
+          },
+          {
+            "selector": "h2.headline-lg",
+            "id": "",
+            "display": "block",
+            "whiteSpace": "normal",
+            "wordBreak": "normal",
+            "overflowWrap": "normal",
+            "childCount": 5,
+            "wordWrapOccurredWithoutWordWrappers": false,
+            "rectW": 600,
+            "rectH": 634
+          }
+        ],
+        "consoleLogs": [
+          "[WARN] SplitText called before fonts loaded",
+          "[WARN] SplitText called before fonts loaded",
+          "[WARN] SplitText called before fonts loaded"
+        ],
+        "networkErrors": []
+      }
+    },
+    "contact": {
+      "375": {
+        "screenshot": "/home/jx/Documents/JX/jxdd-portfolio/audit_screenshots/contact_375.png",
+        "overflow": {
+          "overflow": false,
+          "docW": 375,
+          "winW": 375,
+          "spilling": []
+        },
+        "wordBreak": [],
+        "consoleLogs": [
+          "[WARN] SplitText called before fonts loaded"
+        ],
+        "networkErrors": []
+      },
+      "768": {
+        "screenshot": "/home/jx/Documents/JX/jxdd-portfolio/audit_screenshots/contact_768.png",
+        "overflow": {
+          "overflow": false,
+          "docW": 768,
+          "winW": 768,
+          "spilling": []
+        },
+        "wordBreak": [],
+        "consoleLogs": [
+          "[WARN] SplitText called before fonts loaded"
+        ],
+        "networkErrors": []
+      },
+      "1024": {
+        "screenshot": "/home/jx/Documents/JX/jxdd-portfolio/audit_screenshots/contact_1024.png",
+        "overflow": {
+          "overflow": false,
+          "docW": 1024,
+          "winW": 1024,
+          "spilling": []
+        },
+        "wordBreak": [],
+        "consoleLogs": [
+          "[WARN] SplitText called before fonts loaded"
+        ],
+        "networkErrors": []
+      },
+      "1440": {
+        "screenshot": "/home/jx/Documents/JX/jxdd-portfolio/audit_screenshots/contact_1440.png",
+        "overflow": {
+          "overflow": false,
+          "docW": 1440,
+          "winW": 1440,
+          "spilling": []
+        },
+        "wordBreak": [],
+        "consoleLogs": [
+          "[WARN] SplitText called before fonts loaded"
+        ],
+        "networkErrors": []
+      }
+    },
+    "project": {
+      "375": {
+        "screenshot": "/home/jx/Documents/JX/jxdd-portfolio/audit_screenshots/project_375.png",
+        "overflow": {
+          "overflow": false,
+          "docW": 375,
+          "winW": 375,
+          "spilling": []
+        },
+        "wordBreak": [],
+        "consoleLogs": [
+          "[ERROR] Failed to load resource: the server responded with a status of 404 (Not Found)",
+          "[ERROR] Failed to load resource: the server responded with a status of 406 ()",
+          "[ERROR] Project fetch error: [object Object]"
+        ],
+        "networkErrors": [
+          "HTTP 404:http://localhost:19090/favicon.ico",
+          "HTTP 406:https://ahduvfbpnxmxzijbmteq.supabase.co/rest/v1/projects?select=*&slug=eq.zenflow"
+        ]
+      },
+      "768": {
+        "screenshot": "/home/jx/Documents/JX/jxdd-portfolio/audit_screenshots/project_768.png",
+        "overflow": {
+          "overflow": false,
+          "docW": 768,
+          "winW": 768,
+          "spilling": []
+        },
+        "wordBreak": [],
+        "consoleLogs": [
+          "[ERROR] Failed to load resource: the server responded with a status of 406 ()",
+          "[ERROR] Project fetch error: [object Object]"
+        ],
+        "networkErrors": [
+          "HTTP 406:https://ahduvfbpnxmxzijbmteq.supabase.co/rest/v1/projects?select=*&slug=eq.zenflow"
+        ]
+      },
+      "1024": {
+        "screenshot": "/home/jx/Documents/JX/jxdd-portfolio/audit_screenshots/project_1024.png",
+        "overflow": {
+          "overflow": false,
+          "docW": 1024,
+          "winW": 1024,
+          "spilling": []
+        },
+        "wordBreak": [],
+        "consoleLogs": [
+          "[ERROR] Failed to load resource: the server responded with a status of 406 ()",
+          "[ERROR] Project fetch error: [object Object]"
+        ],
+        "networkErrors": [
+          "HTTP 406:https://ahduvfbpnxmxzijbmteq.supabase.co/rest/v1/projects?select=*&slug=eq.zenflow"
+        ]
+      },
+      "1440": {
+        "screenshot": "/home/jx/Documents/JX/jxdd-portfolio/audit_screenshots/project_1440.png",
+        "overflow": {
+          "overflow": false,
+          "docW": 1440,
+          "winW": 1440,
+          "spilling": []
+        },
+        "wordBreak": [],
+        "consoleLogs": [
+          "[ERROR] Failed to load resource: the server responded with a status of 406 ()",
+          "[ERROR] Project fetch error: [object Object]"
+        ],
+        "networkErrors": [
+          "HTTP 406:https://ahduvfbpnxmxzijbmteq.supabase.co/rest/v1/projects?select=*&slug=eq.zenflow"
+        ]
+      }
+    }
+  },
+  "sectionB": {
+    "index": [
+      {
+        "element": "h1.hero-name",
+        "fontSize": "136.8px",
+        "fontWeight": "800",
+        "lineHeight": "123.12px",
+        "fontFamily": "Syne",
+        "color": "rgb(255, 255, 255)",
+        "letterSpacing": "-4.104px",
+        "textTransform": "none"
+      },
+      {
+        "element": "h2.featured-title",
+        "fontSize": "144px",
+        "fontWeight": "800",
+        "lineHeight": "151.2px",
+        "fontFamily": "Syne",
+        "color": "rgb(232, 232, 240)",
+        "letterSpacing": "-4.32px",
+        "textTransform": "none"
+      },
+      {
+        "element": "h2.headline-lg.reveal",
+        "fontSize": "88px",
+        "fontWeight": "800",
+        "lineHeight": "105.6px",
+        "fontFamily": "Syne",
+        "color": "rgb(232, 232, 240)",
+        "letterSpacing": "-2.64px",
+        "textTransform": "none"
+      },
+      {
+        "element": "h3.service-name",
+        "fontSize": "21.6px",
+        "fontWeight": "700",
+        "lineHeight": "32.4px",
+        "fontFamily": "Syne",
+        "color": "rgb(255, 255, 255)",
+        "letterSpacing": "normal",
+        "textTransform": "none"
+      },
+      {
+        "element": "div#hero-eyebrow.hero-eyebrow",
+        "fontSize": "14px",
+        "fontWeight": "400",
+        "lineHeight": "21px",
+        "fontFamily": "JetBrains Mono",
+        "color": "rgb(0, 255, 65)",
+        "letterSpacing": "3.5px",
+        "textTransform": "uppercase"
+      },
+      {
+        "element": "p#hero-desc.hero-desc",
+        "fontSize": "18px",
+        "fontWeight": "400",
+        "lineHeight": "31.5px",
+        "fontFamily": "Space Grotesk",
+        "color": "rgb(168, 168, 192)",
+        "letterSpacing": "normal",
+        "textTransform": "none"
+      },
+      {
+        "element": "p.mobile-menu-location",
+        "fontSize": "10.4px",
+        "fontWeight": "400",
+        "lineHeight": "15.6px",
+        "fontFamily": "JetBrains Mono",
+        "color": "rgb(40, 40, 60)",
+        "letterSpacing": "0.832px",
+        "textTransform": "none"
+      },
+      {
+        "element": "p#loader-status-text.loader-status",
+        "fontSize": "12px",
+        "fontWeight": "400",
+        "lineHeight": "18px",
+        "fontFamily": "JetBrains Mono",
+        "color": "rgb(0, 255, 65)",
+        "letterSpacing": "1.8px",
+        "textTransform": "uppercase"
+      },
+      {
+        "element": "p#hud-status.hud-value.accent",
+        "fontSize": "14px",
+        "fontWeight": "500",
+        "lineHeight": "21px",
+        "fontFamily": "JetBrains Mono",
+        "color": "rgb(255, 184, 0)",
+        "letterSpacing": "normal",
+        "textTransform": "none"
+      },
+      {
+        "element": "p#hud-project-count.hud-value.large",
+        "fontSize": "28px",
+        "fontWeight": "700",
+        "lineHeight": "42px",
+        "fontFamily": "JetBrains Mono",
+        "color": "rgb(255, 255, 255)",
+        "letterSpacing": "normal",
+        "textTransform": "none"
+      },
+      {
+        "element": "p#stat-projects.stat-number",
+        "fontSize": "56px",
+        "fontWeight": "800",
+        "lineHeight": "56px",
+        "fontFamily": "Syne",
+        "color": "rgb(0, 255, 65)",
+        "letterSpacing": "-1.68px",
+        "textTransform": "none"
+      },
+      {
+        "element": "p.service-desc",
+        "fontSize": "14px",
+        "fontWeight": "400",
+        "lineHeight": "24.5px",
+        "fontFamily": "Space Grotesk",
+        "color": "rgb(168, 168, 192)",
+        "letterSpacing": "normal",
+        "textTransform": "none"
+      },
+      {
+        "element": "body",
+        "fontSize": "16px",
+        "fontWeight": "400",
+        "lineHeight": "24px",
+        "fontFamily": "Space Grotesk",
+        "color": "rgb(232, 232, 240)",
+        "letterSpacing": "normal",
+        "textTransform": "none"
+      }
+    ],
+    "about": [
+      {
+        "element": "h1#ah-title.about-hero-title",
+        "fontSize": "160px",
+        "fontWeight": "800",
+        "lineHeight": "144px",
+        "fontFamily": "Syne",
+        "color": "rgb(255, 255, 255)",
+        "letterSpacing": "normal",
+        "textTransform": "none"
+      },
+      {
+        "element": "h2.headline-lg",
+        "fontSize": "88px",
+        "fontWeight": "800",
+        "lineHeight": "105.6px",
+        "fontFamily": "Syne",
+        "color": "rgb(232, 232, 240)",
+        "letterSpacing": "-2.64px",
+        "textTransform": "none"
+      },
+      {
+        "element": "h3.chapter-title",
+        "fontSize": "48px",
+        "fontWeight": "800",
+        "lineHeight": "52.8px",
+        "fontFamily": "Syne",
+        "color": "rgb(255, 255, 255)",
+        "letterSpacing": "normal",
+        "textTransform": "none"
+      },
+      {
+        "element": "h3.exp-role",
+        "fontSize": "28px",
+        "fontWeight": "700",
+        "lineHeight": "42px",
+        "fontFamily": "Syne",
+        "color": "rgb(255, 255, 255)",
+        "letterSpacing": "normal",
+        "textTransform": "none"
+      },
+      {
+        "element": "p.mobile-menu-location",
+        "fontSize": "10.4px",
+        "fontWeight": "400",
+        "lineHeight": "15.6px",
+        "fontFamily": "JetBrains Mono",
+        "color": "rgb(40, 40, 60)",
+        "letterSpacing": "0.832px",
+        "textTransform": "none"
+      },
+      {
+        "element": "p#ah-label.about-hero-chapter",
+        "fontSize": "12px",
+        "fontWeight": "400",
+        "lineHeight": "18px",
+        "fontFamily": "JetBrains Mono",
+        "color": "rgb(0, 255, 65)",
+        "letterSpacing": "2.4px",
+        "textTransform": "uppercase"
+      },
+      {
+        "element": "p#ah-tag.about-hero-tagline",
+        "fontSize": "21.6px",
+        "fontWeight": "400",
+        "lineHeight": "37.8px",
+        "fontFamily": "Space Grotesk",
+        "color": "rgb(168, 168, 192)",
+        "letterSpacing": "normal",
+        "textTransform": "none"
+      },
+      {
+        "element": "p",
+        "fontSize": "16px",
+        "fontWeight": "400",
+        "lineHeight": "28px",
+        "fontFamily": "Space Grotesk",
+        "color": "rgb(168, 168, 192)",
+        "letterSpacing": "normal",
+        "textTransform": "none"
+      },
+      {
+        "element": "p.philosophy-quote.reveal-scale",
+        "fontSize": "64px",
+        "fontWeight": "400",
+        "lineHeight": "83.2px",
+        "fontFamily": "Playfair Display",
+        "color": "rgb(255, 255, 255)",
+        "letterSpacing": "normal",
+        "textTransform": "none"
+      },
+      {
+        "element": "p.philosophy-by.reveal",
+        "fontSize": "14px",
+        "fontWeight": "400",
+        "lineHeight": "21px",
+        "fontFamily": "JetBrains Mono",
+        "color": "rgb(88, 88, 112)",
+        "letterSpacing": "2.1px",
+        "textTransform": "none"
+      },
+      {
+        "element": "body",
+        "fontSize": "16px",
+        "fontWeight": "400",
+        "lineHeight": "24px",
+        "fontFamily": "Space Grotesk",
+        "color": "rgb(232, 232, 240)",
+        "letterSpacing": "normal",
+        "textTransform": "none"
+      }
+    ],
+    "work": [
+      {
+        "element": "h1#wh-title.headline-xl",
+        "fontSize": "144px",
+        "fontWeight": "800",
+        "lineHeight": "151.2px",
+        "fontFamily": "Syne",
+        "color": "rgb(232, 232, 240)",
+        "letterSpacing": "-4.32px",
+        "textTransform": "none"
+      },
+      {
+        "element": "h2.sr-only",
+        "fontSize": "24px",
+        "fontWeight": "700",
+        "lineHeight": "36px",
+        "fontFamily": "Space Grotesk",
+        "color": "rgb(232, 232, 240)",
+        "letterSpacing": "normal",
+        "textTransform": "none"
+      },
+      {
+        "element": "h3.work-card-title",
+        "fontSize": "28px",
+        "fontWeight": "700",
+        "lineHeight": "42px",
+        "fontFamily": "Syne",
+        "color": "rgb(255, 255, 255)",
+        "letterSpacing": "normal",
+        "textTransform": "none"
+      },
+      {
+        "element": "p.mobile-menu-location",
+        "fontSize": "10.4px",
+        "fontWeight": "400",
+        "lineHeight": "15.6px",
+        "fontFamily": "JetBrains Mono",
+        "color": "rgb(40, 40, 60)",
+        "letterSpacing": "0.832px",
+        "textTransform": "none"
+      },
+      {
+        "element": "p#wh-label.section-label",
+        "fontSize": "12px",
+        "fontWeight": "400",
+        "lineHeight": "18px",
+        "fontFamily": "JetBrains Mono",
+        "color": "rgb(0, 255, 65)",
+        "letterSpacing": "3px",
+        "textTransform": "uppercase"
+      },
+      {
+        "element": "p#wh-sub",
+        "fontSize": "21.6px",
+        "fontWeight": "400",
+        "lineHeight": "37.8px",
+        "fontFamily": "Space Grotesk",
+        "color": "rgb(168, 168, 192)",
+        "letterSpacing": "normal",
+        "textTransform": "none"
+      },
+      {
+        "element": "p.work-card-desc",
+        "fontSize": "14px",
+        "fontWeight": "400",
+        "lineHeight": "24.5px",
+        "fontFamily": "Space Grotesk",
+        "color": "rgb(88, 88, 112)",
+        "letterSpacing": "normal",
+        "textTransform": "none"
+      },
+      {
+        "element": "body",
+        "fontSize": "16px",
+        "fontWeight": "400",
+        "lineHeight": "24px",
+        "fontFamily": "Space Grotesk",
+        "color": "rgb(232, 232, 240)",
+        "letterSpacing": "normal",
+        "textTransform": "none"
+      }
+    ],
+    "services": [
+      {
+        "element": "h1#sh-title.headline-xl",
+        "fontSize": "144px",
+        "fontWeight": "800",
+        "lineHeight": "151.2px",
+        "fontFamily": "Syne",
+        "color": "rgb(232, 232, 240)",
+        "letterSpacing": "-4.32px",
+        "textTransform": "none"
+      },
+      {
+        "element": "h2.service-deep-title",
+        "fontSize": "56px",
+        "fontWeight": "800",
+        "lineHeight": "58.8px",
+        "fontFamily": "Syne",
+        "color": "rgb(255, 255, 255)",
+        "letterSpacing": "normal",
+        "textTransform": "none"
+      },
+      {
+        "element": "h2.headline-lg",
+        "fontSize": "88px",
+        "fontWeight": "800",
+        "lineHeight": "105.6px",
+        "fontFamily": "Syne",
+        "color": "rgb(232, 232, 240)",
+        "letterSpacing": "-2.64px",
+        "textTransform": "none"
+      },
+      {
+        "element": "p.mobile-menu-location",
+        "fontSize": "10.4px",
+        "fontWeight": "400",
+        "lineHeight": "15.6px",
+        "fontFamily": "JetBrains Mono",
+        "color": "rgb(40, 40, 60)",
+        "letterSpacing": "0.832px",
+        "textTransform": "none"
+      },
+      {
+        "element": "p#sh-label.section-label",
+        "fontSize": "12px",
+        "fontWeight": "400",
+        "lineHeight": "18px",
+        "fontFamily": "JetBrains Mono",
+        "color": "rgb(0, 255, 65)",
+        "letterSpacing": "3px",
+        "textTransform": "uppercase"
+      },
+      {
+        "element": "p#sh-sub",
+        "fontSize": "21.6px",
+        "fontWeight": "400",
+        "lineHeight": "37.8px",
+        "fontFamily": "Space Grotesk",
+        "color": "rgb(168, 168, 192)",
+        "letterSpacing": "normal",
+        "textTransform": "none"
+      },
+      {
+        "element": "p.service-deep-body",
+        "fontSize": "16px",
+        "fontWeight": "400",
+        "lineHeight": "28px",
+        "fontFamily": "Space Grotesk",
+        "color": "rgb(168, 168, 192)",
+        "letterSpacing": "normal",
+        "textTransform": "none"
+      },
+      {
+        "element": "p.process-step-name",
+        "fontSize": "21.6px",
+        "fontWeight": "700",
+        "lineHeight": "32.4px",
+        "fontFamily": "Syne",
+        "color": "rgb(255, 255, 255)",
+        "letterSpacing": "normal",
+        "textTransform": "none"
+      },
+      {
+        "element": "p.process-step-desc",
+        "fontSize": "14px",
+        "fontWeight": "400",
+        "lineHeight": "24.5px",
+        "fontFamily": "Space Grotesk",
+        "color": "rgb(88, 88, 112)",
+        "letterSpacing": "normal",
+        "textTransform": "none"
+      },
+      {
+        "element": "body",
+        "fontSize": "16px",
+        "fontWeight": "400",
+        "lineHeight": "24px",
+        "fontFamily": "Space Grotesk",
+        "color": "rgb(232, 232, 240)",
+        "letterSpacing": "normal",
+        "textTransform": "none"
+      }
+    ],
+    "contact": [
+      {
+        "element": "h1#ch-title.headline-xl",
+        "fontSize": "144px",
+        "fontWeight": "800",
+        "lineHeight": "151.2px",
+        "fontFamily": "Syne",
+        "color": "rgb(232, 232, 240)",
+        "letterSpacing": "-4.32px",
+        "textTransform": "none"
+      },
+      {
+        "element": "p.mobile-menu-location",
+        "fontSize": "10.4px",
+        "fontWeight": "400",
+        "lineHeight": "15.6px",
+        "fontFamily": "JetBrains Mono",
+        "color": "rgb(40, 40, 60)",
+        "letterSpacing": "0.832px",
+        "textTransform": "none"
+      },
+      {
+        "element": "p#ch-label.section-label",
+        "fontSize": "12px",
+        "fontWeight": "400",
+        "lineHeight": "18px",
+        "fontFamily": "JetBrains Mono",
+        "color": "rgb(0, 255, 65)",
+        "letterSpacing": "3px",
+        "textTransform": "uppercase"
+      },
+      {
+        "element": "p#ch-sub",
+        "fontSize": "21.6px",
+        "fontWeight": "400",
+        "lineHeight": "37.8px",
+        "fontFamily": "Space Grotesk",
+        "color": "rgb(168, 168, 192)",
+        "letterSpacing": "normal",
+        "textTransform": "none"
+      },
+      {
+        "element": "p.contact-info-value",
+        "fontSize": "36px",
+        "fontWeight": "700",
+        "lineHeight": "43.2px",
+        "fontFamily": "Syne",
+        "color": "rgb(255, 255, 255)",
+        "letterSpacing": "normal",
+        "textTransform": "none"
+      },
+      {
+        "element": "p.contact-info-sub",
+        "fontSize": "14px",
+        "fontWeight": "400",
+        "lineHeight": "24.5px",
+        "fontFamily": "Space Grotesk",
+        "color": "rgb(88, 88, 112)",
+        "letterSpacing": "normal",
+        "textTransform": "none"
+      },
+      {
+        "element": "body",
+        "fontSize": "16px",
+        "fontWeight": "400",
+        "lineHeight": "24px",
+        "fontFamily": "Space Grotesk",
+        "color": "rgb(232, 232, 240)",
+        "letterSpacing": "normal",
+        "textTransform": "none"
+      }
+    ],
+    "project": [
+      {
+        "element": "h1.case-study-title.reveal",
+        "fontSize": "96px",
+        "fontWeight": "800",
+        "lineHeight": "96px",
+        "fontFamily": "Syne",
+        "color": "rgb(255, 255, 255)",
+        "letterSpacing": "normal",
+        "textTransform": "none"
+      },
+      {
+        "element": "p.mobile-menu-location",
+        "fontSize": "10.4px",
+        "fontWeight": "400",
+        "lineHeight": "15.6px",
+        "fontFamily": "JetBrains Mono",
+        "color": "rgb(40, 40, 60)",
+        "letterSpacing": "0.832px",
+        "textTransform": "none"
+      },
+      {
+        "element": "p",
+        "fontSize": "16px",
+        "fontWeight": "400",
+        "lineHeight": "24px",
+        "fontFamily": "JetBrains Mono",
+        "color": "rgb(168, 168, 192)",
+        "letterSpacing": "normal",
+        "textTransform": "none"
+      },
+      {
+        "element": "body",
+        "fontSize": "16px",
+        "fontWeight": "400",
+        "lineHeight": "24px",
+        "fontFamily": "Space Grotesk",
+        "color": "rgb(232, 232, 240)",
+        "letterSpacing": "normal",
+        "textTransform": "none"
+      }
+    ]
+  },
+  "sectionC": {
+    "index": {
+      "colors": [
+        {
+          "value": "rgb(0, 0, 0)",
+          "prop": "color",
+          "refs": [
+            "html.lenis",
+            "head."
+          ]
+        },
+        {
+          "value": "rgb(232, 232, 240)",
+          "prop": "color",
+          "refs": [
+            "body.",
+            "div#jx-scroll-progress."
+          ]
+        },
+        {
+          "value": "rgba(0, 0, 0, 0.85)",
+          "prop": "background-color",
+          "refs": [
+            "nav#nav.nav"
+          ]
+        },
+        {
+          "value": "rgb(255, 255, 255)",
+          "prop": "color",
+          "refs": [
+            "a.nav-link",
+            "h1.hero-name"
+          ]
+        },
+        {
+          "value": "rgb(168, 168, 192)",
+          "prop": "color",
+          "refs": [
+            "a.nav-link",
+            "span#nav-availability-text.nav-availability-text"
+          ]
+        },
+        {
+          "value": "rgb(0, 255, 65)",
+          "prop": "background-color",
+          "refs": [
+            "div#nav-dot.nav-dot",
+            "a.nav-cta"
+          ]
+        },
+        {
+          "value": "rgb(88, 88, 112)",
+          "prop": "color",
+          "refs": [
+            "button#nav-audio-toggle.nav-audio-toggle",
+            "svg"
+          ]
+        },
+        {
+          "value": "rgba(255, 255, 255, 0.06)",
+          "prop": "border-top-color",
+          "refs": [
+            "button#nav-audio-toggle.nav-audio-toggle",
+            "div.ticker"
+          ]
+        },
+        {
+          "value": "rgba(0, 255, 65, 0.2)",
+          "prop": "border-top-color",
+          "refs": [
+            "a.nav-cta",
+            "a.btn"
+          ]
+        },
+        {
+          "value": "rgba(0, 0, 0, 0.97)",
+          "prop": "background-color",
+          "refs": [
+            "div#mobile-menu.mobile-menu"
+          ]
+        },
+        {
+          "value": "rgb(40, 40, 60)",
+          "prop": "color",
+          "refs": [
+            "p.mobile-menu-location",
+            "div.loader-track"
+          ]
+        },
+        {
+          "value": "rgb(212, 162, 78)",
+          "prop": "color",
+          "refs": [
+            "div.hero-symbol",
+            "svg"
+          ]
+        },
+        {
+          "value": "rgba(10, 10, 15, 0.7)",
+          "prop": "background-color",
+          "refs": [
+            "div.hud-widget"
+          ]
+        },
+        {
+          "value": "rgb(255, 184, 0)",
+          "prop": "color",
+          "refs": [
+            "p#hud-status.hud-value"
+          ]
+        },
+        {
+          "value": "rgb(15, 15, 26)",
+          "prop": "background-color",
+          "refs": [
+            "div.skeleton",
+            "button#cli-trigger.cli-trigger"
+          ]
+        },
+        {
+          "value": "rgb(10, 10, 15)",
+          "prop": "background-color",
+          "refs": [
+            "div.service-card",
+            "footer.footer"
+          ]
+        },
+        {
+          "value": "rgba(0, 255, 65, 0.08)",
+          "prop": "background-color",
+          "refs": [
+            "div.service-icon"
+          ]
+        },
+        {
+          "value": "rgba(0, 255, 65, 0.15)",
+          "prop": "background-color",
+          "refs": [
+            "kbd."
+          ]
+        },
+        {
+          "value": "rgba(4, 4, 6, 0.97)",
+          "prop": "background-color",
+          "refs": [
+            "div#cli-panel.cli-panel"
+          ]
+        },
+        {
+          "value": "rgb(255, 95, 87)",
+          "prop": "background-color",
+          "refs": [
+            "div.cli-dot"
+          ]
+        },
+        {
+          "value": "rgb(255, 189, 46)",
+          "prop": "background-color",
+          "refs": [
+            "div.cli-dot"
+          ]
+        }
+      ],
+      "nearDuplicates": [
+        {
+          "a": "rgb(0, 0, 0)",
+          "b": "rgba(4, 4, 6, 0.97)",
+          "distance": 8
+        },
+        {
+          "a": "rgba(0, 0, 0, 0.85)",
+          "b": "rgba(4, 4, 6, 0.97)",
+          "distance": 8
+        },
+        {
+          "a": "rgba(0, 0, 0, 0.97)",
+          "b": "rgba(4, 4, 6, 0.97)",
+          "distance": 8
+        },
+        {
+          "a": "rgba(10, 10, 15, 0.7)",
+          "b": "rgb(15, 15, 26)",
+          "distance": 13
+        },
+        {
+          "a": "rgba(10, 10, 15, 0.7)",
+          "b": "rgba(4, 4, 6, 0.97)",
+          "distance": 12
+        },
+        {
+          "a": "rgb(15, 15, 26)",
+          "b": "rgb(10, 10, 15)",
+          "distance": 13
+        },
+        {
+          "a": "rgb(10, 10, 15)",
+          "b": "rgba(4, 4, 6, 0.97)",
+          "distance": 12
+        }
+      ]
+    },
+    "about": {
+      "colors": [
+        {
+          "value": "rgb(0, 0, 0)",
+          "prop": "color",
+          "refs": [
+            "html.lenis",
+            "head."
+          ]
+        },
+        {
+          "value": "rgb(232, 232, 240)",
+          "prop": "color",
+          "refs": [
+            "body.",
+            "div#jx-scroll-progress."
+          ]
+        },
+        {
+          "value": "rgba(0, 0, 0, 0.85)",
+          "prop": "background-color",
+          "refs": [
+            "nav#nav.nav"
+          ]
+        },
+        {
+          "value": "rgb(168, 168, 192)",
+          "prop": "color",
+          "refs": [
+            "a.nav-link",
+            "span#nav-availability-text.nav-availability-text"
+          ]
+        },
+        {
+          "value": "rgb(255, 255, 255)",
+          "prop": "color",
+          "refs": [
+            "a.nav-link",
+            "h1#ah-title.about-hero-title"
+          ]
+        },
+        {
+          "value": "rgb(0, 255, 65)",
+          "prop": "background-color",
+          "refs": [
+            "div#nav-dot.nav-dot",
+            "a.nav-cta"
+          ]
+        },
+        {
+          "value": "rgb(88, 88, 112)",
+          "prop": "color",
+          "refs": [
+            "button#nav-audio-toggle.nav-audio-toggle",
+            "svg"
+          ]
+        },
+        {
+          "value": "rgba(255, 255, 255, 0.06)",
+          "prop": "border-top-color",
+          "refs": [
+            "button#nav-audio-toggle.nav-audio-toggle",
+            "div.video-container"
+          ]
+        },
+        {
+          "value": "rgba(0, 255, 65, 0.2)",
+          "prop": "border-top-color",
+          "refs": [
+            "a.nav-cta",
+            "span.tag"
+          ]
+        },
+        {
+          "value": "rgba(0, 0, 0, 0.97)",
+          "prop": "background-color",
+          "refs": [
+            "div#mobile-menu.mobile-menu"
+          ]
+        },
+        {
+          "value": "rgb(40, 40, 60)",
+          "prop": "color",
+          "refs": [
+            "p.mobile-menu-location"
+          ]
+        },
+        {
+          "value": "rgb(0, 187, 47)",
+          "prop": "border-top-color",
+          "refs": [
+            "div.portrait-frame",
+            "div.chapter-num"
+          ]
+        },
+        {
+          "value": "rgb(3, 5, 8)",
+          "prop": "background-color",
+          "refs": [
+            "div.stat-item"
+          ]
+        },
+        {
+          "value": "rgb(255, 184, 0)",
+          "prop": "color",
+          "refs": [
+            "p.chapter-era"
+          ]
+        },
+        {
+          "value": "rgba(0, 255, 65, 0.07)",
+          "prop": "background-color",
+          "refs": [
+            "span.tag"
+          ]
+        },
+        {
+          "value": "rgb(10, 10, 15)",
+          "prop": "background-color",
+          "refs": [
+            "div.ct-panel"
+          ]
+        }
+      ],
+      "nearDuplicates": [
+        {
+          "a": "rgb(0, 0, 0)",
+          "b": "rgb(3, 5, 8)",
+          "distance": 10
+        },
+        {
+          "a": "rgba(0, 0, 0, 0.85)",
+          "b": "rgb(3, 5, 8)",
+          "distance": 10
+        },
+        {
+          "a": "rgba(0, 0, 0, 0.97)",
+          "b": "rgb(3, 5, 8)",
+          "distance": 10
+        },
+        {
+          "a": "rgb(3, 5, 8)",
+          "b": "rgb(10, 10, 15)",
+          "distance": 11
+        }
+      ]
+    },
+    "work": {
+      "colors": [
+        {
+          "value": "rgb(0, 0, 0)",
+          "prop": "color",
+          "refs": [
+            "html.lenis",
+            "head."
+          ]
+        },
+        {
+          "value": "rgb(232, 232, 240)",
+          "prop": "color",
+          "refs": [
+            "body.",
+            "div#jx-scroll-progress."
+          ]
+        },
+        {
+          "value": "rgba(0, 0, 0, 0.85)",
+          "prop": "background-color",
+          "refs": [
+            "nav#nav.nav"
+          ]
+        },
+        {
+          "value": "rgb(168, 168, 192)",
+          "prop": "color",
+          "refs": [
+            "a.nav-link",
+            "span#nav-availability-text.nav-availability-text"
+          ]
+        },
+        {
+          "value": "rgb(255, 255, 255)",
+          "prop": "color",
+          "refs": [
+            "a.nav-link",
+            "h3.work-card-title"
+          ]
+        },
+        {
+          "value": "rgb(0, 255, 65)",
+          "prop": "background-color",
+          "refs": [
+            "div#nav-dot.nav-dot",
+            "a.nav-cta"
+          ]
+        },
+        {
+          "value": "rgb(88, 88, 112)",
+          "prop": "color",
+          "refs": [
+            "button#nav-audio-toggle.nav-audio-toggle",
+            "svg"
+          ]
+        },
+        {
+          "value": "rgba(255, 255, 255, 0.06)",
+          "prop": "border-top-color",
+          "refs": [
+            "button#nav-audio-toggle.nav-audio-toggle",
+            "button.filter-btn"
+          ]
+        },
+        {
+          "value": "rgba(0, 255, 65, 0.2)",
+          "prop": "border-top-color",
+          "refs": [
+            "a.nav-cta",
+            "span.tag"
+          ]
+        },
+        {
+          "value": "rgba(0, 0, 0, 0.97)",
+          "prop": "background-color",
+          "refs": [
+            "div#mobile-menu.mobile-menu"
+          ]
+        },
+        {
+          "value": "rgb(40, 40, 60)",
+          "prop": "color",
+          "refs": [
+            "p.mobile-menu-location"
+          ]
+        },
+        {
+          "value": "rgba(0, 255, 65, 0.04)",
+          "prop": "background-color",
+          "refs": [
+            "button.filter-btn"
+          ]
+        },
+        {
+          "value": "rgb(10, 10, 15)",
+          "prop": "background-color",
+          "refs": [
+            "article.work-card",
+            "div.ct-panel"
+          ]
+        },
+        {
+          "value": "rgb(0, 187, 47)",
+          "prop": "color",
+          "refs": [
+            "div.work-card-placeholder",
+            "span.tag"
+          ]
+        },
+        {
+          "value": "rgb(15, 15, 26)",
+          "prop": "background-color",
+          "refs": [
+            "div.work-card-placeholder"
+          ]
+        },
+        {
+          "value": "rgba(0, 255, 65, 0.07)",
+          "prop": "background-color",
+          "refs": [
+            "span.tag"
+          ]
+        }
+      ],
+      "nearDuplicates": [
+        {
+          "a": "rgb(10, 10, 15)",
+          "b": "rgb(15, 15, 26)",
+          "distance": 13
+        }
+      ]
+    },
+    "services": {
+      "colors": [
+        {
+          "value": "rgb(0, 0, 0)",
+          "prop": "color",
+          "refs": [
+            "html.lenis",
+            "head."
+          ]
+        },
+        {
+          "value": "rgb(232, 232, 240)",
+          "prop": "color",
+          "refs": [
+            "body.",
+            "div#jx-scroll-progress."
+          ]
+        },
+        {
+          "value": "rgba(0, 0, 0, 0.85)",
+          "prop": "background-color",
+          "refs": [
+            "nav#nav.nav"
+          ]
+        },
+        {
+          "value": "rgb(168, 168, 192)",
+          "prop": "color",
+          "refs": [
+            "a.nav-link",
+            "span#nav-availability-text.nav-availability-text"
+          ]
+        },
+        {
+          "value": "rgb(255, 255, 255)",
+          "prop": "color",
+          "refs": [
+            "a.nav-link",
+            "h2.service-deep-title"
+          ]
+        },
+        {
+          "value": "rgb(0, 255, 65)",
+          "prop": "background-color",
+          "refs": [
+            "div#nav-dot.nav-dot",
+            "a.nav-cta"
+          ]
+        },
+        {
+          "value": "rgb(88, 88, 112)",
+          "prop": "color",
+          "refs": [
+            "button#nav-audio-toggle.nav-audio-toggle",
+            "svg"
+          ]
+        },
+        {
+          "value": "rgba(255, 255, 255, 0.06)",
+          "prop": "border-top-color",
+          "refs": [
+            "button#nav-audio-toggle.nav-audio-toggle",
+            "div.service-deep-visual"
+          ]
+        },
+        {
+          "value": "rgba(0, 255, 65, 0.2)",
+          "prop": "border-top-color",
+          "refs": [
+            "a.nav-cta",
+            "span.tag"
+          ]
+        },
+        {
+          "value": "rgba(0, 0, 0, 0.97)",
+          "prop": "background-color",
+          "refs": [
+            "div#mobile-menu.mobile-menu"
+          ]
+        },
+        {
+          "value": "rgb(40, 40, 60)",
+          "prop": "color",
+          "refs": [
+            "p.mobile-menu-location"
+          ]
+        },
+        {
+          "value": "rgb(10, 10, 15)",
+          "prop": "background-color",
+          "refs": [
+            "div.service-deep-visual",
+            "section.process-section"
+          ]
+        },
+        {
+          "value": "rgb(0, 187, 47)",
+          "prop": "color",
+          "refs": [
+            "span.tag"
+          ]
+        },
+        {
+          "value": "rgba(0, 255, 65, 0.07)",
+          "prop": "background-color",
+          "refs": [
+            "span.tag"
+          ]
+        }
+      ],
+      "nearDuplicates": []
+    },
+    "contact": {
+      "colors": [
+        {
+          "value": "rgb(0, 0, 0)",
+          "prop": "color",
+          "refs": [
+            "html.lenis",
+            "head."
+          ]
+        },
+        {
+          "value": "rgb(232, 232, 240)",
+          "prop": "color",
+          "refs": [
+            "body.",
+            "div#jx-scroll-progress."
+          ]
+        },
+        {
+          "value": "rgba(0, 0, 0, 0.85)",
+          "prop": "background-color",
+          "refs": [
+            "nav#nav.nav"
+          ]
+        },
+        {
+          "value": "rgb(168, 168, 192)",
+          "prop": "color",
+          "refs": [
+            "a.nav-link",
+            "span#nav-availability-text.nav-availability-text"
+          ]
+        },
+        {
+          "value": "rgb(255, 255, 255)",
+          "prop": "color",
+          "refs": [
+            "a.nav-link",
+            "p.contact-info-value"
+          ]
+        },
+        {
+          "value": "rgb(0, 255, 65)",
+          "prop": "background-color",
+          "refs": [
+            "div#nav-dot.nav-dot",
+            "a.nav-cta"
+          ]
+        },
+        {
+          "value": "rgb(88, 88, 112)",
+          "prop": "color",
+          "refs": [
+            "button#nav-audio-toggle.nav-audio-toggle",
+            "svg"
+          ]
+        },
+        {
+          "value": "rgba(255, 255, 255, 0.06)",
+          "prop": "border-top-color",
+          "refs": [
+            "button#nav-audio-toggle.nav-audio-toggle",
+            "a#link-social-twitter.contact-social-link"
+          ]
+        },
+        {
+          "value": "rgba(0, 255, 65, 0.2)",
+          "prop": "border-top-color",
+          "refs": [
+            "a.nav-cta"
+          ]
+        },
+        {
+          "value": "rgba(0, 0, 0, 0.97)",
+          "prop": "background-color",
+          "refs": [
+            "div#mobile-menu.mobile-menu"
+          ]
+        },
+        {
+          "value": "rgb(40, 40, 60)",
+          "prop": "color",
+          "refs": [
+            "p.mobile-menu-location"
+          ]
+        },
+        {
+          "value": "rgb(10, 10, 15)",
+          "prop": "background-color",
+          "refs": [
+            "form#contact-form.contact-form",
+            "div.ct-panel"
+          ]
+        },
+        {
+          "value": "rgb(3, 5, 8)",
+          "prop": "background-color",
+          "refs": [
+            "input#cf-name.form-input",
+            "input#cf-email.form-input"
+          ]
+        },
+        {
+          "value": "rgb(15, 15, 26)",
+          "prop": "background-color",
+          "refs": [
+            "option."
+          ]
+        },
+        {
+          "value": "rgb(0, 255, 204)",
+          "prop": "color",
+          "refs": [
+            "span."
+          ]
+        }
+      ],
+      "nearDuplicates": [
+        {
+          "a": "rgb(0, 0, 0)",
+          "b": "rgb(3, 5, 8)",
+          "distance": 10
+        },
+        {
+          "a": "rgba(0, 0, 0, 0.85)",
+          "b": "rgb(3, 5, 8)",
+          "distance": 10
+        },
+        {
+          "a": "rgba(0, 0, 0, 0.97)",
+          "b": "rgb(3, 5, 8)",
+          "distance": 10
+        },
+        {
+          "a": "rgb(10, 10, 15)",
+          "b": "rgb(3, 5, 8)",
+          "distance": 11
+        },
+        {
+          "a": "rgb(10, 10, 15)",
+          "b": "rgb(15, 15, 26)",
+          "distance": 13
+        }
+      ]
+    },
+    "project": {
+      "colors": [
+        {
+          "value": "rgb(0, 0, 0)",
+          "prop": "color",
+          "refs": [
+            "html.",
+            "head."
+          ]
+        },
+        {
+          "value": "rgb(232, 232, 240)",
+          "prop": "color",
+          "refs": [
+            "body.",
+            "div#jx-scroll-progress."
+          ]
+        },
+        {
+          "value": "rgba(0, 0, 0, 0.85)",
+          "prop": "background-color",
+          "refs": [
+            "nav#nav.nav"
+          ]
+        },
+        {
+          "value": "rgb(168, 168, 192)",
+          "prop": "color",
+          "refs": [
+            "a.nav-link",
+            "span#nav-availability-text.nav-availability-text"
+          ]
+        },
+        {
+          "value": "rgb(0, 255, 65)",
+          "prop": "background-color",
+          "refs": [
+            "div#nav-dot.nav-dot",
+            "a.nav-cta"
+          ]
+        },
+        {
+          "value": "rgb(88, 88, 112)",
+          "prop": "color",
+          "refs": [
+            "button#nav-audio-toggle.nav-audio-toggle",
+            "svg"
+          ]
+        },
+        {
+          "value": "rgba(255, 255, 255, 0.06)",
+          "prop": "border-top-color",
+          "refs": [
+            "button#nav-audio-toggle.nav-audio-toggle",
+            "footer."
+          ]
+        },
+        {
+          "value": "rgba(0, 255, 65, 0.2)",
+          "prop": "border-top-color",
+          "refs": [
+            "a.nav-cta",
+            "a.btn"
+          ]
+        },
+        {
+          "value": "rgba(0, 0, 0, 0.97)",
+          "prop": "background-color",
+          "refs": [
+            "div#mobile-menu.mobile-menu"
+          ]
+        },
+        {
+          "value": "rgb(40, 40, 60)",
+          "prop": "color",
+          "refs": [
+            "p.mobile-menu-location"
+          ]
+        },
+        {
+          "value": "rgb(255, 255, 255)",
+          "prop": "color",
+          "refs": [
+            "h1.case-study-title"
+          ]
+        },
+        {
+          "value": "rgb(10, 10, 15)",
+          "prop": "background-color",
+          "refs": [
+            "div.ct-panel"
+          ]
+        }
+      ],
+      "nearDuplicates": []
+    },
+    "_cssVars": {
+      "--bg": "#030508",
+      "--accent": "var(--green)",
+      "--void": "#000000",
+      "--deep": "#040406",
+      "--surface": "#0A0A0F",
+      "--surface-2": "#0F0F1A",
+      "--surface-3": "#141428",
+      "--nav-height": "140px",
+      "--green": "#00FF41",
+      "--green-2": "#39FF14",
+      "--green-dim": "#00BB2F",
+      "--green-faint": "#003D0D",
+      "--green-glow": "rgba(0, 255, 65, 0.08)",
+      "--green-glow-md": "rgba(0, 255, 65, 0.18)",
+      "--green-glow-lg": "rgba(0, 255, 65, 0.35)",
+      "--amber": "#FFB800",
+      "--amber-dim": "rgba(255, 184, 0, 0.10)",
+      "--amber-glow": "rgba(255, 184, 0, 0.25)",
+      "--gold": "#D4A24E",
+      "--gold-dim": "rgba(212, 162, 78, 0.10)",
+      "--gold-glow": "rgba(212, 162, 78, 0.25)",
+      "--cyan": "#00FFCC",
+      "--cyan-dim": "rgba(0, 255, 204, 0.08)",
+      "--red": "#FF5F57",
+      "--red-dim": "rgba(255, 95, 87, 0.10)",
+      "--purple": "#8B5CF6",
+      "--purple-dim": "rgba(139, 92, 246, 0.10)",
+      "--white": "#FFFFFF",
+      "--gray-1": "#E8E8F0",
+      "--gray-2": "#A8A8C0",
+      "--gray-3": "#585870",
+      "--gray-4": "#28283C",
+      "--border": "rgba(255, 255, 255, 0.06)",
+      "--border-2": "rgba(255, 255, 255, 0.12)",
+      "--border-green": "rgba(0, 255, 65, 0.20)",
+      "--border-green-2": "rgba(0, 255, 65, 0.40)",
+      "--font-display": "'Syne', sans-serif",
+      "--font-body": "'Space Grotesk', sans-serif",
+      "--font-mono": "'JetBrains Mono', monospace",
+      "--font-serif": "'Playfair Display', serif",
+      "--text-2xs": "clamp(0.58rem, 1vw,   0.65rem)",
+      "--text-xs": "clamp(0.68rem, 1.2vw, 0.75rem)",
+      "--text-sm": "clamp(0.80rem, 1.5vw, 0.875rem)",
+      "--text-base": "clamp(0.92rem, 2vw,   1rem)",
+      "--text-md": "clamp(1rem,    2.2vw, 1.125rem)",
+      "--text-lg": "clamp(1.1rem,  2.5vw, 1.35rem)",
+      "--text-xl": "clamp(1.3rem,  3.5vw, 1.75rem)",
+      "--text-2xl": "clamp(1.6rem,  4.5vw, 2.25rem)",
+      "--text-3xl": "clamp(2rem,    6vw,   3.5rem)",
+      "--text-4xl": "clamp(2.8rem,  8vw,   5.5rem)",
+      "--text-5xl": "clamp(3.5rem,  11vw,  9rem)",
+      "--text-hero": "clamp(4rem, 9.5vw, 9rem)",
+      "--track-tight": "-0.03em",
+      "--track-normal": "0em",
+      "--track-wide": "0.08em",
+      "--track-wider": "0.15em",
+      "--track-widest": "0.25em",
+      "--lead-tight": "1.05",
+      "--lead-snug": "1.2",
+      "--lead-normal": "1.5",
+      "--lead-relaxed": "1.75",
+      "--s-1": "4px",
+      "--s-2": "8px",
+      "--s-3": "12px",
+      "--s-4": "16px",
+      "--s-5": "20px",
+      "--s-6": "24px",
+      "--s-8": "32px",
+      "--s-10": "40px",
+      "--s-12": "48px",
+      "--s-16": "64px",
+      "--s-20": "80px",
+      "--s-24": "96px",
+      "--s-32": "128px",
+      "--container-sm": "640px",
+      "--container-md": "768px",
+      "--container-lg": "1024px",
+      "--container-xl": "1280px",
+      "--container-2xl": "1536px",
+      "--radius-sm": "4px",
+      "--radius-md": "8px",
+      "--radius-lg": "12px",
+      "--radius-xl": "20px",
+      "--radius-2xl": "32px",
+      "--radius-full": "9999px",
+      "--z-base": "1",
+      "--z-above": "10",
+      "--z-modal": "100",
+      "--z-nav": "200",
+      "--z-loader": "900",
+      "--z-transition": "950",
+      "--z-cursor": "999",
+      "--ease-smooth": "cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+      "--ease-snap": "cubic-bezier(0.16, 1, 0.3, 1)",
+      "--ease-expo": "cubic-bezier(0.87, 0, 0.13, 1)",
+      "--ease-back": "cubic-bezier(0.34, 1.56, 0.64, 1)",
+      "--dur-fast": "200ms",
+      "--dur-normal": "400ms",
+      "--dur-slow": "700ms",
+      "--dur-cinema": "1000ms"
+    }
+  },
+  "sectionD": {
+    "index": {
+      "interactiveElements": [
+        {
+          "element": "a.nav-brand",
+          "text": "",
+          "w": 32,
+          "h": 32,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "a.nav-link.active",
+          "text": "Home",
+          "w": 36,
+          "h": 16,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "a.nav-link",
+          "text": "About",
+          "w": 45,
+          "h": 16,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "a.nav-link",
+          "text": "Work",
+          "w": 36,
+          "h": 16,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "a.nav-link",
+          "text": "Services",
+          "w": 72,
+          "h": 16,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "a.nav-link",
+          "text": "Contact",
+          "w": 63,
+          "h": 16,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "button#nav-audio-toggle.nav-audio-toggle",
+          "text": "",
+          "w": 32,
+          "h": 32,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "a.nav-cta",
+          "text": "Hire Me",
+          "w": 99,
+          "h": 36,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "a.mobile-nav-link",
+          "text": "Home",
+          "w": 270,
+          "h": 84,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": true
+        },
+        {
+          "element": "a.mobile-nav-link",
+          "text": "About",
+          "w": 266,
+          "h": 84,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": true
+        },
+        {
+          "element": "a.mobile-nav-link",
+          "text": "Work",
+          "w": 234,
+          "h": 84,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": true
+        },
+        {
+          "element": "a.mobile-nav-link",
+          "text": "Services",
+          "w": 363,
+          "h": 84,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": true
+        },
+        {
+          "element": "a.mobile-nav-link",
+          "text": "Contact",
+          "w": 360,
+          "h": 84,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": true
+        },
+        {
+          "element": "button.mobile-nav-link",
+          "text": "Audio",
+          "w": 251,
+          "h": 84,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": true
+        },
+        {
+          "element": "a.mobile-menu-social",
+          "text": "Twitter",
+          "w": 63,
+          "h": 18,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "a.mobile-menu-social",
+          "text": "LinkedIn",
+          "w": 72,
+          "h": 18,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "a.mobile-menu-social",
+          "text": "GitHub",
+          "w": 54,
+          "h": 18,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "a#skip-to-content.skip-to-content",
+          "text": "Skip to content",
+          "w": 176,
+          "h": 40,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "a.skip-to-content",
+          "text": "Skip to content",
+          "w": 176,
+          "h": 40,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "a.btn.btn-primary",
+          "text": "See My Work",
+          "w": 198,
+          "h": 55,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": true
+        },
+        {
+          "element": "a.btn.btn-ghost",
+          "text": "My Story →",
+          "w": 187,
+          "h": 55,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": true
+        },
+        {
+          "element": "a.btn.btn-ghost",
+          "text": "View All Work →",
+          "w": 201,
+          "h": 44,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": true
+        },
+        {
+          "element": "a.btn.btn-ghost",
+          "text": "Read My Story →",
+          "w": 201,
+          "h": 44,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": true
+        },
+        {
+          "element": "a.service-link",
+          "text": "Explore →",
+          "w": 226,
+          "h": 18,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "a.service-link",
+          "text": "Explore →",
+          "w": 226,
+          "h": 18,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "a.service-link",
+          "text": "Explore →",
+          "w": 226,
+          "h": 18,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "a.service-link",
+          "text": "Explore →",
+          "w": 226,
+          "h": 18,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "a.footer-nav-link",
+          "text": "About",
+          "w": 42,
+          "h": 18,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "a.footer-nav-link",
+          "text": "Work",
+          "w": 34,
+          "h": 18,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "a.footer-nav-link",
+          "text": "Services",
+          "w": 57,
+          "h": 18,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "a.footer-nav-link",
+          "text": "Contact",
+          "w": 55,
+          "h": 18,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "a.footer-nav-link",
+          "text": "Twitter",
+          "w": 46,
+          "h": 18,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "a.footer-nav-link",
+          "text": "LinkedIn",
+          "w": 56,
+          "h": 18,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "a.footer-nav-link",
+          "text": "GitHub",
+          "w": 46,
+          "h": 18,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "button#cli-trigger.cli-trigger",
+          "text": "jx@universe:~$\n    Ctrl+K",
+          "w": 225,
+          "h": 46,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": true
+        },
+        {
+          "element": "button#cli-close.cli-close",
+          "text": "✕",
+          "w": 28,
+          "h": 28,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "input#cli-input.cli-input",
+          "text": "type 'help' to start...",
+          "w": 1262,
+          "h": 18,
+          "cursor": "text",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "button.scroll-top",
+          "text": "↑",
+          "w": 44,
+          "h": 44,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": true
+        }
+      ],
+      "navLinks": [
+        {
+          "href": "http://localhost:19090/index.html",
+          "text": ""
+        },
+        {
+          "href": "http://localhost:19090/index.html",
+          "text": "Home"
+        },
+        {
+          "href": "http://localhost:19090/about.html",
+          "text": "About"
+        },
+        {
+          "href": "http://localhost:19090/work.html",
+          "text": "Work"
+        },
+        {
+          "href": "http://localhost:19090/services.html",
+          "text": "Services"
+        },
+        {
+          "href": "http://localhost:19090/contact.html",
+          "text": "Contact"
+        },
+        {
+          "href": "http://localhost:19090/contact.html",
+          "text": "Hire Me"
+        },
+        {
+          "href": "http://localhost:19090/index.html",
+          "text": "Home"
+        },
+        {
+          "href": "http://localhost:19090/about.html",
+          "text": "About"
+        },
+        {
+          "href": "http://localhost:19090/work.html",
+          "text": "Work"
+        },
+        {
+          "href": "http://localhost:19090/services.html",
+          "text": "Services"
+        },
+        {
+          "href": "http://localhost:19090/contact.html",
+          "text": "Contact"
+        }
+      ],
+      "filterBtns": [],
+      "formFields": []
+    },
+    "about": {
+      "interactiveElements": [
+        {
+          "element": "a.nav-brand",
+          "text": "",
+          "w": 32,
+          "h": 32,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "a.nav-link",
+          "text": "Home",
+          "w": 36,
+          "h": 16,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "a.nav-link.active",
+          "text": "About",
+          "w": 45,
+          "h": 16,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "a.nav-link",
+          "text": "Work",
+          "w": 36,
+          "h": 16,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "a.nav-link",
+          "text": "Services",
+          "w": 72,
+          "h": 16,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "a.nav-link",
+          "text": "Contact",
+          "w": 63,
+          "h": 16,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "button#nav-audio-toggle.nav-audio-toggle",
+          "text": "",
+          "w": 32,
+          "h": 32,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "a.nav-cta",
+          "text": "Hire Me",
+          "w": 99,
+          "h": 36,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "a.mobile-nav-link",
+          "text": "Home",
+          "w": 270,
+          "h": 84,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": true
+        },
+        {
+          "element": "a.mobile-nav-link",
+          "text": "About",
+          "w": 266,
+          "h": 84,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": true
+        },
+        {
+          "element": "a.mobile-nav-link",
+          "text": "Work",
+          "w": 234,
+          "h": 84,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": true
+        },
+        {
+          "element": "a.mobile-nav-link",
+          "text": "Services",
+          "w": 363,
+          "h": 84,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": true
+        },
+        {
+          "element": "a.mobile-nav-link",
+          "text": "Contact",
+          "w": 360,
+          "h": 84,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": true
+        },
+        {
+          "element": "button.mobile-nav-link",
+          "text": "Audio",
+          "w": 251,
+          "h": 84,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": true
+        },
+        {
+          "element": "a.mobile-menu-social",
+          "text": "Twitter",
+          "w": 63,
+          "h": 18,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "a.mobile-menu-social",
+          "text": "LinkedIn",
+          "w": 72,
+          "h": 18,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "a.mobile-menu-social",
+          "text": "GitHub",
+          "w": 54,
+          "h": 18,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "a#skip-to-content.skip-to-content",
+          "text": "Skip to content",
+          "w": 176,
+          "h": 40,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "a.skip-to-content",
+          "text": "Skip to content",
+          "w": 176,
+          "h": 40,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "a.btn.btn-primary",
+          "text": "View My Work ↗",
+          "w": 195,
+          "h": 44,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": true
+        },
+        {
+          "element": "a.btn.btn-ghost",
+          "text": "Work With Me",
+          "w": 174,
+          "h": 44,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": true
+        }
+      ],
+      "navLinks": [
+        {
+          "href": "http://localhost:19090/index.html",
+          "text": ""
+        },
+        {
+          "href": "http://localhost:19090/index.html",
+          "text": "Home"
+        },
+        {
+          "href": "http://localhost:19090/about.html",
+          "text": "About"
+        },
+        {
+          "href": "http://localhost:19090/work.html",
+          "text": "Work"
+        },
+        {
+          "href": "http://localhost:19090/services.html",
+          "text": "Services"
+        },
+        {
+          "href": "http://localhost:19090/contact.html",
+          "text": "Contact"
+        },
+        {
+          "href": "http://localhost:19090/contact.html",
+          "text": "Hire Me"
+        },
+        {
+          "href": "http://localhost:19090/index.html",
+          "text": "Home"
+        },
+        {
+          "href": "http://localhost:19090/about.html",
+          "text": "About"
+        },
+        {
+          "href": "http://localhost:19090/work.html",
+          "text": "Work"
+        },
+        {
+          "href": "http://localhost:19090/services.html",
+          "text": "Services"
+        },
+        {
+          "href": "http://localhost:19090/contact.html",
+          "text": "Contact"
+        }
+      ],
+      "filterBtns": [],
+      "formFields": []
+    },
+    "work": {
+      "interactiveElements": [
+        {
+          "element": "a.nav-brand",
+          "text": "",
+          "w": 32,
+          "h": 32,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "a.nav-link",
+          "text": "Home",
+          "w": 36,
+          "h": 16,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "a.nav-link",
+          "text": "About",
+          "w": 45,
+          "h": 16,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "a.nav-link.active",
+          "text": "Work",
+          "w": 36,
+          "h": 16,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "a.nav-link",
+          "text": "Services",
+          "w": 72,
+          "h": 16,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "a.nav-link",
+          "text": "Contact",
+          "w": 63,
+          "h": 16,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "button#nav-audio-toggle.nav-audio-toggle",
+          "text": "",
+          "w": 32,
+          "h": 32,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "a.nav-cta",
+          "text": "Hire Me",
+          "w": 99,
+          "h": 36,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "a.mobile-nav-link",
+          "text": "Home",
+          "w": 270,
+          "h": 84,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": true
+        },
+        {
+          "element": "a.mobile-nav-link",
+          "text": "About",
+          "w": 266,
+          "h": 84,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": true
+        },
+        {
+          "element": "a.mobile-nav-link",
+          "text": "Work",
+          "w": 234,
+          "h": 84,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": true
+        },
+        {
+          "element": "a.mobile-nav-link",
+          "text": "Services",
+          "w": 363,
+          "h": 84,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": true
+        },
+        {
+          "element": "a.mobile-nav-link",
+          "text": "Contact",
+          "w": 360,
+          "h": 84,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": true
+        },
+        {
+          "element": "button.mobile-nav-link",
+          "text": "Audio",
+          "w": 251,
+          "h": 84,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": true
+        },
+        {
+          "element": "a.mobile-menu-social",
+          "text": "Twitter",
+          "w": 63,
+          "h": 18,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "a.mobile-menu-social",
+          "text": "LinkedIn",
+          "w": 72,
+          "h": 18,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "a.mobile-menu-social",
+          "text": "GitHub",
+          "w": 54,
+          "h": 18,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "a#skip-to-content.skip-to-content",
+          "text": "Skip to content",
+          "w": 176,
+          "h": 40,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "a.skip-to-content",
+          "text": "Skip to content",
+          "w": 176,
+          "h": 40,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "button.filter-btn.active",
+          "text": "All",
+          "w": 60,
+          "h": 36,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "button.filter-btn",
+          "text": "Product Design",
+          "w": 155,
+          "h": 36,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "button.filter-btn",
+          "text": "Development",
+          "w": 129,
+          "h": 36,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "button.filter-btn",
+          "text": "Automation",
+          "w": 120,
+          "h": 36,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "button.filter-btn",
+          "text": "Security",
+          "w": 103,
+          "h": 36,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "article.work-card",
+          "text": "TE\n        \n          \n            Produ",
+          "w": 395,
+          "h": 462,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": true
+        },
+        {
+          "element": "article.work-card",
+          "text": "Product Design\n            2025\n        ",
+          "w": 395,
+          "h": 462,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": true
+        },
+        {
+          "element": "a.btn.btn-ghost",
+          "text": "Work With Me →",
+          "w": 151,
+          "h": 34,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        }
+      ],
+      "navLinks": [
+        {
+          "href": "http://localhost:19090/index.html",
+          "text": ""
+        },
+        {
+          "href": "http://localhost:19090/index.html",
+          "text": "Home"
+        },
+        {
+          "href": "http://localhost:19090/about.html",
+          "text": "About"
+        },
+        {
+          "href": "http://localhost:19090/work.html",
+          "text": "Work"
+        },
+        {
+          "href": "http://localhost:19090/services.html",
+          "text": "Services"
+        },
+        {
+          "href": "http://localhost:19090/contact.html",
+          "text": "Contact"
+        },
+        {
+          "href": "http://localhost:19090/contact.html",
+          "text": "Hire Me"
+        },
+        {
+          "href": "http://localhost:19090/index.html",
+          "text": "Home"
+        },
+        {
+          "href": "http://localhost:19090/about.html",
+          "text": "About"
+        },
+        {
+          "href": "http://localhost:19090/work.html",
+          "text": "Work"
+        },
+        {
+          "href": "http://localhost:19090/services.html",
+          "text": "Services"
+        },
+        {
+          "href": "http://localhost:19090/contact.html",
+          "text": "Contact"
+        }
+      ],
+      "filterBtns": [
+        {
+          "text": "All",
+          "filter": "all",
+          "active": true,
+          "cursor": "pointer"
+        },
+        {
+          "text": "Product Design",
+          "filter": "design",
+          "active": false,
+          "cursor": "pointer"
+        },
+        {
+          "text": "Development",
+          "filter": "dev",
+          "active": false,
+          "cursor": "pointer"
+        },
+        {
+          "text": "Automation",
+          "filter": "automation",
+          "active": false,
+          "cursor": "pointer"
+        },
+        {
+          "text": "Security",
+          "filter": "security",
+          "active": false,
+          "cursor": "pointer"
+        }
+      ],
+      "formFields": []
+    },
+    "services": {
+      "interactiveElements": [
+        {
+          "element": "a.nav-brand",
+          "text": "",
+          "w": 32,
+          "h": 32,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "a.nav-link",
+          "text": "Home",
+          "w": 36,
+          "h": 16,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "a.nav-link",
+          "text": "About",
+          "w": 45,
+          "h": 16,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "a.nav-link",
+          "text": "Work",
+          "w": 36,
+          "h": 16,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "a.nav-link.active",
+          "text": "Services",
+          "w": 72,
+          "h": 16,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "a.nav-link",
+          "text": "Contact",
+          "w": 63,
+          "h": 16,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "button#nav-audio-toggle.nav-audio-toggle",
+          "text": "",
+          "w": 32,
+          "h": 32,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "a.nav-cta",
+          "text": "Hire Me",
+          "w": 99,
+          "h": 36,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "a.mobile-nav-link",
+          "text": "Home",
+          "w": 270,
+          "h": 84,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": true
+        },
+        {
+          "element": "a.mobile-nav-link",
+          "text": "About",
+          "w": 266,
+          "h": 84,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": true
+        },
+        {
+          "element": "a.mobile-nav-link",
+          "text": "Work",
+          "w": 234,
+          "h": 84,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": true
+        },
+        {
+          "element": "a.mobile-nav-link",
+          "text": "Services",
+          "w": 363,
+          "h": 84,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": true
+        },
+        {
+          "element": "a.mobile-nav-link",
+          "text": "Contact",
+          "w": 360,
+          "h": 84,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": true
+        },
+        {
+          "element": "button.mobile-nav-link",
+          "text": "Audio",
+          "w": 251,
+          "h": 84,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": true
+        },
+        {
+          "element": "a.mobile-menu-social",
+          "text": "Twitter",
+          "w": 63,
+          "h": 18,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "a.mobile-menu-social",
+          "text": "LinkedIn",
+          "w": 72,
+          "h": 18,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "a.mobile-menu-social",
+          "text": "GitHub",
+          "w": 54,
+          "h": 18,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "a#skip-to-content.skip-to-content",
+          "text": "Skip to content",
+          "w": 176,
+          "h": 40,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "a.skip-to-content",
+          "text": "Skip to content",
+          "w": 176,
+          "h": 40,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "a.btn.btn-primary",
+          "text": "Send the Signal ↗",
+          "w": 222,
+          "h": 44,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": true
+        },
+        {
+          "element": "a.btn.btn-ghost",
+          "text": "See My Work",
+          "w": 165,
+          "h": 44,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": true
+        }
+      ],
+      "navLinks": [
+        {
+          "href": "http://localhost:19090/index.html",
+          "text": ""
+        },
+        {
+          "href": "http://localhost:19090/index.html",
+          "text": "Home"
+        },
+        {
+          "href": "http://localhost:19090/about.html",
+          "text": "About"
+        },
+        {
+          "href": "http://localhost:19090/work.html",
+          "text": "Work"
+        },
+        {
+          "href": "http://localhost:19090/services.html",
+          "text": "Services"
+        },
+        {
+          "href": "http://localhost:19090/contact.html",
+          "text": "Contact"
+        },
+        {
+          "href": "http://localhost:19090/contact.html",
+          "text": "Hire Me"
+        },
+        {
+          "href": "http://localhost:19090/index.html",
+          "text": "Home"
+        },
+        {
+          "href": "http://localhost:19090/about.html",
+          "text": "About"
+        },
+        {
+          "href": "http://localhost:19090/work.html",
+          "text": "Work"
+        },
+        {
+          "href": "http://localhost:19090/services.html",
+          "text": "Services"
+        },
+        {
+          "href": "http://localhost:19090/contact.html",
+          "text": "Contact"
+        }
+      ],
+      "filterBtns": [],
+      "formFields": []
+    },
+    "contact": {
+      "interactiveElements": [
+        {
+          "element": "a.nav-brand",
+          "text": "",
+          "w": 32,
+          "h": 32,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "a.nav-link",
+          "text": "Home",
+          "w": 36,
+          "h": 16,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "a.nav-link",
+          "text": "About",
+          "w": 45,
+          "h": 16,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "a.nav-link",
+          "text": "Work",
+          "w": 36,
+          "h": 16,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "a.nav-link",
+          "text": "Services",
+          "w": 72,
+          "h": 16,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "a.nav-link.active",
+          "text": "Contact",
+          "w": 63,
+          "h": 16,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "button#nav-audio-toggle.nav-audio-toggle",
+          "text": "",
+          "w": 32,
+          "h": 32,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "a.nav-cta",
+          "text": "Hire Me",
+          "w": 99,
+          "h": 36,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "a.mobile-nav-link",
+          "text": "Home",
+          "w": 270,
+          "h": 84,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": true
+        },
+        {
+          "element": "a.mobile-nav-link",
+          "text": "About",
+          "w": 266,
+          "h": 84,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": true
+        },
+        {
+          "element": "a.mobile-nav-link",
+          "text": "Work",
+          "w": 234,
+          "h": 84,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": true
+        },
+        {
+          "element": "a.mobile-nav-link",
+          "text": "Services",
+          "w": 363,
+          "h": 84,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": true
+        },
+        {
+          "element": "a.mobile-nav-link",
+          "text": "Contact",
+          "w": 360,
+          "h": 84,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": true
+        },
+        {
+          "element": "button.mobile-nav-link",
+          "text": "Audio",
+          "w": 251,
+          "h": 84,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": true
+        },
+        {
+          "element": "a.mobile-menu-social",
+          "text": "Twitter",
+          "w": 63,
+          "h": 18,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "a.mobile-menu-social",
+          "text": "LinkedIn",
+          "w": 72,
+          "h": 18,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "a.mobile-menu-social",
+          "text": "GitHub",
+          "w": 54,
+          "h": 18,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "a#skip-to-content.skip-to-content",
+          "text": "Skip to content",
+          "w": 176,
+          "h": 40,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "a.skip-to-content",
+          "text": "Skip to content",
+          "w": 176,
+          "h": 40,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "a#link-social-github.contact-social-link",
+          "text": "GitHub ↗",
+          "w": 672,
+          "h": 47,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": true
+        },
+        {
+          "element": "a",
+          "text": "hello@jxdesigndev.com",
+          "w": 160,
+          "h": 18,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "input#cf-name.form-input",
+          "text": "Your name",
+          "w": 191,
+          "h": 47,
+          "cursor": "text",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": true
+        },
+        {
+          "element": "input#cf-email.form-input",
+          "text": "your@email.com",
+          "w": 191,
+          "h": 47,
+          "cursor": "text",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": true
+        },
+        {
+          "element": "select#cf-type.form-select",
+          "text": "Select a service…\n            Product De",
+          "w": 398,
+          "h": 43,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "select#cf-budget.form-select",
+          "text": "Select a range…\n            Under $500\n ",
+          "w": 398,
+          "h": 43,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "textarea#cf-message.form-textarea",
+          "text": "Tell me about your project, your goals, ",
+          "w": 398,
+          "h": 140,
+          "cursor": "text",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": true
+        },
+        {
+          "element": "button#form-submit.btn.btn-primary",
+          "text": "Transmit Signal ↗",
+          "w": 398,
+          "h": 44,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": true
+        }
+      ],
+      "navLinks": [
+        {
+          "href": "http://localhost:19090/index.html",
+          "text": ""
+        },
+        {
+          "href": "http://localhost:19090/index.html",
+          "text": "Home"
+        },
+        {
+          "href": "http://localhost:19090/about.html",
+          "text": "About"
+        },
+        {
+          "href": "http://localhost:19090/work.html",
+          "text": "Work"
+        },
+        {
+          "href": "http://localhost:19090/services.html",
+          "text": "Services"
+        },
+        {
+          "href": "http://localhost:19090/contact.html",
+          "text": "Contact"
+        },
+        {
+          "href": "http://localhost:19090/contact.html",
+          "text": "Hire Me"
+        },
+        {
+          "href": "http://localhost:19090/index.html",
+          "text": "Home"
+        },
+        {
+          "href": "http://localhost:19090/about.html",
+          "text": "About"
+        },
+        {
+          "href": "http://localhost:19090/work.html",
+          "text": "Work"
+        },
+        {
+          "href": "http://localhost:19090/services.html",
+          "text": "Services"
+        },
+        {
+          "href": "http://localhost:19090/contact.html",
+          "text": "Contact"
+        }
+      ],
+      "filterBtns": [],
+      "formFields": [
+        {
+          "id": "cf-name",
+          "name": "name",
+          "type": "text",
+          "required": true,
+          "placeholder": "Your name",
+          "hasLabel": true
+        },
+        {
+          "id": "cf-email",
+          "name": "email",
+          "type": "email",
+          "required": true,
+          "placeholder": "your@email.com",
+          "hasLabel": true
+        },
+        {
+          "id": "cf-type",
+          "name": "project_type",
+          "type": "select-one",
+          "required": false,
+          "hasLabel": true
+        },
+        {
+          "id": "cf-budget",
+          "name": "budget",
+          "type": "select-one",
+          "required": false,
+          "hasLabel": true
+        },
+        {
+          "id": "cf-message",
+          "name": "message",
+          "type": "textarea",
+          "required": true,
+          "placeholder": "Tell me about your project, your goals, and your timeline…",
+          "hasLabel": true
+        }
+      ]
+    },
+    "project": {
+      "interactiveElements": [
+        {
+          "element": "a.nav-brand",
+          "text": "",
+          "w": 32,
+          "h": 32,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "a.nav-link",
+          "text": "Home",
+          "w": 36,
+          "h": 16,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "a.nav-link",
+          "text": "About",
+          "w": 45,
+          "h": 16,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "a.nav-link",
+          "text": "Work",
+          "w": 36,
+          "h": 16,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "a.nav-link",
+          "text": "Services",
+          "w": 72,
+          "h": 16,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "a.nav-link",
+          "text": "Contact",
+          "w": 63,
+          "h": 16,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "button#nav-audio-toggle.nav-audio-toggle",
+          "text": "",
+          "w": 32,
+          "h": 32,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "a.nav-cta",
+          "text": "Hire Me",
+          "w": 99,
+          "h": 36,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "a.mobile-nav-link",
+          "text": "Home",
+          "w": 270,
+          "h": 84,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": true
+        },
+        {
+          "element": "a.mobile-nav-link",
+          "text": "About",
+          "w": 266,
+          "h": 84,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": true
+        },
+        {
+          "element": "a.mobile-nav-link",
+          "text": "Work",
+          "w": 234,
+          "h": 84,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": true
+        },
+        {
+          "element": "a.mobile-nav-link",
+          "text": "Services",
+          "w": 363,
+          "h": 84,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": true
+        },
+        {
+          "element": "a.mobile-nav-link",
+          "text": "Contact",
+          "w": 360,
+          "h": 84,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": true
+        },
+        {
+          "element": "button.mobile-nav-link",
+          "text": "Audio",
+          "w": 251,
+          "h": 84,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": true
+        },
+        {
+          "element": "a.mobile-menu-social",
+          "text": "Twitter",
+          "w": 63,
+          "h": 18,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "a.mobile-menu-social",
+          "text": "LinkedIn",
+          "w": 72,
+          "h": 18,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "a.mobile-menu-social",
+          "text": "GitHub",
+          "w": 54,
+          "h": 18,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "a#skip-to-content.skip-to-content",
+          "text": "Skip to content",
+          "w": 176,
+          "h": 40,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "a.skip-to-content",
+          "text": "Skip to content",
+          "w": 176,
+          "h": 40,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": false
+        },
+        {
+          "element": "a.btn.btn-ghost",
+          "text": "← Back to Work",
+          "w": 192,
+          "h": 44,
+          "cursor": "pointer",
+          "outlineStyle": "none",
+          "outlineWidth": "3px",
+          "outlineNone": false,
+          "touchTarget": true
+        }
+      ],
+      "navLinks": [
+        {
+          "href": "http://localhost:19090/index.html",
+          "text": ""
+        },
+        {
+          "href": "http://localhost:19090/index.html",
+          "text": "Home"
+        },
+        {
+          "href": "http://localhost:19090/about.html",
+          "text": "About"
+        },
+        {
+          "href": "http://localhost:19090/work.html",
+          "text": "Work"
+        },
+        {
+          "href": "http://localhost:19090/services.html",
+          "text": "Services"
+        },
+        {
+          "href": "http://localhost:19090/contact.html",
+          "text": "Contact"
+        },
+        {
+          "href": "http://localhost:19090/contact.html",
+          "text": "Hire Me"
+        },
+        {
+          "href": "http://localhost:19090/index.html",
+          "text": "Home"
+        },
+        {
+          "href": "http://localhost:19090/about.html",
+          "text": "About"
+        },
+        {
+          "href": "http://localhost:19090/work.html",
+          "text": "Work"
+        },
+        {
+          "href": "http://localhost:19090/services.html",
+          "text": "Services"
+        },
+        {
+          "href": "http://localhost:19090/contact.html",
+          "text": "Contact"
+        }
+      ],
+      "filterBtns": [],
+      "formFields": []
+    }
+  }
+}

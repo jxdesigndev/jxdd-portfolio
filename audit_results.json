@@ -1,0 +1,159 @@
+{
+  "loads": {
+    "404": true,
+    "index": false,
+    "about": true,
+    "work": true,
+    "services": false,
+    "contact": true,
+    "project": true,
+    "admin": true
+  },
+  "console": {
+    "404": [
+      {
+        "type": "error",
+        "text": "Failed to load resource: the server responded with a status of 404 ()"
+      }
+    ],
+    "index": [],
+    "about": [
+      {
+        "type": "warn",
+        "text": "SplitText called before fonts loaded"
+      },
+      {
+        "type": "warn",
+        "text": "SplitText called before fonts loaded"
+      },
+      {
+        "type": "warn",
+        "text": "SplitText called before fonts loaded"
+      }
+    ],
+    "work": [
+      {
+        "type": "warn",
+        "text": "SplitText called before fonts loaded"
+      }
+    ],
+    "services": [],
+    "contact": [
+      {
+        "type": "warn",
+        "text": "SplitText called before fonts loaded"
+      }
+    ],
+    "project": [
+      {
+        "type": "error",
+        "text": "Failed to load resource: the server responded with a status of 404 ()"
+      },
+      {
+        "type": "error",
+        "text": "Failed to load resource: the server responded with a status of 406 ()"
+      },
+      {
+        "type": "error",
+        "text": "Project fetch error: [object Object]"
+      }
+    ],
+    "admin": []
+  },
+  "network": {
+    "404": [
+      {
+        "url": "https://www.jxdesign.dev/nonsense-url-404",
+        "status": 404
+      }
+    ],
+    "index": [],
+    "about": [],
+    "work": [],
+    "services": [],
+    "contact": [],
+    "project": [
+      {
+        "url": "https://www.jxdesign.dev/favicon.ico",
+        "status": 404
+      }
+    ],
+    "admin": []
+  },
+  "splitText": false,
+  "scrollProgress": false,
+  "cliButton": false,
+  "webGL": false,
+  "navLinks": false,
+  "adminPanel": false,
+  "responsiveness": {
+    "about": {
+      "375": {
+        "hasHorizontalOverflow": false
+      },
+      "768": {
+        "hasHorizontalOverflow": false
+      },
+      "1024": {
+        "hasHorizontalOverflow": false
+      },
+      "1440": {
+        "hasHorizontalOverflow": false
+      }
+    },
+    "work": {
+      "375": {
+        "hasHorizontalOverflow": false
+      },
+      "768": {
+        "hasHorizontalOverflow": false
+      },
+      "1024": {
+        "hasHorizontalOverflow": false
+      },
+      "1440": {
+        "hasHorizontalOverflow": false
+      }
+    },
+    "project": {
+      "375": {
+        "hasHorizontalOverflow": false
+      },
+      "768": {
+        "hasHorizontalOverflow": false
+      },
+      "1024": {
+        "hasHorizontalOverflow": false
+      },
+      "1440": {
+        "hasHorizontalOverflow": false
+      }
+    }
+  },
+  "supabaseQuery": null,
+  "rlsWrite": null,
+  "storageWrite": null,
+  "skipToContent": true,
+  "jsonLD": {
+    "404": [],
+    "about": [
+      "\n  {\n    \"@context\": \"https://schema.org\",\n    \"@type\": \"AboutPage\",\n    \"@id\": \"https://www.jxdesign.dev/about.html\",\n    \"url\": \"https://www.jxdesign.dev/about.html\",\n    \"name\": \"The Story | Okezie Ferdinand | JX Design & Dev\",\n    \"description\": \"The Story of Okezie Ferdinand, JX — artist, technologist, designer, builder. From Nigeria to the future.\",\n    \"about\": {\n      \"@type\": \"Person\",\n      \"@id\": \"https://www.jxdesign.dev/#person\",\n      \"name\": \"Okezie Ferdinand\",\n      \"alternateName\": \"JX\",\n      \"url\": \"https://www.jxdesign.dev/\",\n      \"image\": \"https://www.jxdesign.dev/assets/images/okezie-2.png\",\n      \"jobTitle\": \"Product Designer & Full-Stack Developer\",\n      \"nationality\": {\n        \"@type\": \"Country\",\n        \"name\": \"Nigeria\"\n      }\n    }\n  }\n  "
+    ],
+    "work": [
+      "\n  {\n    \"@context\": \"https://schema.org\",\n    \"@type\": \"CollectionPage\",\n    \"@id\": \"https://www.jxdesign.dev/work.html\",\n    \"url\": \"https://www.jxdesign.dev/work.html\",\n    \"name\": \"The Vault | Work | JX Design & Dev\",\n    \"description\": \"Portfolio of projects by Okezie Ferdinand — Product Design, Full-Stack Development, Automation, and Cybersecurity.\",\n    \"author\": {\n      \"@id\": \"https://www.jxdesign.dev/#person\"\n    },\n    \"hasPart\": [\n      {\n        \"@type\": \"CreativeWork\",\n        \"name\": \"Zenflow\",\n        \"url\": \"https://www.jxdesign.dev/projects/zenflow.html\",\n        \"description\": \"A wellness app concept for women combining yoga and strength training into a single unified experience.\",\n        \"image\": \"https://www.jxdesign.dev/assets/images/zenflow-cover.png\",\n        \"author\": {\n          \"@id\": \"https://www.jxdesign.dev/#person\"\n        },\n        \"dateCreated\": \"2026\",\n        \"genre\": \"Product Design\"\n      }\n    ]\n  }\n  "
+    ],
+    "contact": [
+      "\n  {\n    \"@context\": \"https://schema.org\",\n    \"@type\": \"ContactPage\",\n    \"@id\": \"https://www.jxdesign.dev/contact.html\",\n    \"url\": \"https://www.jxdesign.dev/contact.html\",\n    \"name\": \"The Signal | Contact | JX Design & Dev\",\n    \"description\": \"Contact Okezie Ferdinand (JX) to discuss product design, full-stack development, automation, or cybersecurity projects.\",\n    \"mainEntity\": {\n      \"@id\": \"https://www.jxdesign.dev/#person\"\n    }\n  }\n  "
+    ],
+    "project": [],
+    "admin": []
+  },
+  "canonical": {
+    "404": "https://www.jxdesign.dev/404.html",
+    "about": "https://www.jxdesign.dev/about.html",
+    "work": "https://www.jxdesign.dev/work.html",
+    "contact": "https://www.jxdesign.dev/contact.html",
+    "project": "https://www.jxdesign.dev/project.html",
+    "admin": null
+  }
+}

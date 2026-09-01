@@ -25,10 +25,10 @@ const puppeteer = require('puppeteer');
     });
 
     console.log("Loading index.html...");
-    await page.goto('https://jxdesigndev.vercel.app/', { waitUntil: 'networkidle0', timeout: 30000 });
+    await page.goto('https://www.jxdesign.dev/', { waitUntil: 'networkidle0', timeout: 30000 });
     
     console.log("Loading work.html...");
-    await page.goto('https://jxdesigndev.vercel.app/work.html', { waitUntil: 'networkidle0', timeout: 30000 });
+    await page.goto('https://www.jxdesign.dev/work.html', { waitUntil: 'networkidle0', timeout: 30000 });
     
   } catch (err) {
     console.error("Test error:", err);

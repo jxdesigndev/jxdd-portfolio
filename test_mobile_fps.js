@@ -12,7 +12,7 @@ const puppeteer = require('puppeteer');
     await page.setViewport({ width: 375, height: 667, isMobile: true, deviceScaleFactor: 2 });
     
     console.log("Loading index.html (Mobile)...");
-    await page.goto('https://jxdesigndev.vercel.app/', { waitUntil: 'domcontentloaded' });
+    await page.goto('https://www.jxdesign.dev/', { waitUntil: 'domcontentloaded' });
     
     await new Promise(r => setTimeout(r, 4000));
     

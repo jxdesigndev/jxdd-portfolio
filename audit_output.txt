@@ -1,0 +1,23 @@
+=== VERCEL LS ===
+audit_run.sh: line 12: vercel: command not found
+=== VERCEL INSPECT ===
+audit_run.sh: line 15: vercel: command not found
+=== PUPPETEER AUDIT ===
+Error on index TypeError: page.waitForTimeout is not a function
+    at runAudit (/home/jx/Documents/JX/jxdd-portfolio/audit.js:87:20)
+Error on about TypeError: page.waitForTimeout is not a function
+    at runAudit (/home/jx/Documents/JX/jxdd-portfolio/audit.js:127:22)
+Error on work TypeError: page.waitForTimeout is not a function
+    at runAudit (/home/jx/Documents/JX/jxdd-portfolio/audit.js:127:22)
+Error on services TimeoutError: Navigation timeout of 30000 ms exceeded
+    at new Deferred (file:///home/jx/Documents/JX/jxdd-portfolio/node_modules/puppeteer-core/lib/puppeteer/util/Deferred.js:57:34)
+    at Deferred.create (file:///home/jx/Documents/JX/jxdd-portfolio/node_modules/puppeteer-core/lib/puppeteer/util/Deferred.js:18:16)
+    at new LifecycleWatcher (file:///home/jx/Documents/JX/jxdd-portfolio/node_modules/puppeteer-core/lib/puppeteer/cdp/LifecycleWatcher.js:70:46)
+    at CdpFrame.goto (file:///home/jx/Documents/JX/jxdd-portfolio/node_modules/puppeteer-core/lib/puppeteer/cdp/Frame.js:152:29)
+    at CdpFrame.<anonymous> (file:///home/jx/Documents/JX/jxdd-portfolio/node_modules/puppeteer-core/lib/puppeteer/util/decorators.js:101:27)
+    at CdpPage.goto (file:///home/jx/Documents/JX/jxdd-portfolio/node_modules/puppeteer-core/lib/puppeteer/api/Page.js:582:43)
+    at runAudit (/home/jx/Documents/JX/jxdd-portfolio/audit.js:53:35)
+Error on project TypeError: page.waitForTimeout is not a function
+    at runAudit (/home/jx/Documents/JX/jxdd-portfolio/audit.js:127:22)
+Audit completed.
+=== LIGHTHOUSE AUDIT ===

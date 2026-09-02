@@ -60,6 +60,7 @@
         <button class="admin-nav-btn" data-tab="experience">04 // TIMELINE (Experience)</button>
         <button class="admin-nav-btn" data-tab="testimonials">05 // VOICES (Testimonials)</button>
         <button class="admin-nav-btn" data-tab="tools">06 // STACK (Tools)</button>
+        <button class="admin-nav-btn" data-tab="services">07 // SYSTEMS (Services)</button>
       </nav>
       
       <div class="admin-sidebar-bottom">
@@ -265,6 +266,31 @@
         </div>
       </section>
 
+
+      <!-- ── TAB: SERVICES ── -->
+      <section id="tab-services" class="admin-tab-content" style="display:none;">
+        <header class="admin-header">
+          <h1 class="headline-md">Systems (Services)</h1>
+          <button id="btn-new-service" class="btn btn-primary btn-sm">+ Add Service</button>
+        </header>
+
+        <div class="admin-table-container">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th style="width:50px;">Pri</th>
+                <th>Name</th>
+                <th>Category</th>
+                <th style="width:80px; text-align:center;">Active</th>
+                <th style="width:120px; text-align:right;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="tbody-services">
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
+        </div>
+      </section>
     </main>
   </div>
 

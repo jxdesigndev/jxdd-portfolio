@@ -1858,8 +1858,8 @@ svg { display: block; }
   transform: scale(0.92);
 }
 .tool-item img {
-  width: 48px;
-  height: 48px;
+  width: clamp(32px, 5vw, 56px);
+  height: clamp(32px, 5vw, 56px);
   object-fit: contain;
   border-radius: var(--radius-md);
   filter: grayscale(30%) brightness(0.9);

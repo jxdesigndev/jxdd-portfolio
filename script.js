@@ -2543,6 +2543,8 @@ const JXUniverse = {
 
       if (error) throw error;
 
+      let totalRenderedTools = 0;
+
       containers.forEach(container => {
         const category = container.getAttribute('data-tool-category');
         let filteredTools = tools;
@@ -2552,14 +2554,16 @@ const JXUniverse = {
         }
 
         if (filteredTools.length === 0) {
-          // If it's the main section wrapper, hide it
-          const section = container.closest('.tools-section') || container;
-          section.style.display = 'none';
+          // Hide specific empty category
+          const group = container.closest('.tools-group') || container;
+          group.style.display = 'none';
           return;
         }
 
-        const section = container.closest('.tools-section');
-        if (section) section.style.display = '';
+        totalRenderedTools += filteredTools.length;
+
+        const group = container.closest('.tools-group');
+        if (group) group.style.display = '';
 
         container.innerHTML = '';
         const newNodes = [];
@@ -2607,6 +2611,15 @@ const JXUniverse = {
           });
         }
       });
+
+      const globalSection = document.getElementById('tools-section');
+      if (globalSection) {
+        if (totalRenderedTools > 0) {
+          globalSection.style.display = '';
+        } else {
+          globalSection.style.display = 'none';
+        }
+      }
 
     } catch (err) {
       console.error('JX: Tools load error:', err);

@@ -317,6 +317,9 @@
 
       // Update the video src and reveal normally
       videoPlayer.src = data.value;
+      if (window.JX && window.JX.initLoopingPreviewVideo) {
+        window.JX.initLoopingPreviewVideo(videoPlayer);
+      }
       
     } catch (err) {
       console.error('Failed to load about video:', err);

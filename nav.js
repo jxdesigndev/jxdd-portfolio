@@ -800,12 +800,47 @@
       window.addEventListener('load', pageRevealIn);
     }
 
+    /* Shared Video Looping Utility */
+    function initLoopingPreviewVideo(videoEl) {
+      if (!videoEl || videoEl.tagName !== 'VIDEO') return;
+      if (videoEl.dataset.loopInit) return; // Prevent duplicate observers
+      videoEl.dataset.loopInit = 'true';
+      
+      const prefsRM = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (prefsRM) {
+        // Reduced motion: Do not autoplay or loop. 
+        // Leave static on poster frame (requires manual click).
+        return; 
+      }
+      
+      videoEl.muted = true;
+      videoEl.loop = true;
+      videoEl.setAttribute('playsinline', '');
+      if (!videoEl.hasAttribute('controls')) videoEl.setAttribute('controls', '');
+      
+      if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              videoEl.play().catch(e => console.warn('JX: Video autoplay prevented', e));
+            } else {
+              videoEl.pause();
+            }
+          });
+        }, { threshold: 0.1 });
+        observer.observe(videoEl);
+      } else {
+        videoEl.autoplay = true;
+      }
+    }
+
     /* Expose helpers globally */
     window.JX = window.JX || {};
     window.JX.nav = {
       startClock,
       loadAvailability,
     };
+    window.JX.initLoopingPreviewVideo = initLoopingPreviewVideo;
   }
 
   /* Run immediately when DOM is ready */

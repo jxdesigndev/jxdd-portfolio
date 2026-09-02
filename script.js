@@ -2452,7 +2452,17 @@ const JXUniverse = {
           img.src = t.logo_url;
           img.alt = t.role_company || 'Company Logo';
           img.loading = 'lazy';
-          logoStrip.appendChild(img);
+          
+          if (t.client_website_url) {
+            const a = document.createElement('a');
+            a.href = t.client_website_url;
+            a.target = '_blank';
+            a.rel = 'noopener noreferrer';
+            a.appendChild(img);
+            logoStrip.appendChild(a);
+          } else {
+            logoStrip.appendChild(img);
+          }
         }
       });
 

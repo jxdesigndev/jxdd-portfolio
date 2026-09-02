@@ -149,7 +149,7 @@
             <span class="work-card-year">${p.year || ''}</span>
           </div>
           <h3 class="work-card-title">${p.title}</h3>
-          <p class="work-card-desc">${(p.description || '').slice(0, 110)}${(p.description || '').length > 110 ? '…' : ''}</p>
+          <p class="work-card-desc">${(p.description || '').replace(/<[^>]*>?/gm, '').slice(0, 110)}${(p.description || '').replace(/<[^>]*>?/gm, '').length > 110 ? '…' : ''}</p>
           <div class="work-card-tools">${tools}</div>
         </div>
         <span class="work-card-arrow" aria-hidden="true">↗</span>
@@ -272,7 +272,9 @@
         <div class="vault-modal-content" style="overflow-wrap: anywhere;">
           <div class="section-label">${p.category || 'Project'}</div>
           <h2 class="vault-modal-title">${p.title}</h2>
-          <p style="font-family:var(--font-body); font-size:var(--text-sm); color:var(--gray-2); line-height:var(--lead-relaxed);overflow-wrap:anywhere;">${p.description || ''}</p>
+          <div style="font-family:var(--font-body); font-size:var(--text-sm); color:var(--gray-2); line-height:var(--lead-relaxed);overflow-wrap:anywhere;" class="tiptap-content">
+            ${window.DOMPurify ? window.DOMPurify.sanitize(p.description || '', { ALLOWED_TAGS: ['b', 'strong', 'i', 'em', 'blockquote', 'p', 'br'] }) : (() => { const d = document.createElement('div'); d.textContent = new DOMParser().parseFromString(p.description || '', 'text/html').body.textContent || ''; return d.innerHTML; })()}
+          </div>
           
           ${metaGrid}
           
@@ -283,7 +285,9 @@
           </div>
 
           ${hasDedicatedPage ? '' : (p.content ? `<div style="border-top:1px solid var(--border); padding-top:var(--s-6); margin-top:var(--s-4);">
-            <p style="font-family:var(--font-body); font-size:var(--text-sm); color:var(--gray-2); line-height:var(--lead-relaxed);overflow-wrap:anywhere;">${p.content.replace(/\n/g, '<br>')}</p>
+            <div style="font-family:var(--font-body); font-size:var(--text-sm); color:var(--gray-2); line-height:var(--lead-relaxed);overflow-wrap:anywhere;" class="tiptap-content">
+            ${window.DOMPurify ? window.DOMPurify.sanitize(p.content || '', { ALLOWED_TAGS: ['b', 'strong', 'i', 'em', 'blockquote', 'p', 'br'] }) : (() => { const d = document.createElement('div'); d.textContent = new DOMParser().parseFromString(p.content || '', 'text/html').body.textContent || ''; return d.innerHTML; })()}
+          </div>
           </div>` : '')}
           
           ${hasDedicatedPage ? `<div style="margin-top: var(--s-8);">${caseStudyContent}</div>` : (caseStudyContent.includes('<div') ? caseStudyContent : '')}

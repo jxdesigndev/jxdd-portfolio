@@ -2027,7 +2027,7 @@ const JXUniverse = {
             <span class="project-card-year">${p.year || ''}</span>
           </div>
           <h3 class="project-card-title" style="display:flex; align-items:center;">${p.title}${conceptBadge}</h3>
-          <p class="project-card-desc">${(p.description || '').slice(0, 100)}${(p.description || '').length > 100 ? '…' : ''}</p>
+          <p class="project-card-desc">${(p.description || '').replace(/<[^>]*>?/gm, '').slice(0, 100)}${(p.description || '').replace(/<[^>]*>?/gm, '').length > 100 ? '…' : ''}</p>
           <div class="project-card-tools">${tools}</div>
         </div>
         <div class="project-card-arrow" aria-hidden="true">↗</div>
@@ -2139,7 +2139,7 @@ const JXUniverse = {
           <div class="section-label">${p.category || 'Project'}</div>
           <h2 class="modal-title">${p.title}</h2>
           <p style="font-size:var(--text-sm);color:var(--gray-2);line-height:var(--lead-relaxed);overflow-wrap:anywhere;">
-            ${p.description || ''}
+            ${window.DOMPurify ? window.DOMPurify.sanitize(p.description || '', { ALLOWED_TAGS: ['b', 'strong', 'i', 'em', 'blockquote', 'p', 'br'] }) : (() => { const d = document.createElement('div'); d.textContent = new DOMParser().parseFromString(p.description || '', 'text/html').body.textContent || ''; return d.innerHTML; })()}
           </p>
           ${metaGrid}
           <div style="display:flex; gap:var(--s-3); flex-wrap:wrap; margin-top:var(--s-4);">

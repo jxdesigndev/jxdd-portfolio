@@ -195,16 +195,19 @@ document.addEventListener('DOMContentLoaded', async () => {
       splitDiv.style.marginTop = '0';
 
       const textWrapper = document.createElement('div');
+
       if (project.description) {
-        // Split description by double newlines into paragraphs
-        const paras = project.description.split('\n\n').filter(p => p.trim() !== '');
-        paras.forEach(pText => {
-          const p = document.createElement('p');
-          p.className = 'reveal';
-          p.textContent = pText.trim();
-          textWrapper.appendChild(p);
-        });
+        const cleanHTML = window.DOMPurify ? window.DOMPurify.sanitize(project.description, { ALLOWED_TAGS: ['b', 'strong', 'i', 'em', 'blockquote', 'p', 'br'] }) : (() => { const d = document.createElement('div'); d.textContent = new DOMParser().parseFromString(project.description || '', 'text/html').body.textContent || ''; return d.innerHTML; })();
+        const tempDiv = document.createElement('div');
+        tempDiv.className = 'tiptap-content';
+        tempDiv.innerHTML = cleanHTML;
+        
+        // Add reveal class to paragraphs for GSAP
+        tempDiv.querySelectorAll('p, blockquote').forEach(el => el.classList.add('reveal'));
+        
+        textWrapper.appendChild(tempDiv);
       }
+
       splitDiv.appendChild(textWrapper);
 
       const imgWrapper = document.createElement('div');
@@ -320,6 +323,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       contentSection.appendChild(galleryDiv);
     }
 
+
     // Outcome
     if (project.outcome_text) {
       const outHeading = document.createElement('h2');
@@ -327,14 +331,17 @@ document.addEventListener('DOMContentLoaded', async () => {
       outHeading.textContent = 'Outcome';
       contentSection.appendChild(outHeading);
 
-      const outParas = project.outcome_text.split('\n\n').filter(p => p.trim() !== '');
-      outParas.forEach(pText => {
-        const p = document.createElement('p');
-        p.className = 'reveal';
-        p.textContent = pText.trim();
-        contentSection.appendChild(p);
-      });
+      const cleanHTML = window.DOMPurify ? window.DOMPurify.sanitize(project.outcome_text, { ALLOWED_TAGS: ['b', 'strong', 'i', 'em', 'blockquote', 'p', 'br'] }) : (() => { const d = document.createElement('div'); d.textContent = new DOMParser().parseFromString(project.outcome_text || '', 'text/html').body.textContent || ''; return d.innerHTML; })();
+      const tempDiv = document.createElement('div');
+      tempDiv.className = 'tiptap-content';
+      tempDiv.innerHTML = cleanHTML;
+      
+      // Add reveal class for GSAP
+      tempDiv.querySelectorAll('p, blockquote').forEach(el => el.classList.add('reveal'));
+      
+      contentSection.appendChild(tempDiv);
     }
+
 
     // Case Study Link (if exists, e.g. external link or further reading)
     if (project.case_study) {

@@ -16,6 +16,26 @@
   <!-- Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
   <script src="supabase.js" defer></script>
+
+  <!-- DOMPurify -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
+  <!-- TipTap -->
+  <script type="module">
+    import { Editor } from 'https://esm.sh/@tiptap/core@2';
+    import StarterKit from 'https://esm.sh/@tiptap/starter-kit@2';
+    window.TipTap = { Editor, StarterKit };
+    window.dispatchEvent(new Event('tiptap-ready'));
+  </script>
+  <style>
+    .tiptap-wrapper { border: 1px solid var(--border); border-radius: 4px; overflow: hidden; background: var(--surface); margin-top: var(--s-2); }
+    .tiptap-toolbar { padding: var(--s-2); background: var(--surface-light); border-bottom: 1px solid var(--border); display: flex; gap: var(--s-2); }
+    .tiptap-toolbar button { padding: var(--s-1) var(--s-3); font-size: var(--text-xs); background: transparent; border: 1px solid var(--border); color: var(--text); cursor: pointer; border-radius: 2px; }
+    .tiptap-toolbar button:hover { background: var(--border); }
+    .tiptap-editor { padding: var(--s-4); min-height: 120px; outline: none; }
+    .tiptap-editor p { margin-bottom: var(--s-2); }
+    .tiptap-editor blockquote { border-left: 3px solid var(--green); padding-left: var(--s-4); color: var(--gray-2); margin-left: 0; }
+  </style>
+
 </head>
 <body class="admin-body">
   <a href="#page" class="skip-to-content">Skip to content</a>

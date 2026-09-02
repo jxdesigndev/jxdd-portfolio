@@ -241,10 +241,13 @@
       document.getElementById('pf-url').value = project.url || '';
       document.getElementById('pf-github').value = project.github_url || '';
       document.getElementById('pf-desc').value = project.description || '';
+      if (window.pfDescEditor) window.pfDescEditor.commands.setContent(project.description || '');
       document.getElementById('pf-content').value = project.content || '';
+      if (window.pfContentEditor) window.pfContentEditor.commands.setContent(project.content || '');
       document.getElementById('pf-casestudy').value = project.case_study || '';
       document.getElementById('pf-slug').value = project.slug || '';
       document.getElementById('pf-outcome').value = project.outcome_text || '';
+      if (window.pfOutcomeEditor) window.pfOutcomeEditor.commands.setContent(project.outcome_text || '');
       
       if (project.image_url) {
         document.getElementById('pf-image-preview').textContent = `Current: ${project.image_url.split('/').pop()}`;
@@ -1137,3 +1140,66 @@
   checkAuth();
 
 })();
+
+
+/* TipTap Initialization */
+window.pfDescEditor = null;
+window.pfContentEditor = null;
+window.pfOutcomeEditor = null;
+
+function initTipTap() {
+  if (!window.TipTap) return;
+  const { Editor, StarterKit } = window.TipTap;
+  
+  function createEditor(elementId) {
+    const el = document.getElementById(elementId);
+    if (!el) return null;
+    
+    const wrapper = document.createElement('div');
+    wrapper.className = 'tiptap-wrapper';
+    el.parentNode.insertBefore(wrapper, el);
+    
+    const toolbar = document.createElement('div');
+    toolbar.className = 'tiptap-toolbar';
+    toolbar.innerHTML = `
+      <button type="button" data-command="bold"><b>B</b></button>
+      <button type="button" data-command="italic"><i>I</i></button>
+      <button type="button" data-command="blockquote">Quote</button>
+    `;
+    wrapper.appendChild(toolbar);
+    
+    const editorEl = document.createElement('div');
+    editorEl.className = 'tiptap-editor';
+    wrapper.appendChild(editorEl);
+    
+    el.style.display = 'none';
+    
+    const editor = new Editor({
+      element: editorEl,
+      extensions: [ StarterKit ],
+      content: el.value,
+      onUpdate: ({ editor }) => {
+        el.value = editor.getHTML();
+      }
+    });
+    
+    toolbar.querySelectorAll('button').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+         e.preventDefault();
+         const cmd = btn.getAttribute('data-command');
+         if (cmd === 'bold') editor.chain().focus().toggleBold().run();
+         if (cmd === 'italic') editor.chain().focus().toggleItalic().run();
+         if (cmd === 'blockquote') editor.chain().focus().toggleBlockquote().run();
+      });
+    });
+    
+    return editor;
+  }
+  
+  if (!window.pfDescEditor) window.pfDescEditor = createEditor('pf-desc');
+  if (!window.pfContentEditor) window.pfContentEditor = createEditor('pf-content');
+  if (!window.pfOutcomeEditor) window.pfOutcomeEditor = createEditor('pf-outcome');
+}
+
+window.addEventListener('tiptap-ready', initTipTap);
+if (window.TipTap) initTipTap(); // In case it loaded before this script

@@ -322,8 +322,9 @@
         </div>
 
         <div class="form-group">
-          <label class="form-label" for="pf-image">Cover Image URL</label>
-          <input type="text" id="pf-image" class="form-input" placeholder="https://...">
+          <label class="form-label" for="pf-image">Thumbnail Image (Listings, single)</label>
+          <input type="file" id="pf-image" class="form-input" accept="image/*">
+          <div id="pf-image-preview" style="margin-top:var(--s-2); font-size:var(--text-xs); color:var(--gray-2); word-break: break-all;"></div>
         </div>
 
         <div class="form-group">
@@ -362,6 +363,22 @@
             <label class="form-label" for="pf-slug">URL Slug <span style="font-weight: normal; color: var(--gray-2); font-size: var(--text-2xs);">(used in the project's URL, e.g. 'zenflow')</span></label>
             <input type="text" id="pf-slug" class="form-input" placeholder="zenflow">
           </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="pf-cover">Cover Image (single)</label>
+            <input type="file" id="pf-cover" class="form-input" accept="image/*">
+            <div id="pf-cover-preview" style="margin-top:var(--s-2); font-size:var(--text-xs); color:var(--gray-2); word-break: break-all;"></div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="pf-process">Process Images (Wireframes, Multiple)</label>
+            <input type="file" id="pf-process" class="form-input" accept="image/*" multiple>
+            <div id="pf-process-preview" style="margin-top:var(--s-2); font-size:var(--text-xs); color:var(--gray-2); word-break: break-all;"></div>
+          </div>
+        </div>
+
           <div class="form-group">
             <label class="form-label" for="pf-persona">Persona Image (single)</label>
             <input type="file" id="pf-persona" class="form-input" accept="image/*">

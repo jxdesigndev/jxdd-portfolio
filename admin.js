@@ -211,6 +211,9 @@
   function openProjectModal(project) {
     currentEditingProject = project || null;
     DOM.projectForm.reset();
+    document.getElementById('pf-image-preview').textContent = '';
+    document.getElementById('pf-cover-preview').textContent = '';
+    document.getElementById('pf-process-preview').textContent = '';
     document.getElementById('pf-persona-preview').textContent = '';
     document.getElementById('pf-screenshots-preview').textContent = '';
 
@@ -224,7 +227,7 @@
       document.getElementById('pf-timeline').value = project.timeline || '';
       document.getElementById('pf-project-type').value = project.project_type || '';
       document.getElementById('pf-priority').value = project.priority || 0;
-      document.getElementById('pf-image').value = project.image_url || '';
+      
       document.getElementById('pf-tools').value = (project.tools || []).join(', ');
       document.getElementById('pf-url').value = project.url || '';
       document.getElementById('pf-github').value = project.github_url || '';
@@ -234,6 +237,15 @@
       document.getElementById('pf-slug').value = project.slug || '';
       document.getElementById('pf-outcome').value = project.outcome_text || '';
       
+      if (project.image_url) {
+        document.getElementById('pf-image-preview').textContent = `Current: ${project.image_url.split('/').pop()}`;
+      }
+      if (project.cover_image_url) {
+        document.getElementById('pf-cover-preview').textContent = `Current: ${project.cover_image_url.split('/').pop()}`;
+      }
+      if (project.process_image_urls && project.process_image_urls.length > 0) {
+        document.getElementById('pf-process-preview').textContent = `Current: ${project.process_image_urls.length} image(s) saved.`;
+      }
       if (project.persona_image_url) {
         document.getElementById('pf-persona-preview').textContent = `Current: ${project.persona_image_url.split('/').pop()}`;
       }
@@ -266,6 +278,28 @@
     btn.disabled = true;
 
     try {
+      let newImageUrl = currentEditingProject ? currentEditingProject.image_url : null;
+      const imageFile = document.getElementById('pf-image').files[0];
+      if (imageFile) {
+        newImageUrl = await uploadCompressedImage(imageFile);
+      }
+
+      let newCoverUrl = currentEditingProject ? currentEditingProject.cover_image_url : null;
+      const coverFile = document.getElementById('pf-cover').files[0];
+      if (coverFile) {
+        newCoverUrl = await uploadCompressedImage(coverFile);
+      }
+
+      let newProcessUrls = currentEditingProject ? currentEditingProject.process_image_urls : [];
+      const processFiles = document.getElementById('pf-process').files;
+      if (processFiles && processFiles.length > 0) {
+        newProcessUrls = [];
+        for (let i = 0; i < processFiles.length; i++) {
+          const url = await uploadCompressedImage(processFiles[i]);
+          newProcessUrls.push(url);
+        }
+      }
+
       let newPersonaUrl = currentEditingProject ? currentEditingProject.persona_image_url : null;
       const personaFile = document.getElementById('pf-persona').files[0];
       if (personaFile) {
@@ -290,7 +324,7 @@
         timeline: document.getElementById('pf-timeline').value.trim(),
         project_type: document.getElementById('pf-project-type').value.trim(),
         priority: parseInt(document.getElementById('pf-priority').value) || 0,
-        image_url: document.getElementById('pf-image').value.trim(),
+        image_url: newImageUrl,
         tools: document.getElementById('pf-tools').value.split(',').map(s => s.trim()).filter(Boolean),
         url: document.getElementById('pf-url').value.trim(),
         github_url: document.getElementById('pf-github').value.trim(),
@@ -300,6 +334,8 @@
         featured: document.getElementById('pf-featured').checked,
         slug: document.getElementById('pf-slug').value.trim(),
         outcome_text: document.getElementById('pf-outcome').value.trim(),
+        cover_image_url: newCoverUrl,
+        process_image_urls: newProcessUrls,
         persona_image_url: newPersonaUrl,
         screenshot_urls: newScreenshots
       };

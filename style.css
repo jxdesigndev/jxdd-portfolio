@@ -1038,6 +1038,12 @@ svg { display: block; }
   color: var(--green);
 }
 
+@media (max-width: 768px) {
+  .loader-skip {
+    bottom: calc(var(--s-16) + env(safe-area-inset-bottom, 0px));
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .loader-skip {
     animation-duration: 0.1s;

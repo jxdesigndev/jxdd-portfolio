@@ -1601,6 +1601,14 @@ const JXUniverse = {
 
     /* \u2500\u2500 Build HUD overlay \u2500\u2500 */
     const isTouch = window.matchMedia('(hover: none)').matches;
+    const isPortraitMobile = isTouch && (window.innerWidth < window.innerHeight);
+    const rotateHint = isPortraitMobile ? `
+      <div class="pong-rotate-hint" id="pong-rotate-hint">
+        <span>Rotate device for best experience</span>
+        <button id="pong-rotate-close" aria-label="Close hint">✕</button>
+      </div>
+    ` : '';
+
     const hud = document.createElement('div');
     hud.id = 'pong-hud';
     hud.innerHTML = `
@@ -1612,8 +1620,17 @@ const JXUniverse = {
       <div class="pong-title">PARTICLE PONG</div>
       <div class="pong-hint">${isTouch ? 'Drag to play · Tap ✕ to exit' : 'Move mouse · Esc to exit'}</div>
       <button class="pong-close-btn" id="pong-close-btn" aria-label="Exit Pong">✕</button>
+      ${rotateHint}
     `;
     document.body.append(hud);
+
+    if (isPortraitMobile) {
+      setTimeout(() => {
+        document.getElementById('pong-rotate-close')?.addEventListener('click', () => {
+          document.getElementById('pong-rotate-hint')?.remove();
+        }, { once: true });
+      }, 0);
+    }
 
     /* Inject pong HUD CSS if not already there */
     if (!document.getElementById('pong-css')) {
@@ -1691,12 +1708,38 @@ const JXUniverse = {
           border-color: var(--green, #00FF41);
           color: var(--green, #00FF41);
         }
+        .pong-rotate-hint {
+          position: absolute;
+          bottom: var(--s-8, 2rem);
+          left: 50%;
+          transform: translateX(-50%);
+          background: var(--surface-2, #0c0e12);
+          border: 1px solid var(--green, #00ff41);
+          color: var(--green, #00ff41);
+          padding: 8px 12px;
+          font-family: var(--font-mono, monospace);
+          font-size: 10px;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          pointer-events: auto;
+          box-shadow: 0 4px 12px rgba(0, 255, 65, 0.15);
+          white-space: nowrap;
+        }
+        .pong-rotate-hint button {
+          background: none; border: none; color: inherit; cursor: pointer;
+          font-size: 14px; padding: 0; line-height: 1; opacity: 0.8;
+        }
+        .pong-rotate-hint button:hover { opacity: 1; }
       `;
       document.head.append(s);
     }
 
     /* \u2500\u2500 Game state \u2500\u2500 */
-    const ARENA_W = 60, ARENA_H = 40, PADDLE_H = 12;
+    let ARENA_W = 60;
+    const MAX_ARENA_W = 60, ARENA_H = 40, PADDLE_H = 12;
     let ballX = 0, ballY = 0;
     let ballVX = 0.5, ballVY = 0.3;
     let paddleLY = 0, paddleRY = 0;
@@ -1724,6 +1767,11 @@ const JXUniverse = {
     const step = () => {
       if (!this._pongActive) return;
       pongRAF = requestAnimationFrame(step);
+
+      /* Responsive arena scaling */
+      const aspect = window.innerWidth / window.innerHeight;
+      ARENA_W = Math.min(MAX_ARENA_W, aspect * 55);
+      const scaleX = ARENA_W / MAX_ARENA_W;
 
       /* Player paddle (left) follows mouse */
       paddleLY += (mouseNY * (ARENA_H - PADDLE_H) - paddleLY) * 0.12;
@@ -1805,26 +1853,29 @@ const JXUniverse = {
       const base = this._pongBase;
       const count = attr.count;
 
-      /* 0.40 - 0.60: Left Paddle */
       const idxLPStart = Math.floor(0.40 * count);
       const idxLPEnd   = Math.floor(0.60 * count);
-      for (let i = idxLPStart; i < idxLPEnd; i++) {
-        arr[i*3 + 1] = base[i*3 + 1] + paddleLY;
-      }
-      
-      /* 0.60 - 0.80: Right Paddle */
       const idxRPStart = Math.floor(0.60 * count);
       const idxRPEnd   = Math.floor(0.80 * count);
-      for (let i = idxRPStart; i < idxRPEnd; i++) {
-        arr[i*3 + 1] = base[i*3 + 1] + paddleRY;
-      }
-
-      /* 0.80 - 0.95: Ball */
       const idxBallStart = Math.floor(0.80 * count);
       const idxBallEnd   = Math.floor(0.95 * count);
-      for (let i = idxBallStart; i < idxBallEnd; i++) {
-        arr[i*3]     = base[i*3]     + ballX;
-        arr[i*3 + 1] = base[i*3 + 1] + ballY;
+
+      for (let i = 0; i < count; i++) {
+        if (i >= idxBallStart && i < idxBallEnd) {
+          /* Ball */
+          arr[i*3]     = base[i*3] + ballX;
+          arr[i*3 + 1] = base[i*3 + 1] + ballY;
+        } else {
+          /* Walls, paddles, and dust scaled proportionally */
+          arr[i*3] = base[i*3] * scaleX;
+          
+          /* Paddle Y updates */
+          if (i >= idxLPStart && i < idxLPEnd) {
+            arr[i*3 + 1] = base[i*3 + 1] + paddleLY;
+          } else if (i >= idxRPStart && i < idxRPEnd) {
+            arr[i*3 + 1] = base[i*3 + 1] + paddleRY;
+          }
+        }
       }
       
       attr.needsUpdate = true;

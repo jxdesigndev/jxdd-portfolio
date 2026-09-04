@@ -220,6 +220,52 @@
   let currentEditingProject = null;
   let currentEditingProcess = [];
   let currentEditingScreenshots = [];
+  let currentEditingThumbnail = null;
+  let currentEditingCover = null;
+  let currentEditingPersona = null;
+
+  function renderSingleGallery(containerId, url, stateKey) {
+    const container = document.getElementById(containerId);
+    if (!url) {
+      container.innerHTML = '';
+      return;
+    }
+    
+    // Check if it's a video
+    const isVid = url.toLowerCase().endsWith('.mp4') || url.toLowerCase().endsWith('.webm');
+    const mediaTag = isVid ? `<video src="${url}" muted playsinline></video>` : `<img src="${url}">`;
+    
+    container.innerHTML = `
+      <div class="admin-gallery-item">
+        ${mediaTag}
+        <button type="button" class="btn-remove" data-target="${containerId}">×</button>
+      </div>
+    `;
+    
+    container.querySelector('.btn-remove').addEventListener('click', () => {
+      if (stateKey === 'thumbnail') currentEditingThumbnail = null;
+      if (stateKey === 'cover') currentEditingCover = null;
+      if (stateKey === 'persona') currentEditingPersona = null;
+      if (stateKey === 'testLogo') currentEditingTestimonialLogo = null;
+      if (stateKey === 'testVideo') currentEditingTestimonialVideo = null;
+      if (stateKey === 'testPhoto') currentEditingTestimonialPhoto = null;
+      if (stateKey === 'toolLogo') currentEditingToolLogo = null;
+      if (stateKey === 'serviceImg') currentEditingServiceImage = null;
+      if (stateKey === 'serviceVid') currentEditingServiceVideo = null;
+      if (stateKey === 'aboutVideo') currentSettingAboutVideo = null;
+      if (stateKey === 'aboutPoster') currentSettingAboutPoster = null;
+      renderSingleGallery(containerId, null, stateKey);
+    });
+  }
+  
+  let currentEditingTestimonialLogo = null;
+  let currentEditingTestimonialVideo = null;
+  let currentEditingTestimonialPhoto = null;
+  let currentEditingToolLogo = null;
+  let currentEditingServiceImage = null;
+  let currentEditingServiceVideo = null;
+  let currentSettingAboutVideo = null;
+  let currentSettingAboutPoster = null;
 
   function renderMiniGallery(containerId, urlsArray) {
     const container = document.getElementById(containerId);
@@ -247,12 +293,15 @@
   function openProjectModal(project) {
     currentEditingProject = project || null;
     DOM.projectForm.reset();
-    document.getElementById('pf-image-preview').textContent = '';
-    document.getElementById('pf-cover-preview').textContent = '';
+    currentEditingThumbnail = null;
+    currentEditingCover = null;
+    currentEditingPersona = null;
     currentEditingProcess = [];
     currentEditingScreenshots = [];
+    document.getElementById('pf-image-preview').innerHTML = '';
+    document.getElementById('pf-cover-preview').innerHTML = '';
     document.getElementById('pf-process-preview').innerHTML = '';
-    document.getElementById('pf-persona-preview').textContent = '';
+    document.getElementById('pf-persona-preview').innerHTML = '';
     document.getElementById('pf-screenshots-preview').innerHTML = '';
 
     if (project) {
@@ -278,18 +327,17 @@
       document.getElementById('pf-outcome').value = project.outcome_text || '';
       if (window.pfOutcomeEditor) window.pfOutcomeEditor.commands.setContent(project.outcome_text || '');
       
-      if (project.image_url) {
-        document.getElementById('pf-image-preview').textContent = `Current: ${project.image_url.split('/').pop()}`;
-      }
-      if (project.cover_image_url) {
-        document.getElementById('pf-cover-preview').textContent = `Current: ${project.cover_image_url.split('/').pop()}`;
-      }
+      currentEditingThumbnail = project.image_url || null;
+      renderSingleGallery('pf-image-preview', currentEditingThumbnail, 'thumbnail');
+      
+      currentEditingCover = project.cover_image_url || null;
+      renderSingleGallery('pf-cover-preview', currentEditingCover, 'cover');
+
       currentEditingProcess = project.process_image_urls ? [...project.process_image_urls] : [];
       renderMiniGallery('pf-process-preview', currentEditingProcess);
 
-      if (project.persona_image_url) {
-        document.getElementById('pf-persona-preview').textContent = `Current: ${project.persona_image_url.split('/').pop()}`;
-      }
+      currentEditingPersona = project.persona_image_url || null;
+      renderSingleGallery('pf-persona-preview', currentEditingPersona, 'persona');
 
       currentEditingScreenshots = project.screenshot_urls ? [...project.screenshot_urls] : [];
       renderMiniGallery('pf-screenshots-preview', currentEditingScreenshots);
@@ -319,7 +367,7 @@
     btn.disabled = true;
 
     try {
-      let newImageUrl = currentEditingProject ? currentEditingProject.image_url : null;
+      let newImageUrl = currentEditingThumbnail;
       const imageFile = document.getElementById('pf-image').files[0];
       if (imageFile) {
         if (imageFile.type.startsWith('video/')) {
@@ -329,7 +377,7 @@
         }
       }
 
-      let newCoverUrl = currentEditingProject ? currentEditingProject.cover_image_url : null;
+      let newCoverUrl = currentEditingCover;
       const coverFile = document.getElementById('pf-cover').files[0];
       if (coverFile) {
         if (coverFile.type.startsWith('video/')) {
@@ -348,7 +396,7 @@
         }
       }
 
-      let newPersonaUrl = currentEditingProject ? currentEditingProject.persona_image_url : null;
+      let newPersonaUrl = currentEditingPersona;
       const personaFile = document.getElementById('pf-persona').files[0];
       if (personaFile) {
         newPersonaUrl = await uploadCompressedImage(personaFile);
@@ -729,7 +777,14 @@
     if (data) {
       data.forEach(row => {
         if (row.key === 'availability_status') DOM.settingAvailability.value = row.value;
-        if (row.key === 'about_video_url') DOM.settingAboutVideoPreview.value = row.value;
+        if (row.key === 'about_video_url') {
+          currentSettingAboutVideo = row.value || null;
+          renderSingleGallery('setting-about-video-preview', currentSettingAboutVideo, 'aboutVideo');
+        }
+        if (row.key === 'about_poster_url') {
+          currentSettingAboutPoster = row.value || null;
+          renderSingleGallery('setting-about-poster-preview', currentSettingAboutPoster, 'aboutPoster');
+        }
         if (row.key === 'social_twitter') DOM.settingSocialTwitter.value = row.value;
         if (row.key === 'social_linkedin') DOM.settingSocialLinkedin.value = row.value;
         if (row.key === 'social_github') DOM.settingSocialGithub.value = row.value;

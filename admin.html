@@ -49,7 +49,7 @@
     overflow: hidden;
     background: var(--surface-2);
   }
-  .admin-gallery-item img {
+  .admin-gallery-item img, .admin-gallery-item video {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -280,7 +280,7 @@
             </div>
             <div class="form-group" style="margin-top:var(--s-2);">
               <label class="form-label">Current Video URL</label>
-              <input type="url" id="setting-about-video-preview" class="form-input" readonly placeholder="No video uploaded yet">
+              <div id="setting-about-video-preview" class="admin-gallery-preview"></div>
             </div>
             <div class="form-group" style="margin-top:var(--s-4);">
               <label class="form-label" for="setting-about-poster">Upload Intro Poster (Image)</label>
@@ -288,7 +288,7 @@
             </div>
             <div class="form-group" style="margin-top:var(--s-2);">
               <label class="form-label">Current Poster URL</label>
-              <input type="url" id="setting-about-poster-preview" class="form-input" readonly placeholder="No poster uploaded yet">
+              <div id="setting-about-poster-preview" class="admin-gallery-preview"></div>
             </div>
             <button type="submit" id="btn-upload-video" class="btn btn-primary btn-sm" style="margin-top:var(--s-4);">Save About Media</button>
           </form>
@@ -414,7 +414,7 @@
         <div class="form-group">
           <label class="form-label" for="pf-image">Thumbnail — Image or Video (Listings, single)</label>
           <input type="file" id="pf-image" class="form-input" accept="image/*,video/mp4,video/webm">
-          <div id="pf-image-preview" style="margin-top:var(--s-2); font-size:var(--text-xs); color:var(--gray-2); word-break: break-all;"></div>
+          <div id="pf-image-preview" class="admin-gallery-preview"></div>
         </div>
 
         <div class="form-group">
@@ -457,7 +457,7 @@
           <div class="form-group">
             <label class="form-label" for="pf-cover">Cover — Image or Video (single)</label>
             <input type="file" id="pf-cover" class="form-input" accept="image/*,video/mp4,video/webm">
-            <div id="pf-cover-preview" style="margin-top:var(--s-2); font-size:var(--text-xs); color:var(--gray-2); word-break: break-all;"></div>
+            <div id="pf-cover-preview" class="admin-gallery-preview"></div>
           </div>
         </div>
 
@@ -472,7 +472,7 @@
           <div class="form-group">
             <label class="form-label" for="pf-persona">Persona / Company Logo</label>
             <input type="file" id="pf-persona" class="form-input" accept="image/*">
-            <div id="pf-persona-preview" style="margin-top:var(--s-2); font-size:var(--text-xs); color:var(--gray-2); word-break: break-all;"></div>
+            <div id="pf-persona-preview" class="admin-gallery-preview"></div>
           </div>
         </div>
 
@@ -583,21 +583,21 @@
           <label class="form-label" for="tf-logo-file">Logo Upload</label>
           <input type="file" id="tf-logo-file" class="form-input" accept="image/*">
           <label class="form-label" for="tf-logo-preview" style="margin-top:var(--s-3);">Current Logo URL</label>
-          <input type="url" id="tf-logo-preview" class="form-input" readonly placeholder="No logo uploaded yet">
+          <div id="tf-logo-preview" class="admin-gallery-preview"></div>
         </div>
 
         <div class="form-group">
           <label class="form-label" for="tf-video-file">Video Upload</label>
           <input type="file" id="tf-video-file" class="form-input" accept="video/mp4,video/webm">
           <label class="form-label" for="tf-video-preview" style="margin-top:var(--s-3);">Current Video URL</label>
-          <input type="url" id="tf-video-preview" class="form-input" readonly placeholder="No video uploaded yet">
+          <div id="tf-video-preview" class="admin-gallery-preview"></div>
         </div>
 
         <div class="form-group">
           <label class="form-label" for="tf-photo-file">Photo Upload</label>
           <input type="file" id="tf-photo-file" class="form-input" accept="image/*">
           <label class="form-label" for="tf-photo-preview" style="margin-top:var(--s-3);">Current Photo URL</label>
-          <input type="url" id="tf-photo-preview" class="form-input" readonly placeholder="No photo uploaded yet">
+          <div id="tf-photo-preview" class="admin-gallery-preview"></div>
         </div>
 
         <div class="form-row">
@@ -652,7 +652,7 @@
           <label class="form-label" for="tlf-logo-file">Logo Image (upload)</label>
           <input type="file" id="tlf-logo-file" class="form-input" accept="image/*">
           <label class="form-label" for="tlf-logo-preview" style="margin-top:var(--s-3);">Current Logo URL</label>
-          <input type="url" id="tlf-logo-preview" class="form-input" readonly placeholder="No logo uploaded yet">
+          <div id="tlf-logo-preview" class="admin-gallery-preview"></div>
         </div>
 
         <div class="form-row">
@@ -748,13 +748,13 @@
         <div class="form-group">
           <label class="form-label" for="sv-image">Poster Image (single)</label>
           <input type="file" id="sv-image" class="form-input" accept="image/*">
-          <div id="sv-image-preview" style="margin-top:var(--s-2); font-size:var(--text-xs); color:var(--gray-2); word-break: break-all;"></div>
+          <div id="sv-image-preview" class="admin-gallery-preview"></div>
         </div>
 
         <div class="form-group">
           <label class="form-label" for="sv-video">Demo Video (single, mp4/webm)</label>
           <input type="file" id="sv-video" class="form-input" accept="video/mp4,video/webm">
-          <div id="sv-video-preview" style="margin-top:var(--s-2); font-size:var(--text-xs); color:var(--gray-2); word-break: break-all;"></div>
+          <div id="sv-video-preview" class="admin-gallery-preview"></div>
         </div>
 
         <div class="form-row">

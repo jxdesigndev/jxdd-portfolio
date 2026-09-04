@@ -189,15 +189,23 @@
   }
 
   /* ── Screenshot Gallery: smart responsive grid ── */
-  .screenshot-gallery {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: var(--s-8);
-    align-items: start;
+    .screenshot-gallery {
+    column-count: 2;
+    column-gap: var(--s-8);
     margin: var(--s-16) 0;
   }
 
+  @media (max-width: 768px) {
+    .screenshot-gallery {
+      column-count: 1;
+    }
+  }
+
   .screenshot-frame {
+    break-inside: avoid;
+    -webkit-column-break-inside: avoid;
+    page-break-inside: avoid;
+    margin-bottom: var(--s-8);
     background: linear-gradient(145deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
     border: 1px solid rgba(255,255,255,0.05);
     border-radius: 16px;
@@ -211,27 +219,21 @@
     cursor: pointer;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
   }
+
   .screenshot-frame:hover {
     transform: translateY(-4px);
     box-shadow: inset 0 0 40px rgba(0,0,0,0.2), 0 20px 40px rgba(0,0,0,0.5);
   }
 
-  /* Single portrait image: expand to reasonable width, centered */
   .screenshot-gallery.single-portrait {
-    grid-template-columns: minmax(260px, 480px);
-    justify-content: center;
-  }
-
-  /* Landscape always spans full row */
-  .screenshot-frame.frame-landscape {
-    grid-column: 1 / -1;
-  }
-
-  /* Orphan last portrait: if there's an odd one out, let it fill the row gracefully */
-  .screenshot-frame.frame-portrait:last-child:nth-child(odd) {
-    grid-column: 1 / -1;
+    column-count: 1;
     max-width: 480px;
-    justify-self: center;
+    margin: var(--s-16) auto;
+  }
+
+  .screenshot-frame.frame-landscape {
+    column-span: all;
+    -webkit-column-span: all;
   }
 
   .screenshot-frame picture,

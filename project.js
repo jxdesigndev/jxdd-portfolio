@@ -317,7 +317,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       contentSection.appendChild(h2);
 
       const ALLOWED = {
-        ALLOWED_TAGS: ['b','strong','i','em','blockquote','p','br','ul','ol','li','h2','h3','h4']
+        ALLOWED_TAGS: ['b','strong','i','em','blockquote','p','br','ul','ol','li','h2','h3','h4','img']
       };
 
       // Wrapper for text + float image
@@ -432,7 +432,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       contentSection.appendChild(h2);
 
       const ALLOWED = {
-        ALLOWED_TAGS: ['b','strong','i','em','blockquote','p','br','ul','ol','li','h2','h3','h4']
+        ALLOWED_TAGS: ['b','strong','i','em','blockquote','p','br','ul','ol','li','h2','h3','h4','img']
       };
       const cleanHTML = window.DOMPurify
         ? window.DOMPurify.sanitize(project.outcome_text, ALLOWED)

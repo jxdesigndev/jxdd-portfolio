@@ -23,7 +23,8 @@
   <script type="module">
     import { Editor } from 'https://esm.sh/@tiptap/core@2';
     import StarterKit from 'https://esm.sh/@tiptap/starter-kit@2';
-    window.TipTap = { Editor, StarterKit };
+    import Image from 'https://esm.sh/@tiptap/extension-image@2';
+    window.TipTap = { Editor, StarterKit, Image };
     window.dispatchEvent(new Event('tiptap-ready'));
   </script>
   <style>

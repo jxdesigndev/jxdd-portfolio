@@ -218,15 +218,42 @@
   DOM.btnNewProject.addEventListener('click', () => openProjectModal(null));
 
   let currentEditingProject = null;
+  let currentEditingProcess = [];
+  let currentEditingScreenshots = [];
+
+  function renderMiniGallery(containerId, urlsArray) {
+    const container = document.getElementById(containerId);
+    container.innerHTML = urlsArray.map((url, i) => `
+      <div class="admin-gallery-item">
+        <img src="${url}">
+        <button type="button" class="btn-remove" data-index="${i}" data-target="${containerId}">×</button>
+      </div>
+    `).join('');
+    
+    container.querySelectorAll('.btn-remove').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const idx = parseInt(e.target.dataset.index);
+        if (containerId === 'pf-process-preview') {
+          currentEditingProcess.splice(idx, 1);
+          renderMiniGallery('pf-process-preview', currentEditingProcess);
+        } else {
+          currentEditingScreenshots.splice(idx, 1);
+          renderMiniGallery('pf-screenshots-preview', currentEditingScreenshots);
+        }
+      });
+    });
+  }
 
   function openProjectModal(project) {
     currentEditingProject = project || null;
     DOM.projectForm.reset();
     document.getElementById('pf-image-preview').textContent = '';
     document.getElementById('pf-cover-preview').textContent = '';
-    document.getElementById('pf-process-preview').textContent = '';
+    currentEditingProcess = [];
+    currentEditingScreenshots = [];
+    document.getElementById('pf-process-preview').innerHTML = '';
     document.getElementById('pf-persona-preview').textContent = '';
-    document.getElementById('pf-screenshots-preview').textContent = '';
+    document.getElementById('pf-screenshots-preview').innerHTML = '';
 
     if (project) {
       DOM.projectModalTitle.textContent = 'Edit Project';
@@ -257,15 +284,15 @@
       if (project.cover_image_url) {
         document.getElementById('pf-cover-preview').textContent = `Current: ${project.cover_image_url.split('/').pop()}`;
       }
-      if (project.process_image_urls && project.process_image_urls.length > 0) {
-        document.getElementById('pf-process-preview').textContent = `Current: ${project.process_image_urls.length} image(s) saved.`;
-      }
+      currentEditingProcess = project.process_image_urls ? [...project.process_image_urls] : [];
+      renderMiniGallery('pf-process-preview', currentEditingProcess);
+
       if (project.persona_image_url) {
         document.getElementById('pf-persona-preview').textContent = `Current: ${project.persona_image_url.split('/').pop()}`;
       }
-      if (project.screenshot_urls && project.screenshot_urls.length > 0) {
-        document.getElementById('pf-screenshots-preview').textContent = `Current: ${project.screenshot_urls.length} image(s) saved.`;
-      }
+
+      currentEditingScreenshots = project.screenshot_urls ? [...project.screenshot_urls] : [];
+      renderMiniGallery('pf-screenshots-preview', currentEditingScreenshots);
       
       document.getElementById('pf-featured').checked = !!project.featured;
       DOM.btnDeleteProject.style.display = 'block';
@@ -312,10 +339,9 @@
         }
       }
 
-      let newProcessUrls = currentEditingProject ? currentEditingProject.process_image_urls : [];
+      let newProcessUrls = [...currentEditingProcess];
       const processFiles = document.getElementById('pf-process').files;
       if (processFiles && processFiles.length > 0) {
-        newProcessUrls = [];
         for (let i = 0; i < processFiles.length; i++) {
           const url = await uploadCompressedImage(processFiles[i]);
           newProcessUrls.push(url);
@@ -328,10 +354,9 @@
         newPersonaUrl = await uploadCompressedImage(personaFile);
       }
 
-      let newScreenshots = currentEditingProject ? currentEditingProject.screenshot_urls : [];
+      let newScreenshots = [...currentEditingScreenshots];
       const screenshotFiles = document.getElementById('pf-screenshots').files;
       if (screenshotFiles && screenshotFiles.length > 0) {
-        newScreenshots = [];
         for (let i = 0; i < screenshotFiles.length; i++) {
           const url = await uploadCompressedImage(screenshotFiles[i]);
           newScreenshots.push(url);

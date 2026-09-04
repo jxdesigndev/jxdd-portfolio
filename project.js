@@ -359,30 +359,27 @@ document.addEventListener('DOMContentLoaded', async () => {
       const gallery = document.createElement('div');
       gallery.className = 'screenshot-gallery';
 
-      const procPromises = project.process_image_urls.map((url, i) => new Promise(resolve => {
+      project.process_image_urls.forEach((url, i) => {
         const frame = document.createElement('div');
-        frame.className = 'screenshot-frame';
+        frame.className = 'screenshot-frame frame-portrait';
         frame.style.transitionDelay = `${i * 0.1}s`;
         const img = document.createElement('img');
         img.onload = () => {
-          frame.classList.add(img.naturalWidth > img.naturalHeight ? 'frame-landscape' : 'frame-portrait');
-          resolve(frame);
+          if (img.naturalWidth > img.naturalHeight) {
+            frame.classList.remove('frame-portrait');
+            frame.classList.add('frame-landscape');
+          }
+          if (window.ScrollTrigger) window.ScrollTrigger.refresh();
         };
-        img.onerror = () => resolve(null);
         img.src = url;
         img.alt = `Process ${i + 1}`;
-        img.loading = 'lazy';
         const pic = document.createElement('picture');
         pic.appendChild(img);
         frame.appendChild(pic);
-      }));
+        gallery.appendChild(frame);
+      });
 
-      const loaded = await Promise.all(procPromises);
-      loaded.forEach(f => { if (f) gallery.appendChild(f); });
-
-      // Single image gets full width treatment
-      const validFrames = loaded.filter(Boolean);
-      if (validFrames.length === 1 && validFrames[0].classList.contains('frame-portrait')) {
+      if (project.process_image_urls.length === 1) {
         gallery.classList.add('single-portrait');
       }
 
@@ -400,29 +397,27 @@ document.addEventListener('DOMContentLoaded', async () => {
       const gallery = document.createElement('div');
       gallery.className = 'screenshot-gallery';
 
-      const framePromises = project.screenshot_urls.map((url, i) => new Promise(resolve => {
+      project.screenshot_urls.forEach((url, i) => {
         const frame = document.createElement('div');
-        frame.className = 'screenshot-frame';
+        frame.className = 'screenshot-frame frame-portrait';
         frame.style.transitionDelay = `${i * 0.1}s`;
         const img = document.createElement('img');
         img.onload = () => {
-          frame.classList.add(img.naturalWidth > img.naturalHeight ? 'frame-landscape' : 'frame-portrait');
-          resolve(frame);
+          if (img.naturalWidth > img.naturalHeight) {
+            frame.classList.remove('frame-portrait');
+            frame.classList.add('frame-landscape');
+          }
+          if (window.ScrollTrigger) window.ScrollTrigger.refresh();
         };
-        img.onerror = () => resolve(null);
         img.src = url;
         img.alt = `Screen ${i + 1}`;
         const pic = document.createElement('picture');
         pic.appendChild(img);
         frame.appendChild(pic);
-      }));
+        gallery.appendChild(frame);
+      });
 
-      const loadedFrames = await Promise.all(framePromises);
-      loadedFrames.forEach(f => { if (f) gallery.appendChild(f); });
-
-      // Single portrait image: center it nicely
-      const validScreens = loadedFrames.filter(Boolean);
-      if (validScreens.length === 1 && validScreens[0].classList.contains('frame-portrait')) {
+      if (project.screenshot_urls.length === 1) {
         gallery.classList.add('single-portrait');
       }
 

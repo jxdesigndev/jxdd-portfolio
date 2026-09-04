@@ -3,12 +3,116 @@ document.addEventListener('DOMContentLoaded', async () => {
   const footerTitle = document.getElementById('footer-project-title');
   const pageWrap = document.getElementById('page');
 
-  // GSAP or CSS fallback animation wrapper
+  /* ── Helper: detect if a URL is a video ── */
+  function isVideoUrl(url) {
+    if (!url) return false;
+    const u = url.toLowerCase().split('?')[0];
+    return u.endsWith('.mp4') || u.endsWith('.webm') || u.endsWith('.mov');
+  }
+
+  /* ── Helper: render image or video element ── */
+  function makeMedia(src, altOrTitle, extraClass, lazy) {
+    if (isVideoUrl(src)) {
+      const vid = document.createElement('video');
+      vid.src = src;
+      vid.autoplay = true;
+      vid.loop = true;
+      vid.muted = true;
+      vid.playsInline = true;
+      vid.className = extraClass || '';
+      return vid;
+    }
+    const img = document.createElement('img');
+    img.src = src;
+    img.alt = altOrTitle || '';
+    img.className = extraClass || '';
+    if (lazy) img.loading = 'lazy';
+    return img;
+  }
+
+  /* ── Terminal decoder animation on h2 elements ── */
+  function attachDecoder(el) {
+    if (!window.gsap || !window.ScrollTrigger) return;
+    const original = el.textContent;
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*';
+    let frame = 0;
+    let raf;
+    const totalFrames = 18;
+    ScrollTrigger.create({
+      trigger: el,
+      start: 'top 88%',
+      once: true,
+      onEnter: () => {
+        el.classList.add('decoder-running');
+        const run = () => {
+          frame++;
+          const progress = frame / totalFrames;
+          el.textContent = original
+            .split('')
+            .map((c, i) => {
+              if (c === ' ') return ' ';
+              if (i / original.length < progress) return c;
+              return chars[Math.floor(Math.random() * chars.length)];
+            })
+            .join('');
+          if (frame < totalFrames) {
+            raf = requestAnimationFrame(run);
+          } else {
+            el.textContent = original;
+            el.classList.remove('decoder-running');
+          }
+        };
+        raf = requestAnimationFrame(run);
+      }
+    });
+  }
+
+  /* ── Lightbox setup ── */
+  function setupLightbox() {
+    let lb = document.getElementById('cs-lightbox');
+    if (!lb) {
+      lb = document.createElement('div');
+      lb.id = 'cs-lightbox';
+      lb.innerHTML = `<button id="cs-lightbox-close" aria-label="Close">✕</button><img src="" alt="">`;
+      document.body.appendChild(lb);
+      const closeBtn = lb.querySelector('#cs-lightbox-close');
+      const closeIt = () => { lb.classList.remove('open'); };
+      closeBtn.addEventListener('click', (e) => { e.stopPropagation(); closeIt(); });
+      lb.addEventListener('click', closeIt);
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeIt(); });
+    }
+    return lb;
+  }
+
+  function openLightbox(src, alt) {
+    const lb = document.getElementById('cs-lightbox') || setupLightbox();
+    const img = lb.querySelector('img');
+    img.src = src;
+    img.alt = alt || '';
+    lb.classList.add('open');
+  }
+
+  /* ── Magnetic button effect ── */
+  function attachMagnetic(el) {
+    const strength = 0.3;
+    el.addEventListener('mousemove', (e) => {
+      const rect = el.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+      const dx = (e.clientX - cx) * strength;
+      const dy = (e.clientY - cy) * strength;
+      el.style.transform = `translate(${dx}px, ${dy}px)`;
+    });
+    el.addEventListener('mouseleave', () => {
+      el.style.transform = 'translate(0,0)';
+    });
+  }
+
+  /* ── GSAP animations ── */
   const applyAnimations = () => {
-    // Fade page in
     if (window.gsap) {
       gsap.to('#page', { opacity: 1, duration: 1, ease: 'power2.out' });
-      
+
       const reveals = document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale, .reveal-blur');
       reveals.forEach(el => {
         const isLeft  = el.classList.contains('reveal-left');
@@ -17,7 +121,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const isBlur  = el.classList.contains('reveal-blur');
 
         const from = isLeft  ? { opacity: 0, x: -40 }
-                   : isRight ? { opacity: 0, x: 40  }
+                   : isRight ? { opacity: 0, x:  40 }
                    : isScale ? { opacity: 0, scale: 0.92 }
                    : isBlur  ? { opacity: 0, filter: 'blur(12px)' }
                    : { opacity: 0, y: 40 };
@@ -31,106 +135,104 @@ document.addEventListener('DOMContentLoaded', async () => {
           ...to,
           duration: 0.9,
           ease: 'power3.out',
-          scrollTrigger: {
-            trigger: el,
-            start: 'top 88%',
-            once: true,
-          }
+          scrollTrigger: { trigger: el, start: 'top 88%', once: true }
         });
       });
-      
+
+      // Staggered gallery reveals
+      document.querySelectorAll('.screenshot-gallery').forEach(gallery => {
+        const frames = gallery.querySelectorAll('.screenshot-frame');
+        frames.forEach((frame, i) => {
+          gsap.fromTo(frame,
+            { opacity: 0, y: 40, scale: 0.95 },
+            {
+              opacity: 1, y: 0, scale: 1,
+              duration: 0.7,
+              ease: 'power3.out',
+              delay: i * 0.08,
+              scrollTrigger: { trigger: frame, start: 'top 90%', once: true }
+            }
+          );
+        });
+      });
+
+      // Decoder on all h2 headings in content
+      document.querySelectorAll('.case-study-content h2').forEach(attachDecoder);
+
+      // Parallax on images
       gsap.utils.toArray('.parallax-img').forEach(img => {
         gsap.to(img, {
-          y: -40,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: img,
-            start: 'top bottom',
-            end: 'bottom top',
-            scrub: true
-          }
+          y: -40, ease: 'none',
+          scrollTrigger: { trigger: img, start: 'top bottom', end: 'bottom top', scrub: true }
         });
       });
     } else {
-      // Fallback
       pageWrap.style.opacity = '1';
-      pageWrap.style.transition = 'opacity 0.6s ease';
       document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale, .reveal-blur').forEach(el => {
         el.style.opacity = '1';
         el.style.transform = 'none';
         el.style.filter = 'none';
       });
     }
+
+    // Magnetic buttons (works without GSAP)
+    document.querySelectorAll('.btn-magnetic').forEach(attachMagnetic);
+
+    // Lightbox on all screenshot images
+    setupLightbox();
+    document.querySelectorAll('.screenshot-frame img').forEach(img => {
+      img.addEventListener('click', (e) => {
+        e.stopPropagation();
+        openLightbox(img.src, img.alt);
+      });
+      img.style.cursor = 'zoom-in';
+    });
   };
 
+  /* ── Not Found ── */
   const renderNotFound = () => {
     mainContent.innerHTML = '';
     const section = document.createElement('section');
     section.className = 'case-study-hero';
     section.style.textAlign = 'center';
-    
     const backBtn = document.createElement('a');
     backBtn.href = 'work.html';
     backBtn.className = 'btn btn-ghost';
     backBtn.style.marginBottom = 'var(--s-12)';
     backBtn.textContent = '← Back to Work';
-    
     const title = document.createElement('h1');
     title.className = 'case-study-title reveal';
     title.textContent = 'Project Not Found';
-    
     const subtitle = document.createElement('p');
     subtitle.style.fontFamily = 'var(--font-mono)';
     subtitle.style.color = 'var(--gray-2)';
     subtitle.textContent = 'The case study you are looking for does not exist.';
-    
     section.appendChild(backBtn);
     section.appendChild(title);
     section.appendChild(subtitle);
     mainContent.appendChild(section);
-    
     applyAnimations();
   };
 
   try {
     const params = new URLSearchParams(window.location.search);
     const slug = params.get('slug');
+    if (!slug) { renderNotFound(); return; }
 
-    if (!slug) {
-      renderNotFound();
-      return;
-    }
-
-    try {
-      if (window.initSupabase) await window.initSupabase();
-    } catch (err) {
-      console.warn("Supabase init failed", err);
-    }
-    
-    if (typeof supabase === 'undefined' || !supabase.from) {
-      renderNotFound();
-      return;
-    }
+    try { if (window.initSupabase) await window.initSupabase(); } catch (err) { console.warn('Supabase init failed', err); }
+    if (typeof supabase === 'undefined' || !supabase.from) { renderNotFound(); return; }
 
     const { data: project, error } = await window.supabase
-      .from('projects')
-      .select('*')
-      .eq('slug', slug)
-      .single();
+      .from('projects').select('*').eq('slug', slug).single();
 
-    if (error || !project) {
-      console.error('Project fetch error:', error);
-      renderNotFound();
-      return;
-    }
+    if (error || !project) { console.error('Project fetch error:', error); renderNotFound(); return; }
 
-    // Build DOM safely
     mainContent.innerHTML = '';
 
-    // -- Hero Section --
+    // ── HERO SECTION ──
     const heroSection = document.createElement('section');
     heroSection.className = 'case-study-hero';
-    
+
     const backLink = document.createElement('a');
     backLink.href = 'work.html';
     backLink.className = 'btn btn-ghost';
@@ -144,266 +246,247 @@ document.addEventListener('DOMContentLoaded', async () => {
     titleH1.textContent = project.title || 'Untitled';
     heroSection.appendChild(titleH1);
 
+    // Meta grid: 2 rows × 3 cols
     const metaGrid = document.createElement('div');
     metaGrid.className = 'case-study-meta reveal-scale';
-    
-    const metaItems = [
-      { label: 'Category', value: project.category },
-      { label: 'Year', value: project.year },
-      { label: 'Role', value: project.project_role },
-      { label: 'Tools', value: (project.tools || []).join(', ') },
-      { label: 'Timeline', value: project.timeline },
-      { label: 'Type', value: project.project_type }
-    ];
 
-    metaItems.forEach(item => {
-      if (item.value) {
-        const div = document.createElement('div');
-        div.textContent = item.label + ' ';
-        const span = document.createElement('span');
-        span.textContent = item.value;
-        div.appendChild(span);
-        metaGrid.appendChild(div);
-      }
+    const regularMeta = [
+      { label: 'Category', value: project.category },
+      { label: 'Year',     value: project.year },
+      { label: 'Role',     value: project.project_role },
+      { label: 'Timeline', value: project.timeline },
+      { label: 'Type',     value: project.project_type },
+    ];
+    regularMeta.forEach(item => {
+      if (!item.value) return;
+      const cell = document.createElement('div');
+      cell.className = 'meta-cell';
+      const lbl = document.createElement('span');
+      lbl.className = 'meta-label';
+      lbl.textContent = item.label;
+      const val = document.createElement('span');
+      val.className = 'meta-value';
+      val.textContent = item.value;
+      cell.appendChild(lbl);
+      cell.appendChild(val);
+      metaGrid.appendChild(cell);
     });
-    if (metaGrid.children.length > 0) {
-      heroSection.appendChild(metaGrid);
+
+    // Tools as pills (occupies last slot in the grid)
+    if (project.tools && project.tools.length > 0) {
+      const cell = document.createElement('div');
+      cell.className = 'meta-cell';
+      const lbl = document.createElement('span');
+      lbl.className = 'meta-label';
+      lbl.textContent = 'Tools';
+      const pillRow = document.createElement('div');
+      pillRow.className = 'meta-tools-row';
+      project.tools.forEach(tool => {
+        const pill = document.createElement('span');
+        pill.className = 'tool-pill';
+        pill.textContent = tool;
+        pillRow.appendChild(pill);
+      });
+      cell.appendChild(lbl);
+      cell.appendChild(pillRow);
+      metaGrid.appendChild(cell);
     }
 
+    if (metaGrid.children.length > 0) heroSection.appendChild(metaGrid);
+
+    // Hero cover: image or video
     const heroSrc = project.cover_image_url || project.image_url;
     if (heroSrc) {
-      const heroImg = document.createElement('img');
-      heroImg.src = heroSrc;
-      heroImg.alt = project.title;
-      heroImg.className = 'case-study-image-full reveal-scale';
-      heroImg.loading = 'lazy';
-      heroSection.appendChild(heroImg);
+      const heroMedia = isVideoUrl(heroSrc)
+        ? makeMedia(heroSrc, project.title, 'case-study-video-full reveal-scale')
+        : makeMedia(heroSrc, project.title, 'case-study-image-full reveal-scale', true);
+      heroSection.appendChild(heroMedia);
     }
     mainContent.appendChild(heroSection);
 
-    // -- Content Section --
+    // ── CONTENT SECTION ──
     const contentSection = document.createElement('section');
     contentSection.className = 'case-study-content';
 
-    // Overview / Full Content Split Section
-    // Uses project.content (the rich "Full Content / Story" TipTap field)
-    // paired with the persona image. Falls back to project.description if content is empty.
+    // ── OVERVIEW ──
     const overviewText = project.content || project.description;
-    if (project.persona_image_url || overviewText) {
-      const descHeading = document.createElement('h2');
-      descHeading.className = 'reveal';
-      descHeading.textContent = 'Overview';
-      contentSection.appendChild(descHeading);
+    if (overviewText || project.persona_image_url) {
+      const h2 = document.createElement('h2');
+      h2.className = 'reveal';
+      h2.textContent = 'Overview';
+      contentSection.appendChild(h2);
 
-      const splitDiv = document.createElement('div');
-      splitDiv.className = 'split-section';
-      splitDiv.style.marginTop = '0';
+      const ALLOWED = {
+        ALLOWED_TAGS: ['b','strong','i','em','blockquote','p','br','ul','ol','li','h2','h3','h4']
+      };
 
-      const textWrapper = document.createElement('div');
+      // Wrapper for text + float image
+      const overviewWrap = document.createElement('div');
+      overviewWrap.className = 'overview-wrap overview-clearfix';
+
+      // Float persona image right if exists
+      if (project.persona_image_url) {
+        const pImg = document.createElement('img');
+        pImg.src = project.persona_image_url;
+        pImg.alt = 'Persona';
+        pImg.className = 'persona-float reveal-blur';
+        pImg.loading = 'lazy';
+        overviewWrap.appendChild(pImg);
+      }
 
       if (overviewText) {
-        const ALLOWED = { ALLOWED_TAGS: ['b', 'strong', 'i', 'em', 'blockquote', 'p', 'br', 'ul', 'ol', 'li', 'h2', 'h3', 'h4'] };
         const cleanHTML = window.DOMPurify
           ? window.DOMPurify.sanitize(overviewText, ALLOWED)
           : (() => { const d = document.createElement('div'); d.textContent = new DOMParser().parseFromString(overviewText || '', 'text/html').body.textContent || ''; return d.innerHTML; })();
         const tempDiv = document.createElement('div');
         tempDiv.className = 'tiptap-content';
         tempDiv.innerHTML = cleanHTML;
-
-        // Add reveal class to each top-level element for staggered GSAP scroll reveals
         tempDiv.querySelectorAll('p, blockquote, ul, ol, h2, h3, h4').forEach(el => el.classList.add('reveal'));
-
-        textWrapper.appendChild(tempDiv);
+        overviewWrap.appendChild(tempDiv);
       }
 
-      splitDiv.appendChild(textWrapper);
-
-      const imgWrapper = document.createElement('div');
-      imgWrapper.className = 'reveal-blur';
-      if (project.persona_image_url) {
-        const pImg = document.createElement('img');
-        pImg.src = project.persona_image_url;
-        pImg.alt = 'Persona Image';
-        pImg.className = 'case-study-image-full';
-        pImg.loading = 'lazy';
-        pImg.style.margin = '0';
-        pImg.style.boxShadow = '0 20px 40px rgba(0,0,0,0.3)';
-        imgWrapper.appendChild(pImg);
-      }
-      splitDiv.appendChild(imgWrapper);
-
-      contentSection.appendChild(splitDiv);
+      contentSection.appendChild(overviewWrap);
     }
 
-
-    // Process Images
+    // ── PROCESS & WIREFRAMES ──
     if (project.process_image_urls && project.process_image_urls.length > 0) {
-      const procHeading = document.createElement('h2');
-      procHeading.className = 'reveal';
-      procHeading.textContent = 'Process & Wireframes';
-      procHeading.style.marginTop = 'var(--s-32)';
-      contentSection.appendChild(procHeading);
+      const h2 = document.createElement('h2');
+      h2.className = 'reveal';
+      h2.textContent = 'Process & Wireframes';
+      h2.style.marginTop = 'var(--s-32)';
+      contentSection.appendChild(h2);
 
-      const processGallery = document.createElement('div');
-      processGallery.className = 'screenshot-gallery';
+      const gallery = document.createElement('div');
+      gallery.className = 'screenshot-gallery';
 
-      const procPromises = project.process_image_urls.map((url, i) => {
-        return new Promise((resolve) => {
-          const frame = document.createElement('div');
-          frame.className = 'screenshot-frame reveal-scale';
-          frame.style.transitionDelay = `${i * 0.1}s`;
-          
-          const img = document.createElement('img');
-          
-          img.onload = () => {
-            if (img.naturalWidth > img.naturalHeight) {
-              frame.classList.add('frame-landscape');
-            } else {
-              frame.classList.add('frame-portrait');
-            }
-            resolve(frame);
-          };
-          img.onerror = () => {
-            console.warn('Failed to load process image:', url);
-            resolve(null);
-          };
+      const procPromises = project.process_image_urls.map((url, i) => new Promise(resolve => {
+        const frame = document.createElement('div');
+        frame.className = 'screenshot-frame';
+        frame.style.transitionDelay = `${i * 0.1}s`;
+        const img = document.createElement('img');
+        img.onload = () => {
+          frame.classList.add(img.naturalWidth > img.naturalHeight ? 'frame-landscape' : 'frame-portrait');
+          resolve(frame);
+        };
+        img.onerror = () => resolve(null);
+        img.src = url;
+        img.alt = `Process ${i + 1}`;
+        img.loading = 'lazy';
+        const pic = document.createElement('picture');
+        pic.appendChild(img);
+        frame.appendChild(pic);
+      }));
 
-          img.src = url;
-          img.alt = `Process ${i + 1}`;
-          
-          const picture = document.createElement('picture');
-          picture.appendChild(img);
-          frame.appendChild(picture);
-        });
-      });
+      const loaded = await Promise.all(procPromises);
+      loaded.forEach(f => { if (f) gallery.appendChild(f); });
 
-      const loadedProcFrames = await Promise.all(procPromises);
-      loadedProcFrames.forEach(frame => {
-        if (frame) processGallery.appendChild(frame);
-      });
+      // Single image gets full width treatment
+      const validFrames = loaded.filter(Boolean);
+      if (validFrames.length === 1 && validFrames[0].classList.contains('frame-portrait')) {
+        gallery.classList.add('single-portrait');
+      }
 
-      contentSection.appendChild(processGallery);
+      contentSection.appendChild(gallery);
     }
 
-    // Screenshots Gallery
+    // ── SCREENS ──
     if (project.screenshot_urls && project.screenshot_urls.length > 0) {
-      const screensHeading = document.createElement('h2');
-      screensHeading.className = 'reveal';
-      screensHeading.textContent = 'Screens';
-      screensHeading.style.marginTop = 'var(--s-32)';
-      contentSection.appendChild(screensHeading);
+      const h2 = document.createElement('h2');
+      h2.className = 'reveal';
+      h2.textContent = 'Screens';
+      h2.style.marginTop = 'var(--s-32)';
+      contentSection.appendChild(h2);
 
-      const galleryDiv = document.createElement('div');
-      galleryDiv.className = 'screenshot-gallery';
+      const gallery = document.createElement('div');
+      gallery.className = 'screenshot-gallery';
 
-
-      // Preload images in memory to determine orientation BEFORE appending to DOM
-      // This prevents layout shifts/flashes and avoids ScrollTrigger recalculation issues.
-      const framePromises = project.screenshot_urls.map((url, i) => {
-        return new Promise((resolve) => {
-          const frame = document.createElement('div');
-          frame.className = 'screenshot-frame reveal-scale';
-          frame.style.transitionDelay = `${i * 0.1}s`;
-          
-          const img = document.createElement('img');
-          // Removed loading='lazy' because off-DOM lazy images may never trigger onload
-          
-          img.onload = () => {
-            if (img.naturalWidth > img.naturalHeight) {
-              frame.classList.add('frame-landscape');
-            } else {
-              frame.classList.add('frame-portrait');
-            }
-            resolve(frame);
-          };
-          img.onerror = () => {
-            console.warn('Failed to load screenshot:', url);
-            resolve(null);
-          };
-
-          img.src = url;
-          img.alt = `Screenshot ${i + 1}`;
-          
-          const picture = document.createElement('picture');
-          picture.appendChild(img);
-          frame.appendChild(picture);
-        });
-      });
+      const framePromises = project.screenshot_urls.map((url, i) => new Promise(resolve => {
+        const frame = document.createElement('div');
+        frame.className = 'screenshot-frame';
+        frame.style.transitionDelay = `${i * 0.1}s`;
+        const img = document.createElement('img');
+        img.onload = () => {
+          frame.classList.add(img.naturalWidth > img.naturalHeight ? 'frame-landscape' : 'frame-portrait');
+          resolve(frame);
+        };
+        img.onerror = () => resolve(null);
+        img.src = url;
+        img.alt = `Screen ${i + 1}`;
+        const pic = document.createElement('picture');
+        pic.appendChild(img);
+        frame.appendChild(pic);
+      }));
 
       const loadedFrames = await Promise.all(framePromises);
-      loadedFrames.forEach(frame => {
-        if (frame) galleryDiv.appendChild(frame);
-      });
+      loadedFrames.forEach(f => { if (f) gallery.appendChild(f); });
 
-      contentSection.appendChild(galleryDiv);
+      // Single portrait image: center it nicely
+      const validScreens = loadedFrames.filter(Boolean);
+      if (validScreens.length === 1 && validScreens[0].classList.contains('frame-portrait')) {
+        gallery.classList.add('single-portrait');
+      }
+
+      contentSection.appendChild(gallery);
     }
 
-
-    // Outcome
+    // ── OUTCOME ──
     if (project.outcome_text) {
-      const outHeading = document.createElement('h2');
-      outHeading.className = 'reveal';
-      outHeading.textContent = 'Outcome';
-      contentSection.appendChild(outHeading);
+      const h2 = document.createElement('h2');
+      h2.className = 'reveal';
+      h2.textContent = 'Outcome';
+      contentSection.appendChild(h2);
 
-      const ALLOWED = { ALLOWED_TAGS: ['b', 'strong', 'i', 'em', 'blockquote', 'p', 'br', 'ul', 'ol', 'li', 'h2', 'h3', 'h4'] };
+      const ALLOWED = {
+        ALLOWED_TAGS: ['b','strong','i','em','blockquote','p','br','ul','ol','li','h2','h3','h4']
+      };
       const cleanHTML = window.DOMPurify
         ? window.DOMPurify.sanitize(project.outcome_text, ALLOWED)
         : (() => { const d = document.createElement('div'); d.textContent = new DOMParser().parseFromString(project.outcome_text || '', 'text/html').body.textContent || ''; return d.innerHTML; })();
       const tempDiv = document.createElement('div');
       tempDiv.className = 'tiptap-content';
       tempDiv.innerHTML = cleanHTML;
-
-      // Add reveal class for GSAP scroll reveals
       tempDiv.querySelectorAll('p, blockquote, ul, ol, h2, h3, h4').forEach(el => el.classList.add('reveal'));
-
       contentSection.appendChild(tempDiv);
     }
 
-    // -- Action Buttons (Case Study, Live Link, GitHub) --
-    const hasButtons = project.case_study || project.url || project.github_url;
+    // ── ACTION BUTTONS ──
+    const hasButtons = project.url || project.case_study || project.github_url;
     if (hasButtons) {
       const btnWrap = document.createElement('div');
-      btnWrap.style.cssText = 'margin-top: var(--s-16); display: flex; flex-wrap: wrap; gap: var(--s-4);';
-      btnWrap.className = 'reveal-scale';
+      btnWrap.className = 'project-actions reveal-scale';
 
       if (project.url) {
         const a = document.createElement('a');
         a.href = project.url;
         a.target = '_blank';
         a.rel = 'noopener noreferrer';
-        a.className = 'btn btn-primary';
+        a.className = 'btn btn-primary btn-magnetic';
         a.textContent = 'View Live Project ↗';
         btnWrap.appendChild(a);
       }
-
       if (project.case_study) {
         const a = document.createElement('a');
         a.href = project.case_study;
         a.target = '_blank';
         a.rel = 'noopener noreferrer';
-        a.className = 'btn btn-primary';
+        a.className = 'btn btn-primary btn-magnetic';
         a.textContent = 'View Case Study ↗';
         btnWrap.appendChild(a);
       }
-
       if (project.github_url) {
         const a = document.createElement('a');
         a.href = project.github_url;
         a.target = '_blank';
         a.rel = 'noopener noreferrer';
-        a.className = 'btn btn-ghost';
+        a.className = 'btn btn-ghost btn-magnetic';
         a.textContent = 'View on GitHub ↗';
         btnWrap.appendChild(a);
       }
-
       contentSection.appendChild(btnWrap);
     }
 
-
     mainContent.appendChild(contentSection);
-    
-    // Update footer
+
     footerTitle.textContent = `${(project.title || '').toUpperCase()} / CASE STUDY`;
     document.title = `${project.title || 'Project'} | JX Design & Dev`;
 

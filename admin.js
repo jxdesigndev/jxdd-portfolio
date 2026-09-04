@@ -293,13 +293,21 @@
       let newImageUrl = currentEditingProject ? currentEditingProject.image_url : null;
       const imageFile = document.getElementById('pf-image').files[0];
       if (imageFile) {
-        newImageUrl = await uploadCompressedImage(imageFile);
+        if (imageFile.type.startsWith('video/')) {
+          newImageUrl = await uploadRawFile(imageFile);
+        } else {
+          newImageUrl = await uploadCompressedImage(imageFile);
+        }
       }
 
       let newCoverUrl = currentEditingProject ? currentEditingProject.cover_image_url : null;
       const coverFile = document.getElementById('pf-cover').files[0];
       if (coverFile) {
-        newCoverUrl = await uploadCompressedImage(coverFile);
+        if (coverFile.type.startsWith('video/')) {
+          newCoverUrl = await uploadRawFile(coverFile);
+        } else {
+          newCoverUrl = await uploadCompressedImage(coverFile);
+        }
       }
 
       let newProcessUrls = currentEditingProject ? currentEditingProject.process_image_urls : [];
@@ -1162,9 +1170,11 @@ function initTipTap() {
     const toolbar = document.createElement('div');
     toolbar.className = 'tiptap-toolbar';
     toolbar.innerHTML = `
-      <button type="button" data-command="bold"><b>B</b></button>
-      <button type="button" data-command="italic"><i>I</i></button>
-      <button type="button" data-command="blockquote">Quote</button>
+      <button type="button" data-command="bold" title="Bold"><b>B</b></button>
+      <button type="button" data-command="italic" title="Italic"><i>I</i></button>
+      <button type="button" data-command="blockquote" title="Blockquote">❝</button>
+      <button type="button" data-command="bulletList" title="Bullet List">• List</button>
+      <button type="button" data-command="orderedList" title="Numbered List">1. List</button>
     `;
     wrapper.appendChild(toolbar);
     
@@ -1190,6 +1200,8 @@ function initTipTap() {
          if (cmd === 'bold') editor.chain().focus().toggleBold().run();
          if (cmd === 'italic') editor.chain().focus().toggleItalic().run();
          if (cmd === 'blockquote') editor.chain().focus().toggleBlockquote().run();
+         if (cmd === 'bulletList') editor.chain().focus().toggleBulletList().run();
+         if (cmd === 'orderedList') editor.chain().focus().toggleOrderedList().run();
       });
     });
     

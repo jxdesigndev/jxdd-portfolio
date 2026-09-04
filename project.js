@@ -148,6 +148,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     metaGrid.className = 'case-study-meta reveal-scale';
     
     const metaItems = [
+      { label: 'Category', value: project.category },
+      { label: 'Year', value: project.year },
       { label: 'Role', value: project.project_role },
       { label: 'Tools', value: (project.tools || []).join(', ') },
       { label: 'Timeline', value: project.timeline },
@@ -183,8 +185,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     const contentSection = document.createElement('section');
     contentSection.className = 'case-study-content';
 
-    // Persona / Description Split Section
-    if (project.persona_image_url || project.description) {
+    // Overview / Full Content Split Section
+    // Uses project.content (the rich "Full Content / Story" TipTap field)
+    // paired with the persona image. Falls back to project.description if content is empty.
+    const overviewText = project.content || project.description;
+    if (project.persona_image_url || overviewText) {
       const descHeading = document.createElement('h2');
       descHeading.className = 'reveal';
       descHeading.textContent = 'Overview';
@@ -196,15 +201,18 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       const textWrapper = document.createElement('div');
 
-      if (project.description) {
-        const cleanHTML = window.DOMPurify ? window.DOMPurify.sanitize(project.description, { ALLOWED_TAGS: ['b', 'strong', 'i', 'em', 'blockquote', 'p', 'br'] }) : (() => { const d = document.createElement('div'); d.textContent = new DOMParser().parseFromString(project.description || '', 'text/html').body.textContent || ''; return d.innerHTML; })();
+      if (overviewText) {
+        const ALLOWED = { ALLOWED_TAGS: ['b', 'strong', 'i', 'em', 'blockquote', 'p', 'br', 'ul', 'ol', 'li', 'h2', 'h3', 'h4'] };
+        const cleanHTML = window.DOMPurify
+          ? window.DOMPurify.sanitize(overviewText, ALLOWED)
+          : (() => { const d = document.createElement('div'); d.textContent = new DOMParser().parseFromString(overviewText || '', 'text/html').body.textContent || ''; return d.innerHTML; })();
         const tempDiv = document.createElement('div');
         tempDiv.className = 'tiptap-content';
         tempDiv.innerHTML = cleanHTML;
-        
-        // Add reveal class to paragraphs for GSAP
-        tempDiv.querySelectorAll('p, blockquote').forEach(el => el.classList.add('reveal'));
-        
+
+        // Add reveal class to each top-level element for staggered GSAP scroll reveals
+        tempDiv.querySelectorAll('p, blockquote, ul, ol, h2, h3, h4').forEach(el => el.classList.add('reveal'));
+
         textWrapper.appendChild(tempDiv);
       }
 
@@ -223,7 +231,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         imgWrapper.appendChild(pImg);
       }
       splitDiv.appendChild(imgWrapper);
-      
+
       contentSection.appendChild(splitDiv);
     }
 
@@ -279,8 +287,15 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Screenshots Gallery
     if (project.screenshot_urls && project.screenshot_urls.length > 0) {
+      const screensHeading = document.createElement('h2');
+      screensHeading.className = 'reveal';
+      screensHeading.textContent = 'Screens';
+      screensHeading.style.marginTop = 'var(--s-32)';
+      contentSection.appendChild(screensHeading);
+
       const galleryDiv = document.createElement('div');
       galleryDiv.className = 'screenshot-gallery';
+
 
       // Preload images in memory to determine orientation BEFORE appending to DOM
       // This prevents layout shifts/flashes and avoids ScrollTrigger recalculation issues.
@@ -331,34 +346,60 @@ document.addEventListener('DOMContentLoaded', async () => {
       outHeading.textContent = 'Outcome';
       contentSection.appendChild(outHeading);
 
-      const cleanHTML = window.DOMPurify ? window.DOMPurify.sanitize(project.outcome_text, { ALLOWED_TAGS: ['b', 'strong', 'i', 'em', 'blockquote', 'p', 'br'] }) : (() => { const d = document.createElement('div'); d.textContent = new DOMParser().parseFromString(project.outcome_text || '', 'text/html').body.textContent || ''; return d.innerHTML; })();
+      const ALLOWED = { ALLOWED_TAGS: ['b', 'strong', 'i', 'em', 'blockquote', 'p', 'br', 'ul', 'ol', 'li', 'h2', 'h3', 'h4'] };
+      const cleanHTML = window.DOMPurify
+        ? window.DOMPurify.sanitize(project.outcome_text, ALLOWED)
+        : (() => { const d = document.createElement('div'); d.textContent = new DOMParser().parseFromString(project.outcome_text || '', 'text/html').body.textContent || ''; return d.innerHTML; })();
       const tempDiv = document.createElement('div');
       tempDiv.className = 'tiptap-content';
       tempDiv.innerHTML = cleanHTML;
-      
-      // Add reveal class for GSAP
-      tempDiv.querySelectorAll('p, blockquote').forEach(el => el.classList.add('reveal'));
-      
+
+      // Add reveal class for GSAP scroll reveals
+      tempDiv.querySelectorAll('p, blockquote, ul, ol, h2, h3, h4').forEach(el => el.classList.add('reveal'));
+
       contentSection.appendChild(tempDiv);
     }
 
+    // -- Action Buttons (Case Study, Live Link, GitHub) --
+    const hasButtons = project.case_study || project.url || project.github_url;
+    if (hasButtons) {
+      const btnWrap = document.createElement('div');
+      btnWrap.style.cssText = 'margin-top: var(--s-16); display: flex; flex-wrap: wrap; gap: var(--s-4);';
+      btnWrap.className = 'reveal-scale';
 
-    // Case Study Link (if exists, e.g. external link or further reading)
-    if (project.case_study) {
-      const linkWrap = document.createElement('div');
-      linkWrap.style.marginTop = 'var(--s-16)';
-      linkWrap.className = 'reveal-scale';
+      if (project.url) {
+        const a = document.createElement('a');
+        a.href = project.url;
+        a.target = '_blank';
+        a.rel = 'noopener noreferrer';
+        a.className = 'btn btn-primary';
+        a.textContent = 'View Live Project ↗';
+        btnWrap.appendChild(a);
+      }
 
-      const a = document.createElement('a');
-      a.href = project.case_study;
-      a.target = '_blank';
-      a.rel = 'noopener noreferrer';
-      a.className = 'btn btn-primary';
-      a.textContent = 'View Case Study ↗';
-      
-      linkWrap.appendChild(a);
-      contentSection.appendChild(linkWrap);
+      if (project.case_study) {
+        const a = document.createElement('a');
+        a.href = project.case_study;
+        a.target = '_blank';
+        a.rel = 'noopener noreferrer';
+        a.className = 'btn btn-primary';
+        a.textContent = 'View Case Study ↗';
+        btnWrap.appendChild(a);
+      }
+
+      if (project.github_url) {
+        const a = document.createElement('a');
+        a.href = project.github_url;
+        a.target = '_blank';
+        a.rel = 'noopener noreferrer';
+        a.className = 'btn btn-ghost';
+        a.textContent = 'View on GitHub ↗';
+        btnWrap.appendChild(a);
+      }
+
+      contentSection.appendChild(btnWrap);
     }
+
 
     mainContent.appendChild(contentSection);
     

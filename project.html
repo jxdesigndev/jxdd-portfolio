@@ -140,10 +140,12 @@
     }
 
     .screenshot-gallery {
-      display: flex;
-      flex-direction: column;
-      gap: var(--s-16);
-      align-items: center;
+      display: grid;
+      /* Auto-fill columns: portrait images (~280px min) flow 2-3 per row;
+         landscape images break out to full width via grid-column span below. */
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: var(--s-8);
+      align-items: start;
       margin: var(--s-16) 0;
     }
 
@@ -159,15 +161,17 @@
       box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.2), 0 10px 30px rgba(0, 0, 0, 0.3);
       width: 100%;
     }
-    
+
+    /* Portrait frames: sit in auto-filled grid columns (2-3 per row on desktop) */
     .screenshot-frame.frame-portrait {
-      max-width: 350px;
+      /* No override needed — grid auto-fill handles column width */
     }
-    
+
+    /* Landscape frames: always span the full grid row */
     .screenshot-frame.frame-landscape {
-      max-width: 100%;
+      grid-column: 1 / -1;
     }
-    
+
     .screenshot-frame picture {
       display: flex;
       justify-content: center;
@@ -182,6 +186,7 @@
       margin: 0;
       box-shadow: 0 20px 40px rgba(0,0,0,0.4);
     }
+
     
     .parallax-img {
       width: 100%;
@@ -243,6 +248,46 @@
       text-transform: uppercase;
       line-height: 1.5;
     }
+
+    /* ── Rich Text (TipTap) output styles ── */
+    .tiptap-content p {
+      margin-bottom: var(--s-6);
+      line-height: var(--lead-relaxed);
+    }
+    .tiptap-content p:last-child {
+      margin-bottom: 0;
+    }
+    .tiptap-content strong, .tiptap-content b {
+      color: var(--white);
+      font-weight: 600;
+    }
+    .tiptap-content em, .tiptap-content i {
+      font-style: italic;
+    }
+    .tiptap-content blockquote {
+      border-left: 2px solid var(--green);
+      padding-left: var(--s-6);
+      margin: var(--s-8) 0;
+      color: var(--gray-3);
+      font-style: italic;
+    }
+    .tiptap-content ul, .tiptap-content ol {
+      margin: var(--s-4) 0 var(--s-6);
+      padding-left: var(--s-6);
+    }
+    .tiptap-content li {
+      margin-bottom: var(--s-2);
+      line-height: var(--lead-relaxed);
+    }
+    .tiptap-content h2, .tiptap-content h3, .tiptap-content h4 {
+      color: var(--white);
+      font-family: var(--font-display);
+      font-weight: 700;
+      margin: var(--s-10) 0 var(--s-4);
+    }
+    .tiptap-content h2 { font-size: clamp(1.5rem, 3vw, 2rem); }
+    .tiptap-content h3 { font-size: clamp(1.2rem, 2.5vw, 1.6rem); }
+    .tiptap-content h4 { font-size: var(--text-lg); }
   
   </style>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>

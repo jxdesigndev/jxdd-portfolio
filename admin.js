@@ -1159,12 +1159,6 @@
     });
   }
 
-  // Init
-  checkAuth();
-
-})();
-
-
 /* TipTap Initialization */
 window.pfDescEditor = null;
 window.pfContentEditor = null;
@@ -1248,3 +1242,11 @@ function initTipTap() {
 
 window.addEventListener('tiptap-ready', initTipTap);
 if (window.TipTap) initTipTap(); // In case it loaded before this script
+
+  // Init
+  checkAuth();
+
+})();
+
+
+

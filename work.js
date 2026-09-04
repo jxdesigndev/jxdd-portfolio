@@ -135,8 +135,11 @@
   }
 
   function renderCard (p) {
+    const isVid = p.image_url && (p.image_url.toLowerCase().endsWith('.mp4') || p.image_url.toLowerCase().endsWith('.webm'));
     const img   = p.image_url
-      ? `<img src="${p.image_url}" alt="${p.title}" class="work-card-image" loading="lazy">`
+      ? (isVid 
+          ? `<video src="${p.image_url}" class="work-card-image" autoplay loop muted playsinline loading="lazy"></video>`
+          : `<img src="${p.image_url}" alt="${p.title}" class="work-card-image" loading="lazy">`)
       : `<div class="work-card-placeholder">${(p.title || 'JX').slice(0, 2).toUpperCase()}</div>`;
     const tools = (p.tools || []).slice(0, 4).map(t => `<span class="tag">${t}</span>`).join('');
 
@@ -216,9 +219,12 @@
       }
     }
 
+    const isVidModal = p.image_url && (p.image_url.toLowerCase().endsWith('.mp4') || p.image_url.toLowerCase().endsWith('.webm'));
     const imagePart = p.image_url
       ? `<div class="vault-modal-image" style="background:var(--surface-2);">
-           <img src="${p.image_url}" alt="${p.title}" style="object-fit:contain;width:100%;height:100%;background:var(--surface-2);">
+           ${isVidModal
+             ? `<video src="${p.image_url}" style="object-fit:cover;width:100%;height:100%;background:var(--surface-2);" autoplay loop muted playsinline></video>`
+             : `<img src="${p.image_url}" alt="${p.title}" style="object-fit:contain;width:100%;height:100%;background:var(--surface-2);">`}
            <div class="vault-modal-image-overlay"></div>
          </div>`
       : `<div class="vault-modal-image" style="background:var(--surface-2); display:flex; align-items:center; justify-content:center; font-family:var(--font-display); font-size:4rem; font-weight:800; color:var(--green);">

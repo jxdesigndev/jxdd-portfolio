@@ -2062,8 +2062,11 @@ const JXUniverse = {
   },
 
   renderProjectCard (p, i) {
+    const isVid = p.image_url && (p.image_url.toLowerCase().endsWith('.mp4') || p.image_url.toLowerCase().endsWith('.webm'));
     const imagePart = p.image_url
-      ? `<img src="${p.image_url}" alt="${p.title}" class="project-card-image" loading="lazy">`
+      ? (isVid 
+          ? `<video src="${p.image_url}" class="project-card-image" autoplay loop muted playsinline loading="lazy"></video>` 
+          : `<img src="${p.image_url}" alt="${p.title}" class="project-card-image" loading="lazy">`)
       : `<div class="project-card-placeholder">${(p.title || 'JX').slice(0,2).toUpperCase()}</div>`;
 
     const tools = (p.tools || []).slice(0, 4).map(t => `<span class="tag">${t}</span>`).join('');
@@ -2134,9 +2137,12 @@ const JXUniverse = {
       }
     }
 
+    const isVidModal = p.image_url && (p.image_url.toLowerCase().endsWith('.mp4') || p.image_url.toLowerCase().endsWith('.webm'));
     const imagePart = p.image_url
       ? `<div class="modal-image-pane" style="background:var(--surface-2);">
-           <img src="${p.image_url}" alt="${p.title}" style="object-fit:contain;background:var(--surface-2);">
+           ${isVidModal 
+             ? `<video src="${p.image_url}" style="object-fit:cover;background:var(--surface-2);width:100%;height:100%;" autoplay loop muted playsinline></video>`
+             : `<img src="${p.image_url}" alt="${p.title}" style="object-fit:contain;background:var(--surface-2);">`}
            <div class="modal-image-overlay"></div>
          </div>`
       : `<div class="modal-image-pane" style="background:var(--surface-2);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:5rem;font-weight:800;color:var(--green);">

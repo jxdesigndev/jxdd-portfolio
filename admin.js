@@ -71,6 +71,8 @@
     videoForm: document.getElementById('video-form'),
     settingAboutVideo: document.getElementById('setting-about-video'),
     settingAboutVideoPreview: document.getElementById('setting-about-video-preview'),
+    settingAboutPoster: document.getElementById('setting-about-poster'),
+    settingAboutPosterPreview: document.getElementById('setting-about-poster-preview'),
     btnUploadVideo: document.getElementById('btn-upload-video'),
 
     socialsForm: document.getElementById('socials-form'),

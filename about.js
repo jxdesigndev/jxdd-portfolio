@@ -301,22 +301,35 @@
       if (window.initSupabase) await window.initSupabase();
       if (typeof supabase === 'undefined') throw new Error('Database offline.');
 
-      const { data, error } = await supabase
+      // Fetch video URL
+      const { data: vidData, error: vidErr } = await supabase
         .from('site_settings')
         .select('*')
         .eq('key', 'about_video_url')
         .single();
 
-      if (error && error.code !== 'PGRST116') throw error; // PGRST116 is "no rows returned"
+      if (vidErr && vidErr.code !== 'PGRST116') throw vidErr;
 
-      if (!data || !data.value) {
+      if (!vidData || !vidData.value) {
         // Hide section gracefully if no video exists
         videoSection.style.display = 'none';
         return;
       }
+      
+      // Update the video src
+      videoPlayer.src = vidData.value;
+      
+      // Fetch poster URL
+      const { data: posterData, error: posterErr } = await supabase
+        .from('site_settings')
+        .select('*')
+        .eq('key', 'about_poster_url')
+        .single();
+        
+      if (posterData && posterData.value) {
+        videoPlayer.poster = posterData.value;
+      }
 
-      // Update the video src and reveal normally
-      videoPlayer.src = data.value;
       if (window.JX && window.JX.initLoopingPreviewVideo) {
         window.JX.initLoopingPreviewVideo(videoPlayer);
       }

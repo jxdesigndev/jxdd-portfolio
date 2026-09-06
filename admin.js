@@ -627,6 +627,13 @@
 
   function openTestimonialModal(testm) {
     DOM.testimonialForm.reset();
+    currentEditingTestimonialLogo = null;
+    currentEditingTestimonialVideo = null;
+    currentEditingTestimonialPhoto = null;
+    document.getElementById('tf-logo-preview').innerHTML = '';
+    document.getElementById('tf-video-preview').innerHTML = '';
+    document.getElementById('tf-photo-preview').innerHTML = '';
+    
     if (testm) {
       DOM.testimonialModalTitle.textContent = 'Edit Testimonial';
       document.getElementById('tf-id').value = testm.id;
@@ -634,9 +641,16 @@
       document.getElementById('tf-role').value = testm.role_company || '';
       document.getElementById('tf-quote').value = testm.quote_text || '';
       document.getElementById('tf-website').value = testm.client_website_url || '';
-      document.getElementById('tf-logo-preview').value = testm.logo_url || '';
-      document.getElementById('tf-video-preview').value = testm.video_url || '';
-      document.getElementById('tf-photo-preview').value = testm.photo_url || '';
+      
+      currentEditingTestimonialLogo = testm.logo_url || null;
+      renderSingleGallery('tf-logo-preview', currentEditingTestimonialLogo, 'testLogo');
+      
+      currentEditingTestimonialVideo = testm.video_url || null;
+      renderSingleGallery('tf-video-preview', currentEditingTestimonialVideo, 'testVideo');
+      
+      currentEditingTestimonialPhoto = testm.photo_url || null;
+      renderSingleGallery('tf-photo-preview', currentEditingTestimonialPhoto, 'testPhoto');
+
       document.getElementById('tf-priority').value = testm.priority || 0;
       document.getElementById('tf-active').checked = testm.is_active !== false; // defaults to true
       DOM.btnDeleteTestimonial.style.display = 'block';
@@ -851,6 +865,10 @@
     if (!file.type.startsWith('image/')) {
       throw new Error('File is not an image.');
     }
+    // Skip compression for SVGs to preserve vector quality
+    if (file.type === 'image/svg+xml' || file.name.toLowerCase().endsWith('.svg')) {
+      return uploadRawFile(file);
+    }
 
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -1005,7 +1023,8 @@
   function openToolModal(tool) {
     if (!DOM.toolForm) return;
     DOM.toolForm.reset();
-    document.getElementById('tlf-logo-preview').value = '';
+    currentEditingToolLogo = null;
+    document.getElementById('tlf-logo-preview').innerHTML = '';
 
     if (tool) {
       DOM.toolModalTitle.textContent = 'Edit Tool';
@@ -1014,7 +1033,8 @@
       document.getElementById('tlf-category').value = tool.category || '';
       document.getElementById('tlf-priority').value = tool.priority || 0;
       document.getElementById('tlf-active').checked = tool.is_active !== false;
-      document.getElementById('tlf-logo-preview').value = tool.logo_url || '';
+      currentEditingToolLogo = tool.logo_url || null;
+      renderSingleGallery('tlf-logo-preview', currentEditingToolLogo, 'toolLogo');
       DOM.btnDeleteTool.style.display = 'block';
     } else {
       DOM.toolModalTitle.textContent = 'Add Tool';
@@ -1136,6 +1156,12 @@
     if (!DOM.serviceForm) return;
     currentEditingService = sv || null;
     DOM.serviceForm.reset();
+    
+    currentEditingServiceImage = null;
+    currentEditingServiceVideo = null;
+    document.getElementById('sv-image-preview').innerHTML = '';
+    document.getElementById('sv-video-preview').innerHTML = '';
+
     if (sv) {
       DOM.serviceModalTitle.textContent = 'Edit Service';
       document.getElementById('sv-id').value = sv.id;
@@ -1145,8 +1171,13 @@
       document.getElementById('sv-label').value = sv.label || '';
       document.getElementById('sv-tool-category').value = sv.tool_category || '';
       document.getElementById('sv-deliverables').value = (sv.deliverables || []).join(', ');
-      document.getElementById('sv-image-preview').textContent = sv.image_url ? `Current: ${sv.image_url.split('/').pop()}` : '';
-      document.getElementById('sv-video-preview').textContent = sv.video_url ? `Current: ${sv.video_url.split('/').pop()}` : '';
+      
+      currentEditingServiceImage = sv.image_url || null;
+      renderSingleGallery('sv-image-preview', currentEditingServiceImage, 'serviceImg');
+      
+      currentEditingServiceVideo = sv.video_url || null;
+      renderSingleGallery('sv-video-preview', currentEditingServiceVideo, 'serviceVid');
+      
       document.getElementById('sv-priority').value = sv.priority || 0;
       document.getElementById('sv-active').checked = sv.is_active !== false;
       DOM.btnDeleteService.style.display = 'block';
@@ -1154,8 +1185,6 @@
       DOM.serviceModalTitle.textContent = 'Add Service';
       document.getElementById('sv-id').value = '';
       document.getElementById('sv-active').checked = true;
-      document.getElementById('sv-image-preview').textContent = '';
-      document.getElementById('sv-video-preview').textContent = '';
       DOM.btnDeleteService.style.display = 'none';
     }
     DOM.serviceModal.classList.add('open');

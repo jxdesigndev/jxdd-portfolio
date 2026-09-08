@@ -2782,17 +2782,17 @@ const JXUniverse = {
             const floor = Bodies.rectangle(width/2, height + 25, width*2, 50, wallOpts);
             const leftWall = Bodies.rectangle(-25, height/2, 50, height*2, wallOpts);
             const rightWall = Bodies.rectangle(width + 25, height/2, 50, height*2, wallOpts);
-            const ceiling = Bodies.rectangle(width/2, -100, width*2, 50, wallOpts);
             
-            Composite.add(world, [floor, leftWall, rightWall, ceiling]);
+            // Ceiling removed so items can spawn high and drop in, and be thrown into the air
+            Composite.add(world, [floor, leftWall, rightWall]);
 
             const bodyMap = [];
             const size = 64; // Approximated box size for tool
 
             newNodes.forEach((node, i) => {
-               // Random start position near top across the ENTIRE width
+               // Random start position high above the box across the ENTIRE width
                const startX = Math.random() * (width - size) + (size / 2);
-               const startY = (Math.random() * -200) - 50;
+               const startY = (Math.random() * -400) - 100;
                const body = Bodies.rectangle(startX, startY, size, size, {
                    restitution: 0.6, // Bounciness
                    friction: 0.1,

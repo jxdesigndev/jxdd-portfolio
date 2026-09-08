@@ -2822,8 +2822,11 @@ const JXUniverse = {
                const targetX = startX + (col * itemSize);
                const targetY = startY + (row * itemSize);
                
-               // Spawn them slightly offset from target so they smoothly slide into place on load
-               const body = Bodies.rectangle(targetX + (Math.random() * 20 - 10), targetY + (Math.random() * 20 - 10), size, size, {
+               // PROPER ENTRANCE: Spawn them wildly scattered outside the box so they violently fly in
+               const spawnX = Math.random() * width;
+               const spawnY = (Math.random() * -300) - 100; // Drop from above
+               
+               const body = Bodies.rectangle(spawnX, spawnY, size, size, {
                    restitution: 0.8, // Bounciness against other nodes
                    friction: 0.1,
                    frictionAir: 0.05, // Important for the floating magnetic feel
@@ -2843,7 +2846,7 @@ const JXUniverse = {
                Composite.add(world, [body, spring]);
             });
 
-            // Add Mouse Control
+            // Add Mouse Control (Click & Drag)
             const mouse = Mouse.create(container);
             const mouseConstraint = MouseConstraint.create(engine, {
                 mouse: mouse,
@@ -2853,6 +2856,28 @@ const JXUniverse = {
                 }
             });
             Composite.add(world, mouseConstraint);
+            
+            // PROPER HOVER REPULSION: Magnetic dodging
+            container.addEventListener('mousemove', (e) => {
+                const rect = container.getBoundingClientRect();
+                const mouseX = e.clientX - rect.left;
+                const mouseY = e.clientY - rect.top;
+                
+                bodyMap.forEach(({ body }) => {
+                    const dx = body.position.x - mouseX;
+                    const dy = body.position.y - mouseY;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    
+                    // Repel radius of 120px
+                    if (dist < 120 && dist > 0) {
+                        const forceMagnitude = 0.005 * (120 - dist) / 120;
+                        Matter.Body.applyForce(body, body.position, {
+                            x: (dx / dist) * forceMagnitude,
+                            y: (dy / dist) * forceMagnitude
+                        });
+                    }
+                });
+            });
 
             // Sync DOM elements with Physics bodies
             Events.on(engine, 'afterUpdate', function() {

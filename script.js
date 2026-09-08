@@ -1215,11 +1215,13 @@ const JXUniverse = {
             
             // 1. Form okezie-1 (Actual colors) immediately as loader slides up
             phase2T1 = setTimeout(() => {
+              if (window.JXAudio && window.JXAudio.enabled) window.JXAudio.morphWhisper();
               this.tweenUniform(mats.uProgress1, 0, 1, 2500); // 2.5s duration
             }, 200);
             
             // 2. Direct Morph to jx-hero-2 (Actual colors)
             phase2T2 = setTimeout(() => {
+              if (window.JXAudio && window.JXAudio.enabled) window.JXAudio.morphWhisper();
               this.tweenUniform(mats.uProgress2, 0, 1, 2500); // 2.5s duration
             }, 3000); 
             

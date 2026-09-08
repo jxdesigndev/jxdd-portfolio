@@ -906,7 +906,7 @@ svg { display: block; }
   position: fixed;
   inset: 0;
   z-index: var(--z-loader);
-  background: var(--void);
+  background: radial-gradient(circle at center, rgba(0, 255, 170, 0.05) 0%, var(--void) 60%), var(--void);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -986,7 +986,7 @@ svg { display: block; }
   background: var(--green);
   border-radius: 1px;
   box-shadow: 0 0 12px var(--green-glow-md);
-  transition: width 0.1s linear;
+  transition: width 0.3s ease-out;
 }
 
 .loader-pct {

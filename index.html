@@ -70,12 +70,6 @@
 
     .hero-symbol {
       position: absolute;
-      animation: floatSymbol 10s ease-in-out infinite alternate;
-    }
-
-    @keyframes floatSymbol {
-      0% { transform: translateY(0); }
-      100% { transform: translateY(-40px); }
     }
 
     .hero-inner {
@@ -199,135 +193,7 @@
       opacity: 0;
     }
 
-    /* Hero right — HUD column */
-    .hero-hud {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      gap: var(--s-5);
-      opacity: 0;
-      padding-bottom: var(--s-12);
-      position: fixed; top: 50%; transform: translateY(-50%); right: 32px; z-index: 999; transition: opacity 0.4s ease, visibility 0.4s ease;
-    }
 
-    .hero-hud.hud-hidden {
-      opacity: 0 !important;
-      visibility: hidden;
-    }
-
-    .hero-hud.hud-force-show {
-      opacity: 1 !important;
-      visibility: visible;
-    }
-
-    /* Orbital HUD Widget */
-    .hud-widget {
-      background: rgba(10, 10, 15, 0.7);
-      border: 1px solid var(--border-green);
-      border-radius: var(--radius-md);
-      padding: var(--s-4) var(--s-5);
-      min-width: 200px;
-      max-width: 260px; /* Sensible max-width so they never overflow */
-      overflow-wrap: break-word;
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .hud-widget::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 1px;
-      background: linear-gradient(90deg, transparent, var(--green), transparent);
-    }
-
-    .hud-label {
-      font-family: var(--font-mono);
-      font-size: var(--text-2xs);
-      letter-spacing: var(--track-widest);
-      text-transform: uppercase;
-      color: var(--green);
-      margin-bottom: var(--s-2);
-    }
-
-    .hud-value {
-      font-family: var(--font-mono);
-      font-size: var(--text-sm);
-      color: var(--white);
-      font-weight: 500;
-    }
-
-    .hud-value.large {
-      font-size: var(--text-xl);
-      font-weight: 700;
-    }
-
-    .hud-value.accent { color: var(--amber); }
-
-    /* Signal strength bars */
-    .hud-signal {
-      display: flex;
-      align-items: flex-end;
-      gap: 3px;
-      margin-top: var(--s-3);
-    }
-
-    .hud-signal-bar {
-      width: 5px;
-      border-radius: 2px;
-      background: var(--green);
-      box-shadow: 0 0 4px var(--green-glow-md);
-      animation: signal-pulse 1.8s ease-in-out infinite;
-    }
-
-    .hud-signal-bar:nth-child(1) { height: 8px;  animation-delay: 0s; }
-    .hud-signal-bar:nth-child(2) { height: 12px; animation-delay: 0.15s; }
-    .hud-signal-bar:nth-child(3) { height: 16px; animation-delay: 0.30s; }
-    .hud-signal-bar:nth-child(4) { height: 20px; animation-delay: 0.45s; }
-    .hud-signal-bar:nth-child(5) { height: 24px; animation-delay: 0.60s; }
-
-    @keyframes signal-pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.3; }
-    }
-
-    /* Hero scroll indicator */
-    .hero-scroll {
-      position: absolute;
-      bottom: var(--s-8);
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: var(--s-3);
-      opacity: 0;
-    }
-
-    .hero-scroll-text {
-      font-family: var(--font-mono);
-      font-size: var(--text-2xs);
-      letter-spacing: var(--track-widest);
-      text-transform: uppercase;
-      color: var(--gray-3);
-      writing-mode: vertical-rl;
-    }
-
-    .hero-scroll-line {
-      width: 1px;
-      height: 60px;
-      background: linear-gradient(to bottom, var(--green), transparent);
-      animation: scroll-line 1.8s ease-in-out infinite;
-    }
-
-    @keyframes scroll-line {
-      0%   { transform: scaleY(0); transform-origin: top; }
-      50%  { transform: scaleY(1); transform-origin: top; }
-      51%  { transform-origin: bottom; }
-      100% { transform: scaleY(0); transform-origin: bottom; }
-    }
 
     /* ── FEATURED WORK ── */
     .featured-section {
@@ -994,8 +860,7 @@
           </div>
 
           <p class="hero-desc" id="hero-desc">
-            Building the future from Nigeria. Crafting digital worlds that make people stop
-            and ask, <em style="color:var(--white)">how did he make this?</em>
+            I don't just build websites. I build worlds.
           </p>
 
           <div class="hero-cta-group" id="hero-cta">

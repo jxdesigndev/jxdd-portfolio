@@ -1438,6 +1438,7 @@ const JXUniverse = {
       document.head.appendChild(st);
     }
 
+    this.initOrganicFloat();
     this.initHUD();
     this.initCLI();
     this.initTypeToForm();
@@ -1914,6 +1915,35 @@ const JXUniverse = {
 
     /* Expose exit for UI use */
     this._exitPong = exitPong;
+  },
+
+  /* ────────────────────────────────────────────────────────────────
+     ORGANIC FLOAT (JS Perlin-like motion for Hero SVGs)
+     ──────────────────────────────────────────────────────────────── */
+  initOrganicFloat () {
+    const symbols = document.querySelectorAll('.hero-symbol');
+    if (!symbols.length) return;
+    
+    const configs = Array.from(symbols).map(() => ({
+      freqX: (Math.random() * 0.5 + 0.5) * 0.001,
+      freqY: (Math.random() * 0.5 + 0.5) * 0.001,
+      phaseX: Math.random() * Math.PI * 2,
+      phaseY: Math.random() * Math.PI * 2,
+      ampX: Math.random() * 10 + 10,
+      ampY: Math.random() * 15 + 20
+    }));
+    
+    const animate = (time) => {
+      symbols.forEach((sym, i) => {
+        const conf = configs[i];
+        const x = Math.sin(time * conf.freqX + conf.phaseX) * conf.ampX;
+        const y = Math.sin(time * conf.freqY + conf.phaseY) * conf.ampY;
+        sym.style.transform = `translate(${x}px, ${y}px)`;
+      });
+      requestAnimationFrame(animate);
+    };
+    
+    requestAnimationFrame(animate);
   },
 
   /* ────────────────────────────────────────────────────────────────

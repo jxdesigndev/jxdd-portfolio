@@ -2509,7 +2509,7 @@ const JXUniverse = {
           const img = document.createElement('img');
           img.src = t.logo_url;
           img.alt = t.role_company || 'Company Logo';
-          img.loading = 'lazy';
+          
           
           if (t.client_website_url) {
             const a = document.createElement('a');
@@ -2724,7 +2724,7 @@ const JXUniverse = {
             img.title  = tool.name;
             img.width  = 48;
             img.height = 48;
-            img.loading = 'lazy';
+            
             item.appendChild(img);
           } else {
             const label = document.createElement('span');
@@ -2737,7 +2737,22 @@ const JXUniverse = {
           newNodes.push(item);
         });
         
-        // Matter.js Physics implementation
+        // Store nodes for physics init later
+        container._physicsNodes = newNodes;
+      }); // end first loop
+
+      const globalSection = document.getElementById('tools-section');
+      if (globalSection) {
+        if (totalRenderedTools > 0) {
+          globalSection.style.display = 'block'; // MUST BE BLOCK BEFORE PHYSICS
+        } else {
+          globalSection.style.display = 'none';
+        }
+      }
+
+      // Loop 2: Init physics now that layout is resolved
+      containers.forEach(container => {
+        const newNodes = container._physicsNodes || [];
         if (container.classList.contains('physics-grid')) {
           // Force visibility immediately
           newNodes.forEach(el => {
@@ -2747,7 +2762,6 @@ const JXUniverse = {
           
           if (window.Matter && newNodes.length > 0) {
             const Engine = Matter.Engine,
-                  Render = Matter.Render,
                   Runner = Matter.Runner,
                   Bodies = Matter.Bodies,
                   Composite = Matter.Composite,
@@ -2758,7 +2772,7 @@ const JXUniverse = {
             const engine = Engine.create();
             const world = engine.world;
             
-            // Container dimensions
+            // Container dimensions (NOW ACCURATE)
             const rect = container.getBoundingClientRect();
             const width = rect.width || 400;
             const height = rect.height || 240;
@@ -2776,9 +2790,9 @@ const JXUniverse = {
             const size = 64; // Approximated box size for tool
 
             newNodes.forEach((node, i) => {
-               // Random start position near top
-               const startX = (width / 2) + (Math.random() * 100 - 50);
-               const startY = Math.random() * -100 - 50;
+               // Random start position near top across the ENTIRE width
+               const startX = Math.random() * (width - size) + (size / 2);
+               const startY = (Math.random() * -200) - 50;
                const body = Bodies.rectangle(startX, startY, size, size, {
                    restitution: 0.6, // Bounciness
                    friction: 0.1,
@@ -2814,15 +2828,6 @@ const JXUniverse = {
           }
         }
       });
-
-      const globalSection = document.getElementById('tools-section');
-      if (globalSection) {
-        if (totalRenderedTools > 0) {
-          globalSection.style.display = '';
-        } else {
-          globalSection.style.display = 'none';
-        }
-      }
 
     } catch (err) {
       console.error('JX: Tools load error:', err);

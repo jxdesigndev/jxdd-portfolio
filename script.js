@@ -2443,6 +2443,28 @@ const JXUniverse = {
     trigger?.addEventListener('click', () => this.cliOpen ? close() : open());
     closeBtn?.addEventListener('click', close);
 
+    /* Focus Trap for CLI Modal */
+    panel.addEventListener('keydown', e => {
+      if (e.key === 'Tab') {
+        const focusable = panel.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+        if (!focusable.length) return;
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        
+        if (e.shiftKey) {
+          if (document.activeElement === first) {
+            e.preventDefault();
+            last.focus();
+          }
+        } else {
+          if (document.activeElement === last) {
+            e.preventDefault();
+            first.focus();
+          }
+        }
+      }
+    });
+
     document.addEventListener('keydown', e => {
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
         e.preventDefault();

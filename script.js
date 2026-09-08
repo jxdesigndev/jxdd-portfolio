@@ -2525,10 +2525,32 @@ const JXUniverse = {
 
       /* Render testimonials grid */
       grid.innerHTML = '';
-      testimonials.forEach((t, index) => {
+      
+      function scrambleText(element, originalText) {
+        if (element.dataset.scrambling === 'true') return;
+        element.dataset.scrambling = 'true';
+        let iterations = 0;
+        const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()";
+        const interval = setInterval(() => {
+          element.textContent = originalText.split("").map((letter, index) => {
+            if(index < Math.floor(iterations)) {
+              return originalText[index];
+            }
+            return letters[Math.floor(Math.random() * letters.length)]
+          }).join("");
+          if(iterations >= originalText.length) {
+            clearInterval(interval);
+            element.dataset.scrambling = 'false';
+            element.textContent = originalText;
+          }
+          iterations += 1/2; // Smoother decrypt reveal
+        }, 20);
+      }
+
+      const cardNodes = [];
+      testimonials.forEach((t) => {
         const card = document.createElement('div');
-        card.className = 'testimonial-card reveal-scale';
-        if (index > 0) card.style.transitionDelay = (index * 0.1) + 's';
+        card.className = 'testimonial-card secure-log';
 
         if (t.video_url) {
           const video = document.createElement('video');
@@ -2541,8 +2563,11 @@ const JXUniverse = {
         } else {
           const blockquote = document.createElement('blockquote');
           blockquote.className = 'testimonial-quote';
+          blockquote.dataset.value = `"${t.quote_text}"`;
           blockquote.textContent = `"${t.quote_text}"`;
           card.appendChild(blockquote);
+          
+          card.addEventListener('mouseenter', () => scrambleText(blockquote, blockquote.dataset.value));
         }
 
         const meta = document.createElement('div');
@@ -2561,7 +2586,27 @@ const JXUniverse = {
         card.appendChild(meta);
 
         grid.appendChild(card);
+        cardNodes.push(card);
       });
+      
+      // Clone for infinite marquee
+      if (grid.classList.contains('testimonials-bento-track')) {
+        const clones1 = cardNodes.map(n => {
+          const clone = n.cloneNode(true);
+          const bq = clone.querySelector('blockquote');
+          if (bq) clone.addEventListener('mouseenter', () => scrambleText(bq, bq.dataset.value));
+          return clone;
+        });
+        clones1.forEach(c => grid.appendChild(c));
+        
+        const clones2 = cardNodes.map(n => {
+          const clone = n.cloneNode(true);
+          const bq = clone.querySelector('blockquote');
+          if (bq) clone.addEventListener('mouseenter', () => scrambleText(bq, bq.dataset.value));
+          return clone;
+        });
+        clones2.forEach(c => grid.appendChild(c));
+      }
 
       /* Trigger GSAP if ready */
       if (window.gsap && window.ScrollTrigger) {
@@ -2622,14 +2667,14 @@ const JXUniverse = {
 
         if (filteredTools.length === 0) {
           // Hide specific empty category
-          const group = container.closest('.tools-group') || container;
+          const group = container.closest('.tools-group') || container.closest('.bento-item') || container;
           group.style.display = 'none';
           return;
         }
 
         totalRenderedTools += filteredTools.length;
 
-        const group = container.closest('.tools-group');
+        const group = container.closest('.tools-group') || container.closest('.bento-item');
         if (group) group.style.display = '';
 
         container.innerHTML = '';
@@ -2658,24 +2703,40 @@ const JXUniverse = {
           container.appendChild(item);
           newNodes.push(item);
         });
-
-        /* Animate */
-        if (window.gsap && window.ScrollTrigger) {
-          newNodes.forEach((el, i) => {
-            gsap.fromTo(el, { opacity: 0, scale: 0.92 }, {
-              opacity: 1, scale: 1,
-              duration: 0.7,
-              delay: i * 0.04,
-              ease: 'power3.out',
-              scrollTrigger: { trigger: el, start: 'top 90%', once: true }
-            });
-          });
-          ScrollTrigger.refresh();
-        } else {
-          newNodes.forEach(el => {
-            el.style.opacity   = '1';
+        
+        let allNodes = [...newNodes];
+        if (container.classList.contains('marquee-track')) {
+          // Clone nodes for infinite scroll
+          const clones = newNodes.map(n => n.cloneNode(true));
+          clones.forEach(c => { container.appendChild(c); allNodes.push(c); });
+          
+          const clones2 = newNodes.map(n => n.cloneNode(true));
+          clones2.forEach(c => { container.appendChild(c); allNodes.push(c); });
+          
+          // Force immediate visibility for marquee items (skip GSAP stagger to avoid scrolling invisible items)
+          allNodes.forEach(el => {
+            el.style.opacity = '1';
             el.style.transform = 'none';
           });
+        } else {
+          /* Animate Normal Grids */
+          if (window.gsap && window.ScrollTrigger) {
+            allNodes.forEach((el, i) => {
+              gsap.fromTo(el, { opacity: 0, scale: 0.92 }, {
+                opacity: 1, scale: 1,
+                duration: 0.7,
+                delay: i * 0.04,
+                ease: 'power3.out',
+                scrollTrigger: { trigger: el, start: 'top 90%', once: true }
+              });
+            });
+            ScrollTrigger.refresh();
+          } else {
+            allNodes.forEach(el => {
+              el.style.opacity   = '1';
+              el.style.transform = 'none';
+            });
+          }
         }
       });
 
@@ -2776,3 +2837,14 @@ if (document.fonts && document.fonts.ready) {
   window.addEventListener('load', autoFitHeroText);
   window.addEventListener('resize', autoFitHeroText);
 }
+
+// Bento Box Mouse Tracking
+document.addEventListener('mousemove', (e) => {
+  document.querySelectorAll('.bento-item').forEach((item) => {
+    const rect = item.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    item.style.setProperty('--mouse-x', `${x}px`);
+    item.style.setProperty('--mouse-y', `${y}px`);
+  });
+});

@@ -247,6 +247,8 @@ svg { display: block; }
   will-change: transform;
   margin-left: -19px;
   margin-top: -19px;
+  animation: cursor-spin-slow 4s linear infinite;
+  animation-play-state: paused;
 }
 
 /* ── Aura glow cloud ── */
@@ -343,7 +345,7 @@ svg { display: block; }
   border-style: dashed;
   width: 52px; height: 52px;
   margin-left: -26px; margin-top: -26px;
-  animation: cursor-spin-slow 4s linear infinite;
+  animation-play-state: running;
 }
 .cursor-aura[data-mode="scan"] {
   background: radial-gradient(circle, var(--amber-glow) 0%, transparent 65%);
@@ -411,7 +413,7 @@ svg { display: block; }
 
 /* ── Mode keyframes ── */
 @keyframes cursor-spin-slow {
-  to { transform: rotate(360deg); }
+  to { rotate: 360deg; }
 }
 @keyframes cursor-pulse {
   from { box-shadow: 0 0 20px rgba(57, 255, 20, 0.9), 0 0 50px rgba(57, 255, 20, 0.4); }

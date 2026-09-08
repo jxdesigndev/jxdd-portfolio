@@ -736,6 +736,7 @@ const JXUniverse = {
       const u  = this.threeCtx.mainMat.uniforms;
       /* Trigger explosion, then decay */
       u.uExplosion.value.set(nx, ny, 1.0);
+      if (window.JXAudio && window.JXAudio.enabled) window.JXAudio.sculptPing(1.0);
       setTimeout(() => {
         if (this.threeCtx && this.threeCtx.mainMat)
           this.threeCtx.mainMat.uniforms.uExplosion.value.set(9999, 9999, 0);
@@ -1590,6 +1591,7 @@ const JXUniverse = {
 
     /* Transition particles to pong arena */
     this.tweenUniform(mats.uProgress7, 0, 1, 1200);
+    if (window.JXAudio && window.JXAudio.enabled) window.JXAudio.morphWhisper();
     /* Fade out portrait / section morphs while in game */
     const savedP4 = mats.uProgress4.value;
     const savedP5 = mats.uProgress5.value;
@@ -1780,9 +1782,12 @@ const JXUniverse = {
       paddleLY += (mouseNY * (ARENA_H - PADDLE_H) - paddleLY) * 0.12;
       paddleLY  = Math.max(-ARENA_H + PADDLE_H, Math.min(ARENA_H - PADDLE_H, paddleLY));
 
-      /* AI paddle (right) tracks ball */
-      const aiTarget = ballY;
-      paddleRY += (aiTarget - paddleRY) * AI_SPEED;
+      /* AI paddle (right) tracks ball with humanized imperfection */
+      const aiTarget = (ballVX > 0) ? ballY : 0;
+      const ballSpeed = Math.sqrt(ballVX*ballVX + ballVY*ballVY);
+      const panicFactor = Math.max(0, ballSpeed - SPEED_BASE);
+      const dynamicAISpeed = Math.max(0.02, AI_SPEED * (1 - panicFactor * 0.7));
+      paddleRY += (aiTarget - paddleRY) * dynamicAISpeed;
       paddleRY  = Math.max(-ARENA_H + PADDLE_H, Math.min(ARENA_H - PADDLE_H, paddleRY));
 
       /* Ball movement */
@@ -1899,6 +1904,7 @@ const JXUniverse = {
       /* Restore uniforms */
       mats.uMouseForce.value.set(9999, 9999, 0);
       this.tweenUniform(mats.uProgress7, 1, 0, 1000);
+      if (window.JXAudio && window.JXAudio.enabled) window.JXAudio.morphWhisper();
       this.tweenUniform(mats.uProgress4, 0, savedP4, 800);
       this.tweenUniform(mats.uProgress5, 0, savedP5, 800);
       this.tweenUniform(mats.uProgress6, 0, savedP6, 800);

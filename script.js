@@ -2891,14 +2891,14 @@ const JXUniverse = {
                const targetX = startX + (col * itemSize);
                const targetY = startY + (row * itemSize);
                
-               // PROPER ENTRANCE: Spawn them wildly scattered outside the box so they violently fly in
-               const spawnX = Math.random() * width;
-               const spawnY = (Math.random() * -300) - 100; // Drop from above
+               // PROPER ENTRANCE: Spawn them dynamically INSIDE the visible box
+               const spawnX = (width / 2) + (Math.random() * 40 - 20);
+               const spawnY = (height / 2) + (Math.random() * 40 - 20);
                
                const body = Bodies.rectangle(spawnX, spawnY, size, size, {
-                   restitution: 0.8, // Bounciness against other nodes
+                   restitution: 0.8,
                    friction: 0.1,
-                   frictionAir: 0.05, // Important for the floating magnetic feel
+                   frictionAir: 0.01, // Reduced friction so they snap into the grid instantly
                    density: 0.05
                });
                

@@ -2891,22 +2891,23 @@ const JXUniverse = {
                const targetX = startX + (col * itemSize);
                const targetY = startY + (row * itemSize);
                
-               // PROPER ENTRANCE: Spawn them dynamically INSIDE the visible box
-               const spawnX = (width / 2) + (Math.random() * 40 - 20);
-               const spawnY = (height / 2) + (Math.random() * 40 - 20);
+               // PERFECT ARRANGEMENT: Spawn directly into the calculated grid targets
+               const spawnX = targetX;
+               const spawnY = targetY;
                
                const body = Bodies.rectangle(spawnX, spawnY, size, size, {
-                   restitution: 0.8,
+                   restitution: 0.2, // Lower bounce to prevent chaotic tangling
                    friction: 0.1,
-                   frictionAir: 0.01, // Reduced friction so they snap into the grid instantly
-                   density: 0.05
+                   frictionAir: 0.05, // Higher air drag to keep them stable
+                   density: 0.05,
+                   inertia: Infinity // Mathematically locks rotation so they stay upright
                });
                
                // The invisible rubber band constraint
                const spring = Constraint.create({
                    pointA: { x: targetX, y: targetY },
                    bodyB: body,
-                   stiffness: 0.015, // Low stiffness = loose, smooth rubber band
+                   stiffness: 0.08, // Tighter spring for a strict, professional grid
                    damping: 0.05,
                    render: { visible: false }
                });
@@ -2953,8 +2954,8 @@ const JXUniverse = {
                 bodyMap.forEach(({ body, node }) => {
                     const x = body.position.x - size/2;
                     const y = body.position.y - size/2;
-                    // Apply position and rotation
-                    node.style.transform = `translate(${x}px, ${y}px) rotate(${body.angle}rad)`;
+                    // Apply position ONLY, keeping logos perfectly upright
+                    node.style.transform = `translate(${x}px, ${y}px)`;
                 });
             });
 

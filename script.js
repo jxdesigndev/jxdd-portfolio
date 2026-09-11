@@ -2818,18 +2818,22 @@ const JXUniverse = {
         const newNodes = container._physicsNodes || [];
         if (newNodes.length === 0) return;
 
-        // Clean CSS-native stagger reveal (No GSAP conflicts)
+        // CSS-native stagger reveal — items are visible by default,
+        // animation class enhances appearance but is not required for visibility
         newNodes.forEach((el, index) => {
             el.style.position = '';
             el.style.top = '';
             el.style.left = '';
             el.style.margin = '';
+            // Start transparent for stagger, but with a guaranteed fallback
             el.style.opacity = '0';
-            el.style.transform = '';
+            el.style.transform = 'translateY(12px) scale(0.95)';
+            el.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
             
             setTimeout(() => {
-                el.classList.add('tool-reveal');
-            }, index * 60);
+                el.style.opacity = '1';
+                el.style.transform = 'translateY(0) scale(1)';
+            }, 80 + index * 55); // 80ms base delay + stagger
         });
       });
 
@@ -2911,24 +2915,56 @@ function autoFitHeroText() {
 }
 
 // Run safely after fonts load to ensure accurate measurements
-if (document.fonts && document.fonts.ready) {
-  document.fonts.ready.then(() => {
-    autoFitHeroText();
-    window.addEventListener('resize', autoFitHeroText);
-  });
-} else {
-  // Fallback for older browsers
-  window.addEventListener('load', autoFitHeroText);
-  window.addEventListener('resize', autoFitHeroText);
-}
+// Resize listener is debounced to prevent layout-thrash during continuous resize
+(function() {
+  let resizeTimer = null;
+  function debouncedAutoFit() {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(autoFitHeroText, 120);
+  }
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(() => {
+      autoFitHeroText();
+      window.addEventListener('resize', debouncedAutoFit, { passive: true });
+    });
+  } else {
+    window.addEventListener('load', autoFitHeroText);
+    window.addEventListener('resize', debouncedAutoFit, { passive: true });
+  }
+})();
 
-// Bento Box Mouse Tracking
-document.addEventListener('mousemove', (e) => {
-  document.querySelectorAll('.bento-item').forEach((item) => {
-    const rect = item.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    item.style.setProperty('--mouse-x', `${x}px`);
-    item.style.setProperty('--mouse-y', `${y}px`);
-  });
-});
+// Bento Box Mouse Tracking — cached rects to avoid layout thrash on every move
+(function() {
+  let bentoRects = [];
+  let bentoItems = [];
+  let rafPending = false;
+  let lastX = 0, lastY = 0;
+
+  function cacheBentoRects() {
+    bentoItems = Array.from(document.querySelectorAll('.bento-item'));
+    bentoRects = bentoItems.map(item => item.getBoundingClientRect());
+  }
+
+  function applyBentoSpotlight() {
+    rafPending = false;
+    bentoItems.forEach((item, i) => {
+      const rect = bentoRects[i];
+      if (!rect) return;
+      item.style.setProperty('--mouse-x', `${lastX - rect.left}px`);
+      item.style.setProperty('--mouse-y', `${lastY - rect.top}px`);
+    });
+  }
+
+  // Cache after DOM is settled, and on resize
+  requestAnimationFrame(cacheBentoRects);
+  window.addEventListener('resize', cacheBentoRects, { passive: true });
+
+  document.addEventListener('mousemove', (e) => {
+    lastX = e.clientX;
+    lastY = e.clientY;
+    if (!rafPending) {
+      rafPending = true;
+      requestAnimationFrame(applyBentoSpotlight);
+    }
+  }, { passive: true });
+})();

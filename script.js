@@ -2817,8 +2817,15 @@ const JXUniverse = {
       containers.forEach(container => {
         const newNodes = container._physicsNodes || [];
         if (container.classList.contains('physics-grid')) {
-          // Force visibility immediately
+          container.style.position = 'relative'; // Ensure coordinate system matches
+          container.style.overflow = 'hidden';
+          
+          // Force absolute positioning for Matter.js coordinate sync
           newNodes.forEach(el => {
+            el.style.position = 'absolute';
+            el.style.top = '0';
+            el.style.left = '0';
+            el.style.margin = '0';
             el.style.opacity = '1';
             el.style.transform = 'none';
           });

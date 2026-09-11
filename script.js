@@ -2755,7 +2755,10 @@ const JXUniverse = {
 
         if (category && category !== 'all') {
           const cats = category.split(',').map(c => c.trim().toLowerCase());
-          filteredTools = tools.filter(t => cats.includes((t.category || '').toLowerCase()));
+          filteredTools = tools.filter(t => {
+            const dbCat = (t.category || '').toLowerCase();
+            return cats.some(c => dbCat.includes(c));
+          });
         }
 
         if (filteredTools.length === 0) {

@@ -2866,11 +2866,10 @@ const JXUniverse = {
             // Walls (invisible) so they don't get thrown out
             const wallOpts = { isStatic: true, render: { visible: false } };
             const floor = Bodies.rectangle(width/2, height + 25, width*2, 50, wallOpts);
-            const ceiling = Bodies.rectangle(width/2, -25, width*2, 50, wallOpts);
             const leftWall = Bodies.rectangle(-25, height/2, 50, height*2, wallOpts);
             const rightWall = Bodies.rectangle(width + 25, height/2, 50, height*2, wallOpts);
             
-            Composite.add(world, [floor, ceiling, leftWall, rightWall]);
+            Composite.add(world, [floor, leftWall, rightWall]);
 
             const bodyMap = [];
             

@@ -2813,155 +2813,50 @@ const JXUniverse = {
         }
       }
 
-      // Loop 2: Init physics now that layout is resolved
+      // Loop 2: Init premium grid and spotlight interactions
       containers.forEach(container => {
         const newNodes = container._physicsNodes || [];
-        if (container.classList.contains('physics-grid')) {
-          container.style.position = 'relative'; // Ensure coordinate system matches
-          container.style.overflow = 'hidden';
-          
-          // Force absolute positioning for Matter.js coordinate sync
-          newNodes.forEach(el => {
-            el.style.position = 'absolute';
-            el.style.top = '0';
-            el.style.left = '0';
-            el.style.margin = '0';
-            el.style.opacity = '1';
-            el.style.transform = 'none';
-          });
-          
-          if (window.Matter && newNodes.length > 0) {
-            const Engine = Matter.Engine,
-                  Runner = Matter.Runner,
-                  Bodies = Matter.Bodies,
-                  Composite = Matter.Composite,
-                  Constraint = Matter.Constraint,
-                  Mouse = Matter.Mouse,
-                  MouseConstraint = Matter.MouseConstraint,
-                  Events = Matter.Events;
+        if (newNodes.length === 0) return;
 
-            const engine = Engine.create();
-            const world = engine.world;
-            
-            // Turn off gravity for magnetic matrix effect
-            engine.world.gravity.y = 0;
-            engine.world.gravity.x = 0;
-            
-            // Container dimensions initial
-            let rect = container.getBoundingClientRect();
-            const width = rect.width || 400;
+        // 1. Dynamic Spotlight Hover Effect
+        container.addEventListener('mousemove', (e) => {
+          const rect = container.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          container.style.setProperty('--mouse-x', `${x}px`);
+          container.style.setProperty('--mouse-y', `${y}px`);
+        });
 
-            const size = 64; // Approximated box size for tool
-            const gap = 24;  // Gap between grid items
-            const itemSize = size + gap;
-            
-            // Calculate grid columns and rows based on container width
-            const cols = Math.max(1, Math.floor((width - 40) / itemSize));
-            const rows = Math.ceil(newNodes.length / cols);
-            
-            // Calculate grid total dimensions to center it
-            const gridWidth = cols * itemSize;
-            const gridHeight = rows * itemSize;
-            
-            // Ensure container is tall enough to fit the matrix
-            const requiredHeight = Math.max(240, gridHeight + 40);
-            container.style.height = requiredHeight + 'px';
-            
-            // Re-fetch rect for accurate walls
-            const height = requiredHeight;
+        // 2. Clear any lingering absolute positioning from previous iterations
+        newNodes.forEach(el => {
+            el.style.position = '';
+            el.style.top = '';
+            el.style.left = '';
+            el.style.margin = '';
+        });
 
-            // Walls (invisible) so they don't get thrown out
-            const wallOpts = { isStatic: true, render: { visible: false } };
-            const floor = Bodies.rectangle(width/2, height + 25, width*2, 50, wallOpts);
-            const leftWall = Bodies.rectangle(-25, height/2, 50, height*2, wallOpts);
-            const rightWall = Bodies.rectangle(width + 25, height/2, 50, height*2, wallOpts);
-            
-            Composite.add(world, [floor, leftWall, rightWall]);
-
-            const bodyMap = [];
-            
-            const startX = (width - gridWidth) / 2 + (itemSize / 2);
-            // Center vertically, but ensure it doesn't clip top
-            const startY = Math.max(itemSize / 2 + 10, (height - gridHeight) / 2 + (itemSize / 2));
-
-            newNodes.forEach((node, i) => {
-               // Calculate exact target position for this node in the grid
-               const col = i % cols;
-               const row = Math.floor(i / cols);
-               const targetX = startX + (col * itemSize);
-               const targetY = startY + (row * itemSize);
-               
-               // PERFECT ARRANGEMENT: Spawn directly into the calculated grid targets
-               const spawnX = targetX;
-               const spawnY = targetY;
-               
-               const body = Bodies.rectangle(spawnX, spawnY, size, size, {
-                   restitution: 0.2, // Lower bounce to prevent chaotic tangling
-                   friction: 0.1,
-                   frictionAir: 0.05, // Higher air drag to keep them stable
-                   density: 0.05,
-                   inertia: Infinity // Mathematically locks rotation so they stay upright
-               });
-               
-               // The invisible rubber band constraint
-               const spring = Constraint.create({
-                   pointA: { x: targetX, y: targetY },
-                   bodyB: body,
-                   stiffness: 0.08, // Tighter spring for a strict, professional grid
-                   damping: 0.05,
-                   render: { visible: false }
-               });
-               
-               bodyMap.push({ body, node });
-               Composite.add(world, [body, spring]);
-            });
-
-            // Add Mouse Control (Click & Drag)
-            const mouse = Mouse.create(container);
-            const mouseConstraint = MouseConstraint.create(engine, {
-                mouse: mouse,
-                constraint: {
-                    stiffness: 0.2,
-                    render: { visible: false }
-                }
-            });
-            Composite.add(world, mouseConstraint);
-            
-            // PROPER HOVER REPULSION: Magnetic dodging
-            container.addEventListener('mousemove', (e) => {
-                const rect = container.getBoundingClientRect();
-                const mouseX = e.clientX - rect.left;
-                const mouseY = e.clientY - rect.top;
-                
-                bodyMap.forEach(({ body }) => {
-                    const dx = body.position.x - mouseX;
-                    const dy = body.position.y - mouseY;
-                    const dist = Math.sqrt(dx * dx + dy * dy);
-                    
-                    // Repel radius of 120px
-                    if (dist < 120 && dist > 0) {
-                        const forceMagnitude = 0.005 * (120 - dist) / 120;
-                        Matter.Body.applyForce(body, body.position, {
-                            x: (dx / dist) * forceMagnitude,
-                            y: (dy / dist) * forceMagnitude
-                        });
+        // 3. GSAP Stagger Reveal
+        if (window.gsap && window.ScrollTrigger) {
+            gsap.fromTo(newNodes, 
+                { opacity: 0, y: 20, scale: 0.9 },
+                { 
+                    opacity: 1, 
+                    y: 0, 
+                    scale: 1,
+                    duration: 0.6, 
+                    stagger: 0.04, 
+                    ease: 'back.out(1.5)',
+                    scrollTrigger: {
+                        trigger: container,
+                        start: 'top 85%'
                     }
-                });
+                }
+            );
+        } else {
+            newNodes.forEach(el => {
+                el.style.opacity = '1';
+                el.style.transform = 'none';
             });
-
-            // Sync DOM elements with Physics bodies
-            Events.on(engine, 'afterUpdate', function() {
-                bodyMap.forEach(({ body, node }) => {
-                    const x = body.position.x - size/2;
-                    const y = body.position.y - size/2;
-                    // Apply position ONLY, keeping logos perfectly upright
-                    node.style.transform = `translate(${x}px, ${y}px)`;
-                });
-            });
-
-            // Run Physics
-            Runner.run(Runner.create(), engine);
-          }
         }
       });
 

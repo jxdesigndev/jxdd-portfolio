@@ -2140,23 +2140,6 @@ svg { display: block; }
   background: repeating-linear-gradient(45deg, rgba(0,255,170,0.03) 0px, rgba(0,255,170,0.03) 2px, transparent 2px, transparent 12px);
 }
 
-/* Make tool items position absolute for Matter.js sync */
-.physics-grid .tool-item {
-  position: absolute;
-  top: 0;
-  left: 0;
-  margin: 0;
-  cursor: grab;
-  /* Matter.js calculates transform, so we remove transition to prevent lag */
-  transition: none !important; 
-  opacity: 1 !important; /* Force visibility immediately */
-}
-.physics-grid .tool-item:active {
-  cursor: grabbing;
-}
-.physics-grid .tool-item img {
-  pointer-events: none; /* Let the container handle dragging */
-}
 
 @keyframes scroll-left {
   from { transform: translateX(0); }

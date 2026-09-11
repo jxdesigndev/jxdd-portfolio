@@ -2732,30 +2732,10 @@ svg { display: block; }
 /* --- PREMIUM BENTO TOOL GRID --- */
 .db-tools-container {
     display: grid !important;
-    grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
     gap: 1.25rem;
-    position: relative;
-    padding: 1.5rem;
-    border-radius: 16px;
-    background: rgba(10, 10, 10, 0.4);
-    border: 1px solid rgba(255, 255, 255, 0.03);
-    overflow: hidden;
-}
-
-/* Spotlight Glow */
-.db-tools-container::before {
-    content: "";
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: radial-gradient(400px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255, 255, 255, 0.08), transparent 40%);
-    z-index: 0;
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.4s ease;
-}
-
-.db-tools-container:hover::before {
-    opacity: 1;
+    width: 100%;
+    /* Removed the ugly double-padding and backgrounds */
 }
 
 /* Individual Tool Cards */
@@ -2766,36 +2746,45 @@ svg { display: block; }
     align-items: center;
     justify-content: center;
     aspect-ratio: 1;
-    background: rgba(25, 25, 25, 0.6);
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
     border-radius: 12px;
-    backdrop-filter: blur(8px);
-    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.3s, background 0.3s;
-    animation: ambient-float 6s ease-in-out infinite;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-/* Staggered breathing offset */
-.tool-item:nth-child(even) { animation-delay: -3s; }
-.tool-item:nth-child(3n) { animation-delay: -1.5s; }
+.tool-reveal {
+    animation: tool-pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
 
-.tool-item:hover {
-    transform: translateY(-6px) scale(1.08) !important;
-    border-color: rgba(0, 255, 170, 0.4);
-    background: rgba(30, 30, 30, 0.9);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5), 0 0 15px rgba(0, 255, 170, 0.15);
-    z-index: 2;
+@keyframes tool-pop {
+    0% { opacity: 0; transform: translateY(15px) scale(0.9); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 .tool-item img {
-    width: 36px;
-    height: 36px;
+    width: 44px; /* Increased from 36px to 44px for maximum clarity */
+    height: 44px;
     object-fit: contain;
-    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
     transition: filter 0.3s ease;
+    /* Moved ambient float to the image to prevent transform conflicts with the parent */
+    animation: ambient-float 6s ease-in-out infinite; 
+}
+
+/* Staggered breathing offset */
+.tool-item:nth-child(even) img { animation-delay: -3s; }
+.tool-item:nth-child(3n) img { animation-delay: -1.5s; }
+
+.tool-item:hover {
+    transform: translateY(-4px) scale(1.05);
+    border-color: rgba(0, 255, 170, 0.5);
+    background: rgba(0, 255, 170, 0.05);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3), 0 0 15px rgba(0, 255, 170, 0.2);
+    z-index: 2;
 }
 
 .tool-item:hover img {
-    filter: drop-shadow(0 4px 10px rgba(0, 255, 170, 0.4));
+    filter: drop-shadow(0 4px 10px rgba(0, 255, 170, 0.6));
 }
 
 @keyframes ambient-float {

@@ -2818,46 +2818,19 @@ const JXUniverse = {
         const newNodes = container._physicsNodes || [];
         if (newNodes.length === 0) return;
 
-        // 1. Dynamic Spotlight Hover Effect
-        container.addEventListener('mousemove', (e) => {
-          const rect = container.getBoundingClientRect();
-          const x = e.clientX - rect.left;
-          const y = e.clientY - rect.top;
-          container.style.setProperty('--mouse-x', `${x}px`);
-          container.style.setProperty('--mouse-y', `${y}px`);
-        });
-
-        // 2. Clear any lingering absolute positioning from previous iterations
-        newNodes.forEach(el => {
+        // Clean CSS-native stagger reveal (No GSAP conflicts)
+        newNodes.forEach((el, index) => {
             el.style.position = '';
             el.style.top = '';
             el.style.left = '';
             el.style.margin = '';
+            el.style.opacity = '0';
+            el.style.transform = '';
+            
+            setTimeout(() => {
+                el.classList.add('tool-reveal');
+            }, index * 60);
         });
-
-        // 3. GSAP Stagger Reveal
-        if (window.gsap && window.ScrollTrigger) {
-            gsap.fromTo(newNodes, 
-                { opacity: 0, y: 20, scale: 0.9 },
-                { 
-                    opacity: 1, 
-                    y: 0, 
-                    scale: 1,
-                    duration: 0.6, 
-                    stagger: 0.04, 
-                    ease: 'back.out(1.5)',
-                    scrollTrigger: {
-                        trigger: container,
-                        start: 'top 85%'
-                    }
-                }
-            );
-        } else {
-            newNodes.forEach(el => {
-                el.style.opacity = '1';
-                el.style.transform = 'none';
-            });
-        }
       });
 
     } catch (err) {

@@ -2363,9 +2363,13 @@ svg { display: block; }
       padding: 0 var(--s-8);
     }
     .testimonials-inner .headline-lg {
-      font-size: clamp(2rem, 8vw, 5rem);
-      word-break: normal;
-      overflow-wrap: break-word;
+      font-size: clamp(2.5rem, 9vw, 5rem);
+      word-break: keep-all;
+      overflow-wrap: normal;
+    }
+    .mobile-hyphen { display: none; }
+    @media (max-width: 768px) {
+      .mobile-hyphen { display: inline; }
     }
     .logo-strip {
       display: flex;

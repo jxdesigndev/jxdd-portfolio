@@ -2363,9 +2363,9 @@ svg { display: block; }
       padding: 0 var(--s-8);
     }
     .testimonials-inner .headline-lg {
-      font-size: clamp(1.75rem, 8vw, 5rem);
-      word-break: keep-all;
-      overflow-wrap: normal;
+      font-size: clamp(2rem, 8vw, 5rem);
+      word-break: normal;
+      overflow-wrap: break-word;
     }
     .logo-strip {
       display: flex;

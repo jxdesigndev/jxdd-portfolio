@@ -2217,9 +2217,6 @@ svg { display: block; }
       gap: var(--s-6);
     }
 
-    .featured-grid .project-card:first-child {
-      grid-column: span 2;
-    }
 
     .featured-empty {
       grid-column: 1 / -1;

@@ -1155,7 +1155,7 @@ const JXUniverse = {
 
 
       const timer = setInterval(() => {
-        pct += (95 - pct) * 0.12 + 0.8;
+        pct += (95 - pct) * 0.055 + 0.4;
         // Cap visual progress at 99% while waiting for WebGL worker
         this.setProgress(this.particlesReady ? pct : Math.min(pct, 99));
 
@@ -1217,17 +1217,17 @@ const JXUniverse = {
             // 1. Form okezie-1 (Actual colors) immediately as loader slides up
             phase2T1 = setTimeout(() => {
               if (window.JXAudio && window.JXAudio.enabled) window.JXAudio.morphWhisper();
-              this.tweenUniform(mats.uProgress1, 0, 1, 1000); // 1.0s duration
-            }, 100);
+              this.tweenUniform(mats.uProgress1, 0, 1, 2500); // 2.5s duration
+            }, 200);
             
             // 2. Direct Morph to jx-hero-2 (Actual colors)
             phase2T2 = setTimeout(() => {
               if (window.JXAudio && window.JXAudio.enabled) window.JXAudio.morphWhisper();
-              this.tweenUniform(mats.uProgress2, 0, 1, 1000); // 1.0s duration
-            }, 1200); 
+              this.tweenUniform(mats.uProgress2, 0, 1, 2500); // 2.5s duration
+            }, 3000); 
             
             // End Phase 2, move to Phase 3 (HTML Reveal)
-            phase2T3 = setTimeout(finishLoader, 2500);
+            phase2T3 = setTimeout(finishLoader, 6000);
           } else {
             phase2T4 = setTimeout(finishLoader, 1500);
           }

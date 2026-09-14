@@ -1241,8 +1241,6 @@ svg { display: block; }
   font-weight: 800;
   line-height: var(--lead-snug);
   letter-spacing: var(--track-tight);
-  overflow-wrap: break-word;
-  word-break: break-word;
 }
 
 .headline-md {
@@ -2362,14 +2360,16 @@ svg { display: block; }
       margin: 0 auto;
       padding: 0 var(--s-8);
     }
-    .testimonials-inner .headline-lg {
+    .testimonials-heading {
       font-size: clamp(2.5rem, 9vw, 5rem);
-      word-break: keep-all;
-      overflow-wrap: normal;
+      white-space: nowrap;
     }
-    .mobile-hyphen { display: none; }
-    @media (max-width: 768px) {
-      .mobile-hyphen { display: inline; }
+    @media (max-width: 500px) {
+      .testimonials-heading {
+        font-size: clamp(1.6rem, 11.5vw, 2.5rem);
+        white-space: normal;
+        word-break: keep-all;
+      }
     }
     .logo-strip {
       display: flex;

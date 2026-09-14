@@ -1021,28 +1021,34 @@ svg { display: block; }
 }
 
 .loader-skip {
-  position: absolute;
-  bottom: var(--s-6);
-  right: var(--s-6);
+  position: fixed;
+  bottom: var(--s-8);
+  right: var(--s-8);
+  z-index: 9999;
   font-family: var(--font-mono);
-  font-size: var(--text-xs);
-  color: var(--gray-3);
-  background: none;
-  border: none;
+  font-size: var(--text-sm);
+  color: var(--green);
+  background: rgba(0, 255, 65, 0.05);
+  border: 1px solid rgba(0, 255, 65, 0.3);
+  border-radius: 100px;
+  padding: 8px 16px;
   cursor: pointer;
-  letter-spacing: var(--track-wider);
+  letter-spacing: var(--track-wide);
   opacity: 0;
-  animation: fade-in 0.5s ease 1s forwards;
-  transition: color 0.2s, opacity 0.3s;
+  animation: fade-in 0.5s ease 0.5s forwards;
+  transition: all 0.3s ease;
 }
 
 .loader-skip:hover {
-  color: var(--green);
+  background: var(--green);
+  color: #000;
 }
 
 @media (max-width: 768px) {
   .loader-skip {
     bottom: calc(var(--s-16) + env(safe-area-inset-bottom, 0px));
+    right: auto;
+    left: var(--s-6);
   }
 }
 

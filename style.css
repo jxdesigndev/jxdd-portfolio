@@ -2362,12 +2362,10 @@ svg { display: block; }
     }
     .testimonials-heading {
       font-size: clamp(2.5rem, 9vw, 5rem);
-      white-space: nowrap;
     }
     @media (max-width: 500px) {
       .testimonials-heading {
         font-size: clamp(1.6rem, 11.5vw, 2.5rem);
-        white-space: normal;
         word-break: keep-all;
       }
     }

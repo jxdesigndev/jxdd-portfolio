@@ -103,7 +103,9 @@
       requestAnimationFrame(() => toast.classList.add('visible'));
     });
 
+    let toastTimer;
     const dismiss = () => {
+      clearTimeout(toastTimer);
       toast.classList.remove('visible');
       toast.addEventListener('transitionend', () => toast.remove(), { once: true });
     };
@@ -114,8 +116,8 @@
     });
     document.getElementById('jx-audio-dismiss').addEventListener('click', dismiss);
 
-    /* Auto-dismiss after 8 s if user ignores it */
-    setTimeout(dismiss, 8000);
+    /* Auto-dismiss after 6s if user ignores it */
+    toastTimer = setTimeout(dismiss, 6000);
   }
 
   /* ─────────────────────────────────────────────────────────────

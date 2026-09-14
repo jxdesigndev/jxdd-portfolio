@@ -2356,6 +2356,12 @@ svg { display: block; }
       margin: 0 auto;
       padding: 0 var(--s-8);
     }
+    .testimonials-inner .headline-lg {
+      font-size: clamp(2.5rem, 6vw, 5rem);
+      hyphens: auto;
+      -webkit-hyphens: auto;
+      word-break: break-word;
+    }
     .logo-strip {
       display: flex;
       flex-wrap: wrap;
@@ -2689,8 +2695,8 @@ svg { display: block; }
       .featured-grid .project-card:first-child { grid-column: span 1; }
       .services-grid { grid-template-columns: 1fr; }
       .about-strip-stats { grid-template-columns: repeat(3, 1fr); }
-      .hero-name { font-size: clamp(2.75rem, 14vw, 11rem); word-break: break-word; overflow-wrap: break-word; }
-      .hero-name-line { white-space: normal; }
+      .hero-name { font-size: clamp(2.4rem, 18vw, 4rem); line-height: 0.92; word-break: keep-all; overflow-wrap: normal; }
+      .hero-name-line { white-space: nowrap; }
       .cli-trigger { display: none; }
     }
 

@@ -2506,6 +2506,7 @@ svg { display: block; }
       background: var(--green-glow);
       border: 1px solid var(--border-green);
       border-radius: var(--radius-md);
+      color: var(--green);
     }
 
     .service-name {

@@ -2025,7 +2025,7 @@ const JXUniverse = {
         .select('*')
         .eq('featured', true)
         .order('priority', { ascending: true })
-        .limit(4);
+        .limit(6);
 
       let renderList = projects;
       if (error || !projects || projects.length === 0) {
@@ -2126,8 +2126,9 @@ const JXUniverse = {
   },
 
   /* ────────────────────────────────────────────────────────────────
-     9b. VAULT REELFOLIO HOVER
-     Interactive horizontal card fan. Sweeps based on mouse X.
+     9b. VAULT REELFOLIO HOVER (BUTTERY SMOOTH CONTINUOUS SWEEP)
+     Interactive horizontal card fan. Uses continuous interpolation
+     and gsap.quickTo for a true fluid 1:1 mouse connection.
      ──────────────────────────────────────────────────────────────── */
   initVaultHover () {
     /* Guard: only run on pointer devices */
@@ -2142,81 +2143,98 @@ const JXUniverse = {
 
     const numCards = cards.length;
     let moveRAF = null;
-    let lastActive = -1;
+    let isHovering = false;
     
-    /* Calculate and apply positions */
-    const updateCards = (activeIndex) => {
-      cards.forEach((card, i) => {
+    /* Pre-bake GSAP quickTo setters for 60fps performance */
+    const cardTweens = cards.map(card => {
+      // Set initial centering securely
+      gsap.set(card, { xPercent: -50, yPercent: -50 });
+      return {
+        card: card,
+        xTo: gsap.quickTo(card, "x", { duration: 0.5, ease: "power3.out" }),
+        yTo: gsap.quickTo(card, "y", { duration: 0.5, ease: "power3.out" }),
+        rotTo: gsap.quickTo(card, "rotation", { duration: 0.5, ease: "power3.out" }),
+        scaleTo: gsap.quickTo(card, "scale", { duration: 0.5, ease: "power3.out" })
+      };
+    });
+
+    /* Render function that continuously maps mouse progress to cards */
+    const render = (progress, isIdle) => {
+      // If idle, the cards just rest. If active, the center of gravity follows the mouse.
+      // mouse progress is 0.0 to 1.0. We multiply by (numCards - 1) so it maps to card indices.
+      const hoverIndex = progress * (numCards - 1);
+
+      cardTweens.forEach((ct, i) => {
         let x = 0, y = 0, rot = 0, scale = 1, zIndex = 1;
         
-        if (activeIndex === -1) {
+        if (isIdle) {
           /* Resting State: slight centered fan */
-          const offset = i - (numCards - 1) / 2; // e.g. -1.5, -0.5, 0.5, 1.5 for 4 cards
-          x = offset * 40;
-          y = Math.abs(offset) * 10;
-          rot = offset * 5;
-          scale = 0.95 - Math.abs(offset) * 0.02;
-          zIndex = i; // stack left to right naturally
+          const offset = i - (numCards - 1) / 2; // e.g. for 6 cards: -2.5, -1.5, -0.5...
+          x = offset * 30; // tighter grouping when idle
+          y = Math.abs(offset) * 8;
+          rot = offset * 4;
+          scale = 0.95 - Math.abs(offset) * 0.015;
+          zIndex = i; // simple stack
         } else {
-          /* Hover State: Sweep */
-          const diff = i - activeIndex;
+          /* Continuous Hover State: Fluid Parting */
+          const diff = i - hoverIndex; // how far is this card from the mouse 'center'?
+          const absDiff = Math.abs(diff);
           
-          if (diff === 0) {
-            // Active Card (Front & Center)
-            x = 0;
-            y = -20;
-            rot = 0;
-            scale = 1.15;
-            zIndex = 50;
-          } else {
-            // Give Way Cards (Pushed Aside)
-            x = diff * 75 + (Math.sign(diff) * 50); 
-            y = Math.abs(diff) * 15;
-            rot = diff * 12;
-            scale = 0.95 - Math.abs(diff) * 0.05;
-            zIndex = 10 - Math.abs(diff); // tuck neatly behind
-          }
+          /* 
+             Math breakdown:
+             - Base shift: diff * 35 (spreads them out)
+             - Extra Parting: Math.min(absDiff, 1) creates a strong push away exactly at the cursor, flattening out further away.
+          */
+          x = diff * 35 + Math.sign(diff) * Math.min(absDiff, 1) * 60;
+          y = absDiff * 12;
+          rot = diff * 10;
+          
+          // Max scale at cursor (1.15), drops to 0.95 at 1 card away
+          scale = 1.15 - Math.min(absDiff, 1) * 0.2 - absDiff * 0.02;
+          
+          // Z-index needs to be strictly based on proximity to cursor.
+          // Using 1000 guarantees no overlap issues.
+          zIndex = Math.round(1000 - absDiff * 100);
         }
 
-        gsap.to(card, {
-          xPercent: -50, yPercent: -50,
-          x, y, rotation: rot, scale, zIndex,
-          duration: 0.6, 
-          ease: 'power3.out',
-          overwrite: 'auto'
-        });
+        // Apply via quickTo for buttery smoothness
+        ct.xTo(x);
+        ct.yTo(y);
+        ct.rotTo(rot);
+        ct.scaleTo(scale);
+        
+        // Z-index is discrete, so we just set it directly on the element
+        ct.card.style.zIndex = zIndex;
       });
     };
 
-    /* Set Initial Resting State */
-    updateCards(-1);
+    /* Set Initial Resting State (0.5 progress just puts it visually in the middle) */
+    render(0.5, true);
 
-    /* Track hover via container mouse position */
+    /* Track hover continuously via container mouse position */
     container.addEventListener('mousemove', (e) => {
+      isHovering = true;
       if (!moveRAF) {
         moveRAF = requestAnimationFrame(() => {
           moveRAF = null;
+          if (!isHovering) return; // guard if left quickly
+          
           const rect = container.getBoundingClientRect();
           let progress = (e.clientX - rect.left) / rect.width;
+          
+          // Optional: slight padding so you can easily reach the edges
+          progress = (progress - 0.05) / 0.9;
           progress = Math.max(0, Math.min(1, progress));
           
-          // Map mouse progress (0-1) to an active card index
-          let newActive = Math.floor(progress * numCards);
-          if (newActive >= numCards) newActive = numCards - 1;
-          
-          if (newActive !== lastActive) {
-            lastActive = newActive;
-            updateCards(newActive);
-          }
+          render(progress, false);
         });
       }
     });
 
-    /* Reset to resting state when cursor leaves container entirely */
+    /* Reset to resting state smoothly when cursor leaves */
     container.addEventListener('mouseleave', () => {
-      lastActive = -1;
-      updateCards(-1);
-      if (moveRAF) { cancelAnimationFrame(moveRAF); moveRAF = null; }
+      isHovering = false;
+      render(0.5, true);
     });
   },
 

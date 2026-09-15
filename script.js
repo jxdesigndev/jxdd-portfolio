@@ -2025,7 +2025,7 @@ const JXUniverse = {
         .select('*')
         .eq('featured', true)
         .order('priority', { ascending: true })
-        .limit(3);
+        .limit(4);
 
       let renderList = projects;
       if (error || !projects || projects.length === 0) {
@@ -2063,16 +2063,21 @@ const JXUniverse = {
 
       grid.innerHTML = renderList.map((p, i) => this.renderProjectCard(p, i)).join('');
 
-      /* Animate rows in on scroll */
+      grid.innerHTML = renderList.map((p, i) => this.renderProjectCard(p, i)).join('');
+
+      /* Animate the whole container in on scroll */
       if (window.gsap) {
-        gsap.fromTo('.featured-row', { opacity: 0, y: 32 }, {
-          opacity: 1, y: 0, duration: 0.6, ease: 'power3.out', stagger: 0.08,
-          scrollTrigger: { trigger: grid, start: 'top 88%', once: true }
+        gsap.fromTo(grid, { opacity: 0, y: 40 }, {
+          opacity: 1, y: 0, duration: 0.8, ease: 'power3.out',
+          scrollTrigger: { trigger: grid, start: 'top 85%', once: true }
         });
       }
 
-      /* Bind row clicks */
-      grid.querySelectorAll('.featured-row').forEach((row, i) => {
+      /* Boot the Reelfolio hover interaction (initializes layout + sets up tracking) */
+      this.initVaultHover();
+
+      /* Bind card clicks */
+      grid.querySelectorAll('.reelfolio-card').forEach((card, i) => {
         const p = renderList[i];
         if (!p) return;
         const handleClick = () => {
@@ -2084,12 +2089,9 @@ const JXUniverse = {
             this.openModal(p);
           }
         };
-        row.addEventListener('click', handleClick);
-        row.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleClick(); } });
+        card.addEventListener('click', handleClick);
+        card.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleClick(); } });
       });
-
-      /* Boot the Reelfolio hover interaction */
-      this.initVaultHover(renderList);
 
       /* Refresh cursor hover states */
       if (window.JX && window.JX.refreshCursor) window.JX.refreshCursor();
@@ -2100,161 +2102,122 @@ const JXUniverse = {
   },
 
   renderProjectCard (p, i) {
-    /* Reelfolio Hover — renders a list ROW instead of a card */
-    const index     = String(i + 1).padStart(2, '0');
+    /* Reelfolio Hover — Interactive Horizontal Card Fan */
     const title     = p.title || 'Untitled';
     const category  = p.category || 'Project';
     const year      = p.year || '';
-    const tools     = (p.tools || []).slice(0, 3).map(t => `<span class="tag">${t}</span>`).join('');
     const hasImage  = !!p.image_url;
     const isVid     = hasImage && (p.image_url.toLowerCase().endsWith('.mp4') || p.image_url.toLowerCase().endsWith('.webm'));
-    // Store image src on the row via data attribute so initVaultHover can read it
-    const imgAttr   = hasImage ? `data-img="${p.image_url}" data-vid="${isVid ? '1' : '0'}"` : '';
     const sub       = [category, year].filter(Boolean).join(' / ');
 
+    const media = hasImage 
+      ? (isVid ? `<video src="${p.image_url}" class="reelfolio-card-img" autoplay loop muted playsinline loading="lazy"></video>` : `<img src="${p.image_url}" alt="${title}" class="reelfolio-card-img" loading="lazy">`)
+      : `<div class="reelfolio-card-ph">${title.slice(0, 2).toUpperCase()}</div>`;
+
     return `
-      <article class="featured-row" role="listitem" tabindex="0"
-        aria-label="View project: ${title}"
-        ${imgAttr}
-        data-title="${title.slice(0, 2).toUpperCase()}">
-        <span class="featured-row-index" aria-hidden="true">${index}</span>
-        <div class="featured-row-main">
-          <h3 class="featured-row-title">${title}</h3>
-          <span class="featured-row-sub">${sub}</span>
+      <article class="reelfolio-card" role="listitem" tabindex="0" aria-label="View project: ${title}">
+        ${media}
+        <div class="reelfolio-card-overlay">
+          <h3 class="reelfolio-card-title">${title}</h3>
+          <span class="reelfolio-card-sub">${sub}</span>
         </div>
-        <div class="featured-row-tools" aria-hidden="true">${tools}</div>
-        <div class="featured-row-arrow" aria-hidden="true">↗</div>
       </article>
     `;
   },
 
   /* ────────────────────────────────────────────────────────────────
      9b. VAULT REELFOLIO HOVER
-     Floating image preview that follows the cursor over project rows.
-     Uses GSAP quickTo for zero-jank 60fps tracking.
-     On touch / (hover:none) devices it does nothing.
+     Interactive horizontal card fan. Sweeps based on mouse X.
      ──────────────────────────────────────────────────────────────── */
-  initVaultHover (projects) {
+  initVaultHover () {
     /* Guard: only run on pointer devices */
     if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
     if (!window.gsap) return;
 
-    const list     = document.getElementById('featured-grid');
-    const preview  = document.getElementById('vault-preview');
-    const previewImg = document.getElementById('vault-preview-img');
-    const previewPH  = document.getElementById('vault-preview-placeholder');
-    if (!list || !preview || !previewImg || !previewPH) return;
+    const container = document.getElementById('featured-grid');
+    if (!container) return;
+    
+    const cards = Array.from(container.querySelectorAll('.reelfolio-card'));
+    if (!cards.length) return;
 
-    /* Pre-cache all images so they're instant on hover */
-    projects.forEach(p => {
-      if (p.image_url && !p.image_url.endsWith('.mp4') && !p.image_url.endsWith('.webm')) {
-        const img = new Image();
-        img.src = p.image_url;
-      }
-    });
+    const numCards = cards.length;
+    let moveRAF = null;
+    let lastActive = -1;
+    
+    /* Calculate and apply positions */
+    const updateCards = (activeIndex) => {
+      cards.forEach((card, i) => {
+        let x = 0, y = 0, rot = 0, scale = 1, zIndex = 1;
+        
+        if (activeIndex === -1) {
+          /* Resting State: slight centered fan */
+          const offset = i - (numCards - 1) / 2; // e.g. -1.5, -0.5, 0.5, 1.5 for 4 cards
+          x = offset * 40;
+          y = Math.abs(offset) * 10;
+          rot = offset * 5;
+          scale = 0.95 - Math.abs(offset) * 0.02;
+          zIndex = i; // stack left to right naturally
+        } else {
+          /* Hover State: Sweep */
+          const diff = i - activeIndex;
+          
+          if (diff === 0) {
+            // Active Card (Front & Center)
+            x = 0;
+            y = -20;
+            rot = 0;
+            scale = 1.15;
+            zIndex = 50;
+          } else {
+            // Give Way Cards (Pushed Aside)
+            x = diff * 75 + (Math.sign(diff) * 50); 
+            y = Math.abs(diff) * 15;
+            rot = diff * 12;
+            scale = 0.95 - Math.abs(diff) * 0.05;
+            zIndex = 10 - Math.abs(diff); // tuck neatly behind
+          }
+        }
 
-    /* GSAP quickTo — creates a reusable tween setter for ultra-perf mouse tracking */
-    const xTo = gsap.quickTo(preview, 'x', { duration: 0.55, ease: 'power3.out' });
-    const yTo = gsap.quickTo(preview, 'y', { duration: 0.55, ease: 'power3.out' });
+        gsap.to(card, {
+          xPercent: -50, yPercent: -50,
+          x, y, rotation: rot, scale, zIndex,
+          duration: 0.6, 
+          ease: 'power3.out',
+          overwrite: 'auto'
+        });
+      });
+    };
 
-    /* Half-size for transform-origin offset (preview is fixed at top:0 left:0) */
-    const PW = 340, PH = 240;
+    /* Set Initial Resting State */
+    updateCards(-1);
 
-    let activeRow   = null;
-    let isVisible   = false;
-    let currentImg  = '';
-    let moveRAF     = null;
-    let latestX     = 0, latestY = 0;
-
-    /* Move handler — throttled via rAF */
-    const onMove = e => {
-      latestX = e.clientX;
-      latestY = e.clientY;
+    /* Track hover via container mouse position */
+    container.addEventListener('mousemove', (e) => {
       if (!moveRAF) {
         moveRAF = requestAnimationFrame(() => {
           moveRAF = null;
-          xTo(latestX - PW / 2);
-          yTo(latestY - PH / 2 - 20); /* slight upward offset so cursor is below */
+          const rect = container.getBoundingClientRect();
+          let progress = (e.clientX - rect.left) / rect.width;
+          progress = Math.max(0, Math.min(1, progress));
+          
+          // Map mouse progress (0-1) to an active card index
+          let newActive = Math.floor(progress * numCards);
+          if (newActive >= numCards) newActive = numCards - 1;
+          
+          if (newActive !== lastActive) {
+            lastActive = newActive;
+            updateCards(newActive);
+          }
         });
       }
-    };
-
-    /* Show the preview for a given project */
-    const showPreview = (p, row) => {
-      activeRow = row;
-      const imgSrc = row.dataset.img || '';
-      const initials = row.dataset.title || '??';
-
-      /* Always show placeholder first */
-      previewPH.textContent = initials;
-
-      if (imgSrc && imgSrc !== currentImg) {
-        currentImg = imgSrc;
-        previewImg.classList.remove('is-loaded');
-
-        const tmp = new Image();
-        tmp.onload = () => {
-          if (currentImg !== imgSrc) return; /* stale — user moved away */
-          previewImg.src = imgSrc;
-          previewImg.classList.add('is-loaded');
-        };
-        tmp.src = imgSrc;
-      } else if (imgSrc && imgSrc === currentImg) {
-        /* Already loaded from cache */
-        previewImg.classList.add('is-loaded');
-      } else {
-        /* No image — only show initials placeholder */
-        previewImg.classList.remove('is-loaded');
-        currentImg = '';
-      }
-
-      if (!isVisible) {
-        isVisible = true;
-        gsap.killTweensOf(preview, 'opacity,scale,rotation');
-        gsap.to(preview, {
-          opacity: 1, scale: 1, rotation: 0,
-          duration: 0.5, ease: 'expo.out'
-        });
-        window.addEventListener('mousemove', onMove, { passive: true });
-      }
-    };
-
-    /* Hide the preview */
-    const hidePreview = () => {
-      if (!isVisible) return;
-      isVisible  = false;
-      activeRow  = null;
-      currentImg = '';
-      gsap.killTweensOf(preview, 'opacity,scale,rotation');
-      gsap.to(preview, {
-        opacity: 0, scale: 0.88, rotation: -2,
-        duration: 0.4, ease: 'power3.in'
-      });
-      window.removeEventListener('mousemove', onMove);
-      if (moveRAF) { cancelAnimationFrame(moveRAF); moveRAF = null; }
-    };
-
-    /* Attach enter / leave to each row */
-    list.querySelectorAll('.featured-row').forEach((row, i) => {
-      const p = projects[i];
-      if (!p) return;
-
-      row.addEventListener('mouseenter', () => showPreview(p, row));
-      row.addEventListener('mouseleave', e => {
-        /* Only hide if not moving to another row inside the list */
-        if (!e.relatedTarget || !e.relatedTarget.closest('.featured-list, #featured-grid')) {
-          hidePreview();
-        }
-      });
     });
 
-    /* Hide when cursor leaves the list entirely */
-    list.addEventListener('mouseleave', () => hidePreview());
-
-    /* Cleanup on page change (Lenis / SPA navigation) */
-    window.addEventListener('beforeunload', () => {
-      window.removeEventListener('mousemove', onMove);
-    }, { once: true });
+    /* Reset to resting state when cursor leaves container entirely */
+    container.addEventListener('mouseleave', () => {
+      lastActive = -1;
+      updateCards(-1);
+      if (moveRAF) { cancelAnimationFrame(moveRAF); moveRAF = null; }
+    });
   },
 
   /* ────────────────────────────────────────────────────────────────

@@ -2208,211 +2208,121 @@ svg { display: block; }
       -webkit-text-stroke: 1px rgba(255,255,255,0.25);
     }
 
-    .featured-list {
+    /* ── Reelfolio Interactive Card Fan ── */
+    .reelfolio-container {
       max-width: var(--container-xl);
       margin: 0 auto;
-      padding: 0 var(--s-8);
+      padding: var(--s-10) var(--s-4);
+      height: 55vh;
+      min-height: 400px;
+      max-height: 600px;
       position: relative;
-    }
-
-    /* ── Row separator line at the top of the list ── */
-    .featured-list::before {
-      content: '';
-      display: block;
-      height: 1px;
-      background: var(--border);
-    }
-
-    /* ── Single project row ── */
-    .featured-row {
-      display: grid;
-      grid-template-columns: 40px 1fr auto auto;
-      align-items: center;
-      gap: var(--s-6);
-      padding: var(--s-6) 0;
-      border-bottom: 1px solid var(--border);
-      cursor: pointer;
-      position: relative;
-      text-decoration: none;
-      color: inherit;
-      transition: border-color 0.3s ease;
-      will-change: transform, opacity;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    .featured-row:focus-visible {
-      outline: 2px solid var(--green);
-      outline-offset: 4px;
-      border-radius: 2px;
-    }
-
-    /* ── Row index counter ── */
-    .featured-row-index {
-      font-family: var(--font-mono);
-      font-size: var(--text-xs);
-      color: var(--gray-4);
-      transition: color 0.3s ease;
-      line-height: 1;
-    }
-
-    /* ── Row main content ── */
-    .featured-row-main {
-      display: flex;
-      flex-direction: column;
-      gap: var(--s-1);
-      overflow: hidden;
-    }
-
-    .featured-row-title {
-      font-family: var(--font-display);
-      font-size: clamp(1.35rem, 2.8vw, 2rem);
-      font-weight: 800;
-      letter-spacing: var(--track-tight);
-      line-height: var(--lead-tight);
-      color: var(--gray-1);
-      transition: color 0.35s ease;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .featured-row-sub {
-      font-family: var(--font-mono);
-      font-size: var(--text-2xs);
-      letter-spacing: var(--track-widest);
-      text-transform: uppercase;
-      color: var(--gray-4);
-      transition: color 0.35s ease;
-    }
-
-    /* ── Row tools (middle column, hidden on small screens) ── */
-    .featured-row-tools {
-      display: flex;
-      gap: var(--s-2);
-      flex-wrap: nowrap;
-      overflow: hidden;
-    }
-
-    /* ── Row arrow ── */
-    .featured-row-arrow {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      border: 1px solid var(--border);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1rem;
-      color: var(--gray-3);
-      flex-shrink: 0;
-      transition: background 0.35s var(--ease-snap),
-                  border-color 0.35s var(--ease-snap),
-                  color 0.35s var(--ease-snap),
-                  transform 0.35s var(--ease-snap);
+      perspective: 1200px;
     }
 
-    /* ── Row hover/active states — JS controls these via data-state ── */
-    @media (hover: hover) {
-      .featured-list:hover .featured-row {
-        opacity: 0.4;
-        transform: scale(0.985) translateX(-2px);
-      }
-      .featured-list:hover .featured-row:hover,
-      .featured-list:hover .featured-row[data-state="active"] {
-        opacity: 1;
-        transform: scale(1) translateX(0);
-      }
-      .featured-row:hover .featured-row-index,
-      .featured-row[data-state="active"] .featured-row-index {
-        color: var(--green);
-      }
-      .featured-row:hover .featured-row-title,
-      .featured-row[data-state="active"] .featured-row-title {
-        color: var(--white);
-      }
-      .featured-row:hover .featured-row-sub,
-      .featured-row[data-state="active"] .featured-row-sub {
-        color: var(--gray-2);
-      }
-      .featured-row:hover .featured-row-arrow,
-      .featured-row[data-state="active"] .featured-row-arrow {
-        background: var(--green);
-        border-color: var(--green);
-        color: var(--void);
-        transform: rotate(-45deg);
-      }
-    }
-
-    /* ── Floating image preview panel (desktop only) ── */
-    .vault-preview {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 340px;
-      height: 240px;
-      pointer-events: none;
-      z-index: 50;
-      opacity: 0;
-      transform: translateX(-50%) translateY(-50%) scale(0.88) rotate(-2deg);
-      will-change: transform, opacity;
+    .reelfolio-card {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: clamp(240px, 20vw, 300px);
+      aspect-ratio: 3/4;
       border-radius: var(--radius-lg);
       overflow: hidden;
-      box-shadow: 0 40px 80px rgba(0,0,0,0.7), 0 0 40px rgba(0,255,65,0.12);
+      transform-origin: bottom center;
+      will-change: transform, z-index;
+      cursor: pointer;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.05);
+      background: var(--surface);
+      /* GSAP handles transform & z-index exclusively for silky smoothness */
+      -webkit-tap-highlight-color: transparent;
     }
 
-    .vault-preview-inner {
-      width: 100%;
-      height: 100%;
-      position: relative;
+    .reelfolio-card:focus-visible {
+      outline: 2px solid var(--green);
+      outline-offset: 4px;
     }
 
-    .vault-preview-img {
+    .reelfolio-card-img {
       width: 100%;
       height: 100%;
       object-fit: cover;
       display: block;
+      pointer-events: none;
+    }
+
+    .reelfolio-card-overlay {
       position: absolute;
       inset: 0;
-      opacity: 0;
-      transition: opacity 0.25s ease;
+      background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.4) 40%, transparent 100%);
+      pointer-events: none;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: var(--s-6);
     }
-
-    .vault-preview-img.is-loaded {
-      opacity: 1;
-    }
-
-    .vault-preview-placeholder {
+    
+    .reelfolio-card-ph {
       width: 100%;
       height: 100%;
-      position: absolute;
-      inset: 0;
       background: var(--surface-2);
       display: flex;
       align-items: center;
       justify-content: center;
       font-family: var(--font-display);
-      font-size: var(--text-3xl);
+      font-size: var(--text-4xl);
       font-weight: 800;
       color: var(--green);
+    }
+
+    .reelfolio-card-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.2rem, 2vw, 1.5rem);
+      font-weight: 800;
+      color: var(--white);
+      margin-bottom: var(--s-1);
+      line-height: var(--lead-tight);
       letter-spacing: var(--track-tight);
+      text-shadow: 0 2px 4px rgba(0,0,0,0.8);
     }
 
-    /* Hide preview on touch/mobile devices */
-    @media (hover: none), (max-width: 768px) {
-      .vault-preview { display: none !important; }
+    .reelfolio-card-sub {
+      font-family: var(--font-mono);
+      font-size: var(--text-2xs);
+      color: var(--gray-2);
+      text-transform: uppercase;
+      letter-spacing: var(--track-wider);
     }
 
-    .featured-empty {
-      padding: var(--s-6) 0;
+    .reelfolio-empty {
       display: flex;
-      flex-direction: column;
-      gap: 1px;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
     }
 
-    /* ── Mobile: show tools only at wider widths ── */
-    @media (max-width: 640px) {
-      .featured-row { grid-template-columns: 32px 1fr auto; }
-      .featured-row-tools { display: none; }
+    /* Mobile Fallback: Vertical Stack */
+    @media (hover: none), (max-width: 768px) {
+      .reelfolio-container {
+        height: auto;
+        min-height: auto;
+        flex-direction: column;
+        gap: var(--s-6);
+        padding: var(--s-6) var(--s-4);
+      }
+      .reelfolio-card {
+        position: relative;
+        left: auto;
+        top: auto;
+        width: 100%;
+        max-width: 380px;
+        aspect-ratio: 4/5;
+        transform: none !important; /* GSAP override */
+        opacity: 1 !important;
+        z-index: 1 !important;
+      }
     }
 
     /* ── ABOUT STRIP ── */

@@ -2063,19 +2063,19 @@ const JXUniverse = {
 
       grid.innerHTML = renderList.map((p, i) => this.renderProjectCard(p, i)).join('');
 
-      /* Animate cards in */
+      /* Animate rows in on scroll */
       if (window.gsap) {
-        gsap.fromTo('.project-card', { opacity: 0, y: 40 }, {
-          opacity: 1, y: 0, duration: 0.7, ease: 'power3.out', stagger: 0.1,
-          scrollTrigger: { trigger: grid, start: 'top 85%', once: true }
+        gsap.fromTo('.featured-row', { opacity: 0, y: 32 }, {
+          opacity: 1, y: 0, duration: 0.6, ease: 'power3.out', stagger: 0.08,
+          scrollTrigger: { trigger: grid, start: 'top 88%', once: true }
         });
       }
 
-      /* Bind card clicks */
-      grid.querySelectorAll('.project-card').forEach((card, i) => {
-        const p = projects[i];
+      /* Bind row clicks */
+      grid.querySelectorAll('.featured-row').forEach((row, i) => {
+        const p = renderList[i];
         if (!p) return;
-        const handleCardClick = () => {
+        const handleClick = () => {
           if (p.slug) {
             window.location.href = `project.html?slug=${encodeURIComponent(p.slug)}`;
           } else if (p.case_study && p.case_study.startsWith('/projects/')) {
@@ -2084,12 +2084,12 @@ const JXUniverse = {
             this.openModal(p);
           }
         };
-        card.addEventListener('click', handleCardClick);
-        card.addEventListener('keydown', e => { if (e.key === 'Enter') handleCardClick(); });
-        card.setAttribute('tabindex', '0');
-        card.setAttribute('role', 'button');
-        card.setAttribute('aria-label', `View project: ${p.title || 'Untitled'}`);
+        row.addEventListener('click', handleClick);
+        row.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleClick(); } });
       });
+
+      /* Boot the Reelfolio hover interaction */
+      this.initVaultHover(renderList);
 
       /* Refresh cursor hover states */
       if (window.JX && window.JX.refreshCursor) window.JX.refreshCursor();
@@ -2100,31 +2100,161 @@ const JXUniverse = {
   },
 
   renderProjectCard (p, i) {
-    const isVid = p.image_url && (p.image_url.toLowerCase().endsWith('.mp4') || p.image_url.toLowerCase().endsWith('.webm'));
-    const imagePart = p.image_url
-      ? (isVid 
-          ? `<video src="${p.image_url}" class="project-card-image" autoplay loop muted playsinline loading="lazy"></video>` 
-          : `<img src="${p.image_url}" alt="${p.title}" class="project-card-image" loading="lazy">`)
-      : `<div class="project-card-placeholder">${(p.title || 'JX').slice(0,2).toUpperCase()}</div>`;
-
-    const tools = (p.tools || []).slice(0, 4).map(t => `<span class="tag">${t}</span>`).join('');
-    const conceptBadge = p.concept ? `<span class="badge concept-badge" style="font-size:var(--text-2xs); letter-spacing:0.1em; background:var(--accent); color:var(--bg); padding:2px 6px; border-radius:4px; margin-left:12px; vertical-align:middle; font-weight:700;">CONCEPT</span>` : '';
+    /* Reelfolio Hover — renders a list ROW instead of a card */
+    const index     = String(i + 1).padStart(2, '0');
+    const title     = p.title || 'Untitled';
+    const category  = p.category || 'Project';
+    const year      = p.year || '';
+    const tools     = (p.tools || []).slice(0, 3).map(t => `<span class="tag">${t}</span>`).join('');
+    const hasImage  = !!p.image_url;
+    const isVid     = hasImage && (p.image_url.toLowerCase().endsWith('.mp4') || p.image_url.toLowerCase().endsWith('.webm'));
+    // Store image src on the row via data attribute so initVaultHover can read it
+    const imgAttr   = hasImage ? `data-img="${p.image_url}" data-vid="${isVid ? '1' : '0'}"` : '';
+    const sub       = [category, year].filter(Boolean).join(' / ');
 
     return `
-      <article class="project-card" data-id="${p.id}">
-        ${imagePart}
-        <div class="project-card-body">
-          <div class="project-card-meta">
-            <span class="project-card-category">${p.category || 'Project'}</span>
-            <span class="project-card-year">${p.year || ''}</span>
-          </div>
-          <h3 class="project-card-title" style="display:flex; align-items:center;">${p.title}${conceptBadge}</h3>
-          <p class="project-card-desc">${(p.description || '').replace(/<[^>]*>?/gm, '').slice(0, 100)}${(p.description || '').replace(/<[^>]*>?/gm, '').length > 100 ? '…' : ''}</p>
-          <div class="project-card-tools">${tools}</div>
+      <article class="featured-row" role="listitem" tabindex="0"
+        aria-label="View project: ${title}"
+        ${imgAttr}
+        data-title="${title.slice(0, 2).toUpperCase()}">
+        <span class="featured-row-index" aria-hidden="true">${index}</span>
+        <div class="featured-row-main">
+          <h3 class="featured-row-title">${title}</h3>
+          <span class="featured-row-sub">${sub}</span>
         </div>
-        <div class="project-card-arrow" aria-hidden="true">↗</div>
+        <div class="featured-row-tools" aria-hidden="true">${tools}</div>
+        <div class="featured-row-arrow" aria-hidden="true">↗</div>
       </article>
     `;
+  },
+
+  /* ────────────────────────────────────────────────────────────────
+     9b. VAULT REELFOLIO HOVER
+     Floating image preview that follows the cursor over project rows.
+     Uses GSAP quickTo for zero-jank 60fps tracking.
+     On touch / (hover:none) devices it does nothing.
+     ──────────────────────────────────────────────────────────────── */
+  initVaultHover (projects) {
+    /* Guard: only run on pointer devices */
+    if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+    if (!window.gsap) return;
+
+    const list     = document.getElementById('featured-grid');
+    const preview  = document.getElementById('vault-preview');
+    const previewImg = document.getElementById('vault-preview-img');
+    const previewPH  = document.getElementById('vault-preview-placeholder');
+    if (!list || !preview || !previewImg || !previewPH) return;
+
+    /* Pre-cache all images so they're instant on hover */
+    projects.forEach(p => {
+      if (p.image_url && !p.image_url.endsWith('.mp4') && !p.image_url.endsWith('.webm')) {
+        const img = new Image();
+        img.src = p.image_url;
+      }
+    });
+
+    /* GSAP quickTo — creates a reusable tween setter for ultra-perf mouse tracking */
+    const xTo = gsap.quickTo(preview, 'x', { duration: 0.55, ease: 'power3.out' });
+    const yTo = gsap.quickTo(preview, 'y', { duration: 0.55, ease: 'power3.out' });
+
+    /* Half-size for transform-origin offset (preview is fixed at top:0 left:0) */
+    const PW = 340, PH = 240;
+
+    let activeRow   = null;
+    let isVisible   = false;
+    let currentImg  = '';
+    let moveRAF     = null;
+    let latestX     = 0, latestY = 0;
+
+    /* Move handler — throttled via rAF */
+    const onMove = e => {
+      latestX = e.clientX;
+      latestY = e.clientY;
+      if (!moveRAF) {
+        moveRAF = requestAnimationFrame(() => {
+          moveRAF = null;
+          xTo(latestX - PW / 2);
+          yTo(latestY - PH / 2 - 20); /* slight upward offset so cursor is below */
+        });
+      }
+    };
+
+    /* Show the preview for a given project */
+    const showPreview = (p, row) => {
+      activeRow = row;
+      const imgSrc = row.dataset.img || '';
+      const initials = row.dataset.title || '??';
+
+      /* Always show placeholder first */
+      previewPH.textContent = initials;
+
+      if (imgSrc && imgSrc !== currentImg) {
+        currentImg = imgSrc;
+        previewImg.classList.remove('is-loaded');
+
+        const tmp = new Image();
+        tmp.onload = () => {
+          if (currentImg !== imgSrc) return; /* stale — user moved away */
+          previewImg.src = imgSrc;
+          previewImg.classList.add('is-loaded');
+        };
+        tmp.src = imgSrc;
+      } else if (imgSrc && imgSrc === currentImg) {
+        /* Already loaded from cache */
+        previewImg.classList.add('is-loaded');
+      } else {
+        /* No image — only show initials placeholder */
+        previewImg.classList.remove('is-loaded');
+        currentImg = '';
+      }
+
+      if (!isVisible) {
+        isVisible = true;
+        gsap.killTweensOf(preview, 'opacity,scale,rotation');
+        gsap.to(preview, {
+          opacity: 1, scale: 1, rotation: 0,
+          duration: 0.5, ease: 'expo.out'
+        });
+        window.addEventListener('mousemove', onMove, { passive: true });
+      }
+    };
+
+    /* Hide the preview */
+    const hidePreview = () => {
+      if (!isVisible) return;
+      isVisible  = false;
+      activeRow  = null;
+      currentImg = '';
+      gsap.killTweensOf(preview, 'opacity,scale,rotation');
+      gsap.to(preview, {
+        opacity: 0, scale: 0.88, rotation: -2,
+        duration: 0.4, ease: 'power3.in'
+      });
+      window.removeEventListener('mousemove', onMove);
+      if (moveRAF) { cancelAnimationFrame(moveRAF); moveRAF = null; }
+    };
+
+    /* Attach enter / leave to each row */
+    list.querySelectorAll('.featured-row').forEach((row, i) => {
+      const p = projects[i];
+      if (!p) return;
+
+      row.addEventListener('mouseenter', () => showPreview(p, row));
+      row.addEventListener('mouseleave', e => {
+        /* Only hide if not moving to another row inside the list */
+        if (!e.relatedTarget || !e.relatedTarget.closest('.featured-list, #featured-grid')) {
+          hidePreview();
+        }
+      });
+    });
+
+    /* Hide when cursor leaves the list entirely */
+    list.addEventListener('mouseleave', () => hidePreview());
+
+    /* Cleanup on page change (Lenis / SPA navigation) */
+    window.addEventListener('beforeunload', () => {
+      window.removeEventListener('mousemove', onMove);
+    }, { once: true });
   },
 
   /* ────────────────────────────────────────────────────────────────

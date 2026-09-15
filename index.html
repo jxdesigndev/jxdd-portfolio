@@ -391,10 +391,22 @@
         </div>
         <a href="work.html" class="btn btn-ghost" data-nav-link>View All Work →</a>
       </div>
-      <div class="featured-grid" id="featured-grid">
-        <!-- Loaded from Supabase -->
-        <div class="featured-empty">
-          <div class="skeleton" style="height:280px;border-radius:12px;"></div>
+
+      <!-- Reelfolio Hover: floating image preview (desktop only) -->
+      <div class="vault-preview" id="vault-preview" aria-hidden="true">
+        <div class="vault-preview-inner" id="vault-preview-inner">
+          <img class="vault-preview-img" id="vault-preview-img" src="" alt="" loading="eager">
+          <div class="vault-preview-placeholder" id="vault-preview-placeholder"></div>
+        </div>
+      </div>
+
+      <!-- Reelfolio Hover: project list rows -->
+      <div class="featured-list" id="featured-grid" role="list">
+        <!-- Loaded from Supabase — skeleton while loading -->
+        <div class="featured-empty" aria-live="polite">
+          <div class="skeleton" style="height:72px;border-radius:4px;margin-bottom:1px;"></div>
+          <div class="skeleton" style="height:72px;border-radius:4px;margin-bottom:1px;"></div>
+          <div class="skeleton" style="height:72px;border-radius:4px;"></div>
         </div>
       </div>
     </section>

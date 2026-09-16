@@ -2303,27 +2303,17 @@ svg { display: block; }
       width: 100%;
     }
 
-    /* Mobile Fallback: Vertical Stack */
+    /* Mobile Fallback: Stacked Deck */
     @media (hover: none), (max-width: 768px) {
       .reelfolio-container {
-        height: auto;
-        min-height: auto;
-        flex-direction: column;
-        gap: var(--s-6);
-        padding: var(--s-6) var(--s-4);
+        height: 80vh;
+        min-height: 400px;
+        padding: 0;
       }
       .reelfolio-card {
-        position: relative;
-        left: auto;
-        top: auto;
-        width: 100%;
+        width: 90vw;
         max-width: 380px;
         aspect-ratio: 16/9;
-        /* Remove transform: none !important so GSAP scroll can animate it */
-        transform: scale(0.95);
-        opacity: 0.7; /* fade slightly */
-        z-index: 1 !important;
-        margin: 0 auto;
       }
     }
 

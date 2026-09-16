@@ -2318,7 +2318,7 @@ svg { display: block; }
         top: auto;
         width: 100%;
         max-width: 380px;
-        aspect-ratio: 4/5;
+        aspect-ratio: 16/9;
         transform: none !important; /* GSAP override */
         opacity: 1 !important;
         z-index: 1 !important;
@@ -2347,7 +2347,7 @@ svg { display: block; }
       position: relative;
       border-radius: var(--radius-xl);
       overflow: hidden;
-      aspect-ratio: 4/5;
+      aspect-ratio: 16/9;
     }
 
     .about-strip-image {
@@ -2908,8 +2908,8 @@ svg { display: block; }
 
 .viscose-card {
   position: absolute;
-  width: 22vh; 
-  aspect-ratio: 4/5;
+  width: 38vh; 
+  aspect-ratio: 16/9;
   transform-origin: center center;
   z-index: 10;
 }

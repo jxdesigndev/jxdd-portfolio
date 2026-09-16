@@ -87,7 +87,7 @@
         cardInner.innerHTML = `<span>${(p.title || '').slice(0, 2).toUpperCase()}</span>`;
       }
 
-      cardInner.addEventListener('click', () => openModal(p));
+      cardInner.addEventListener('click', () => { if (p.case_study) window.location.href = p.case_study; });
 
       cardWrap.appendChild(cardInner);
       ring.appendChild(cardWrap);

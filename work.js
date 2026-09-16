@@ -87,7 +87,7 @@
         cardInner.innerHTML = `<span>${(p.title || '').slice(0, 2).toUpperCase()}</span>`;
       }
 
-      cardInner.addEventListener('click', () => { if (p.case_study) window.location.href = p.case_study; });
+      cardInner.addEventListener('click', () => { if (p.slug) { window.location.href = `project.html?slug=${encodeURIComponent(p.slug)}`; } else if (p.case_study && p.case_study.startsWith('/projects/')) { window.location.href = p.case_study; } else { openModal(p); } });
 
       cardWrap.appendChild(cardInner);
       ring.appendChild(cardWrap);

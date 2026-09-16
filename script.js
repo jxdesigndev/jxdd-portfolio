@@ -2131,8 +2131,6 @@ const JXUniverse = {
      tactile, specific vertical 'pop-up' when hovering individual cards.
      ──────────────────────────────────────────────────────────────── */
   initVaultHover () {
-    /* Guard: only run on pointer devices */
-    if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
     if (!window.gsap) return;
 
     const container = document.getElementById('featured-grid');
@@ -2140,6 +2138,27 @@ const JXUniverse = {
     
     const cards = Array.from(container.querySelectorAll('.reelfolio-card'));
     if (!cards.length) return;
+
+    const isHoverable = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+    if (!isHoverable) {
+      /* Mobile Scroll-Driven Lift */
+      cards.forEach(card => {
+        gsap.to(card, {
+          scale: 1.05,
+          opacity: 1,
+          duration: 0.3,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: card,
+            start: "top 70%",
+            end: "bottom 30%",
+            toggleActions: "play reverse play reverse"
+          }
+        });
+      });
+      return;
+    }
 
     const numCards = cards.length;
     let activeIndex = -1;

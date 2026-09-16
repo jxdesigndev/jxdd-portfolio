@@ -112,7 +112,8 @@
     });
 
     // Phase 1: Zoom In
-    const zoomScale = 2.4;
+    const isMobile = window.innerWidth <= 768;
+    const zoomScale = isMobile ? 1.05 : 2.4;
     const shiftXVH = 55 * zoomScale; 
 
     tl.to('#viscose-ring-container', {

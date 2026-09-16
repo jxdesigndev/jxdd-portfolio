@@ -8,6 +8,9 @@
 (function () {
   let allProjects = [];
   let escListener = null;
+  let vaultTriggerElement = null;
+  let vaultEscListener = null;
+  let vaultTabListener = null;
 
   /* Load projects from Supabase */
   async function loadProjects () {

@@ -2161,14 +2161,13 @@ const JXUniverse = {
         });
       });
 
-      // Pin and Scrub
+      // Native Sticky Scrub (No JS Pinning)
       const tl = gsap.timeline({
         scrollTrigger: {
-          trigger: container,
-          start: "center center",
-          end: `+=${numCards * 60}%`, 
-          scrub: true,
-          pin: true
+          trigger: '.featured-section',
+          start: "top top",
+          end: "bottom bottom", 
+          scrub: true
         }
       });
 

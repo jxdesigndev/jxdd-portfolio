@@ -2305,10 +2305,16 @@ svg { display: block; }
 
     /* Mobile Fallback: Stacked Deck */
     @media (hover: none), (max-width: 768px) {
+      .featured-section {
+        height: 300vh;
+      }
       .reelfolio-container {
+        position: sticky;
+        top: 10vh;
         height: 80vh;
         min-height: 400px;
         padding: 0;
+        overflow: visible;
       }
       .reelfolio-card {
         width: 90vw;

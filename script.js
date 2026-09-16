@@ -2150,14 +2150,15 @@ const JXUniverse = {
       const numCards = cards.length;
       
       // Initial Stack State
+      // Initial Stack State (Deeper, more elegant spacing)
       cards.forEach((card, i) => {
         gsap.set(card, {
           xPercent: -50,
           yPercent: -50,
-          y: i * 20,
-          scale: 1 - i * 0.05,
+          y: i * 25,
+          scale: 1 - i * 0.06,
           zIndex: numCards - i,
-          opacity: 1 - i * 0.15
+          opacity: 1 - i * 0.2
         });
       });
 
@@ -2167,30 +2168,31 @@ const JXUniverse = {
           trigger: '.featured-section',
           start: "top top",
           end: "bottom bottom", 
-          scrub: true
+          scrub: 1 // Adds luxurious fluid momentum to the scroll
         }
       });
 
-      // Peeling Animation
+      // Smoother Peeling Animation
       cards.forEach((card, i) => {
         if (i < numCards - 1) {
-          // Top card peels UP and fades out
+          // Top card peels UP, slightly sideways, and fades out
           tl.to(card, {
             y: -window.innerHeight * 0.8,
-            rotation: (i % 2 === 0 ? -10 : 10),
+            x: (i % 2 === 0 ? -40 : 40), // Gentle horizontal drift
+            rotation: (i % 2 === 0 ? -5 : 5), // Softer, more elegant rotation
             opacity: 0,
             duration: 1,
-            ease: "power1.inOut"
+            ease: "power2.inOut" // Silkier easing
           }, i);
 
-          // All cards beneath it slide up, scale up, and brighten
+          // All cards beneath it elegantly slide up and brighten
           for (let j = i + 1; j < numCards; j++) {
             tl.to(cards[j], {
-              y: (j - i - 1) * 20,
-              scale: 1 - (j - i - 1) * 0.05,
-              opacity: 1 - (j - i - 1) * 0.15,
+              y: (j - i - 1) * 25,
+              scale: 1 - (j - i - 1) * 0.06,
+              opacity: 1 - (j - i - 1) * 0.2,
               duration: 1,
-              ease: "none"
+              ease: "power2.inOut" // Match the top card's smoothness
             }, i); 
           }
         }

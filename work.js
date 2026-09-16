@@ -176,7 +176,7 @@
           });
 
           if (vdTitle) {
-            gsap.to('.viscose-details', { 
+            gsap.to(['#vd-index', '#vd-title', '#vd-role', '#vd-year'], { 
               opacity: 0, 
               duration: 0.15, 
               onComplete: () => {
@@ -184,7 +184,7 @@
                 vdTitle.textContent = c.p.title;
                 vdRole.textContent = c.p.category || 'Project';
                 vdYear.textContent = c.p.year || '2026';
-                gsap.to('.viscose-details', { opacity: 1, duration: 0.25 });
+                gsap.to(['#vd-index', '#vd-title', '#vd-role', '#vd-year'], { opacity: 1, duration: 0.25 });
               }
             });
           }
@@ -377,8 +377,11 @@
   }
 
   /* Boot */
+  function revealPage () { const page = document.getElementById("page"); if(page) gsap.to(page, {opacity: 1, duration: 0.7}); } 
+
   function init () {
     if (window.gsap && window.ScrollTrigger) gsap.registerPlugin(ScrollTrigger);
+    revealPage();
     initLenis();
     loadProjects();
   }

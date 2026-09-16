@@ -112,7 +112,7 @@
     });
 
     // Phase 1: Zoom In
-    const zoomScale = 3.5;
+    const zoomScale = 2.4;
     const shiftXVH = 55 * zoomScale; 
 
     tl.to('#viscose-ring-container', {
@@ -184,7 +184,7 @@
               duration: 0.15, 
               onComplete: () => {
                 vdIndex.textContent = String(c.index + 1).padStart(2, '0');
-                vdTitle.textContent = c.p.title;
+                vdTitle.innerHTML = c.p.title.split(' ').join('<br>');
                 vdRole.textContent = c.p.category || 'Project';
                 vdYear.textContent = c.p.year || '2026';
                 gsap.to(['#vd-index', '#vd-title', '#vd-role', '#vd-year'], { opacity: 1, duration: 0.25 });

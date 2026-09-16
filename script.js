@@ -2142,6 +2142,10 @@ const JXUniverse = {
     const isHoverable = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 
     if (!isHoverable) {
+      if (!window.ScrollTrigger) {
+        setTimeout(() => this.initVaultHover(), 100);
+        return;
+      }
       /* Mobile Scroll-Driven Stack Peel */
       const numCards = cards.length;
       

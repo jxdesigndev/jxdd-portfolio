@@ -405,48 +405,32 @@
   <a href="#page" class="skip-to-content">Skip to content</a>
   <main id="page">
 
-    <!-- ── HERO ── -->
-    <section class="work-hero">
-      <div class="work-hero-inner">
-        <p class="section-label" id="wh-label" style="opacity:0">The Vault</p>
-        <h1 class="headline-xl" id="wh-title" style="opacity:0; transform: translateY(60px)">
-          Proof of<br><span class="text-green">what I build.</span>
-        </h1>
-        <p style="font-family:var(--font-body); font-size:var(--text-lg); color:var(--gray-2); max-width:480px; line-height:var(--lead-relaxed); opacity:0;" id="wh-sub">
-          Every project here is a statement. A problem solved. A world made more functional, more beautiful, more powerful.
-        </p>
+    <!-- ── VISCOSE RING (SCROLL INTERACTION) ── -->
+    <div class="viscose-wrapper" id="viscose-wrapper">
+      <div class="viscose-ring-container" id="viscose-ring-container">
+        <div class="viscose-ring" id="viscose-ring">
+          <div class="viscose-center-text" id="viscose-center-text">Works '26</div>
+          <!-- Cards injected via JS -->
+        </div>
       </div>
-      <div class="work-hero-count" id="wh-count" aria-hidden="true">00</div>
-    </section>
-
-    <!-- ── FILTERS ── -->
-    <div class="work-filters" id="work-filters">
-      <button class="filter-btn active" data-filter="all">All</button>
-      <button class="filter-btn" data-filter="design">Product Design</button>
-      <button class="filter-btn" data-filter="dev">Development</button>
-      <button class="filter-btn" data-filter="automation">Automation</button>
-      <button class="filter-btn" data-filter="security">Security</button>
-    </div>
-
-    <!-- ── GRID ── -->
-    <section class="work-grid-section">
-      <h2 class="sr-only">Project Gallery</h2>
-      <div class="work-grid" id="work-grid">
-        <article class="work-card" data-category="product design" style="opacity: 1; transform: translate(0px, 0px);">
-          <div class="work-card-placeholder">ZE</div>
-          <div class="work-card-body">
-            <div class="work-card-meta">
-              <span class="work-card-category">Product Design</span>
-              <span class="work-card-year">2026</span>
-            </div>
-            <h3 class="work-card-title">Zenflow</h3>
-            <p class="work-card-desc">Zenflow is a wellness app concept designed to solve a common friction point in fitness apps built for women: yo…</p>
-            <div class="work-card-tools"><span class="tag">Figma</span></div>
+      
+      <div class="viscose-ui" id="viscose-ui">
+        <div class="viscose-list" id="viscose-list">
+          <!-- Project names injected via JS -->
+        </div>
+        
+        <div class="viscose-details" id="viscose-details">
+          <div class="vd-left">
+            <span class="vd-index" id="vd-index">01</span>
+            <span class="vd-title" id="vd-title">Project Name</span>
           </div>
-          <span class="work-card-arrow" aria-hidden="true">↗</span>
-        </article>
+          <div class="vd-right">
+            <span class="vd-role" id="vd-role">Product Design</span>
+            <span class="vd-year" id="vd-year">2026</span>
+          </div>
+        </div>
       </div>
-    </section>
+    </div>
 
     <!-- ── FOOTER ── -->
     <footer style="border-top:1px solid var(--border); padding:var(--s-8) var(--s-8); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:var(--s-4);">

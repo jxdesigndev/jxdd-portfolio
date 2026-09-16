@@ -1,54 +1,26 @@
 /* ================================================================
-   JX UNIVERSE — work.js v3.0
-   The Vault - Supabase Fetching & Cinematic Modal (WOW #5)
+   JX UNIVERSE — work.js (Viscose Ring Edition)
+   Cinematic Scroll-Driven Portfolio
    ================================================================ */
 
 'use strict';
 
 (function () {
-
   let allProjects = [];
-  let activeFilter = 'all';
   let escListener = null;
-
-  /* Page reveal */
-  function revealPage () {
-    const page = document.getElementById('page');
-    if (!page) return;
-
-    if (window.gsap) {
-      gsap.to(page, { opacity: 1, duration: 0.7, ease: 'power2.out' });
-      const tl = gsap.timeline({ delay: 0.1 });
-      const whTitle = document.getElementById('wh-title');
-      if (whTitle && window.SplitText) {
-        gsap.registerPlugin(SplitText);
-        whTitle.style.transform = 'none';
-        whTitle.style.opacity = '1';
-        const split = SplitText.create(whTitle, { type: 'chars', mask: 'chars' });
-        tl.to('#wh-label', { opacity: 1, duration: 0.6 })
-          .from(split.chars, { yPercent: 100, duration: 0.9, ease: 'expo.out', stagger: { each: 0.025 } }, '-=0.3')
-          .to('#wh-sub',    { opacity: 1, duration: 0.7 }, '-=0.5');
-      } else {
-        tl.to('#wh-label', { opacity: 1, duration: 0.6 })
-          .to('#wh-title',  { y: 0, opacity: 1, duration: 1, ease: 'expo.out' }, '-=0.3')
-          .to('#wh-sub',    { opacity: 1, duration: 0.7 }, '-=0.5');
-      }
-    } else {
-      page.style.opacity = '1';
-    }
-  }
 
   /* Load projects from Supabase */
   async function loadProjects () {
-    const grid = document.getElementById('work-grid');
-    if (!grid) return;
+    const ring = document.getElementById('viscose-ring');
+    if (!ring) return;
+
     try {
       if (window.initSupabase) await window.initSupabase();
     } catch (err) {
       console.warn("Supabase init failed", err);
     }
     if (typeof supabase === 'undefined' || !supabase.from) {
-      renderEmpty(grid, 'Database not configured.');
+      ring.innerHTML = '<div style="color:var(--gray-3); text-align:center; padding: 2rem;">Database not configured.</div>';
       return;
     }
 
@@ -58,129 +30,168 @@
         .select('*')
         .order('priority', { ascending: true });
 
-      if (error || !data || data.length === 0) {
-        renderEmpty(grid, 'No projects yet: add some in the admin panel.');
-        return;
-      }
-
-      allProjects = data;
-
-      /* Update count */
-      const countEl = document.getElementById('wh-count');
-      if (countEl) {
-        countEl.textContent = String(data.length).padStart(2, '0');
-      }
-
-      renderGrid(data, true);
-      bindFilters();
-
-    } catch (err) {
-      renderEmpty(grid, 'Could not connect to the vault.');
-    }
-  }
-
-  function renderEmpty (grid, msg) {
-    if (!grid) return;
-    grid.innerHTML = `<div class="work-empty">${msg}</div>`;
-  }
-
-  function renderGrid (projects, isInitialLoad = false) {
-    const grid = document.getElementById('work-grid');
-    if (!grid) return;
-
-    if (projects.length === 0) {
-      grid.innerHTML = '<div class="work-empty">No projects in this category yet.</div>';
-      return;
-    }
-
-    grid.innerHTML = projects.map(p => renderCard(p)).join('');
-
-    /* Animate cards */
-    if (window.gsap) {
-      if (isInitialLoad && window.ScrollTrigger) {
-        const existingTrigger = ScrollTrigger.getById('work-grid-trigger');
-        if (existingTrigger) existingTrigger.kill();
-
-        gsap.fromTo('.work-card', { opacity: 0, y: 30 }, {
-          opacity: 1, y: 0, duration: 0.6, ease: 'power3.out', stagger: 0.07,
-          scrollTrigger: { id: 'work-grid-trigger', trigger: grid, start: 'top 90%', once: true }
-        });
+      if (error) throw error;
+      allProjects = data || [];
+      if (allProjects.length > 0) {
+        initViscoseRing(allProjects);
       } else {
-        gsap.fromTo('.work-card', { opacity: 0, y: 30 }, {
-          opacity: 1, y: 0, duration: 0.6, ease: 'power3.out', stagger: 0.07
-        });
+        ring.innerHTML = '<div style="color:var(--gray-3); text-align:center;">No projects found.</div>';
       }
-    } else {
-      document.querySelectorAll('.work-card').forEach(c => c.style.opacity = '1');
+    } catch (err) {
+      console.error(err);
+      ring.innerHTML = '<div style="color:var(--red); text-align:center;">Failed to load vault.</div>';
     }
+  }
 
-    /* Click → modal */
-    grid.querySelectorAll('.work-card').forEach((card, i) => {
-      const p = projects[i];
-      const handleCardClick = () => {
-        if (p.slug) {
-          window.location.href = `project.html?slug=${encodeURIComponent(p.slug)}`;
-        } else if (p.case_study && p.case_study.startsWith('/projects/')) {
-          window.location.href = p.case_study;
+  /* Initialize Viscose Ring Animation */
+  function initViscoseRing(projects) {
+    if (!window.gsap || !window.ScrollTrigger) return;
+
+    const ring = document.getElementById('viscose-ring');
+    const listContainer = document.getElementById('viscose-list');
+    
+    // Clear inner contents except the center text
+    const centerText = document.getElementById('viscose-center-text');
+    ring.innerHTML = '';
+    if (centerText) ring.appendChild(centerText);
+    listContainer.innerHTML = '';
+
+    const numCards = projects.length;
+    const angleStep = 360 / numCards;
+    const radiusVH = 55; // Matches half of viscose-ring width (90vh)
+
+    // 1. Build the DOM nodes
+    const cards = [];
+    const listItems = [];
+
+    projects.forEach((p, i) => {
+      const baseAngle = 270 + i * angleStep;
+      
+      const cardWrap = document.createElement('article');
+      cardWrap.className = 'viscose-card';
+      cardWrap.style.transform = `rotate(${baseAngle}deg) translateY(-${radiusVH}vh)`;
+
+      const cardInner = document.createElement('div');
+      cardInner.className = 'v-card-inner';
+      
+      if (p.image_url) {
+        if (p.image_url.toLowerCase().endsWith('.mp4') || p.image_url.toLowerCase().endsWith('.webm')) {
+          cardInner.innerHTML = `<video src="${p.image_url}" autoplay loop muted playsinline></video>`;
         } else {
-          openModal(p);
+          cardInner.innerHTML = `<img src="${p.image_url}" alt="${p.title}">`;
         }
-      };
-      card.addEventListener('click', handleCardClick);
-      card.addEventListener('keydown', e => { if (e.key === 'Enter') handleCardClick(); });
-      card.setAttribute('tabindex', '0');
-      card.setAttribute('role', 'button');
-      card.setAttribute('aria-label', `View project: ${p.title}`);
+      } else {
+        cardInner.innerHTML = `<span>${(p.title || '').slice(0, 2).toUpperCase()}</span>`;
+      }
+
+      cardInner.addEventListener('click', () => openModal(p));
+
+      cardWrap.appendChild(cardInner);
+      ring.appendChild(cardWrap);
+      cards.push({ wrap: cardWrap, inner: cardInner, p: p, baseAngle: baseAngle, index: i });
+
+      // Create List Item
+      const li = document.createElement('span');
+      li.className = 'viscose-list-item';
+      li.textContent = p.title;
+      listContainer.appendChild(li);
+      listItems.push(li);
     });
-  }
 
-  function renderCard (p) {
-    const isVid = p.image_url && (p.image_url.toLowerCase().endsWith('.mp4') || p.image_url.toLowerCase().endsWith('.webm'));
-    const img   = p.image_url
-      ? (isVid 
-          ? `<video src="${p.image_url}" class="work-card-image" autoplay loop muted playsinline loading="lazy"></video>`
-          : `<img src="${p.image_url}" alt="${p.title}" class="work-card-image" loading="lazy">`)
-      : `<div class="work-card-placeholder">${(p.title || 'JX').slice(0, 2).toUpperCase()}</div>`;
-    const tools = (p.tools || []).slice(0, 4).map(t => `<span class="tag">${t}</span>`).join('');
+    // 2. Build GSAP Timeline
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: '#viscose-wrapper',
+        pin: true,
+        scrub: 1.5,
+        end: `+=${numCards * 700}px` 
+      }
+    });
 
-    return `
-      <article class="work-card" data-category="${(p.category || '').toLowerCase()}" style="opacity:0">
-        ${img}
-        <div class="work-card-body">
-          <div class="work-card-meta">
-            <span class="work-card-category">${p.category || 'Project'}</span>
-            <span class="work-card-year">${p.year || ''}</span>
-          </div>
-          <h3 class="work-card-title">${p.title}</h3>
-          <p class="work-card-desc">${(p.description || '').replace(/<[^>]*>?/gm, '').slice(0, 110)}${(p.description || '').replace(/<[^>]*>?/gm, '').length > 110 ? '…' : ''}</p>
-          <div class="work-card-tools">${tools}</div>
-        </div>
-        <span class="work-card-arrow" aria-hidden="true">↗</span>
-      </article>
-    `;
-  }
+    // Phase 1: Zoom In
+    const zoomScale = 3.5;
+    const shiftXVH = 55 * zoomScale; 
 
-  function bindFilters () {
-    document.querySelectorAll('.filter-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        activeFilter = btn.dataset.filter;
-        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
+    tl.to('#viscose-ring-container', {
+      scale: zoomScale,
+      x: `${shiftXVH}vh`,
+      duration: 1, 
+      ease: 'power2.inOut'
+    }, 0);
 
-        const filtered = activeFilter === 'all'
-          ? allProjects
-          : allProjects.filter(p =>
-              (p.category || '').toLowerCase().includes(activeFilter)
-            );
-        renderGrid(filtered);
+    if (centerText) {
+      tl.to(centerText, { opacity: 0, scale: 0.5, duration: 0.8 }, 0);
+    }
+    
+    tl.to('#viscose-details', { opacity: 1, duration: 0.5 }, 0.5);
+
+    // Phase 2: Scrub
+    const totalRotation = -(numCards - 1) * angleStep;
+    tl.to(ring, {
+      rotation: totalRotation,
+      duration: numCards * 0.8,
+      ease: 'none'
+    }, 1);
+
+    // 3. Fluid 'Viscose' Counter-Rotation & UI Sync (onUpdate)
+    const vdIndex = document.getElementById('vd-index');
+    const vdTitle = document.getElementById('vd-title');
+    const vdRole = document.getElementById('vd-role');
+    const vdYear = document.getElementById('vd-year');
+
+    let lastActiveIndex = -1;
+
+    tl.eventCallback('onUpdate', () => {
+      const ringRot = gsap.getProperty(ring, 'rotation') || 0;
+      
+      cards.forEach((c) => {
+        let absAngle = (c.baseAngle + ringRot) % 360;
+        if (absAngle < 0) absAngle += 360;
+        
+        let diff = absAngle - 270;
+        if (diff > 180) diff -= 360;
+        if (diff < -180) diff += 360;
+        
+        const range = Math.max(30, angleStep * 0.7);
+        let factor = 1 - Math.min(Math.abs(diff) / range, 1);
+        factor = gsap.parseEase('power2.out')(factor); 
+        
+        const innerRot = factor * 90;
+        const innerScale = 0.6 + factor * 0.45; 
+        const innerOpacity = 0.3 + factor * 0.7;
+        
+        gsap.set(c.inner, {
+          rotation: innerRot,
+          scale: innerScale,
+          opacity: innerOpacity,
+          filter: `blur(${(1 - factor) * 4}px)`
+        });
+        
+        if (Math.abs(diff) < (angleStep / 2) && lastActiveIndex !== c.index) {
+          lastActiveIndex = c.index;
+          
+          listItems.forEach((li, idx) => {
+            if (idx === c.index) li.classList.add('active');
+            else li.classList.remove('active');
+          });
+
+          if (vdTitle) {
+            gsap.to('.viscose-details', { 
+              opacity: 0, 
+              duration: 0.15, 
+              onComplete: () => {
+                vdIndex.textContent = String(c.index + 1).padStart(2, '0');
+                vdTitle.textContent = c.p.title;
+                vdRole.textContent = c.p.category || 'Project';
+                vdYear.textContent = c.p.year || '2026';
+                gsap.to('.viscose-details', { opacity: 1, duration: 0.25 });
+              }
+            });
+          }
+        }
       });
     });
   }
-
-  /* ── Cinematic Modal (WOW #5) ── */
-  let vaultEscListener = null;
-  let vaultTabListener = null;
-  let vaultTriggerElement = null;
 
   function openModal (p) {
     vaultTriggerElement = document.activeElement;
@@ -368,7 +379,6 @@
   /* Boot */
   function init () {
     if (window.gsap && window.ScrollTrigger) gsap.registerPlugin(ScrollTrigger);
-    revealPage();
     initLenis();
     loadProjects();
   }

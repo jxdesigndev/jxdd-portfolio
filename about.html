@@ -9,157 +9,197 @@
   
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollToPlugin.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
   <script src="supabase.js" defer></script>
   
   <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="about-masonry.css">
+  <link rel="stylesheet" href="about-dbx.css">
   <link rel="icon" type="image/jpeg" href="assets/images/jx-logo.jpeg">
 </head>
-<body>
+<body class="about-page">
   <main id="page">
     
-    <!-- ── THE SCROLLING MASONRY HERO ── -->
-    <section class="masonry-hero">
-      <div class="masonry-grid" id="masonry-grid">
-        
-        <!-- Center Logo Block (Locks into place) -->
-        <div class="m-cell logo-cell" id="cell-logo">
-          <svg viewBox="0 0 200 100" class="logo-svg">
-            <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" class="logo-text">JX</text>
-          </svg>
-        </div>
-
-        <!-- 01: The Origin -->
-        <a href="#origin" class="m-cell" id="cell-origin">
-          <div class="m-bg" style="background-image: url('assets/images/okezie-1.webp');"></div>
-          <div class="m-overlay"></div>
-          <svg class="m-symbol" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
-          <div class="m-content">
-            <div class="m-num">01</div>
-            <div class="m-title">The Origin</div>
-          </div>
-        </a>
-
-        <!-- 02: The Arsenal -->
-        <a href="#arsenal" class="m-cell" id="cell-arsenal">
-          <div class="m-bg" style="background-image: url('assets/images/okezie-coder.webp');"></div>
-          <div class="m-overlay"></div>
-          <svg class="m-symbol" viewBox="0 0 24 24"><path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/></svg>
-          <div class="m-content">
-            <div class="m-num">02</div>
-            <div class="m-title">The Arsenal</div>
-          </div>
-        </a>
-
-        <!-- 03: The Philosophy -->
-        <a href="#philosophy" class="m-cell span-2" id="cell-philosophy">
-          <div class="m-bg" style="background-image: url('assets/images/okezie-designer.webp');"></div>
-          <div class="m-overlay"></div>
-          <svg class="m-symbol" viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
-          <div class="m-content">
-            <div class="m-num">03</div>
-            <div class="m-title">The Philosophy</div>
-          </div>
-        </a>
-
-        <!-- 04: Transmission -->
-        <a href="#transmission" class="m-cell span-2" id="cell-transmission">
-          <div class="m-bg" style="background-image: url('assets/images/og-share-image.jpg');"></div>
-          <div class="m-overlay"></div>
-          <svg class="m-symbol" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-          <div class="m-content">
-            <div class="m-num">04</div>
-            <div class="m-title">Transmission</div>
-          </div>
-        </a>
-
-      </div>
-    </section>
-
-    <!-- ── EDITORIAL SECTIONS (Scroll to) ── -->
-    <div class="editorial-wrapper">
+    <!-- ── THE DROPBOX-STYLE STRUCTURAL GRID ── -->
+    <!-- This wrapper is 100vw and expands with scroll. The grid lines are drawn with borders. -->
+    <div class="dbx-grid-wrapper">
       
-      <section id="origin" class="ed-section">
-        <header class="ed-header">
-          <h2>The Origin.</h2>
-          <p>Nigeria // 2089 // The Awakening</p>
-        </header>
-        <div class="ed-grid">
-          <div class="ed-card">
-            <h3>Humble Beginnings</h3>
-            <p>I started with nothing but a broken laptop and a sheer obsession for how things worked on the web. Every night was a deep dive into the unknown, ripping apart source codes just to see the matrix underneath.</p>
-          </div>
-          <div class="ed-card">
-            <h3>The Pivot</h3>
-            <p>Design wasn't enough. Code wasn't enough. I realized that the true power lay in the intersection—Product Engineering. I didn't just want to paint the interface; I wanted to wire the explosive logic behind it.</p>
-          </div>
-        </div>
-        <img src="assets/images/okezie-1.webp" class="ed-image-full reveal-up" alt="Workspace" style="width:100%; height:auto; margin-top:3rem; border-radius:4px; filter:grayscale(100%); transition:filter 0.5s;">
-      </section>
+      <!-- Structural Empty Cells to show the grid framework -->
+      <div class="dbx-cell empty hide-mobile" style="grid-area: 1 / 1 / 2 / 2;"></div>
+      <div class="dbx-cell empty hide-mobile" style="grid-area: 1 / 4 / 2 / 5;"></div>
+      
+      <!-- Center Hero: JX Logo -->
+      <div class="dbx-cell logo-cell" style="grid-area: 1 / 2 / 2 / 4;">
+        <svg viewBox="0 0 200 100" class="logo-svg">
+          <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" class="logo-text">JX</text>
+        </svg>
+      </div>
 
-      <section id="arsenal" class="ed-section">
-        <header class="ed-header">
-          <h2>The Arsenal.</h2>
-          <p>Stack // Integrations // Experience</p>
-        </header>
-        <div class="ed-grid">
-          <div class="ed-card">
-            <h3>Frontend Engineering</h3>
-            <p>React, Next.js, and raw WebGL. I build cinematic, hardware-accelerated interfaces that run at 60fps.</p>
-          </div>
-          <div class="ed-card">
-            <h3>Backend & Automation</h3>
-            <p>Node.js, Supabase, and N8N. I don't just build apps; I build autonomous systems that scale.</p>
-          </div>
+      <!-- 01: The Origin (Slides up on scroll) -->
+      <div class="dbx-cell content-cell scroll-reveal" style="grid-area: 2 / 1 / 3 / 3;" data-target="modal-origin">
+        <div class="cell-bg" style="background-image: url('assets/images/okezie-1.webp');"></div>
+        <div class="cell-overlay"></div>
+        <svg class="cell-symbol" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+        <div class="cell-text">
+          <span class="c-num">01</span>
+          <span class="c-title">The Origin</span>
         </div>
-        
-        <div class="allies-section">
-          <h3>// ALLIES & CLIENTS</h3>
-          <div class="company-logo-grid" id="company-logos-container">
-            <p>Loading Vault Data...</p>
-          </div>
-        </div>
-      </section>
+      </div>
 
-      <section id="philosophy" class="ed-section">
-        <header class="ed-header">
-          <h2>The Philosophy.</h2>
-          <p>Form // Function // Future</p>
-        </header>
-        <div class="ed-grid">
-          <div class="ed-card">
-            <h3>Dark Tech</h3>
-            <p>I believe software should feel like a command center. Interfaces should be sharp, precise, and void of unnecessary noise.</p>
+      <!-- Empty structural cell -->
+      <div class="dbx-cell empty hide-mobile scroll-reveal" style="grid-area: 2 / 3 / 3 / 4;"></div>
+
+      <!-- 02: The Arsenal -->
+      <div class="dbx-cell content-cell scroll-reveal" style="grid-area: 2 / 4 / 4 / 5;" data-target="modal-arsenal">
+        <div class="cell-bg" style="background-image: url('assets/images/okezie-coder.webp');"></div>
+        <div class="cell-overlay"></div>
+        <svg class="cell-symbol" viewBox="0 0 24 24"><path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/></svg>
+        <div class="cell-text">
+          <span class="c-num">02</span>
+          <span class="c-title">The Arsenal</span>
+        </div>
+      </div>
+
+      <!-- Empty structural cell -->
+      <div class="dbx-cell empty hide-mobile scroll-reveal" style="grid-area: 3 / 1 / 4 / 2;"></div>
+
+      <!-- 03: The Philosophy -->
+      <div class="dbx-cell content-cell scroll-reveal" style="grid-area: 3 / 2 / 4 / 4;" data-target="modal-philosophy">
+        <div class="cell-bg" style="background-image: url('assets/images/okezie-designer.webp');"></div>
+        <div class="cell-overlay"></div>
+        <svg class="cell-symbol" viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+        <div class="cell-text">
+          <span class="c-num">03</span>
+          <span class="c-title">The Philosophy</span>
+        </div>
+      </div>
+
+      <!-- Empty structural cell -->
+      <div class="dbx-cell empty hide-mobile scroll-reveal" style="grid-area: 4 / 2 / 5 / 3;"></div>
+
+      <!-- 04: Transmission -->
+      <div class="dbx-cell content-cell scroll-reveal" style="grid-area: 4 / 3 / 5 / 5;" data-target="modal-transmission">
+        <div class="cell-bg" style="background-image: url('assets/images/og-share-image.jpg');"></div>
+        <div class="cell-overlay"></div>
+        <svg class="cell-symbol" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        <div class="cell-text">
+          <span class="c-num">04</span>
+          <span class="c-title">Transmission</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ── INTERIOR MODALS (Fixed Full-Screen Overlays) ── -->
+    <!-- Using overlays perfectly solves the scroll-trigger glitches. -->
+    
+    <!-- Modal: Origin -->
+    <div class="dbx-modal" id="modal-origin">
+      <div class="modal-nav">
+        <button class="btn-close-modal">← Close & Return to Grid</button>
+      </div>
+      <div class="modal-scroll-area">
+        <div class="modal-content-wrapper">
+          <header class="ed-header">
+            <h2>The Origin.</h2>
+            <p>Nigeria // 2089 // The Awakening</p>
+          </header>
+          <div class="ed-grid">
+            <div class="ed-card">
+              <h3>Humble Beginnings</h3>
+              <p>I started with nothing but a broken laptop and a sheer obsession for how things worked on the web. Every night was a deep dive into the unknown, ripping apart source codes just to see the matrix underneath.</p>
+            </div>
+            <div class="ed-card">
+              <h3>The Pivot</h3>
+              <p>Design wasn't enough. Code wasn't enough. I realized that the true power lay in the intersection—Product Engineering. I didn't just want to paint the interface; I wanted to wire the explosive logic behind it.</p>
+            </div>
           </div>
-          <div class="ed-card">
-            <h3>Unapologetic Excellence</h3>
-            <p>We don't ship "good enough". If it doesn't drop jaws, it doesn't deploy.</p>
+          <img src="assets/images/okezie-1.webp" class="ed-image-full" alt="Workspace">
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal: Arsenal -->
+    <div class="dbx-modal" id="modal-arsenal">
+      <div class="modal-nav">
+        <button class="btn-close-modal">← Close & Return to Grid</button>
+      </div>
+      <div class="modal-scroll-area">
+        <div class="modal-content-wrapper">
+          <header class="ed-header">
+            <h2>The Arsenal.</h2>
+            <p>Stack // Integrations // Experience</p>
+          </header>
+          <div class="ed-grid">
+            <div class="ed-card">
+              <h3>Frontend Engineering</h3>
+              <p>React, Next.js, and raw WebGL. I build cinematic, hardware-accelerated interfaces that run at 60fps.</p>
+            </div>
+            <div class="ed-card">
+              <h3>Backend & Automation</h3>
+              <p>Node.js, Supabase, and N8N. I don't just build apps; I build autonomous systems that scale.</p>
+            </div>
+          </div>
+          <div class="allies-section">
+            <h3>// ALLIES & CLIENTS</h3>
+            <div class="company-logo-grid" id="company-logos-container">
+              <p style="color:var(--gray-3); font-family:var(--font-mono);">Loading Vault Data...</p>
+            </div>
           </div>
         </div>
-        <img src="assets/images/okezie-designer.webp" class="ed-image-full reveal-up" alt="Vision" style="width:100%; height:auto; margin-top:3rem; border-radius:4px; filter:grayscale(100%); transition:filter 0.5s;">
-      </section>
+      </div>
+    </div>
 
-      <section id="transmission" class="ed-section">
-        <header class="ed-header">
-          <h2>Transmission.</h2>
-          <p>Visual // Audio // Signal</p>
-        </header>
-        <div class="ed-grid">
-          <div class="ed-card">
-            <h3>Incoming Signal</h3>
-            <p>Stand by for transmission.</p>
+    <!-- Modal: Philosophy -->
+    <div class="dbx-modal" id="modal-philosophy">
+      <div class="modal-nav">
+        <button class="btn-close-modal">← Close & Return to Grid</button>
+      </div>
+      <div class="modal-scroll-area">
+        <div class="modal-content-wrapper">
+          <header class="ed-header">
+            <h2>The Philosophy.</h2>
+            <p>Form // Function // Future</p>
+          </header>
+          <div class="ed-grid">
+            <div class="ed-card">
+              <h3>Dark Tech</h3>
+              <p>I believe software should feel like a command center. Interfaces should be sharp, precise, and void of unnecessary noise.</p>
+            </div>
+            <div class="ed-card">
+              <h3>Unapologetic Excellence</h3>
+              <p>We don't ship "good enough". If it doesn't drop jaws, it doesn't deploy.</p>
+            </div>
+          </div>
+          <img src="assets/images/okezie-designer.webp" class="ed-image-full" alt="Vision">
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal: Transmission -->
+    <div class="dbx-modal" id="modal-transmission">
+      <div class="modal-nav">
+        <button class="btn-close-modal">← Close & Return to Grid</button>
+      </div>
+      <div class="modal-scroll-area">
+        <div class="modal-content-wrapper">
+          <header class="ed-header">
+            <h2>Transmission.</h2>
+            <p>Visual // Audio // Signal</p>
+          </header>
+          <div class="ed-grid">
+            <div class="ed-card">
+              <h3>Incoming Signal</h3>
+              <p>Stand by for transmission.</p>
+            </div>
           </div>
         </div>
-      </section>
-
+      </div>
     </div>
 
   </main>
   
   <script src="nav.js" defer></script>
-  <script src="about-masonry.js" defer></script>
+  <script src="about-dbx.js" defer></script>
 </body>
 </html>

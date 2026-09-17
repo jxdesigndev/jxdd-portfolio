@@ -3,597 +3,146 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="canonical" href="https://www.jxdesign.dev/about.html">
-  <meta name="description" content="The Story of Okezie Ferdinand, JX. Artist, technologist, designer, builder. From Nigeria to the future.">
-  <meta name="theme-color" content="#000000">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://www.jxdesign.dev/about.html">
-  <meta property="og:title" content="The Story | Okezie Ferdinand | JX Design &amp; Dev">
-  <meta property="og:description" content="The Story of Okezie Ferdinand, JX. Artist, technologist, designer, builder. From Nigeria to the future.">
-  <meta property="og:image" content="https://www.jxdesign.dev/assets/images/og-share-image.jpg">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="The Story | Okezie Ferdinand | JX Design &amp; Dev">
-  <meta name="twitter:description" content="The Story of Okezie Ferdinand, JX. Artist, technologist, designer, builder. From Nigeria to the future.">
-  <meta name="twitter:image" content="https://www.jxdesign.dev/assets/images/og-share-image.jpg">
-  <title>The Story | Okezie Ferdinand | JX Design & Dev</title>
-
-  <!-- Fonts & Resource Hints -->
+  <title>About | JX Design & Dev</title>
+  
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
-  <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&family=Playfair+Display:ital,wght@1,900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 
-  <!-- GSAP -->
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js" defer></script>
-  <!-- Lenis -->
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollToPlugin.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js" defer></script>
-  <!-- Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
   <script src="supabase.js" defer></script>
-
+  
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="about-grid.css">
   <link rel="icon" type="image/jpeg" href="assets/images/jx-logo.jpeg">
-
-  <style>
-    /* ── Page wrapper ── */
-    
-
-    /* ── About Hero ── */
-    .about-hero {
-      min-height: 80svh;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
-      padding: 0 var(--s-8) var(--s-20);
-      padding-top: 140px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .about-hero::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(ellipse 60% 60% at 80% 20%, rgba(0,255,65,0.04) 0%, transparent 70%);
-      pointer-events: none;
-    }
-
-    .about-hero-chapter {
-      font-family: var(--font-mono);
-      font-size: var(--text-xs);
-      letter-spacing: 0.2em;
-      color: var(--green);
-      text-transform: uppercase;
-      margin-bottom: var(--s-4);
-      opacity: 0;
-    }
-
-    .about-hero-title {
-      font-family: var(--font-display);
-      font-size: clamp(4rem, 12vw, 10rem);
-      font-weight: 800;
-      line-height: 0.9;
-      color: var(--white);
-      margin: 0 0 var(--s-8);
-      opacity: 0;
-      transform: translateY(60px);
-    }
-
-    .about-hero-title em {
-      font-style: italic;
-      color: var(--green);
-      font-family: 'Playfair Display', serif;
-    }
-
-    .about-hero-tagline {
-      font-family: var(--font-body);
-      font-size: var(--text-lg);
-      color: var(--gray-2);
-      max-width: 480px;
-      line-height: var(--lead-relaxed);
-      opacity: 0;
-    }
-
-    /* ── Portrait Section ── */
-    .portrait-section {
-      padding: var(--s-20) var(--s-8);
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: var(--s-16);
-      align-items: center;
-      max-width: var(--container-xl);
-      margin: 0 auto;
-    }
-
-    @media (max-width: 768px) {
-      .portrait-section { grid-template-columns: 1fr; }
-    }
-
-    .portrait-wrapper {
-      position: relative;
-      aspect-ratio: 4/5;
-      max-width: 420px;
-    }
-
-    .portrait-wrapper canvas {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      border-radius: 2px;
-      cursor: none;
-    }
-
-    .portrait-wrapper img.portrait-base {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      border-radius: 2px;
-      display: block;
-      filter: grayscale(20%) contrast(1.05);
-    }
-
-    .portrait-frame {
-      position: absolute;
-      inset: -12px;
-      border: 1px solid var(--green-dim);
-      border-radius: 4px;
-      pointer-events: none;
-    }
-
-    .portrait-frame::before {
-      content: '';
-      position: absolute;
-      top: -1px;
-      left: 20px;
-      right: 20px;
-      height: 2px;
-      background: var(--green);
-      box-shadow: 0 0 20px var(--green);
-    }
-
-    .portrait-label {
-      position: absolute;
-      bottom: -36px;
-      left: 0;
-      font-family: var(--font-mono);
-      font-size: var(--text-xs);
-      color: var(--green);
-      letter-spacing: 0.15em;
-    }
-
-    .portrait-text {
-      display: flex;
-      flex-direction: column;
-      gap: var(--s-6);
-    }
-
-    .portrait-text blockquote {
-      font-family: 'Playfair Display', serif;
-      font-style: italic;
-      font-size: clamp(1.5rem, 3vw, 2.2rem);
-      color: var(--white);
-      line-height: 1.4;
-      border-left: 2px solid var(--green);
-      padding-left: var(--s-6);
-      margin: 0 0 var(--s-4);
-    }
-
-    .portrait-text p {
-      font-family: var(--font-body);
-      font-size: var(--text-base);
-      color: var(--gray-2);
-      line-height: var(--lead-relaxed);
-    }
-
-    /* ── Stats Bar ── */
-    .stats-bar {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 1px;
-      background: var(--border);
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-      margin: var(--s-8) 0;
-    }
-
-    @media (max-width: 600px) {
-      .stats-bar { grid-template-columns: repeat(2, 1fr); }
-    }
-
-    .stat-item {
-      padding: var(--s-8) var(--s-6);
-      background: var(--bg);
-      text-align: center;
-    }
-
-    .stat-num {
-      font-family: var(--font-display);
-      font-size: clamp(2.5rem, 5vw, 4rem);
-      font-weight: 800;
-      color: var(--green);
-      line-height: 1;
-      display: block;
-    }
-
-    .stat-label {
-      font-family: var(--font-mono);
-      font-size: var(--text-xs);
-      color: var(--gray-3);
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      margin-top: var(--s-2);
-      display: block;
-    }
-
-    /* ── Showreel Video ── */
-    .showreel-section {
-      padding: var(--s-16) var(--s-8);
-      max-width: var(--container-xl);
-      margin: 0 auto;
-    }
-
-    .video-container {
-      position: relative;
-      width: 100%;
-      border-radius: 12px;
-      overflow: hidden;
-      background: var(--surface-1);
-      border: 1px solid var(--border);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-      aspect-ratio: 16/9;
-    }
-
-    .video-container video {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-
-    /* ── Chapters ── */
-    .chapters-section {
-      padding: var(--s-20) var(--s-8);
-      max-width: var(--container-xl);
-      margin: 0 auto;
-    }
-
-    .chapter {
-      display: grid;
-      grid-template-columns: 80px 1fr;
-      gap: var(--s-10);
-      padding: var(--s-12) 0;
-      border-bottom: 1px solid var(--border);
-      position: relative;
-    }
-
-    @media (max-width: 600px) {
-      .chapter { grid-template-columns: 1fr; gap: var(--s-4); }
-    }
-
-    .chapter:last-child { border-bottom: none; }
-
-    .chapter-num {
-      font-family: var(--font-mono);
-      font-size: clamp(2.5rem, 5vw, 4rem);
-      font-weight: 500;
-      color: var(--green-dim);
-      line-height: 1;
-      position: relative;
-      top: 4px;
-    }
-
-    .chapter-content {}
-
-    .chapter-era {
-      font-family: var(--font-mono);
-      font-size: var(--text-xs);
-      color: var(--amber);
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      margin-bottom: var(--s-3);
-    }
-
-    .chapter-title {
-      font-family: var(--font-display);
-      font-size: clamp(1.8rem, 4vw, 3rem);
-      font-weight: 800;
-      color: var(--white);
-      line-height: 1.1;
-      margin: 0 0 var(--s-4);
-    }
-
-    .chapter-body {
-      font-family: var(--font-body);
-      font-size: var(--text-base);
-      color: var(--gray-2);
-      line-height: var(--lead-relaxed);
-      max-width: 620px;
-    }
-
-    .chapter-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: var(--s-2);
-      margin-top: var(--s-5);
-    }
-
-    /* ── Experience ── */
-    .experience-section {
-      padding: var(--s-20) var(--s-8);
-      max-width: var(--container-xl);
-      margin: 0 auto;
-    }
-
-    .experience-timeline {
-      display: flex;
-      flex-direction: column;
-      gap: var(--s-10);
-      position: relative;
-    }
-    
-    .experience-timeline::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      left: 10px;
-      width: 1px;
-      background: var(--border);
-    }
-
-    .experience-item {
-      display: grid;
-      grid-template-columns: 200px 1fr;
-      gap: var(--s-6);
-      position: relative;
-      padding-left: var(--s-12);
-    }
-    
-    @media (max-width: 600px) {
-      .experience-item {
-        grid-template-columns: 1fr;
-        gap: var(--s-2);
-      }
-    }
-    
-    .experience-item::before {
-      content: '';
-      position: absolute;
-      top: 6px;
-      left: 7px;
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: var(--green);
-      box-shadow: 0 0 10px var(--green);
-    }
-
-    .exp-meta {
-      display: flex;
-      flex-direction: column;
-      gap: var(--s-1);
-      margin-top: 2px;
-    }
-
-    .exp-date {
-      font-family: var(--font-mono);
-      font-size: var(--text-xs);
-      color: var(--gray-3);
-      letter-spacing: 0.1em;
-    }
-
-    .exp-company {
-      font-family: var(--font-mono);
-      font-size: var(--text-sm);
-      color: var(--green);
-      font-weight: 500;
-    }
-
-    .exp-role {
-      font-family: var(--font-display);
-      font-size: var(--text-xl);
-      color: var(--white);
-      margin: 0 0 var(--s-2);
-    }
-
-    .exp-desc {
-      font-family: var(--font-body);
-      font-size: var(--text-base);
-      color: var(--gray-2);
-      line-height: var(--lead-relaxed);
-      max-width: 600px;
-    }
-
-    /* ── Philosophy Section ── */
-    .philosophy-section {
-      padding: var(--s-24) var(--s-8);
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .philosophy-section::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(ellipse 50% 60% at 50% 50%, rgba(0,255,65,0.05) 0%, transparent 70%);
-      pointer-events: none;
-    }
-
-    .philosophy-quote {
-      font-family: 'Playfair Display', serif;
-      font-style: italic;
-      font-size: clamp(2rem, 5vw, 4rem);
-      color: var(--white);
-      line-height: 1.3;
-      max-width: 900px;
-      margin: 0 auto var(--s-8);
-      position: relative;
-      z-index: 1;
-    }
-
-    .philosophy-quote span {
-      color: var(--green);
-    }
-
-    .philosophy-by {
-      font-family: var(--font-mono);
-      font-size: var(--text-sm);
-      color: var(--gray-3);
-      letter-spacing: 0.15em;
-      position: relative;
-      z-index: 1;
-    }
-  </style>
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "AboutPage",
-    "@id": "https://www.jxdesign.dev/about.html",
-    "url": "https://www.jxdesign.dev/about.html",
-    "name": "The Story | Okezie Ferdinand | JX Design & Dev",
-    "description": "The Story of Okezie Ferdinand, JX — artist, technologist, designer, builder. From Nigeria to the future.",
-    "about": {
-      "@type": "Person",
-      "@id": "https://www.jxdesign.dev/#person",
-      "name": "Okezie Ferdinand",
-      "alternateName": "JX",
-      "url": "https://www.jxdesign.dev/",
-      "image": "https://www.jxdesign.dev/assets/images/okezie-2.png",
-      "jobTitle": "Product Designer & Full-Stack Developer",
-      "nationality": {
-        "@type": "Country",
-        "name": "Nigeria"
-      }
-    }
-  }
-  </script>
 </head>
 <body>
-  <a href="#page" class="skip-to-content">Skip to content</a>
-  <main id="page" style="opacity: 1;">
-    <!-- ── GLOBAL WIPE & NAV ── -->
-    <div id="dbx-takeover-layer" class="dbx-takeover-layer"></div>
-    <button id="back-to-hub" class="back-to-hub" aria-label="Back to Hub">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-      CLOSE
-    </button>
+  <main id="page">
+    
+    <!-- ── THE HYBRID HUB GRID ── -->
+    <section class="about-entry-wrapper">
+      <div class="bento-container" id="bento-grid">
+        
+        <!-- Center Logo Hero Cell -->
+        <div class="bento-cell hero-cell">
+          <svg class="jx-svg-logo" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+            <!-- Hand-coded geometric JX -->
+            <!-- J -->
+            <path class="jx-svg-path" d="M 80 40 L 80 120 Q 80 160 50 160 Q 20 160 20 120 L 20 100" />
+            <path class="jx-svg-filled" d="M 90 40 L 90 120 Q 90 170 50 170 Q 10 170 10 120 L 10 100 L 30 100 L 30 120 Q 30 150 50 150 Q 70 150 70 120 L 70 40 Z" />
+            <!-- X -->
+            <path class="jx-svg-path" d="M 110 40 L 190 160 M 190 40 L 110 160" />
+            <polygon class="jx-svg-filled" points="110,40 130,40 150,90 170,40 190,40 165,100 190,160 170,160 150,110 130,160 110,160 135,100" />
+          </svg>
+        </div>
 
-    <!-- ── 1. THE HERO / BENTO HUB ── -->
-    <section id="dbx-hub-view" class="dbx-hub-view">
+        <!-- 01: The Origin -->
+        <a href="#origin" class="bento-cell" data-scroll-to>
+          <div class="cell-bg" style="background-image: url('assets/images/okezie-1.webp');"></div>
+          <div class="cell-flood"></div>
+          <svg class="cell-symbol" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/></svg>
+          <div class="cell-content">
+            <span class="cell-num">01</span>
+            <span class="cell-title">The Origin</span>
+          </div>
+        </a>
+
+        <!-- 02: The Arsenal -->
+        <a href="#arsenal" class="bento-cell" data-scroll-to>
+          <div class="cell-bg" style="background-image: url('assets/images/okezie-coder.webp');"></div>
+          <div class="cell-flood"></div>
+          <!-- Bracket/Code Symbol -->
+          <svg class="cell-symbol" viewBox="0 0 24 24" fill="currentColor"><path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/></svg>
+          <div class="cell-content">
+            <span class="cell-num">02</span>
+            <span class="cell-title">The Arsenal</span>
+          </div>
+        </a>
+
+        <!-- 03: The Philosophy -->
+        <a href="#philosophy" class="bento-cell span-2" data-scroll-to>
+          <div class="cell-bg" style="background-image: url('assets/images/okezie-designer.webp');"></div>
+          <div class="cell-flood"></div>
+          <!-- Abstract Eye/Vision Symbol -->
+          <svg class="cell-symbol" style="width: 30%;" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+          <div class="cell-content">
+            <span class="cell-num">03</span>
+            <span class="cell-title">The Philosophy</span>
+          </div>
+        </a>
+
+      </div>
+    </section>
+
+    <!-- ── EDITORIAL INTERIORS ── -->
+    
+    <section id="origin" class="editorial-section">
+      <div class="section-header reveal-up">
+        <h2>The Origin.</h2>
+        <p style="color:var(--gray-2); font-family:var(--font-mono);">Nigeria // 2089 // The Awakening</p>
+      </div>
+      <div class="editorial-grid">
+        <div class="editorial-card reveal-up">
+          <h3>Humble Beginnings</h3>
+          <p>I started with nothing but a broken laptop and a sheer obsession for how things worked on the web. Every night was a deep dive into the unknown, ripping apart source codes just to see the matrix underneath.</p>
+        </div>
+        <div class="editorial-card reveal-up">
+          <h3>The Pivot</h3>
+          <p>Design wasn't enough. Code wasn't enough. I realized that the true power lay in the intersection—Product Engineering. I didn't just want to paint the interface; I wanted to wire the explosive logic behind it.</p>
+        </div>
+      </div>
+      <img src="assets/images/okezie-1.webp" class="editorial-image-full reveal-up" alt="Workspace">
+    </section>
+
+    <section id="arsenal" class="editorial-section">
+      <div class="section-header reveal-up">
+        <h2>The Arsenal.</h2>
+        <p style="color:var(--gray-2); font-family:var(--font-mono);">Stack // Integrations // Experience</p>
+      </div>
+      <div class="editorial-grid">
+        <div class="editorial-card reveal-up">
+          <h3>Frontend Engineering</h3>
+          <p>React, Next.js, and raw WebGL. I build cinematic, hardware-accelerated interfaces that run at 60fps.</p>
+        </div>
+        <div class="editorial-card reveal-up">
+          <h3>Backend & Automation</h3>
+          <p>Node.js, Supabase, and N8N. I don't just build apps; I build autonomous systems that scale.</p>
+        </div>
+      </div>
       
-      <!-- Massive Hero Logo -->
-      <h1 class="dbx-massive-logo">JX</h1>
-      <p class="dbx-hero-manifesto">I didn't just grow up.<br>I <em>leveled up.</em></p>
-
-      <!-- Sticky Grid Container -->
-      <div class="dbx-bento-container">
-        <div class="dbx-bento-grid">
-          
-          <div class="dbx-cell" data-target="view-origin">
-            <div class="dbx-cell-bg" style="background-image: url('assets/images/okezie-1.webp')"></div>
-            <div class="dbx-cell-overlay"></div>
-            <div class="dbx-cell-content">
-              <div class="dbx-num">01</div>
-              <h2 class="dbx-title"><span class="mask-text">The Origin</span></h2>
-            </div>
-          </div>
-
-          <div class="dbx-cell" data-target="view-arsenal">
-            <div class="dbx-cell-bg dbx-marquee-bg">
-              <div class="marquee-track">
-                <span>REACT / GSAP / SUPABASE / NODE / FIGMA / THREE.JS / WEBGL / </span>
-                <span>REACT / GSAP / SUPABASE / NODE / FIGMA / THREE.JS / WEBGL / </span>
-              </div>
-            </div>
-            <div class="dbx-cell-overlay"></div>
-            <div class="dbx-cell-content">
-              <div class="dbx-num">02</div>
-              <h2 class="dbx-title"><span class="mask-text">The Arsenal</span></h2>
-            </div>
-          </div>
-
-          <div class="dbx-cell" data-target="view-philosophy">
-            <div class="dbx-cell-bg" style="background-image: url('assets/images/okezie-designer.webp')"></div>
-            <div class="dbx-cell-overlay"></div>
-            <div class="dbx-cell-content">
-              <div class="dbx-num">03</div>
-              <h2 class="dbx-title"><span class="mask-text">The Philosophy</span></h2>
-            </div>
-          </div>
-
-          <div class="dbx-cell" data-target="view-transmission">
-            <div class="dbx-cell-bg" style="background-image: url('assets/images/okezie-coder.webp')"></div>
-            <div class="dbx-cell-overlay"></div>
-            <div class="dbx-cell-content">
-              <div class="dbx-num">04</div>
-              <h2 class="dbx-title"><span class="mask-text">Transmission</span></h2>
-            </div>
-          </div>
-
+      <!-- Company Logos (Supabase Integration) -->
+      <div style="margin-top: var(--s-20);" class="reveal-up">
+        <h3 style="color:var(--green); font-family:var(--font-mono); margin-bottom:var(--s-4);">// ALLIES & CLIENTS</h3>
+        <div class="company-logo-grid" id="company-logos-container">
+          <div style="color:var(--gray-3); font-family:var(--font-mono); padding:var(--s-4);">Initializing Vault Data...</div>
         </div>
       </div>
     </section>
 
-    <!-- ── 2. THE ORIGIN (Timeline) ── -->
-    <section id="view-origin" class="content-view" style="display: none;">
-      <div class="cv-header">
-        <h2 class="cv-title"><span class="cv-title-inner">The Origin</span></h2>
+    <section id="philosophy" class="editorial-section" style="margin-bottom: 200px;">
+      <div class="section-header reveal-up">
+        <h2>The Philosophy.</h2>
+        <p style="color:var(--gray-2); font-family:var(--font-mono);">Form // Function // Future</p>
       </div>
-      <div class="origin-timeline-container">
-        <div class="timeline-line"></div>
-        <div class="timeline-line-fill"></div>
-        <div class="timeline-nodes"></div>
-      </div>
-    </section>
-
-    <!-- ── 3. THE ARSENAL (Sticky Stack) ── -->
-    <section id="view-arsenal" class="content-view" style="display: none;">
-      <div class="cv-header">
-        <h2 class="cv-title"><span class="cv-title-inner">The Arsenal</span></h2>
-      </div>
-      <div class="arsenal-stack-container"></div>
-    </section>
-
-    <!-- ── 4. THE PHILOSOPHY (Kinetic) ── -->
-    <section id="view-philosophy" class="content-view" style="display: none;">
-      <div class="philosophy-kinetic-container">
-        <div class="kinetic-sticky">
-          <div class="kinetic-text">I wanted to showcase myself.</div>
-          <div class="kinetic-text">To show people who I am.</div>
-          <div class="kinetic-text">JX isn't a brand;</div>
-          <div class="kinetic-text">It's a <span class="glow">universe.</span></div>
+      <div class="editorial-grid">
+        <div class="editorial-card reveal-up">
+          <h3>Dark Tech</h3>
+          <p>I believe software should feel like a command center. Interfaces should be sharp, precise, and void of unnecessary noise.</p>
+        </div>
+        <div class="editorial-card reveal-up">
+          <h3>Unapologetic Excellence</h3>
+          <p>We don't ship "good enough". If it doesn't drop jaws, it doesn't deploy.</p>
         </div>
       </div>
+      <img src="assets/images/okezie-designer.webp" class="editorial-image-full reveal-up" alt="Concept Art">
     </section>
 
-    <!-- ── 5. TRANSMISSION (Video Portal) ── -->
-    <div id="view-transmission" class="transmission-portal" style="display: none;">
-      <div class="tp-ring"></div>
-      <div class="tp-video-wrapper">
-        <video id="intro-video" src="/assets/videos/showreel.mp4" playsinline controls></video>
-      </div>
-    </div>
+  </main>
 
-    <!-- ── FOOTER ── -->
-    <footer style="border-top: 1px solid var(--border); padding: var(--s-8) var(--s-8); display:flex; justify-content:space-between; align-items:center; flex-wrap: wrap; gap: var(--s-4);">
-      <span style="font-family: var(--font-mono); font-size: var(--text-xs); color: var(--gray-2);">
-        © 2026 JX. Nigeria.
-      </span>
-      <span style="font-family: var(--font-mono); font-size: var(--text-xs); color: var(--green);">
-        CHAPTER_05 / ONGOING
-      </span>
-    </footer>
-
-  </main><!-- /#page -->
-
-  <script src="audio.js" defer></script>
   <script src="nav.js" defer></script>
-
-  <script src="about.js" defer></script>
+  <script src="about_new.js" defer></script>
 </body>
 </html>

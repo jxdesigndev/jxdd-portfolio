@@ -518,12 +518,16 @@
       document.getElementById('ef-company').value = exp.company || '';
       document.getElementById('ef-date-range').value = exp.date_range || '';
       document.getElementById('ef-desc').value = exp.description || '';
+      if(document.getElementById('ef-logo-url')) document.getElementById('ef-logo-url').value = exp.logo_url || '';
+      if(document.getElementById('ef-company-url')) document.getElementById('ef-company-url').value = exp.company_url || '';
       document.getElementById('ef-priority').value = exp.priority || 0;
       document.getElementById('ef-active').checked = exp.is_active !== false;
       DOM.btnDeleteExperience.style.display = 'block';
     } else {
       DOM.experienceModalTitle.textContent = 'Add Experience';
       document.getElementById('ef-id').value = '';
+      if(document.getElementById('ef-logo-url')) document.getElementById('ef-logo-url').value = '';
+      if(document.getElementById('ef-company-url')) document.getElementById('ef-company-url').value = '';
       document.getElementById('ef-active').checked = true;
       DOM.btnDeleteExperience.style.display = 'none';
     }
@@ -544,9 +548,19 @@
     btn.disabled = true;
 
     try {
+      let finalLogoUrl = null;
+      const logoFile = document.getElementById('ef-logo-file') ? document.getElementById('ef-logo-file').files[0] : null;
+      if (logoFile) {
+        finalLogoUrl = await uploadMedia(logoFile);
+      } else if (document.getElementById('ef-logo-preview')) {
+        finalLogoUrl = document.getElementById('ef-logo-preview').dataset.existingUrl || null;
+      }
+
       const payload = {
         role_title: document.getElementById('ef-role').value.trim(),
         company: document.getElementById('ef-company').value.trim(),
+        logo_url: finalLogoUrl,
+        company_url: document.getElementById('ef-company-url') ? document.getElementById('ef-company-url').value.trim() : null,
         date_range: document.getElementById('ef-date-range').value.trim(),
         description: document.getElementById('ef-desc').value.trim(),
         priority: parseInt(document.getElementById('ef-priority').value) || 0,

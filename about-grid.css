@@ -1,0 +1,273 @@
+/* ================================================================
+   ABOUT PAGE - STRICT BENTO GRID & EDITORIAL INTERIORS
+   Isolated CSS to prevent global breakage.
+   ================================================================ */
+
+/* ── 1. THE HERO ENTRY (LOGO) ── */
+.about-entry-wrapper {
+  position: relative;
+  width: 100vw;
+  min-height: 100vh;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  padding: var(--nav-height) var(--s-4) var(--s-4) var(--s-4);
+}
+
+.jx-svg-logo {
+  width: 150px;
+  height: 150px;
+  overflow: visible;
+}
+
+.jx-svg-path {
+  stroke: var(--green);
+  stroke-width: 4;
+  fill: transparent;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  stroke-dasharray: 2000;
+  stroke-dashoffset: 2000;
+  /* Animation handled by JS/GSAP for precision */
+}
+
+.jx-svg-filled {
+  fill: var(--green);
+  stroke: transparent;
+  opacity: 0;
+}
+
+/* ── 2. THE STRUCTURAL BENTO GRID ── */
+.bento-container {
+  max-width: var(--container-xl);
+  margin: 0 auto;
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: 400px;
+  gap: 1px;
+  background: rgba(0, 255, 65, 0.2); /* The thin grid lines */
+  border: 1px solid rgba(0, 255, 65, 0.2);
+  position: relative;
+}
+
+.bento-cell {
+  position: relative;
+  background: var(--deep);
+  overflow: hidden;
+  cursor: pointer;
+  text-decoration: none;
+  display: block;
+}
+
+/* Spanning logic for the hero logo block */
+.bento-cell.hero-cell {
+  grid-column: span 2;
+  grid-row: span 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface);
+  cursor: default;
+}
+
+.bento-cell.span-2 { grid-column: span 2; }
+.bento-cell.span-row-2 { grid-row: span 2; }
+
+@media (max-width: 1024px) {
+  .bento-container { grid-template-columns: repeat(2, 1fr); }
+  .bento-cell.hero-cell { grid-column: span 2; }
+}
+
+@media (max-width: 600px) {
+  .bento-container { grid-template-columns: 1fr; }
+  .bento-cell.hero-cell { grid-column: span 1; }
+  .bento-cell.span-2 { grid-column: span 1; }
+}
+
+/* Base Image Layer (Moody Grayscale) */
+.cell-bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  filter: grayscale(100%) brightness(0.3) contrast(1.2);
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), filter 0.8s ease;
+  transform: scale(1.02);
+  z-index: 1;
+}
+
+/* The Green Neon Flood Layer */
+.cell-flood {
+  position: absolute;
+  inset: 0;
+  background: var(--green);
+  opacity: 0;
+  mix-blend-mode: overlay;
+  transition: opacity 0.5s ease;
+  z-index: 2;
+}
+
+/* Massive Vector Symbol (Bottom Right) */
+.cell-symbol {
+  position: absolute;
+  bottom: -5%;
+  right: -5%;
+  width: 65%;
+  height: auto;
+  opacity: 0.05;
+  color: var(--white);
+  z-index: 3;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s ease, color 0.6s ease;
+  pointer-events: none;
+}
+
+/* Text Content (Strict Top Left) */
+.cell-content {
+  position: absolute;
+  top: var(--s-6);
+  left: var(--s-6);
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+}
+
+.cell-num {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--green);
+  margin-bottom: var(--s-2);
+  transition: color 0.3s ease;
+}
+
+.cell-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 3vw, 2.5rem);
+  font-weight: 800;
+  color: var(--gray-2);
+  line-height: 1.1;
+  text-transform: uppercase;
+  transition: color 0.3s ease;
+}
+
+/* Hover Physics */
+.bento-cell:not(.hero-cell):hover .cell-bg {
+  transform: scale(1.08);
+  filter: grayscale(0%) brightness(0.8) contrast(1.1);
+}
+.bento-cell:not(.hero-cell):hover .cell-flood {
+  opacity: 0.6;
+}
+.bento-cell:not(.hero-cell):hover .cell-symbol {
+  transform: scale(1.1) translate(-10px, -10px);
+  opacity: 0.2;
+  color: var(--green);
+}
+.bento-cell:not(.hero-cell):hover .cell-title {
+  color: var(--white);
+}
+.bento-cell:not(.hero-cell):hover .cell-num {
+  color: var(--white);
+}
+
+/* ── 3. EDITORIAL INTERIOR SECTIONS (Mathematically Equal Cards) ── */
+.editorial-section {
+  padding: var(--s-20) var(--s-4);
+  max-width: var(--container-xl);
+  margin: 0 auto;
+  border-top: 1px solid rgba(0,255,65,0.1);
+}
+
+.section-header {
+  margin-bottom: var(--s-12);
+}
+.section-header h2 {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 6vw, 6rem);
+  font-weight: 900;
+  color: var(--white);
+  line-height: 1;
+  margin-bottom: var(--s-4);
+}
+
+/* Strict Grid for Cards */
+.editorial-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  grid-auto-rows: 1fr; /* Forces equal height */
+  gap: var(--s-6);
+}
+
+.editorial-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: var(--s-8);
+  display: flex;
+  flex-direction: column;
+  transition: border-color 0.3s ease;
+  opacity: 0;
+  transform: translateY(30px); /* For IntersectionObserver fade-in */
+}
+.editorial-card:hover {
+  border-color: var(--green-dim);
+}
+
+.editorial-card h3 {
+  color: var(--white);
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  margin-bottom: var(--s-4);
+}
+.editorial-card p {
+  color: var(--gray-2);
+  line-height: 1.6;
+  flex-grow: 1; /* Pushes footer to bottom */
+}
+
+/* Imagery Integration */
+.editorial-image-full {
+  width: 100%;
+  height: 400px;
+  object-fit: cover;
+  margin: var(--s-12) 0;
+  border: 1px solid var(--border);
+  filter: grayscale(100%);
+  transition: filter 0.5s ease;
+}
+.editorial-image-full:hover {
+  filter: grayscale(0%);
+}
+
+/* ── 4. COMPANY LOGOS GRID (THE ARSENAL) ── */
+.company-logo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: var(--s-4);
+  margin-top: var(--s-8);
+}
+.company-logo-item {
+  background: var(--void);
+  border: 1px solid var(--border);
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--s-4);
+  transition: border-color 0.3s ease;
+}
+.company-logo-item img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  filter: grayscale(100%) opacity(0.5);
+  transition: filter 0.3s ease;
+}
+.company-logo-item:hover {
+  border-color: var(--green);
+}
+.company-logo-item:hover img {
+  filter: grayscale(0%) opacity(1);
+}
+

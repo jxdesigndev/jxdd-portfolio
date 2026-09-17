@@ -21,17 +21,16 @@
   <main id="page">
     
     <!-- ── THE DROPBOX-STYLE STRUCTURAL GRID ── -->
-    <!-- Full viewport width. Dense, interlocking bento layout. No voids. -->
     <div class="dbx-grid-wrapper">
       
-      <!-- Center Hero: JX Logo (Top Left, spans 2 cols) -->
+      <!-- Center Hero: JX Logo -->
       <div class="dbx-cell logo-cell" style="grid-area: 1 / 1 / 2 / 3;">
         <svg viewBox="0 0 200 100" class="logo-svg">
           <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" class="logo-text">JX</text>
         </svg>
       </div>
 
-      <!-- 01: The Origin (Top Right, spans 2 cols, 2 rows for vertical impact) -->
+      <!-- 01: The Origin -->
       <div class="dbx-cell content-cell scroll-reveal" style="grid-area: 1 / 3 / 3 / 5;" data-target="modal-origin">
         <div class="cell-bg" style="background-image: url('assets/images/okezie-1.webp');"></div>
         <div class="cell-overlay"></div>
@@ -42,7 +41,7 @@
         </div>
       </div>
 
-      <!-- 02: The Arsenal (Middle Left, spans 2 cols) -->
+      <!-- 02: The Arsenal -->
       <div class="dbx-cell content-cell scroll-reveal" style="grid-area: 2 / 1 / 3 / 3;" data-target="modal-arsenal">
         <div class="cell-bg" style="background-image: url('assets/images/okezie-coder.webp');"></div>
         <div class="cell-overlay"></div>
@@ -53,7 +52,7 @@
         </div>
       </div>
 
-      <!-- 03: The Philosophy (Bottom Left, spans 3 cols) -->
+      <!-- 03: The Philosophy -->
       <div class="dbx-cell content-cell scroll-reveal" style="grid-area: 3 / 1 / 4 / 4;" data-target="modal-philosophy">
         <div class="cell-bg" style="background-image: url('assets/images/okezie-designer.webp');"></div>
         <div class="cell-overlay"></div>
@@ -64,7 +63,7 @@
         </div>
       </div>
 
-      <!-- 04: Transmission (Bottom Right, 1 col) -->
+      <!-- 04: Transmission -->
       <div class="dbx-cell content-cell scroll-reveal" style="grid-area: 3 / 4 / 4 / 5;" data-target="modal-transmission">
         <div class="cell-bg" style="background-image: url('assets/images/og-share-image.jpg');"></div>
         <div class="cell-overlay"></div>
@@ -77,8 +76,7 @@
 
     </div>
 
-    <!-- ── INTERIOR MODALS (Fixed Full-Screen Overlays) ── -->
-    <!-- Using overlays perfectly solves the scroll-trigger glitches. -->
+    <!-- ── INTERIOR MODALS (Restoring Original Content) ── -->
     
     <!-- Modal: Origin -->
     <div class="dbx-modal" id="modal-origin">
@@ -89,24 +87,17 @@
         <div class="modal-content-wrapper">
           <header class="ed-header">
             <h2>The Origin.</h2>
-            <p>Nigeria // 2089 // The Awakening</p>
+            <p>Five chapters // One relentless arc</p>
           </header>
-          <div class="ed-grid">
-            <div class="ed-card">
-              <h3>Humble Beginnings</h3>
-              <p>I started with nothing but a broken laptop and a sheer obsession for how things worked on the web. Every night was a deep dive into the unknown, ripping apart source codes just to see the matrix underneath.</p>
-            </div>
-            <div class="ed-card">
-              <h3>The Pivot</h3>
-              <p>Design wasn't enough. Code wasn't enough. I realized that the true power lay in the intersection—Product Engineering. I didn't just want to paint the interface; I wanted to wire the explosive logic behind it.</p>
-            </div>
+          <div class="ed-grid" id="origin-grid">
+            <!-- Dynamically populated by JS from your original chapters -->
           </div>
           <img src="assets/images/okezie-1.webp" class="ed-image-full" alt="Workspace">
         </div>
       </div>
     </div>
 
-    <!-- Modal: Arsenal -->
+    <!-- Modal: Arsenal (Experience & Logos) -->
     <div class="dbx-modal" id="modal-arsenal">
       <div class="modal-nav">
         <button class="btn-close-modal">← Close & Return to Grid</button>
@@ -115,22 +106,17 @@
         <div class="modal-content-wrapper">
           <header class="ed-header">
             <h2>The Arsenal.</h2>
-            <p>Stack // Integrations // Experience</p>
+            <p>Experience // Stack // Integrations</p>
           </header>
-          <div class="ed-grid">
-            <div class="ed-card">
-              <h3>Frontend Engineering</h3>
-              <p>React, Next.js, and raw WebGL. I build cinematic, hardware-accelerated interfaces that run at 60fps.</p>
-            </div>
-            <div class="ed-card">
-              <h3>Backend & Automation</h3>
-              <p>Node.js, Supabase, and N8N. I don't just build apps; I build autonomous systems that scale.</p>
-            </div>
+          <!-- Original Experience Timeline Fetch -->
+          <div class="ed-grid" id="arsenal-grid">
+             <p style="color:var(--gray-3); font-family:var(--font-mono);">Loading Experience Vault...</p>
           </div>
+          <!-- Allies/Logos section -->
           <div class="allies-section">
             <h3>// ALLIES & CLIENTS</h3>
             <div class="company-logo-grid" id="company-logos-container">
-              <p style="color:var(--gray-3); font-family:var(--font-mono);">Loading Vault Data...</p>
+              <p style="color:var(--gray-3); font-family:var(--font-mono);">Loading Logo Data...</p>
             </div>
           </div>
         </div>
@@ -146,16 +132,18 @@
         <div class="modal-content-wrapper">
           <header class="ed-header">
             <h2>The Philosophy.</h2>
-            <p>Form // Function // Future</p>
+            <p>A Language of My Own</p>
           </header>
           <div class="ed-grid">
             <div class="ed-card">
-              <h3>Dark Tech</h3>
-              <p>I believe software should feel like a command center. Interfaces should be sharp, precise, and void of unnecessary noise.</p>
+              <p style="color:var(--green); font-family:var(--font-mono); margin-bottom:0.5rem; font-size:0.875rem;">The Present</p>
+              <h3>Igbo Heritage & Code</h3>
+              <p>The gold and the scattered marks across this site aren't trend — they're intentional. I built them myself, without copying any existing script, but they carry the same instinct my Igbo ancestors had for turning meaning into symbol. Most of what "design" means online today traces back to Europe, Japan, the U.S. I wanted something that traced back to me. This is what that looks like.</p>
             </div>
             <div class="ed-card">
-              <h3>Unapologetic Excellence</h3>
-              <p>We don't ship "good enough". If it doesn't drop jaws, it doesn't deploy.</p>
+              <p style="color:var(--green); font-family:var(--font-mono); margin-bottom:0.5rem; font-size:0.875rem;">The Universe</p>
+              <h3>More Than A Brand</h3>
+              <p>"I wanted to showcase myself. To show people who I am and what I can do. JX isn't a brand; it's a universe."</p>
             </div>
           </div>
           <img src="assets/images/okezie-designer.webp" class="ed-image-full" alt="Vision">
@@ -163,22 +151,19 @@
       </div>
     </div>
 
-    <!-- Modal: Transmission -->
+    <!-- Modal: Transmission (Restoring Video) -->
     <div class="dbx-modal" id="modal-transmission">
       <div class="modal-nav">
         <button class="btn-close-modal">← Close & Return to Grid</button>
       </div>
       <div class="modal-scroll-area">
-        <div class="modal-content-wrapper">
-          <header class="ed-header">
+        <div class="modal-content-wrapper" style="text-align: center;">
+          <header class="ed-header" style="text-align: left;">
             <h2>Transmission.</h2>
             <p>Visual // Audio // Signal</p>
           </header>
-          <div class="ed-grid">
-            <div class="ed-card">
-              <h3>Incoming Signal</h3>
-              <p>Stand by for transmission.</p>
-            </div>
+          <div style="position: relative; width: 100%; padding-bottom: 56.25%; border-radius: 8px; overflow: hidden; border: 1px solid var(--border); background: #000; margin-top: var(--s-12);">
+            <video id="intro-video" playsinline controls style="position: absolute; top:0; left:0; width:100%; height:100%;"></video>
           </div>
         </div>
       </div>

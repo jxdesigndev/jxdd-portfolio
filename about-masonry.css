@@ -1,0 +1,248 @@
+/* ================================================================
+   ABOUT PAGE - DBX SCROLLING MASONRY
+   ================================================================ */
+
+body, html {
+  margin: 0; padding: 0;
+  background: var(--bg);
+  overflow-x: hidden;
+}
+
+#page { opacity: 0; }
+
+/* ── 1. MASONRY HERO GRID ── */
+.masonry-hero {
+  position: relative;
+  width: 100vw;
+  min-height: 100svh;
+  padding-top: var(--nav-height);
+  margin-bottom: var(--s-20);
+}
+
+.masonry-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: minmax(300px, 40vh);
+  gap: 1px;
+  background: rgba(0, 255, 65, 0.2);
+  border: 1px solid rgba(0, 255, 65, 0.2);
+  max-width: var(--container-xl);
+  margin: 0 auto;
+}
+
+/* Specific Cell Placement */
+#cell-origin { grid-column: 1 / 2; }
+#cell-arsenal { grid-column: 2 / 3; }
+#cell-logo { 
+  grid-column: 3 / 5; 
+  background: var(--void);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#cell-philosophy { grid-column: 1 / 3; }
+#cell-transmission { grid-column: 3 / 5; }
+
+.m-cell {
+  position: relative;
+  background: var(--deep);
+  text-decoration: none;
+  overflow: hidden;
+  display: block;
+}
+
+/* JX Logo */
+.logo-svg {
+  width: 80%;
+  max-width: 400px;
+  overflow: visible;
+}
+
+.logo-text {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 80px;
+  fill: transparent;
+  stroke: var(--green);
+  stroke-width: 1.5px;
+  stroke-dasharray: 600;
+  stroke-dashoffset: 600;
+}
+
+/* Interactive Grid Cells */
+.m-bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  filter: grayscale(100%) brightness(0.3);
+  transform: scale(1.05);
+  transition: transform 0.6s ease, filter 0.6s ease;
+  z-index: 1;
+}
+
+.m-overlay {
+  position: absolute;
+  inset: 0;
+  background: var(--green);
+  opacity: 0;
+  mix-blend-mode: overlay;
+  transition: opacity 0.4s ease;
+  z-index: 2;
+}
+
+.m-symbol {
+  position: absolute;
+  bottom: -10%;
+  right: -5%;
+  width: 45%;
+  height: auto;
+  fill: var(--gray-3);
+  opacity: 0.1;
+  z-index: 3;
+  transition: transform 0.6s ease, opacity 0.6s ease, fill 0.6s ease;
+  pointer-events: none;
+}
+
+.m-content {
+  position: absolute;
+  top: var(--s-6);
+  left: var(--s-6);
+  z-index: 10;
+}
+
+.m-num {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--green);
+  margin-bottom: var(--s-2);
+}
+
+.m-title {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 3vw, 3rem);
+  font-weight: 800;
+  color: var(--gray-2);
+  text-transform: uppercase;
+  transition: color 0.3s ease;
+}
+
+.m-cell:not(#cell-logo):hover .m-bg {
+  transform: scale(1);
+  filter: grayscale(0%) brightness(0.6);
+}
+.m-cell:not(#cell-logo):hover .m-overlay {
+  opacity: 0.8;
+}
+.m-cell:not(#cell-logo):hover .m-symbol {
+  transform: scale(1.1) translate(-20px, -20px);
+  opacity: 0.3;
+  fill: var(--green);
+}
+.m-cell:not(#cell-logo):hover .m-title {
+  color: var(--white);
+}
+
+/* ── 2. EDITORIAL SECTIONS (BELOW GRID) ── */
+.editorial-wrapper {
+  max-width: var(--container-lg);
+  margin: 0 auto;
+  padding: 0 var(--s-4) var(--s-32) var(--s-4);
+}
+
+.ed-section {
+  padding: var(--s-24) 0;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.ed-header { margin-bottom: var(--s-12); }
+.ed-header h2 {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 6vw, 6rem);
+  font-weight: 900;
+  color: var(--white);
+  line-height: 1;
+  margin-bottom: var(--s-4);
+}
+.ed-header p {
+  color: var(--gray-2);
+  font-family: var(--font-mono);
+}
+
+.ed-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-auto-rows: 1fr;
+  gap: var(--s-6);
+}
+
+.ed-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: var(--s-8);
+  display: flex;
+  flex-direction: column;
+}
+.ed-card h3 {
+  color: var(--white);
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  margin-bottom: var(--s-4);
+}
+.ed-card p {
+  color: var(--gray-2);
+  line-height: 1.6;
+  flex-grow: 1;
+}
+
+/* Allies / Supabase Section */
+.allies-section {
+  margin-top: var(--s-12);
+  padding-top: var(--s-12);
+  border-top: 1px solid rgba(0,255,65,0.1);
+}
+.allies-section h3 {
+  color: var(--green);
+  font-family: var(--font-mono);
+  margin-bottom: var(--s-6);
+}
+
+.company-logo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: var(--s-4);
+}
+.company-logo-item {
+  background: var(--void);
+  border: 1px solid var(--border);
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--s-4);
+  transition: border-color 0.3s ease;
+}
+.company-logo-item img {
+  max-width: 100%; max-height: 100%;
+  object-fit: contain;
+  filter: grayscale(100%) opacity(0.5);
+  transition: all 0.3s ease;
+}
+.company-logo-item:hover { border-color: var(--green); }
+.company-logo-item:hover img { filter: grayscale(0%) opacity(1); }
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .masonry-grid { grid-template-columns: repeat(2, 1fr); }
+  #cell-origin { grid-column: 1 / 2; }
+  #cell-arsenal { grid-column: 2 / 3; }
+  #cell-logo { grid-column: 1 / 3; }
+  #cell-philosophy { grid-column: 1 / 3; }
+  #cell-transmission { grid-column: 1 / 3; }
+}
+@media (max-width: 600px) {
+  .masonry-grid { grid-template-columns: 1fr; }
+  #cell-origin, #cell-arsenal, #cell-logo, #cell-philosophy, #cell-transmission {
+    grid-column: 1 / 2;
+  }
+}

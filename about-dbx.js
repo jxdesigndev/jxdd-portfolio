@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
       ease: "power2.inOut"
     })
     .to(svgText, {
-      fill: "var(--white)",
+      fill: "var(--green)",
       stroke: "transparent",
       duration: 0.5
     });
@@ -26,7 +26,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // 3. ScrollTrigger Reveal for Grid Cells
   const revealCells = document.querySelectorAll('.scroll-reveal');
   revealCells.forEach(cell => {
-    // Initial State
     gsap.set(cell, { y: 150, opacity: 0 });
 
     ScrollTrigger.create({

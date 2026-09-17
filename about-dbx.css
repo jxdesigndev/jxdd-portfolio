@@ -1,5 +1,5 @@
 /* ================================================================
-   ABOUT PAGE - TRUE DROPBOX MASONRY SCALE
+   ABOUT PAGE - TRUE DROPBOX MASONRY SCALE (DENSE)
    ================================================================ */
 
 body, html {
@@ -20,10 +20,10 @@ body, html {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-auto-rows: 50svh; /* Huge massive blocks */
-  gap: 1px;
-  background: rgba(0, 255, 65, 0.1); /* The structural lines color */
+  gap: 1px; /* The structural lines */
+  background: rgba(0, 255, 65, 0.1); 
   border: 1px solid rgba(0, 255, 65, 0.1);
-  margin-bottom: 20svh; /* Padding at bottom */
+  margin-bottom: 10svh;
 }
 
 .dbx-cell {
@@ -40,8 +40,8 @@ body, html {
   z-index: 10;
 }
 .logo-svg {
-  width: 70%;
-  max-width: 400px;
+  width: 60%;
+  max-width: 300px;
   overflow: visible;
 }
 .logo-text {
@@ -96,8 +96,8 @@ body, html {
 
 .cell-text {
   position: absolute;
-  top: var(--s-8);
-  left: var(--s-8);
+  top: var(--s-6);
+  left: var(--s-6);
   z-index: 10;
   pointer-events: none;
 }
@@ -105,20 +105,20 @@ body, html {
 .c-num {
   display: block;
   font-family: var(--font-mono);
-  font-size: var(--text-base);
+  font-size: var(--text-sm);
   color: var(--green);
-  margin-bottom: var(--s-2);
+  margin-bottom: var(--s-1);
 }
 
 .c-title {
   display: block;
   font-family: var(--font-display);
-  font-size: clamp(2.5rem, 4vw, 4rem);
+  font-size: var(--text-2xl); /* Removed the obnoxious clamp() */
   font-weight: 800;
   color: var(--gray-2);
   text-transform: uppercase;
   transition: color 0.3s ease;
-  line-height: 1;
+  line-height: 1.1;
 }
 
 /* Hover States */
@@ -135,7 +135,6 @@ body, html {
 .content-cell:hover .c-title { color: var(--white); }
 
 /* ── 4. FIXED MODALS (INTERIORS) ── */
-/* Modals overlay everything to prevent ScrollTrigger destruction */
 .dbx-modal {
   position: fixed;
   inset: 0;
@@ -194,7 +193,7 @@ body, html {
 .ed-header { margin-bottom: var(--s-12); }
 .ed-header h2 {
   font-family: var(--font-display);
-  font-size: clamp(4rem, 8vw, 8rem);
+  font-size: clamp(3rem, 6vw, 6rem);
   font-weight: 900;
   color: var(--white);
   line-height: 1;
@@ -276,15 +275,14 @@ body, html {
 .company-logo-item:hover { border-color: var(--green); }
 .company-logo-item:hover img { filter: grayscale(0%) opacity(1); }
 
-/* Responsive adjustments for the grid */
+/* Responsive adjustments */
 @media (max-width: 1024px) {
   .dbx-grid-wrapper { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 40svh; }
-  .hide-mobile { display: none; }
   .logo-cell { grid-area: 1 / 1 / 2 / 3 !important; }
-  .content-cell[data-target="modal-origin"] { grid-area: 2 / 1 / 3 / 2 !important; }
-  .content-cell[data-target="modal-arsenal"] { grid-area: 2 / 2 / 3 / 3 !important; }
-  .content-cell[data-target="modal-philosophy"] { grid-area: 3 / 1 / 4 / 3 !important; }
-  .content-cell[data-target="modal-transmission"] { grid-area: 4 / 1 / 5 / 3 !important; }
+  .content-cell[data-target="modal-origin"] { grid-area: 2 / 1 / 3 / 3 !important; }
+  .content-cell[data-target="modal-arsenal"] { grid-area: 3 / 1 / 4 / 3 !important; }
+  .content-cell[data-target="modal-philosophy"] { grid-area: 4 / 1 / 5 / 3 !important; }
+  .content-cell[data-target="modal-transmission"] { grid-area: 5 / 1 / 6 / 3 !important; }
 }
 @media (max-width: 600px) {
   .dbx-grid-wrapper { grid-template-columns: 1fr; grid-auto-rows: 50svh; }

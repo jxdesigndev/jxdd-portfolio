@@ -38,7 +38,7 @@
     });
 
     // Logo shrinks
-    tl.to('.hub-logo', { scale: 0.2, y: -20, duration: 1, ease: 'power2.inOut' }, 0);
+    tl.to('.hub-logo', { scale: 0.15, y: '-35vh', duration: 1, ease: 'power2.inOut' }, 0);
     
     // Manifesto fades out
     tl.to('.hub-manifesto', { opacity: 0, y: -40, duration: 0.5, ease: 'power1.in' }, 0);
@@ -302,7 +302,8 @@
     initTransmission();
     
     // Quick page reveal
-    gsap.fromTo('.hub-logo', { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: 1.5, ease: 'power3.out' });
+    gsap.to('#page', { opacity: 1, duration: 0.7, ease: 'power2.inOut' });
+    gsap.fromTo('.hub-logo', { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: 1.5, ease: 'power3.out', delay: 0.2 });
   }
 
   if (document.readyState === 'loading') {

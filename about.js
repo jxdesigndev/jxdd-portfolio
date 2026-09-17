@@ -1,4 +1,3 @@
-
 (function() {
   'use strict';
 
@@ -20,14 +19,15 @@
   }
 
   /* ────────────────────────────────────────────────────────────────
-     2. THE HUB SCROLL MECHANICS (Shrink & Surround)
+     2. THE HUB SCROLL MECHANICS (Bento Mask Reveals)
      ──────────────────────────────────────────────────────────────── */
-  function initHubScroll() {
+  function initBentoScroll() {
     if (!window.gsap || !window.ScrollTrigger) return;
     
-    const hubView = document.getElementById('hub-view');
+    const hubView = document.getElementById('dbx-hub-view');
     if (!hubView) return;
 
+    // We animate the fixed elements based on scrolling through dbx-hub-view
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: hubView,
@@ -37,67 +37,65 @@
       }
     });
 
-    // Logo shrinks
-    tl.to('.hub-logo', { scale: 0.15, y: '-35vh', duration: 1, ease: 'power2.inOut' }, 0);
-    
-    // Manifesto fades out
-    tl.to('.hub-manifesto', { opacity: 0, y: -40, duration: 0.5, ease: 'power1.in' }, 0);
+    // Logo shrinks aggressively and moves to top center
+    tl.to('.dbx-massive-logo', { scale: 0.15, y: '-38vh', duration: 1, ease: 'power2.inOut' }, 0);
+    tl.to('.dbx-hero-manifesto', { opacity: 0, y: -40, duration: 0.3, ease: 'power1.in' }, 0);
 
-    // Cards slide in and fade in
-    const cards = document.querySelectorAll('.hub-card');
-    cards.forEach((card, i) => {
-      // Starting positions slightly outward
-      const targetId = card.getAttribute('data-target');
-      let xOffset = (targetId.includes('origin') || targetId.includes('philosophy')) ? -100 : 100;
-      let yOffset = (targetId.includes('origin') || targetId.includes('arsenal')) ? -100 : 100;
+    // The Grid itself fades in
+    tl.to('.dbx-bento-grid', { opacity: 1, duration: 0.5, ease: 'none' }, 0.2);
+
+    // Content inside the grid sharp-masks up (The Dropbox Mechanic)
+    const cells = document.querySelectorAll('.dbx-cell');
+    cells.forEach((cell, i) => {
+      const num = cell.querySelector('.dbx-num');
+      const maskText = cell.querySelector('.mask-text');
       
-      gsap.set(card, { x: xOffset, y: yOffset, opacity: 0 });
-      tl.to(card, { x: 0, y: 0, opacity: 1, duration: 0.8, ease: 'power2.out' }, 0.2 + (i * 0.05));
+      const delay = 0.4 + (i * 0.1);
+      
+      tl.to(num, { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out' }, delay);
+      tl.to(maskText, { y: '0%', duration: 0.5, ease: 'power3.out' }, delay);
     });
   }
 
   /* ────────────────────────────────────────────────────────────────
-     3. SINGLE-PAGE TAKEOVERS (Wipes)
+     3. STRUCTURAL TAKEOVERS (The Wipe)
      ──────────────────────────────────────────────────────────────── */
-  let currentView = 'hub-view';
-
   function initTakeovers() {
-    const cards = document.querySelectorAll('.hub-card');
-    const wipe = document.getElementById('page-wipe');
+    const cells = document.querySelectorAll('.dbx-cell');
+    const wipe = document.getElementById('dbx-takeover-layer');
     const backBtn = document.getElementById('back-to-hub');
-    const hubView = document.getElementById('hub-view');
+    const hubView = document.getElementById('dbx-hub-view');
+    const page = document.getElementById('page');
 
-    cards.forEach(card => {
-      card.addEventListener('click', () => {
-        const targetId = card.getAttribute('data-target');
-        if (!targetId || targetId === 'view-transmission') return; // Transmission handled separately
+    if(page) gsap.to(page, { opacity: 1, duration: 0.5 });
+    gsap.fromTo('.dbx-massive-logo', { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: 1.5, ease: 'power3.out', delay: 0.2 });
 
-        // 1. Wipe covers screen
+    cells.forEach(cell => {
+      cell.addEventListener('click', () => {
+        const targetId = cell.getAttribute('data-target');
+        if (!targetId || targetId === 'view-transmission') return;
+
+        gsap.set(wipe, { transformOrigin: 'bottom' });
         gsap.to(wipe, {
-          y: '0%', 
+          scaleY: 1, 
           duration: 0.7, 
-          ease: 'power3.inOut',
+          ease: 'expo.inOut',
           onComplete: () => {
-            // 2. Hide hub, show target
             hubView.style.display = 'none';
             document.querySelectorAll('.content-view').forEach(v => v.style.display = 'none');
             const targetView = document.getElementById(targetId);
             if (targetView) targetView.style.display = 'block';
 
-            // Reset scroll
             window.scrollTo(0, 0);
             if (window.JXLenis) window.JXLenis.scrollTo(0, { immediate: true });
             
-            // 3. Wipe leaves screen
+            gsap.set(wipe, { transformOrigin: 'top' });
             gsap.to(wipe, {
-              y: '-100%', 
+              scaleY: 0, 
               duration: 0.7, 
-              ease: 'power3.inOut',
+              ease: 'expo.inOut',
               onComplete: () => {
-                gsap.set(wipe, { y: '100%' }); // Reset for next time
                 backBtn.classList.add('active');
-                
-                // Trigger view specific animations
                 ScrollTrigger.refresh();
                 if (targetId === 'view-origin') animateOriginTimeline();
                 if (targetId === 'view-philosophy') animatePhilosophy();
@@ -110,21 +108,24 @@
 
     backBtn.addEventListener('click', () => {
       backBtn.classList.remove('active');
+      gsap.set(wipe, { transformOrigin: 'top' });
       gsap.to(wipe, {
-        y: '0%', 
+        scaleY: 1, 
         duration: 0.7, 
-        ease: 'power3.inOut',
+        ease: 'expo.inOut',
         onComplete: () => {
           document.querySelectorAll('.content-view').forEach(v => v.style.display = 'none');
           hubView.style.display = 'block';
+          
           window.scrollTo(0, 0);
           if (window.JXLenis) window.JXLenis.scrollTo(0, { immediate: true });
           ScrollTrigger.refresh();
 
+          gsap.set(wipe, { transformOrigin: 'bottom' });
           gsap.to(wipe, {
-            y: '100%', 
+            scaleY: 0, 
             duration: 0.7, 
-            ease: 'power3.inOut'
+            ease: 'expo.inOut'
           });
         }
       });
@@ -161,10 +162,8 @@
   function animateOriginTimeline() {
     if (!window.gsap || !window.ScrollTrigger) return;
     
-    // Mask reveal for Title
     gsap.fromTo('.cv-title-inner', { y: 150, opacity: 0 }, { y: 0, opacity: 1, duration: 1, ease: 'power4.out' });
 
-    // Timeline Line Drawing
     gsap.to('.timeline-line-fill', {
       height: '100%',
       ease: 'none',
@@ -176,7 +175,6 @@
       }
     });
 
-    // Nodes slide up
     gsap.utils.toArray('.timeline-node').forEach(node => {
       gsap.fromTo(node, 
         { opacity: 0, y: 50 }, 
@@ -222,7 +220,6 @@
         `;
         container.appendChild(card);
       });
-      // Stacking is handled purely by CSS position: sticky!
     } catch (err) {
       console.error('Failed to load arsenal:', err);
     }
@@ -255,7 +252,7 @@
      7. TRANSMISSION (Video Modal)
      ──────────────────────────────────────────────────────────────── */
   async function initTransmission() {
-    const transCard = document.querySelector('.hub-card[data-target="view-transmission"]');
+    const transCard = document.querySelector('.dbx-cell[data-target="view-transmission"]');
     const portal = document.getElementById('view-transmission');
     const ring = document.querySelector('.tp-ring');
     const videoWrap = document.querySelector('.tp-video-wrapper');
@@ -263,7 +260,6 @@
 
     if (!transCard || !portal) return;
 
-    // Supabase Video Load
     try {
       if (window.initSupabase) await window.initSupabase();
       if (typeof supabase !== 'undefined') {
@@ -297,13 +293,9 @@
     initLenis();
     populateOrigin();
     initArsenalStack();
-    initHubScroll();
+    initBentoScroll();
     initTakeovers();
     initTransmission();
-    
-    // Quick page reveal
-    gsap.to('#page', { opacity: 1, duration: 0.7, ease: 'power2.inOut' });
-    gsap.fromTo('.hub-logo', { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: 1.5, ease: 'power3.out', delay: 0.2 });
   }
 
   if (document.readyState === 'loading') {

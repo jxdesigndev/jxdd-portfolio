@@ -39,7 +39,7 @@
 
   <style>
     /* ── Page wrapper ── */
-    #page { opacity: 0; }
+    
 
     /* ── About Hero ── */
     .about-hero {
@@ -475,42 +475,66 @@
 </head>
 <body>
   <a href="#page" class="skip-to-content">Skip to content</a>
-  <main id="page">
-    
-    <!-- ── THE WIPE OVERLAY ── -->
-    <div id="page-wipe" class="page-wipe"></div>
+  <main id="page" style="opacity: 1;">
+    <!-- ── GLOBAL WIPE & NAV ── -->
+    <div id="dbx-takeover-layer" class="dbx-takeover-layer"></div>
     <button id="back-to-hub" class="back-to-hub" aria-label="Back to Hub">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-      HUB
+      CLOSE
     </button>
 
-    <!-- ── 1. THE HUB VIEW ── -->
-    <section id="hub-view" class="hub-view">
-      <div class="hub-sticky">
-        <h1 class="hub-logo">JX</h1>
-        <p class="hub-manifesto">I didn't just grow up.<br>I <em>leveled up.</em></p>
-        
-        <div class="hub-grid">
-          <div class="hub-card" data-target="view-origin">
-            <div class="hc-num">01</div>
-            <div class="hc-title">The Origin</div>
-            <div class="hc-sub">My Story</div>
+    <!-- ── 1. THE HERO / BENTO HUB ── -->
+    <section id="dbx-hub-view" class="dbx-hub-view">
+      
+      <!-- Massive Hero Logo -->
+      <h1 class="dbx-massive-logo">JX</h1>
+      <p class="dbx-hero-manifesto">I didn't just grow up.<br>I <em>leveled up.</em></p>
+
+      <!-- Sticky Grid Container -->
+      <div class="dbx-bento-container">
+        <div class="dbx-bento-grid">
+          
+          <div class="dbx-cell" data-target="view-origin">
+            <div class="dbx-cell-bg" style="background-image: url('assets/images/okezie-1.webp')"></div>
+            <div class="dbx-cell-overlay"></div>
+            <div class="dbx-cell-content">
+              <div class="dbx-num">01</div>
+              <h2 class="dbx-title"><span class="mask-text">The Origin</span></h2>
+            </div>
           </div>
-          <div class="hub-card" data-target="view-arsenal">
-            <div class="hc-num">02</div>
-            <div class="hc-title">The Arsenal</div>
-            <div class="hc-sub">Experience & Stack</div>
+
+          <div class="dbx-cell" data-target="view-arsenal">
+            <div class="dbx-cell-bg dbx-marquee-bg">
+              <div class="marquee-track">
+                <span>REACT / GSAP / SUPABASE / NODE / FIGMA / THREE.JS / WEBGL / </span>
+                <span>REACT / GSAP / SUPABASE / NODE / FIGMA / THREE.JS / WEBGL / </span>
+              </div>
+            </div>
+            <div class="dbx-cell-overlay"></div>
+            <div class="dbx-cell-content">
+              <div class="dbx-num">02</div>
+              <h2 class="dbx-title"><span class="mask-text">The Arsenal</span></h2>
+            </div>
           </div>
-          <div class="hub-card" data-target="view-philosophy">
-            <div class="hc-num">03</div>
-            <div class="hc-title">The Philosophy</div>
-            <div class="hc-sub">The Vision</div>
+
+          <div class="dbx-cell" data-target="view-philosophy">
+            <div class="dbx-cell-bg" style="background-image: url('assets/images/okezie-designer.webp')"></div>
+            <div class="dbx-cell-overlay"></div>
+            <div class="dbx-cell-content">
+              <div class="dbx-num">03</div>
+              <h2 class="dbx-title"><span class="mask-text">The Philosophy</span></h2>
+            </div>
           </div>
-          <div class="hub-card" data-target="view-transmission">
-            <div class="hc-num">04</div>
-            <div class="hc-title">Transmission</div>
-            <div class="hc-sub">Intro Video</div>
+
+          <div class="dbx-cell" data-target="view-transmission">
+            <div class="dbx-cell-bg" style="background-image: url('assets/images/okezie-coder.webp')"></div>
+            <div class="dbx-cell-overlay"></div>
+            <div class="dbx-cell-content">
+              <div class="dbx-num">04</div>
+              <h2 class="dbx-title"><span class="mask-text">Transmission</span></h2>
+            </div>
           </div>
+
         </div>
       </div>
     </section>
@@ -523,9 +547,7 @@
       <div class="origin-timeline-container">
         <div class="timeline-line"></div>
         <div class="timeline-line-fill"></div>
-        <div class="timeline-nodes">
-          <!-- Will be injected by JS or hardcoded -->
-        </div>
+        <div class="timeline-nodes"></div>
       </div>
     </section>
 
@@ -534,9 +556,7 @@
       <div class="cv-header">
         <h2 class="cv-title"><span class="cv-title-inner">The Arsenal</span></h2>
       </div>
-      <div class="arsenal-stack-container">
-        <!-- Will be populated by JS -->
-      </div>
+      <div class="arsenal-stack-container"></div>
     </section>
 
     <!-- ── 4. THE PHILOSOPHY (Kinetic) ── -->

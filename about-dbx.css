@@ -1,291 +1,269 @@
-/* ================================================================
-   ABOUT PAGE - TRUE DROPBOX MASONRY SCALE (DENSE)
-   ================================================================ */
+/* ─────────────────────────────────────────────────────────────────
+   ABOUT PAGE: THE HYBRID BENTO GRID (Dropbox Mechanics + JX Brand)
+   ───────────────────────────────────────────────────────────────── */
 
-body, html {
-  margin: 0; padding: 0;
-  background: var(--bg);
-  overflow-x: hidden;
-  background-color: var(--void);
-}
-
-#page { opacity: 0; }
-.about-page { background-color: var(--void); }
-
-/* ── 1. THE MASSIVE STRUCTURAL GRID ── */
-.dbx-grid-wrapper {
+/* ── 1. The Scroll-to-Lock Container ── */
+.dbx-grid-container {
   position: relative;
   width: 100vw;
-  min-height: 150svh; /* Forces scroll */
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-auto-rows: 50svh; /* Huge massive blocks */
-  gap: 1px; /* The structural lines */
-  background: rgba(0, 255, 65, 0.1); 
-  border: 1px solid rgba(0, 255, 65, 0.1);
-  margin-bottom: 10svh;
-}
-
-.dbx-cell {
-  background: var(--void);
-  position: relative;
+  padding-top: 80px; 
+  padding-bottom: 15vh; /* Allow scroll room */
+  background: var(--void, #030303);
   overflow: hidden;
 }
 
-/* ── 2. THE JX LOGO BLOCK ── */
-.logo-cell {
+/* ── 2. The Dense Bento Grid Architecture ── */
+.dbx-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: 35svh;
+  gap: 4px;
+  background: var(--void);
+  max-width: 1800px;
+  margin: 0 auto;
+}
+
+/* ── Specific Grid Spans for the Puzzle ── */
+.hero-cell { grid-area: 1 / 2 / 3 / 4; } /* 2x2 Central Square */
+.content-cell[data-route="origin"] { grid-area: 1 / 1 / 3 / 2; } /* 2x1 Tall Left */
+.content-cell[data-route="philosophy"] { grid-area: 1 / 4 / 3 / 5; } /* 2x1 Tall Right */
+.content-cell[data-route="arsenal"] { grid-area: 3 / 1 / 4 / 3; } /* 1x2 Wide Bottom Left */
+.content-cell[data-route="transmission"] { grid-area: 3 / 3 / 4 / 5; } /* 1x2 Wide Bottom Right */
+
+
+/* ── 3. Cell Base Mechanics ── */
+.dbx-cell {
+  position: relative;
+  background: var(--void);
+  overflow: hidden;
+  cursor: pointer;
+  /* GSAP animation default states */
+  opacity: 0; 
+  transform: translateY(120px);
+}
+/* The Hero cell starts visible in center */
+.hero-cell {
+  opacity: 1;
+  transform: none;
+  background: var(--void);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 10;
+  cursor: default;
 }
+
+/* ── 4. The JX Logo Draw Animation ── */
 .logo-svg {
   width: 60%;
-  max-width: 300px;
+  max-width: 240px;
+  height: auto;
   overflow: visible;
 }
-.logo-text {
-  font-family: var(--font-display);
-  font-weight: 900;
-  font-size: 80px;
+.jx-path {
   fill: transparent;
-  stroke: var(--green);
-  stroke-width: 1.5px;
-  stroke-dasharray: 600;
-  stroke-dashoffset: 600;
+  stroke: var(--green, #00FF41);
+  stroke-width: 2;
+  stroke-linejoin: bevel;
 }
 
-/* ── 3. CONTENT CELLS ── */
-.content-cell {
-  cursor: pointer;
-}
+/* ── 5. The Hybrid Color & Grayscale Styling ── */
+.color-black { background-color: #050505; }
+.color-amber { background-color: #1A1100; }
+.color-green { background-color: #001A06; }
+.color-void  { background-color: #0A0A0E; }
 
+/* The Grayscale photo overlay */
 .cell-bg {
   position: absolute;
   inset: 0;
   background-size: cover;
   background-position: center;
-  filter: grayscale(100%) brightness(0.3);
-  transform: scale(1.05);
-  transition: transform 0.6s ease, filter 0.6s ease;
-  z-index: 1;
+  /* The Moody Grayscale State */
+  filter: grayscale(100%) brightness(0.3) contrast(1.2);
+  mix-blend-mode: luminosity;
+  opacity: 0.6;
+  transition: filter 0.6s cubic-bezier(0.16, 1, 0.3, 1), 
+              opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: scale(1.01);
 }
 
-.cell-overlay {
+/* Hover Ignition: Color + Glow */
+.content-cell:hover .cell-bg {
+  filter: grayscale(0%) brightness(0.6) contrast(1.1);
+  mix-blend-mode: normal;
+  opacity: 1;
+  transform: scale(1.05);
+}
+.content-cell::after {
+  content: '';
   position: absolute;
   inset: 0;
-  background: var(--green);
-  opacity: 0;
-  mix-blend-mode: overlay;
-  transition: opacity 0.4s ease;
-  z-index: 2;
+  box-shadow: inset 0 0 0 0px var(--green);
+  transition: box-shadow 0.4s ease;
+  pointer-events: none;
+}
+.content-cell:hover::after {
+  box-shadow: inset 0 0 0 1px var(--green);
 }
 
+/* ── 6. Massive Abstract Vector Symbols ── */
 .cell-symbol {
   position: absolute;
-  bottom: -15%;
+  bottom: -10%;
   right: -5%;
-  width: 60%; /* Massive icons */
+  width: 70%;
   height: auto;
-  fill: var(--gray-3);
-  opacity: 0.1;
-  z-index: 3;
+  fill: var(--white);
+  opacity: 0.05;
+  z-index: 2;
   transition: transform 0.6s ease, opacity 0.6s ease, fill 0.6s ease;
   pointer-events: none;
 }
-
-.cell-text {
-  position: absolute;
-  top: var(--s-6);
-  left: var(--s-6);
-  z-index: 10;
-  pointer-events: none;
-}
-
-.c-num {
-  display: block;
-  font-family: var(--font-mono);
-  font-size: var(--text-sm);
-  color: var(--green);
-  margin-bottom: var(--s-1);
-}
-
-.c-title {
-  display: block;
-  font-family: var(--font-display);
-  font-size: var(--text-2xl); /* Removed the obnoxious clamp() */
-  font-weight: 800;
-  color: var(--gray-2);
-  text-transform: uppercase;
-  transition: color 0.3s ease;
-  line-height: 1.1;
-}
-
-/* Hover States */
-.content-cell:hover .cell-bg {
-  transform: scale(1);
-  filter: grayscale(0%) brightness(0.7);
-}
-.content-cell:hover .cell-overlay { opacity: 0.8; }
 .content-cell:hover .cell-symbol {
-  transform: scale(1.1) translate(-20px, -20px);
-  opacity: 0.3;
+  transform: scale(1.1) translate(-10px, -10px);
+  opacity: 0.2;
   fill: var(--green);
 }
-.content-cell:hover .c-title { color: var(--white); }
 
-/* ── 4. FIXED MODALS (INTERIORS) ── */
-.dbx-modal {
+/* ── 7. Strict Top-Left Typography ── */
+.cell-text {
+  position: absolute;
+  top: 32px;
+  left: 32px;
+  z-index: 10;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.c-num {
+  font-family: var(--font-mono, monospace);
+  color: var(--green);
+  font-size: 14px;
+  letter-spacing: 0.1em;
+}
+.c-title {
+  display: block;
+  font-family: var(--font-display, sans-serif);
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--white);
+  text-transform: uppercase;
+  line-height: 1.1;
+  transition: color 0.3s ease;
+}
+
+/* ── 8. Interior Routing Architecture ── */
+.interior-view {
   position: fixed;
   inset: 0;
-  background: var(--void);
+  background: var(--void, #050505);
   z-index: 9999;
   display: flex;
   flex-direction: column;
+  visibility: hidden;
   opacity: 0;
-  pointer-events: none;
-  transform: translateY(20px);
-  transition: opacity 0.5s ease, transform 0.5s ease;
-}
-
-.dbx-modal.open {
-  opacity: 1;
-  pointer-events: auto;
-  transform: translateY(0);
-}
-
-.modal-nav {
-  padding: var(--s-6) var(--s-8);
-  background: var(--void);
-  border-bottom: 1px solid rgba(255,255,255,0.05);
-  display: flex;
-  align-items: center;
-}
-
-.btn-close-modal {
-  background: transparent;
-  color: var(--green);
-  border: 1px solid var(--green);
-  padding: var(--s-3) var(--s-6);
-  font-family: var(--font-mono);
-  font-size: var(--text-sm);
-  cursor: pointer;
-  border-radius: 2px;
-  transition: all 0.2s ease;
-}
-.btn-close-modal:hover {
-  background: var(--green);
-  color: var(--void);
-}
-
-.modal-scroll-area {
-  flex-grow: 1;
   overflow-y: auto;
-  padding: var(--s-12) var(--s-4) var(--s-32) var(--s-4);
+  overflow-x: hidden;
 }
 
-.modal-content-wrapper {
-  max-width: var(--container-lg);
-  margin: 0 auto;
+.interior-nav {
+  position: sticky;
+  top: 0;
+  padding: 24px 5%;
+  background: linear-gradient(180deg, var(--void) 40%, transparent 100%);
+  z-index: 100;
+  backdrop-filter: blur(8px);
 }
 
-/* Editorial Content */
-.ed-header { margin-bottom: var(--s-12); }
-.ed-header h2 {
-  font-family: var(--font-display);
-  font-size: clamp(3rem, 6vw, 6rem);
-  font-weight: 900;
-  color: var(--white);
-  line-height: 1;
-  margin-bottom: var(--s-4);
-}
-.ed-header p {
-  color: var(--gray-2);
+.btn-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  color: var(--green);
   font-family: var(--font-mono);
+  font-size: 14px;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 8px 0;
+}
+.btn-back:hover { color: var(--white); }
+
+.interior-content-wrapper {
+  padding: 40px 5% 120px 5%;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
 }
 
-.ed-grid {
+.interior-page { display: none; }
+.interior-page.active { display: block; }
+
+/* ── 9. Editorial Interiors (Mathematically Equal Cards) ── */
+.ed-header { margin-bottom: 60px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 24px; }
+.ed-num { color: var(--green); font-family: var(--font-mono); font-size: 16px; display: block; margin-bottom: 8px; }
+.ed-header h2 { font-family: var(--font-display); font-size: 48px; font-weight: 900; color: var(--white); margin: 0; text-transform: uppercase; }
+.ed-header p { color: var(--gray-2); font-family: var(--font-mono); font-size: 14px; margin-top: 12px; }
+
+/* The mathematically equal grid */
+.ed-editorial-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  grid-auto-rows: 1fr;
-  gap: var(--s-6);
+  grid-template-columns: repeat(2, 1fr);
+  grid-auto-rows: 1fr; /* Forces equal heights */
+  gap: 24px;
+}
+@media(max-width: 800px) {
+  .ed-editorial-grid { grid-template-columns: 1fr; grid-auto-rows: auto; }
 }
 
-.ed-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  padding: var(--s-8);
+.ed-text-block, .ed-image-block {
+  background: #0a0a0a;
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 8px;
+  padding: 40px;
   display: flex;
   flex-direction: column;
 }
-.ed-card h3 {
-  color: var(--white);
-  font-family: var(--font-display);
-  font-size: var(--text-2xl);
-  margin-bottom: var(--s-4);
-}
-.ed-card p {
-  color: var(--gray-2);
-  line-height: 1.6;
-  flex-grow: 1;
-}
+.ed-image-block { padding: 0; overflow: hidden; border: none; }
+.ed-image-block img { width: 100%; height: 100%; object-fit: cover; }
 
-.ed-image-full {
-  width: 100%;
-  height: auto;
-  margin-top: var(--s-12);
-  border-radius: 4px;
-  filter: grayscale(100%);
-  transition: filter 0.5s ease;
-}
-.ed-image-full:hover { filter: grayscale(0%); }
+.ed-label { color: var(--green); font-family: var(--font-mono); font-size: 12px; margin-bottom: 12px; text-transform: uppercase;}
+.ed-text-block h3 { font-family: var(--font-display); font-size: 24px; color: var(--white); margin-bottom: 16px; }
+.ed-text-block p { color: var(--gray-2); font-size: 16px; line-height: 1.6; margin: 0; }
 
-/* Allies Grid inside Modal */
-.allies-section {
-  margin-top: var(--s-16);
-  padding-top: var(--s-12);
-  border-top: 1px solid rgba(0,255,65,0.1);
-}
-.allies-section h3 {
-  color: var(--green);
-  font-family: var(--font-mono);
-  margin-bottom: var(--s-8);
-}
+/* ── 10. Arsenal Logos ── */
+.allies-section { margin-top: 80px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 40px; }
+.allies-section h3 { font-family: var(--font-mono); color: var(--green); font-size: 14px; margin-bottom: 32px; letter-spacing: 0.1em; }
 .company-logo-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: var(--s-4);
+  gap: 24px;
 }
-.company-logo-item {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  height: 120px;
+.company-logo {
+  background: #050505;
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 4px;
+  padding: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--s-6);
-  transition: border-color 0.3s ease;
-}
-.company-logo-item img {
-  max-width: 100%; max-height: 100%;
-  object-fit: contain;
-  filter: grayscale(100%) opacity(0.5);
   transition: all 0.3s ease;
 }
-.company-logo-item:hover { border-color: var(--green); }
-.company-logo-item:hover img { filter: grayscale(0%) opacity(1); }
+.company-logo img { max-width: 100%; max-height: 50px; filter: grayscale(100%) brightness(0.5); transition: filter 0.3s ease; }
+.company-logo:hover { border-color: var(--green); background: #0a0a0a; }
+.company-logo:hover img { filter: grayscale(0%) brightness(1); }
 
-/* Responsive adjustments */
-@media (max-width: 1024px) {
-  .dbx-grid-wrapper { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 40svh; }
-  .logo-cell { grid-area: 1 / 1 / 2 / 3 !important; }
-  .content-cell[data-target="modal-origin"] { grid-area: 2 / 1 / 3 / 3 !important; }
-  .content-cell[data-target="modal-arsenal"] { grid-area: 3 / 1 / 4 / 3 !important; }
-  .content-cell[data-target="modal-philosophy"] { grid-area: 4 / 1 / 5 / 3 !important; }
-  .content-cell[data-target="modal-transmission"] { grid-area: 5 / 1 / 6 / 3 !important; }
-}
-@media (max-width: 600px) {
-  .dbx-grid-wrapper { grid-template-columns: 1fr; grid-auto-rows: 50svh; }
-  .logo-cell { grid-area: auto !important; }
+/* Video */
+.video-container { position: relative; width: 100%; padding-bottom: 56.25%; border-radius: 8px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); background: #000; }
+.video-container video { position: absolute; top:0; left:0; width:100%; height:100%; }
+
+/* Mobile Grid Fallback */
+@media (max-width: 900px) {
+  .dbx-grid { grid-template-columns: 1fr; grid-auto-rows: 40svh; }
+  .hero-cell { grid-area: auto; }
   .content-cell { grid-area: auto !important; }
 }

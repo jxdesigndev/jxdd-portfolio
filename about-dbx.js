@@ -1,191 +1,230 @@
-'use strict';
-
-gsap.registerPlugin(ScrollTrigger);
+/**
+ * ABOUT PAGE HYBRID LOGIC
+ * - SVG Trace Entry
+ * - GSAP Scroll-to-Assemble Grid
+ * - Smooth Routing (Interior Views)
+ * - Supabase Integrations (Origin timeline, Arsenal logos)
+ */
 
 document.addEventListener('DOMContentLoaded', () => {
-  // 1. Initial Page Fade In
-  gsap.to('#page', { opacity: 1, duration: 0.5 });
+  gsap.registerPlugin(ScrollTrigger);
 
-  // 2. SVG JX Logo Draw Animation
-  const svgText = document.querySelector('.logo-text');
-  if (svgText) {
-    const tl = gsap.timeline();
-    tl.to(svgText, {
-      strokeDashoffset: 0,
-      duration: 2.5,
-      ease: "power2.inOut"
+  /* ── 1. SVG Trace Animation ── */
+  const paths = document.querySelectorAll('.jx-path');
+  
+  // Prepare paths for drawing
+  paths.forEach(path => {
+    const length = path.getTotalLength();
+    path.style.strokeDasharray = length;
+    path.style.strokeDashoffset = length;
+    path.style.fill = 'transparent';
+  });
+
+  // Master Entry Timeline
+  const entryTL = gsap.timeline();
+
+  // Draw the strokes
+  entryTL.to(paths, {
+    strokeDashoffset: 0,
+    duration: 1.5,
+    ease: "power2.inOut",
+    stagger: 0.2
+  })
+  // Flash to solid fill
+  .to(paths, {
+    fill: '#00FF41',
+    stroke: 'transparent',
+    duration: 0.5,
+    ease: "power1.in"
+  });
+
+  /* ── 2. The Scroll-to-Assemble Grid ── */
+  const gridCells = gsap.utils.toArray('.content-cell');
+  
+  // Set initial state for scrolling cells
+  gsap.set(gridCells, { y: 200, opacity: 0 });
+
+  ScrollTrigger.create({
+    trigger: ".dbx-grid-container",
+    start: "top 80px", // Just below the nav
+    end: "+=600",      // Scroll distance to assemble
+    scrub: 1,
+    animation: gsap.to(gridCells, {
+      y: 0,
+      opacity: 1,
+      duration: 1,
+      stagger: 0.1,
+      ease: "power2.out"
     })
-    .to(svgText, {
-      fill: "var(--green)",
-      stroke: "transparent",
-      duration: 0.5
+  });
+
+  /* ── 3. Smooth Interior Routing ── */
+  const interiorView = document.getElementById('interior-view');
+  const interiorPages = document.querySelectorAll('.interior-page');
+  const btnBack = document.getElementById('btn-back-grid');
+  let currentRoute = null;
+
+  // Click on a Bento Cell
+  document.querySelectorAll('.content-cell').forEach(cell => {
+    cell.addEventListener('click', (e) => {
+      const route = cell.getAttribute('data-route');
+      if (!route) return;
+      openInterior(route);
     });
+  });
+
+  btnBack.addEventListener('click', closeInterior);
+
+  function openInterior(route) {
+    // Set active page
+    interiorPages.forEach(p => p.classList.remove('active'));
+    const targetPage = document.getElementById(`page-${route}`);
+    if (targetPage) targetPage.classList.add('active');
+    
+    currentRoute = route;
+
+    // Transition Mechanics
+    gsap.to(window, { scrollTo: 0, duration: 0.3 }); // Reset scroll
+    
+    gsap.fromTo(interiorView, 
+      { autoAlpha: 0, y: 50 }, 
+      { autoAlpha: 1, y: 0, duration: 0.5, ease: "power3.out" }
+    );
+    
+    // Lock body scroll so grid behind doesn't scroll
+    document.body.style.overflow = 'hidden';
   }
 
-  // 3. ScrollTrigger Reveal for Grid Cells
-  const revealCells = document.querySelectorAll('.scroll-reveal');
-  revealCells.forEach(cell => {
-    gsap.set(cell, { y: 150, opacity: 0 });
-    ScrollTrigger.create({
-      trigger: cell,
-      start: "top 95%", 
-      onEnter: () => {
-        gsap.to(cell, { y: 0, opacity: 1, duration: 1.2, ease: "power4.out", overwrite: true });
-      }
-    });
-  });
-
-  // 4. Modal Overlays (Solves GSAP Glitches natively)
-  const cells = document.querySelectorAll('.content-cell');
-  const btnsClose = document.querySelectorAll('.btn-close-modal');
-
-  cells.forEach(cell => {
-    cell.addEventListener('click', () => {
-      const targetId = cell.getAttribute('data-target');
-      const modal = document.getElementById(targetId);
-      if (modal) {
-        modal.classList.add('open');
-        document.body.style.overflow = 'hidden'; // prevent bg scroll
-        
-        // Staggered fade-in for the cards inside this specific modal
-        const cards = modal.querySelectorAll('.ed-card, .ed-image-full, .arsenal-card');
-        if(cards.length > 0) {
-          gsap.fromTo(cards, 
-            { y: 30, opacity: 0 }, 
-            { y: 0, opacity: 1, duration: 0.6, stagger: 0.1, ease: "power2.out", delay: 0.2 }
-          );
-        }
-      }
-    });
-  });
-
-  btnsClose.forEach(btn => {
-    btn.addEventListener('click', () => {
-      const modal = btn.closest('.dbx-modal');
-      if (modal) {
-        modal.classList.remove('open');
+  function closeInterior() {
+    gsap.to(interiorView, {
+      autoAlpha: 0,
+      y: 50,
+      duration: 0.4,
+      ease: "power2.in",
+      onComplete: () => {
+        interiorPages.forEach(p => p.classList.remove('active'));
         document.body.style.overflow = '';
+        // Small refresh to ensure GSAP on the main grid is stable
+        ScrollTrigger.refresh();
       }
     });
-  });
+  }
 
-  // 5. RESTORE ORIGINAL CONTENT: Populate Origin Chapters
-  populateOrigin();
+  /* ── 4. Restore Dynamic Data (Supabase) ── */
+  async function populateOrigin() {
+    const originGrid = document.getElementById('origin-editorial');
+    if(!originGrid) return;
 
-  // 6. RESTORE ORIGINAL CONTENT: Fetch Arsenal & Video & Logos
-  initArsenalStack();
-  loadCompanyLogos();
-  initTransmission();
-});
-
-function populateOrigin() {
-  const container = document.getElementById('origin-grid');
-  if (!container) return;
-  const chapters = [
-    { era: "The Early Years: The Artist", title: "Born to Create", body: "Before code, before computers, there was art. A younger Okezie who wanted to draw, who taught himself by tracing, line by line, character by character. Physics class became a love affair: technical drawing, architectural plans, the geometry of the perfect building. I wanted to design world-class structures. Not just buildings, experiences that people would walk into and feel something." },
-    { era: "The Discovery: The Technologist", title: "Then I Found Computers", body: "A machine that could do anything. I was fascinated, not just by what it could do, but by how it worked. So I learned. First as a student, watching everything. Then under a computer technician, hands inside machines, wires and circuits making sense where they hadn't before. I wasn't just using computers anymore. I was building with them." },
-    { era: "The Canvas", title: "Digital Art & Animation", body: "My passion for drawing never left me. It evolved. I transitioned from pencil and paper to becoming a digital artist, creating cartoon pictures directly on my phone and sharing my creations with the world. This was my digital playground, and it sparked my desire to go into animation—bringing those static cartoon frames to life through motion and code." },
-    { era: "The Convergence", title: "JX", body: "All these paths—the artist, the computer technician, the architect, the digital creator—converged into a single identity: JX. It was coined because I wanted to showcase myself—my true self. I wanted to show people who I am, what I can do, provide exceptional services, and grow immensely. JX is my identity. It is the culmination of every pixel drawn, every system built, and every world designed." }
-  ];
-
-  chapters.forEach(ch => {
-    const card = document.createElement('div');
-    card.className = 'ed-card';
-    card.innerHTML = `
-      <p style="color:var(--green); font-family:var(--font-mono); margin-bottom:0.5rem; font-size:0.875rem;">${ch.era}</p>
-      <h3>${ch.title}</h3>
-      <p>${ch.body}</p>
-    `;
-    container.appendChild(card);
-  });
-}
-
-async function initArsenalStack() {
-  const container = document.getElementById('arsenal-grid');
-  if (!container) return;
-
-  try {
-    if (window.initSupabase) await window.initSupabase();
-    if (typeof supabase === 'undefined') throw new Error('Database offline.');
-
-    const { data, error } = await supabase
-      .from('experience')
-      .select('*')
-      .eq('is_active', true)
-      .order('priority', { ascending: false });
-
-    if (error) throw error;
-
-    if (!data || data.length === 0) {
-      container.innerHTML = '<div style="color:var(--gray-2);">No arsenal entries found.</div>';
+    if (!window.jxSupabase) {
+      originGrid.innerHTML = `<div class="ed-text-block"><p>Error: Supabase client not loaded.</p></div>`;
       return;
     }
 
-    container.innerHTML = '';
-    data.forEach(exp => {
-      const card = document.createElement('div');
-      card.className = 'ed-card arsenal-card';
-      card.innerHTML = `
-        <p style="color:var(--green); font-family:var(--font-mono); margin-bottom:0.5rem; font-size:0.875rem;">${exp.date_range} • ${exp.company}</p>
-        <h3>${exp.role_title}</h3>
-        <p>${exp.description || ''}</p>
-      `;
-      container.appendChild(card);
-    });
-  } catch (err) {
-    console.error('Failed to load arsenal:', err);
-    container.innerHTML = '<div style="color:var(--red);">Failed to load experience vault.</div>';
+    try {
+      const { data, error } = await window.jxSupabase
+        .from('origin_chapters')
+        .select('*')
+        .order('chapter_order', { ascending: true });
+
+      if (error) throw error;
+      if (!data || data.length === 0) return;
+
+      originGrid.innerHTML = '';
+      data.forEach((ch, i) => {
+        // We interleave image blocks and text blocks for editorial magazine feel
+        const block = document.createElement('div');
+        block.className = 'ed-text-block';
+        block.innerHTML = `
+          <p class="ed-label">Chapter ${ch.chapter_order}</p>
+          <h3>${ch.title}</h3>
+          <p>${ch.content}</p>
+        `;
+        originGrid.appendChild(block);
+
+        // Inject an editorial image block after every 2 chapters
+        if ((i + 1) % 2 === 0) {
+          const imgBlock = document.createElement('div');
+          imgBlock.className = 'ed-image-block';
+          // Rotate some stock tech/afrofuturist placeholder images
+          const imgSrc = i === 1 ? 'assets/images/okezie-1.webp' : 'assets/images/okezie-coder.webp';
+          imgBlock.innerHTML = `<img src="${imgSrc}" alt="Editorial visual">`;
+          originGrid.appendChild(imgBlock);
+        }
+      });
+    } catch(err) {
+      console.error(err);
+    }
   }
-}
 
-async function loadCompanyLogos() {
-  const container = document.getElementById('company-logos-container');
-  if (!container) return;
+  async function populateArsenal() {
+    const timeline = document.getElementById('arsenal-timeline');
+    const logos = document.getElementById('company-logos-container');
+    if (!timeline || !window.jxSupabase) return;
 
-  try {
-    if (window.initSupabase) await window.initSupabase();
-    if (typeof supabase === 'undefined') return;
+    // Timeline Data
+    try {
+      const { data, error } = await window.jxSupabase
+        .from('experience')
+        .select('*')
+        .order('start_date', { ascending: false });
 
-    const { data, error } = await supabase
-      .from('experience')
-      .select('*')
-      .order('priority', { ascending: false });
+      if (error) throw error;
+      if (data) {
+        timeline.innerHTML = '';
+        data.forEach(item => {
+          const card = document.createElement('div');
+          card.className = 'ed-text-block';
+          card.innerHTML = `
+            <p class="ed-label">${item.role} // ${item.start_date}</p>
+            <h3>${item.company}</h3>
+            <p>${item.description}</p>
+          `;
+          timeline.appendChild(card);
+        });
+      }
+    } catch(e) { console.error(e); }
+
+    // Logos Data
+    if (!logos) return;
+    try {
+      const { data, error } = await window.jxSupabase
+        .from('company_logos')
+        .select('*')
+        .order('created_at', { ascending: false });
       
-    if (error) throw error;
-    if (!data) return;
-
-    const logos = data.filter(d => d.logo_url);
-    if (logos.length === 0) {
-      container.innerHTML = '<div style="color:var(--gray-3); font-family:var(--font-mono);">Add logo uploads to your experience in Admin.</div>';
-      return;
-    }
-
-    container.innerHTML = '';
-    logos.forEach(logo => {
-      const el = document.createElement('div');
-      el.className = 'company-logo-item';
-      const inner = `<img src="${logo.logo_url}" alt="${logo.company || 'Client'}">`;
-      if(logo.company_url) {
-        el.innerHTML = `<a href="${logo.company_url}" target="_blank" rel="noopener noreferrer" style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; text-decoration:none;">${inner}</a>`;
+      // If table doesn't exist yet (admin needs to add it), we catch error
+      if (error) throw error;
+      
+      if (data && data.length > 0) {
+        logos.innerHTML = '';
+        data.forEach(logo => {
+          logos.innerHTML += `
+            <div class="company-logo">
+              <img src="${logo.image_url}" alt="${logo.name || 'Company'}">
+            </div>
+          `;
+        });
       } else {
-        el.innerHTML = inner;
+        logos.innerHTML = '<p class="loading-text">No allies recorded yet.</p>';
       }
-      container.appendChild(el);
-    });
-
-  } catch (err) {
-    console.error("Error fetching logos:", err);
-  }
-}
-
-async function initTransmission() {
-  const video = document.getElementById('intro-video');
-  if (!video) return;
-  try {
-    if (window.initSupabase) await window.initSupabase();
-    if (typeof supabase !== 'undefined') {
-      const { data, error } = await supabase.from('site_settings').select('*').eq('key', 'about_video_url').single();
-      if (data && data.value) video.src = data.value;
+    } catch(e) { 
+      logos.innerHTML = '<p class="loading-text" style="color:#A8A8C0;">Logo vault preparing...</p>';
     }
-  } catch (e) { console.warn("Video link failed", e); }
-}
+  }
+
+  /* ── 5. Transmission Video ── */
+  function initVideo() {
+    const vid = document.getElementById('intro-video');
+    if(vid) {
+      vid.src = 'assets/videos/hero_video.mp4';
+      if(window.JX && window.JX.initLoopingPreviewVideo) {
+        window.JX.initLoopingPreviewVideo(vid);
+      }
+    }
+  }
+
+  populateOrigin();
+  populateArsenal();
+  initVideo();
+
+});

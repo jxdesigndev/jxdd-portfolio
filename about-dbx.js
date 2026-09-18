@@ -1,394 +1,497 @@
 /**
- * ABOUT PAGE — JX HYBRID BENTO ENGINE v6.0 FINAL
+ * ABOUT PAGE — JX BENTO HUB ENGINE v7.0
  *
- * Sequence:
- * 1. Page loads → body overflow:hidden, content cells invisible
- * 2. Entry: Gridlines shoot across screen (blueprint draw)
- * 3. Entry: JX logo strokes trace, then fill solid green with glow
- * 4. Scroll unlocked → user scrolls through 300vh pin wrapper
- * 5. Scroll: hero JX cell scales from 2x down to 1x
- * 6. Scroll: content cells fade+slide up from below into position
- * 7. Interactive: Magnetic parallax on mousemove per cell
- * 8. Click cell → smooth interior view opens (no modals)
- * 9. Back button → closes interior, restores grid scroll
+ * Exact mirror of brand.dropbox.com mechanics, JX-branded:
+ *
+ * 1. ENTRY: border lines animate (scaleX/scaleY), JX SVG traces, fills green
+ * 2. HUB LAYOUT: tiles positioned absolutely using calculated coords
+ *    - Start at scale(2) + large translate offset (like Dropbox matrix(2,0,0,2,X,Y))
+ *    - Scroll drives them to scale(1), translate(0,0) via GSAP ScrollTrigger
+ * 3. HOVER: magnetic parallax on bg + symbol
+ * 4. CLICK: .enlarge class expands tile to 100vw/100vh with swoop easing
+ *           → other tiles fade → interior editorial page slides in
+ * 5. INTERIOR: scroll-reveal cards, equal-height grid, Supabase data
+ * 6. BACK: close interior → hub restores
  */
 
 (function () {
   'use strict';
 
-  /* ─────────────────── 0. WAIT FOR GSAP ─────────────────── */
-  function init() {
-    if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
-      setTimeout(init, 50);
-      return;
+  /* ─── Wait for GSAP ─── */
+  function waitForGsap(cb) {
+    if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+      cb();
+    } else {
+      setTimeout(() => waitForGsap(cb), 30);
     }
-    gsap.registerPlugin(ScrollTrigger);
-    setupPage();
   }
 
-  function setupPage() {
-    /* ─── References ─── */
-    const heroCell    = document.querySelector('.hero-cell');
-    const contentCells = gsap.utils.toArray('.content-cell');
-    const paths       = gsap.utils.toArray('.jx-path');
-    const glH         = gsap.utils.toArray('.gl-h');
-    const glV         = gsap.utils.toArray('.gl-v');
-    const logoSvg     = document.querySelector('.logo-svg');
-    const interiorView = document.getElementById('interior-view');
-    const btnBack     = document.getElementById('btn-back-grid');
-    const isMobile    = window.matchMedia('(max-width: 900px)').matches;
+  /* ─── Tile Layout Configuration ─── */
+  // These coords define the FINAL grid positions of each tile
+  // All in px from top-left of .jx-hub (below nav)
+  // The pattern produces: [Logo center] [Origin left-tall] [Philosophy right-tall]
+  //                       [Arsenal bottom-wide-left] [Transmission bottom-wide-right]
+  function getTileLayout() {
+    const GAP       = 10;
+    const NAV       = 80; // nav height
+    const W         = window.innerWidth;
+    const H         = window.innerHeight - NAV;
 
-    if (!heroCell || !interiorView) return;
+    // 4 columns, 2 rows
+    // Col widths: [1] [2] [2] [1] relative (25%, 25%, 25%, 25%)
+    // But logo takes middle 2 cols, row 1
+    const COL = (W - GAP * 3) / 4; // one column width
+    const R1  = (H - GAP) * 0.55;  // row 1 height (55% of available)
+    const R2  = (H - GAP) * 0.45;  // row 2 height
 
-    /* ─────────────────── 1. INITIAL STATES ─────────────────── */
-    // Lock scroll during entry animation
-    document.body.style.overflow = 'hidden';
+    return {
+      logo: {
+        left:   COL + GAP,
+        top:    0,
+        width:  COL * 2 + GAP,
+        height: R1,
+      },
+      origin: {
+        left:   0,
+        top:    0,
+        width:  COL,
+        height: R1,
+        anchor: 'anchor-tl',
+      },
+      philosophy: {
+        left:   COL * 3 + GAP * 3,
+        top:    0,
+        width:  COL,
+        height: R1,
+        anchor: 'anchor-tr',
+      },
+      arsenal: {
+        left:   0,
+        top:    R1 + GAP,
+        width:  COL * 2 + GAP,
+        height: R2,
+        anchor: 'anchor-bl',
+      },
+      transmission: {
+        left:   COL * 2 + GAP * 2,
+        top:    R1 + GAP,
+        width:  COL * 2 + GAP,
+        height: R2,
+        anchor: 'anchor-br',
+      },
+    };
+  }
 
-    // Content cells start pushed down and invisible
-    if (!isMobile) {
-      gsap.set(contentCells, { y: 120, autoAlpha: 0 });
-      // Hero starts scaled up (fills the "full screen" feeling)
-      gsap.set(heroCell, { scale: 2.2, transformOrigin: 'center center', zIndex: 10 });
+  /* ─── Apply Layout to DOM ─── */
+  function applyLayout(layout) {
+    const setStyle = (id, pos) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.style.left   = pos.left   + 'px';
+      el.style.top    = pos.top    + 'px';
+      el.style.width  = pos.width  + 'px';
+      el.style.height = pos.height + 'px';
+    };
+    setStyle('tile-logo',         layout.logo);
+    setStyle('tile-origin',       layout.origin);
+    setStyle('tile-philosophy',   layout.philosophy);
+    setStyle('tile-arsenal',      layout.arsenal);
+    setStyle('tile-transmission', layout.transmission);
+  }
+
+  /* ─── Main Init ─── */
+  function init() {
+    gsap.registerPlugin(ScrollTrigger);
+
+    const isMobile = window.matchMedia('(max-width: 900px)').matches;
+    if (isMobile) {
+      initMobile();
+      return;
     }
 
-    // Set up SVG stroke animation
+    /* ── 1. Layout ── */
+    const layout = getTileLayout();
+    applyLayout(layout);
+
+    /* ── 2. Initial State — tiles start scattered at scale(2) ── */
+    // Mirror of Dropbox: each tile starts at matrix(2,0,0,2,OFFSET_X,OFFSET_Y)
+    const contentTiles = document.querySelectorAll('.jx-tile-content');
+    const logoTile     = document.getElementById('tile-logo');
+    const hub          = document.getElementById('jx-hub');
+
+    // Add assembling class to clip overflow during scatter animation
+    hub.classList.add('assembling');
+
+    // Calculate "yeet" offsets — tiles fly in from corners/edges
+    // Dropbox uses calc((max(100vw, 100vh) - 90px) / -4) for the highest offset
+    const YEET = Math.max(window.innerWidth, window.innerHeight) * 0.5;
+
+    const yeetMap = {
+      'tile-origin':       { x: -YEET, y: -YEET * 0.8 },
+      'tile-philosophy':   { x:  YEET, y: -YEET * 0.8 },
+      'tile-arsenal':      { x: -YEET, y:  YEET * 0.8 },
+      'tile-transmission': { x:  YEET, y:  YEET * 0.8 },
+    };
+
+    // Set initial states
+    contentTiles.forEach(tile => {
+      const offset = yeetMap[tile.id] || { x: 0, y: 0 };
+      gsap.set(tile, {
+        scale:   2,
+        x:       offset.x,
+        y:       offset.y,
+        autoAlpha: 0,
+        transformOrigin: 'center center',
+      });
+    });
+
+    // Logo starts large and centered
+    gsap.set(logoTile, {
+      scale: 2.2,
+      transformOrigin: 'center center',
+      zIndex: 10,
+    });
+
+    // Set SVG path lengths for stroke animation
+    const paths = document.querySelectorAll('.jx-path');
     paths.forEach(path => {
       try {
         const len = path.getTotalLength();
-        gsap.set(path, {
-          strokeDasharray: len,
-          strokeDashoffset: len,
-          fill: 'transparent'
-        });
-      } catch(e) {
-        // SVG path length not available in some environments
+        gsap.set(path, { strokeDasharray: len, strokeDashoffset: len, fill: 'transparent' });
+      } catch(e) {}
+    });
+
+    // Lock scroll during entry
+    document.body.style.overflow = 'hidden';
+
+    /* ── 3. Entry Animation ── */
+    const entry = gsap.timeline({
+      onComplete: () => {
+        document.body.style.overflow = '';
+        hub.classList.remove('assembling');
+        ScrollTrigger.refresh();
+        initScrollAssembly(layout);
       }
     });
 
-    // Set gridlines to zero scale
-    gsap.set(glH, { scaleX: 0, transformOrigin: 'left center' });
-    gsap.set(glV, { scaleY: 0, transformOrigin: 'top center' });
+    // 3a. Draw border lines on Logo tile first
+    const logoLines = logoTile.querySelectorAll('.tile-line');
+    entry.to(logoLines, {
+      scaleX: 1, scaleY: 1,
+      duration: 0.8, ease: 'power3.inOut', stagger: 0.05
+    }, 0.2);
 
-    /* ─────────────────── 2. ENTRY ANIMATION ─────────────────── */
-    const entryTL = gsap.timeline({
-      delay: 0.2,
-      onComplete: unlockAndActivateScroll
-    });
-
-    // 2a. Horizontal lines shoot left→right
-    entryTL.to(glH, {
-      scaleX: 1,
-      duration: 0.9,
-      ease: 'power3.inOut',
-      stagger: { each: 0.08, from: 'start' }
-    }, 0);
-
-    // 2b. Vertical lines shoot top→down (overlapping with horizontals)
-    entryTL.to(glV, {
-      scaleY: 1,
-      duration: 0.9,
-      ease: 'power3.inOut',
-      stagger: { each: 0.06, from: 'start' }
-    }, 0.15);
-
-    // 2c. Trace JX strokes
-    entryTL.to(paths, {
+    // 3b. Trace JX strokes
+    entry.to(paths, {
       strokeDashoffset: 0,
-      duration: 1.4,
-      ease: 'power2.inOut',
-      stagger: 0.15
-    }, '-=0.3');
+      duration: 1.4, ease: 'power2.inOut', stagger: 0.15
+    }, 0.4);
 
-    // 2d. Flash fill: strokes → solid green
-    entryTL.to(paths, {
-      fill: '#00FF41',
-      stroke: 'transparent',
-      duration: 0.4,
-      ease: 'power1.in'
+    // 3c. Fill solid green + glow
+    entry.to(paths, {
+      fill: '#00FF41', stroke: 'transparent',
+      duration: 0.4, ease: 'power1.in'
     }, '-=0.15');
 
-    // 2e. Logo glow pulse
-    entryTL.to(logoSvg, {
-      filter: 'drop-shadow(0 0 18px rgba(0,255,65,0.5))',
-      duration: 0.4,
-      yoyo: true,
-      repeat: 1
-    }, '-=0.2');
-
-    // 2f. Fade gridlines out (they served their purpose)
-    entryTL.to([glH, glV], {
-      opacity: 0,
-      duration: 0.5,
-      ease: 'power1.in'
+    entry.to('.jx-logo-svg', {
+      filter: 'drop-shadow(0 0 20px rgba(0,255,65,0.45))',
+      duration: 0.4, yoyo: true, repeat: 1
     }, '-=0.3');
 
-    /* ─────────────────── 3. UNLOCK + SCROLL ASSEMBLY ─────────────────── */
-    function unlockAndActivateScroll() {
-      document.body.style.overflow = '';
-      ScrollTrigger.refresh();
+    // 3d. Reveal tagline
+    entry.fromTo('.jx-tagline', { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.5 }, '-=0.3');
 
-      if (isMobile) return; // Mobile shows all cells statically
 
-      /* ScrollTrigger uses sticky positioning on .dbx-grid-container
-         The pin-wrapper is 300vh tall, so user scrolls 200vh worth of
-         distance while the grid container stays "stuck" at top:0 */
-      const scrollTL = gsap.timeline({
+    /* ── 4. Scroll Assembly ── */
+    function initScrollAssembly(layout) {
+      // ScrollTrigger: hub stays fixed, tiles animate into position as user scrolls
+      const hub = document.getElementById('jx-hub');
+
+      const assemblyTL = gsap.timeline({
         scrollTrigger: {
-          trigger: '.dbx-pin-wrapper',
+          trigger: document.documentElement,
           start: 'top top',
-          end: 'bottom bottom',
+          end: '+=200vh',
           scrub: 1.2,
+          onUpdate: self => {
+            // Keep hub fixed until assembly is done (progress < 1)
+            // Once complete, do nothing — hub already has position:fixed
+          }
         }
       });
 
-      // Hero shrinks from 2.2x → 1x as user scrolls
-      scrollTL.to(heroCell, {
+      // Logo shrinks from 2.2 → 1
+      assemblyTL.to(logoTile, {
         scale: 1,
-        duration: 1,
-        ease: 'power2.out'
+        duration: 1, ease: 'power2.out'
       }, 0);
 
-      // Content cells slide up from below into their grid positions
-      scrollTL.to(contentCells, {
-        y: 0,
-        autoAlpha: 1,
-        duration: 0.8,
-        stagger: { each: 0.07, from: 'start' },
-        ease: 'power2.out'
+      // Content tiles fly from scatter to their positions
+      // Origin (top-left corner)
+      assemblyTL.to('#tile-origin', {
+        scale: 1, x: 0, y: 0, autoAlpha: 1,
+        duration: 1, ease: 'power2.out'
+      }, 0.05);
+
+      // Philosophy (top-right corner)
+      assemblyTL.to('#tile-philosophy', {
+        scale: 1, x: 0, y: 0, autoAlpha: 1,
+        duration: 1, ease: 'power2.out'
       }, 0.1);
+
+      // Arsenal (bottom-left)
+      assemblyTL.to('#tile-arsenal', {
+        scale: 1, x: 0, y: 0, autoAlpha: 1,
+        duration: 1, ease: 'power2.out'
+      }, 0.15);
+
+      // Transmission (bottom-right)
+      assemblyTL.to('#tile-transmission', {
+        scale: 1, x: 0, y: 0, autoAlpha: 1,
+        duration: 1, ease: 'power2.out'
+      }, 0.18);
+
+      // Border lines on content tiles draw in as they arrive
+      assemblyTL.to('.jx-tile-content .tile-line', {
+        scaleX: 1, scaleY: 1,
+        duration: 0.6, ease: 'power2.inOut', stagger: 0.02
+      }, 0.5);
+
+      // Fade scroll hint out as user scrolls
+      assemblyTL.to('#scroll-hint', { autoAlpha: 0, duration: 0.3 }, 0);
     }
 
-    /* ─────────────────── 4. MAGNETIC PARALLAX HOVER ─────────────────── */
-    if (!isMobile) {
-      contentCells.forEach(cell => {
-        const bg     = cell.querySelector('.cell-bg');
-        const symbol = cell.querySelector('.cell-symbol');
+    /* ── 5. Magnetic Parallax Hover ── */
+    contentTiles.forEach(tile => {
+      const bg     = tile.querySelector('.tile-bg');
+      const symbol = tile.querySelector('.tile-symbol');
 
-        cell.addEventListener('mousemove', e => {
-          const r    = cell.getBoundingClientRect();
-          const xPct = ((e.clientX - r.left) / r.width  - 0.5) * 2; // -1 to +1
-          const yPct = ((e.clientY - r.top)  / r.height - 0.5) * 2;
+      tile.addEventListener('mousemove', e => {
+        const r    = tile.getBoundingClientRect();
+        const xPct = ((e.clientX - r.left) / r.width  - 0.5) * 2;
+        const yPct = ((e.clientY - r.top)  / r.height - 0.5) * 2;
 
-          if (bg) {
-            gsap.to(bg, {
-              x: xPct * -18,
-              y: yPct * -18,
-              duration: 0.5,
-              ease: 'power2.out',
-              overwrite: 'auto'
-            });
-          }
-          if (symbol) {
-            gsap.to(symbol, {
-              x: xPct * -35,
-              y: yPct * -35,
-              duration: 0.35,
-              ease: 'power2.out',
-              overwrite: 'auto'
-            });
-          }
-        });
-
-        cell.addEventListener('mouseleave', () => {
-          if (bg)     gsap.to(bg,     { x: 0, y: 0, duration: 0.6, ease: 'power2.out', overwrite: 'auto' });
-          if (symbol) gsap.to(symbol, { x: 0, y: 0, duration: 0.6, ease: 'power2.out', overwrite: 'auto' });
-        });
+        if (bg) gsap.to(bg, { x: xPct * -20, y: yPct * -20, duration: 0.5, ease: 'power2.out', overwrite: 'auto' });
+        if (symbol) gsap.to(symbol, { x: xPct * -40, y: yPct * -40, duration: 0.35, ease: 'power2.out', overwrite: 'auto' });
       });
-    }
 
-    /* ─────────────────── 5. INTERIOR ROUTING ─────────────────── */
-    const interiorPages = document.querySelectorAll('.interior-page');
-
-    contentCells.forEach(cell => {
-      cell.addEventListener('click', () => {
-        const route = cell.getAttribute('data-route');
-        if (route) openInterior(route);
+      tile.addEventListener('mouseleave', () => {
+        if (bg) gsap.to(bg, { x: 0, y: 0, duration: 0.6, ease: 'power2.out', overwrite: 'auto' });
+        if (symbol) gsap.to(symbol, { x: 0, y: 0, duration: 0.6, ease: 'power2.out', overwrite: 'auto' });
       });
     });
 
-    if (btnBack) {
-      btnBack.addEventListener('click', closeInterior);
-    }
+    /* ── 6. Click → Enlarge → Interior ── */
+    initRouting(hub);
 
-    function openInterior(route) {
-      // Show correct page
+    /* ── 7. Resize Handler ── */
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        const newLayout = getTileLayout();
+        applyLayout(newLayout);
+        ScrollTrigger.refresh();
+      }, 200);
+    });
+  }
+
+  /* ─── Routing ─── */
+  function initRouting(hub) {
+    if (!hub) hub = document.getElementById('jx-hub');
+    const interior      = document.getElementById('interior-shell');
+    const btnBack       = document.getElementById('btn-back');
+    const interiorPages = document.querySelectorAll('.interior-page');
+    let   activeRoute   = null;
+
+    document.querySelectorAll('.jx-tile-content').forEach(tile => {
+      tile.addEventListener('click', () => {
+        if (hub.classList.contains('has-enlarged')) return; // prevent double-click
+        const route = tile.getAttribute('data-route');
+        if (route) openInterior(tile, route);
+      });
+    });
+
+    if (btnBack) btnBack.addEventListener('click', closeInterior);
+
+    function openInterior(tile, route) {
+      activeRoute = route;
+      const anchor = layout_anchor_for(tile.id);
+
+      // 1. Show active interior page
       interiorPages.forEach(p => p.classList.remove('active'));
       const target = document.getElementById('page-' + route);
       if (target) target.classList.add('active');
 
-      // Reset interior scroll to top
-      interiorView.scrollTop = 0;
+      // 2. Add enlarge class to clicked tile
+      hub.classList.add('has-enlarged');
+      tile.classList.add('enlarge', anchor);
 
-      // Animate in
-      gsap.fromTo(interiorView,
-        { autoAlpha: 0, y: 60 },
-        { autoAlpha: 1, y: 0, duration: 0.55, ease: 'power3.out' }
-      );
+      // 3. After tile finishes expanding (600ms), open interior shell
+      setTimeout(() => {
+        gsap.fromTo(interior,
+          { autoAlpha: 0, y: 40 },
+          { autoAlpha: 1, y: 0, duration: 0.5, ease: 'power3.out' }
+        );
+        document.body.style.overflow = 'hidden';
 
-      // Prevent background scroll
-      document.body.style.overflow = 'hidden';
+        // Animate interior cards in with stagger
+        setTimeout(() => revealInteriorCards(), 200);
+      }, 650);
     }
 
     function closeInterior() {
-      gsap.to(interiorView, {
-        autoAlpha: 0,
-        y: 60,
-        duration: 0.4,
-        ease: 'power2.in',
+      gsap.to(interior, {
+        autoAlpha: 0, y: 40,
+        duration: 0.35, ease: 'power2.in',
         onComplete: () => {
           interiorPages.forEach(p => p.classList.remove('active'));
+
+          // Remove enlarge from all tiles
+          document.querySelectorAll('.jx-tile.enlarge').forEach(t => {
+            t.classList.remove('enlarge', 'anchor-tl', 'anchor-tr', 'anchor-bl', 'anchor-br');
+          });
+          hub.classList.remove('has-enlarged');
           document.body.style.overflow = '';
-          // Refresh ScrollTrigger after DOM change
           ScrollTrigger.refresh();
         }
       });
     }
 
-    /* ─────────────────── 6. SUPABASE DATA ─────────────────── */
-    loadOriginChapters();
-    loadArsenalData();
-    initTransmissionVideo();
+    function revealInteriorCards() {
+      const cards = document.querySelectorAll('.interior-page.active .int-card');
+      cards.forEach((card, i) => {
+        setTimeout(() => card.classList.add('revealed'), i * 80);
+      });
+    }
   }
 
-  /* ─── Origin Chapters ─── */
-  async function loadOriginChapters() {
-    const container = document.getElementById('origin-editorial');
-    if (!container) return;
+  /* Corner anchor based on tile id */
+  function layout_anchor_for(id) {
+    const map = {
+      'tile-origin':       'anchor-tl',
+      'tile-philosophy':   'anchor-tr',
+      'tile-arsenal':      'anchor-bl',
+      'tile-transmission': 'anchor-br',
+    };
+    return map[id] || 'anchor-tl';
+  }
 
-    if (!window.jxSupabase) {
-      container.innerHTML = '<div class="ed-text-block"><p class="ed-label">Connection</p><p>Supabase not loaded.</p></div>';
-      return;
-    }
+
+  /* ─── Mobile: Simple static tiles, no assembly ─── */
+  function initMobile() {
+    initRouting();
+
+    // Show all tiles immediately
+    document.querySelectorAll('.jx-tile-content').forEach(t => {
+      gsap.set(t, { opacity: 1, visibility: 'visible' });
+    });
+
+    // Still do the JX logo trace on mobile
+    const paths = document.querySelectorAll('.jx-path');
+    paths.forEach(path => {
+      try {
+        const len = path.getTotalLength();
+        gsap.set(path, { strokeDasharray: len, strokeDashoffset: len, fill: 'transparent' });
+      } catch(e) {}
+    });
+
+    gsap.timeline({ delay: 0.3 })
+      .to(paths, { strokeDashoffset: 0, duration: 1.2, ease: 'power2.inOut', stagger: 0.15 })
+      .to(paths, { fill: '#00FF41', stroke: 'transparent', duration: 0.3, ease: 'power1.in' }, '-=0.1');
+  }
+
+
+  /* ─── Supabase Data ─── */
+  async function loadOriginChapters() {
+    const container = document.getElementById('origin-grid');
+    if (!container || !window.jxSupabase) return;
 
     try {
       const { data, error } = await window.jxSupabase
-        .from('origin_chapters')
-        .select('*')
-        .order('chapter_order', { ascending: true });
-
+        .from('origin_chapters').select('*').order('chapter_order', { ascending: true });
       if (error) throw error;
-      if (!data || data.length === 0) {
-        container.innerHTML = '<div class="ed-text-block"><p>No chapters found yet.</p></div>';
-        return;
-      }
+      if (!data || data.length === 0) return;
 
       container.innerHTML = '';
-
-      const editorialImages = [
-        'assets/images/okezie-1.webp',
-        'assets/images/okezie-coder.webp',
-        'assets/images/okezie-designer.webp'
-      ];
+      const imgs = ['assets/images/okezie-1.webp', 'assets/images/okezie-coder.webp', 'assets/images/okezie-designer.webp'];
       let imgIdx = 0;
 
       data.forEach((ch, i) => {
-        // Text card
-        const textBlock = document.createElement('div');
-        textBlock.className = 'ed-text-block';
-        textBlock.innerHTML = `
-          <p class="ed-label">Chapter ${ch.chapter_order}</p>
-          <h3>${escHtml(ch.title)}</h3>
-          <p>${escHtml(ch.content)}</p>
-        `;
-        container.appendChild(textBlock);
+        const card = document.createElement('div');
+        card.className = 'int-card';
+        card.innerHTML = `<p class="card-label">Chapter ${esc(ch.chapter_order)}</p><h3>${esc(ch.title)}</h3><p>${esc(ch.content)}</p>`;
+        container.appendChild(card);
 
-        // Interleave an editorial image every 2 chapters
-        if ((i + 1) % 2 === 0 && imgIdx < editorialImages.length) {
-          const imgBlock = document.createElement('div');
-          imgBlock.className = 'ed-image-block';
-          imgBlock.innerHTML = `<img src="${editorialImages[imgIdx]}" alt="Chapter visual" loading="lazy">`;
-          container.appendChild(imgBlock);
+        if ((i + 1) % 2 === 0 && imgIdx < imgs.length) {
+          const imgCard = document.createElement('div');
+          imgCard.className = 'int-card int-card-img';
+          imgCard.innerHTML = `<img src="${imgs[imgIdx]}" alt="Chapter visual" loading="lazy">`;
+          container.appendChild(imgCard);
           imgIdx++;
         }
       });
-    } catch (err) {
-      console.error('[About] Origin chapters error:', err);
-    }
+    } catch(e) { console.error('[JX About] Origin:', e); }
   }
 
-  /* ─── Arsenal Timeline + Logos ─── */
-  async function loadArsenalData() {
-    const timeline = document.getElementById('arsenal-timeline');
-    const logos    = document.getElementById('company-logos-container');
+  async function loadArsenal() {
+    const tGrid = document.getElementById('arsenal-grid');
+    const lGrid = document.getElementById('logo-grid');
+    if (!tGrid || !window.jxSupabase) return;
 
-    if (!timeline || !window.jxSupabase) return;
-
-    // Experience timeline
     try {
       const { data, error } = await window.jxSupabase
-        .from('experience')
-        .select('*')
-        .order('start_date', { ascending: false });
-
+        .from('experience').select('*').order('start_date', { ascending: false });
       if (error) throw error;
-
-      if (data && data.length > 0) {
-        timeline.innerHTML = '';
+      if (data && data.length) {
+        tGrid.innerHTML = '';
         data.forEach(item => {
           const card = document.createElement('div');
-          card.className = 'ed-text-block';
-          card.innerHTML = `
-            <p class="ed-label">${escHtml(item.role || '')} // ${escHtml(item.start_date || '')}</p>
-            <h3>${escHtml(item.company || '')}</h3>
-            <p>${escHtml(item.description || '')}</p>
-          `;
-          timeline.appendChild(card);
+          card.className = 'int-card';
+          card.innerHTML = `<p class="card-label">${esc(item.role)} // ${esc(item.start_date)}</p><h3>${esc(item.company)}</h3><p>${esc(item.description)}</p>`;
+          tGrid.appendChild(card);
         });
       }
-    } catch (e) {
-      console.error('[About] Arsenal experience error:', e);
-    }
+    } catch(e) { console.error('[JX About] Arsenal:', e); }
 
-    // Company logos
-    if (!logos) return;
+    if (!lGrid) return;
     try {
       const { data, error } = await window.jxSupabase
-        .from('company_logos')
-        .select('*')
-        .order('created_at', { ascending: false });
-
+        .from('company_logos').select('*').order('created_at', { ascending: false });
       if (error) throw error;
-
-      if (data && data.length > 0) {
-        logos.innerHTML = '';
+      if (data && data.length) {
+        lGrid.innerHTML = '';
         data.forEach(logo => {
-          logos.innerHTML += `
-            <div class="company-logo">
-              <img src="${escHtml(logo.image_url)}" alt="${escHtml(logo.name || 'Client')}" loading="lazy">
-            </div>
-          `;
+          lGrid.innerHTML += `<div class="logo-card"><img src="${esc(logo.image_url)}" alt="${esc(logo.name || 'Client')}" loading="lazy"></div>`;
         });
       } else {
-        logos.innerHTML = '<p class="loading-text">Roster loading soon.</p>';
+        lGrid.innerHTML = '<p class="load-text">Roster coming soon.</p>';
       }
-    } catch (e) {
-      logos.innerHTML = '<p class="loading-text">Logo vault initialising...</p>';
-    }
+    } catch(e) { lGrid.innerHTML = '<p class="load-text">Logo vault initialising...</p>'; }
   }
 
-  /* ─── Transmission Video ─── */
-  function initTransmissionVideo() {
-    const vid = document.getElementById('intro-video');
-    if (!vid) return;
-    vid.src = 'assets/videos/hero_video.mp4';
-    vid.load();
+  function initVideo() {
+    const v = document.getElementById('int-video');
+    if (v) { v.src = 'assets/videos/hero_video.mp4'; v.load(); }
   }
 
-  /* ─── Utility ─── */
-  function escHtml(str) {
+  function esc(str) {
     if (typeof str !== 'string') return String(str || '');
-    return str
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;');
+    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   }
 
   /* ─── Boot ─── */
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
+    document.addEventListener('DOMContentLoaded', () => waitForGsap(init));
   } else {
-    init();
+    waitForGsap(init);
   }
+
+  // Load data regardless of animation state
+  document.addEventListener('DOMContentLoaded', () => {
+    loadOriginChapters();
+    loadArsenal();
+    initVideo();
+  });
 
 })();

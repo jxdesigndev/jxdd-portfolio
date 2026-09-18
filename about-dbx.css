@@ -1,404 +1,464 @@
-/* ─────────────────────────────────────────────────────────────────
-   ABOUT PAGE: JX HYBRID BENTO GRID — v6.0 FINAL
-   Blueprint: brand.dropbox.com mechanics + JX Afrofuturist brand
-   ───────────────────────────────────────────────────────────────── */
+/* ═══════════════════════════════════════════════════════════════════
+   ABOUT PAGE — JX BENTO HUB v7.0
+   Architecture mirrors brand.dropbox.com:
+   - Absolutely positioned tiles (not CSS grid)
+   - Each tile has 4 border-line children animated on entry
+   - Tiles start at scale(2) + large translate, animate to scale(1) pos(0)
+   - Click tile → .enlarge class → full-screen expand → interior
+   ═══════════════════════════════════════════════════════════════════ */
 
-/* ── Reset body for this page ── */
-body.about-page {
-  background: #030303;
+/* ── CSS Variables ── */
+:root {
+  --jx-void:     #030303;
+  --jx-green:    #00FF41;
+  --jx-white:    #F0F0F0;
+  --jx-gray:     rgba(240,240,240,0.4);
+  --jx-amber-bg: #0E0900;
+  --jx-green-bg: #010E03;
+  --jx-void-bg:  #060608;
+
+  /* Tile sizing — computed like Dropbox's --opening-single-column */
+  --tile-gap:    10px;
+  --tile-ease:   cubic-bezier(.4,0,.2,1);
+  --tile-swoop:  cubic-bezier(.6,0,0,1);
+  --tile-dur:    0.55s;
+}
+
+/* ── Reset for this page ── */
+html, body.about-page {
   overflow-x: hidden;
+  background: var(--jx-void);
+  overscroll-behavior: none;
 }
 
-/* ── 1. Pin Wrapper — gives ScrollTrigger a tall scroll distance to scrub ── */
-.dbx-pin-wrapper {
-  position: relative;
-  width: 100%;
-  /* The actual scroll distance for the assembly animation */
-  /* ScrollTrigger will pin .dbx-grid-container for this height */
-  height: 300vh;
-  background: #030303;
-}
-
-/* ── 2. The Grid Container — this is what gets pinned ── */
-.dbx-grid-container {
-  position: sticky;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  background: #030303;
-}
-
-/* ── 3. Laser Gridlines (Blueprint Mechanic) ── */
-.gridlines-overlay {
-  position: absolute;
-  /* Overlay covers the full grid area */
+/* ══════════════════════════════════════
+   THE HUB CONTAINER
+   position:fixed while user is on the
+   hub view, relative once interior opens
+   ══════════════════════════════════════ */
+.jx-hub {
+  position: fixed;
   inset: 0;
-  z-index: 1;
+  background: var(--jx-void);
+  overflow: hidden;
+  /* Nav height compensation */
+  padding-top: 80px;
+}
+
+/* When interior is open, hub slides behind */
+.jx-hub.behind {
   pointer-events: none;
+}
+
+/* During entry animation, tiles can overflow their fixed bounds.
+   The hub clips all of them. */
+.jx-hub.assembling {
   overflow: hidden;
 }
-.gl-h {
+
+
+/* ══════════════════════════════════════
+   TILE BASE
+   All tiles are absolute — matches the
+   Dropbox architecture exactly
+   ══════════════════════════════════════ */
+.jx-tile {
   position: absolute;
-  left: 0;
-  width: 100%;
-  height: 1px;
-  background: rgba(0, 255, 65, 0.15);
-  transform-origin: left center;
-  transform: scaleX(0); /* GSAP animates this to 1 */
-}
-.gl-v {
-  position: absolute;
-  top: 0;
-  width: 1px;
-  height: 100%;
-  background: rgba(0, 255, 65, 0.15);
-  transform-origin: top center;
-  transform: scaleY(0); /* GSAP animates this to 1 */
-}
-
-/* ── 4. The Bento Grid ── */
-.dbx-grid {
-  position: relative;
-  display: grid;
-  /* 4 equal columns */
-  grid-template-columns: repeat(4, 1fr);
-  /* 2 rows. Each row = 44vh so full grid = ~88vh (fits in 100vh with nav) */
-  grid-template-rows: repeat(2, 44vh);
-  gap: 3px;
-  width: calc(100% - 0px);
-  max-width: 1800px;
-  z-index: 2;
-  /* Padding top so nav doesn't clip the first row */
-  margin-top: 80px;
-}
-
-/* ── 5. Grid Area Assignments — the exact puzzle layout ── */
-/* Row 1: [Origin 1col] [JX Hero 2col] [Philosophy 1col] */
-/* Row 2: [Arsenal 2col]               [Transmission 2col] */
-.hero-cell                               { grid-area: 1 / 2 / 2 / 4; } /* Row1, Col2-3 */
-.content-cell[data-route="origin"]       { grid-area: 1 / 1 / 2 / 2; } /* Row1, Col1 */
-.content-cell[data-route="philosophy"]   { grid-area: 1 / 4 / 2 / 5; } /* Row1, Col4 */
-.content-cell[data-route="arsenal"]      { grid-area: 2 / 1 / 3 / 3; } /* Row2, Col1-2 */
-.content-cell[data-route="transmission"] { grid-area: 2 / 3 / 3 / 5; } /* Row2, Col3-4 */
-
-/* ── 6. Cell Base Styles ── */
-.dbx-cell {
-  position: relative;
+  border-radius: 0;
   overflow: hidden;
   cursor: pointer;
-  background: #050505;
+  /* Each tile will get left/top/width/height from JS */
 }
 
-/* Content cells: invisible by default, GSAP reveals on scroll */
-.content-cell {
-  opacity: 0;
-  visibility: hidden;
-  will-change: transform, opacity;
+/* ── The 4 Border Lines (animated on entry) ── */
+.tile-line {
+  position: absolute;
+  background: rgba(0, 255, 65, 0.2);
+  z-index: 20;
+  pointer-events: none;
 }
+.tl-top    { top: 0; left: 0; right: 0; height: 1px; transform: scaleX(0); transform-origin: left center; }
+.tl-bottom { bottom: 0; left: 0; right: 0; height: 1px; transform: scaleX(0); transform-origin: right center; }
+.tl-left   { left: 0; top: 0; bottom: 0; width: 1px; transform: scaleY(0); transform-origin: top center; }
+.tl-right  { right: 0; top: 0; bottom: 0; width: 1px; transform: scaleY(0); transform-origin: bottom center; }
 
-/* Hero cell is always visible (holds the JX logo) */
-.hero-cell {
-  background: #030303;
+
+/* ══════════════════════════════════════
+   LOGO TILE (JX Hero)
+   ══════════════════════════════════════ */
+.jx-tile-logo {
+  background: var(--jx-void);
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
   cursor: default;
-  z-index: 10;
-  /* GSAP will scale this from large to 1 */
+  z-index: 5;
 }
 
-/* ── 7. JX Logo SVG ── */
-.logo-svg {
-  /* Sized relative to its hero cell */
-  width: 55%;
-  max-width: 220px;
+.jx-logo-svg {
+  width: 60%;
+  max-width: 260px;
   height: auto;
   overflow: visible;
   filter: drop-shadow(0 0 0px transparent);
 }
+
 .jx-path {
   fill: transparent;
-  stroke: #00FF41;
+  stroke: var(--jx-green);
   stroke-width: 2;
   stroke-linejoin: round;
   stroke-linecap: round;
 }
 
-/* ── 8. Hybrid Color Blocks ── */
-.color-black { background-color: #050505; }
-.color-amber { background-color: #110D00; }
-.color-green { background-color: #020E04; }
-.color-void  { background-color: #060608; }
-
-/* ── 9. Grayscale Photo Layer — with parallax wrapper ── */
-.cell-bg-wrapper {
-  position: absolute;
-  /* Oversized so GSAP can shift it without gaps appearing */
-  inset: -15%;
-  pointer-events: none;
-  z-index: 0;
+.jx-tagline {
+  font-family: var(--font-mono, monospace);
+  font-size: 11px;
+  color: rgba(0,255,65,0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  margin: 20px 0 0;
+  text-align: center;
 }
-.cell-bg {
+
+
+/* ══════════════════════════════════════
+   CONTENT TILES
+   ══════════════════════════════════════ */
+.jx-tile-content {
+  /* Colors — each tile will have a data-color overriding */
+  background: #050505;
+  transition:
+    background var(--tile-dur) var(--tile-ease),
+    box-shadow var(--tile-dur) var(--tile-ease);
+}
+
+#tile-origin       { background: #050505; }
+#tile-philosophy   { background: var(--jx-green-bg); }
+#tile-arsenal      { background: var(--jx-amber-bg); }
+#tile-transmission { background: var(--jx-void-bg); }
+
+
+/* ── Grayscale Photo Background ── */
+.tile-bg {
   position: absolute;
-  inset: 0;
+  /* Oversized for parallax */
+  inset: -12%;
   background-size: cover;
   background-position: center top;
-  /* Moody desaturated state */
-  filter: grayscale(100%) brightness(0.25) contrast(1.3);
+  /* Moody desaturated */
+  filter: grayscale(100%) brightness(0.22) contrast(1.3);
   mix-blend-mode: luminosity;
   opacity: 0.7;
   transition:
-    filter 0.7s cubic-bezier(0.16, 1, 0.3, 1),
-    opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    filter 0.65s cubic-bezier(0.16,1,0.3,1),
+    opacity 0.65s cubic-bezier(0.16,1,0.3,1);
   will-change: transform;
+  z-index: 0;
 }
 
-/* Hover: Color ignition */
-.content-cell:hover .cell-bg {
-  filter: grayscale(0%) brightness(0.55) contrast(1.1);
+/* Hover: ignite colour */
+.jx-tile-content:hover .tile-bg {
+  filter: grayscale(0%) brightness(0.5) contrast(1.1);
   mix-blend-mode: normal;
-  opacity: 0.9;
+  opacity: 0.85;
 }
 
-/* Hover: Neon border pulse */
-.content-cell::after {
-  content: '';
+/* Hover: neon border ignition */
+.jx-tile-content:hover .tl-top,
+.jx-tile-content:hover .tl-bottom,
+.jx-tile-content:hover .tl-left,
+.jx-tile-content:hover .tl-right {
+  background: var(--jx-green);
+  opacity: 1;
+}
+
+
+/* ── Tile Inner Content ── */
+.tile-inner {
   position: absolute;
   inset: 0;
-  z-index: 20;
-  box-shadow: inset 0 0 0 0px #00FF41;
-  transition: box-shadow 0.4s ease;
-  pointer-events: none;
-}
-.content-cell:hover::after {
-  box-shadow: inset 0 0 0 1px #00FF41;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 28px;
 }
 
-/* ── 10. Massive Abstract Vector Symbols ── */
-.cell-symbol {
-  position: absolute;
-  bottom: -15%;
-  right: -8%;
-  width: 65%;
-  height: auto;
-  fill: #ffffff;
-  opacity: 0.04;
-  z-index: 3;
-  pointer-events: none;
-  will-change: transform;
-  transition: fill 0.5s ease, opacity 0.5s ease;
-}
-.content-cell:hover .cell-symbol {
-  fill: #00FF41;
-  opacity: 0.18;
-}
-
-/* ── 11. Top-Left Editorial Typography ── */
-.cell-text {
-  position: absolute;
-  top: 24px;
-  left: 24px;
-  z-index: 15;
-  pointer-events: none;
+.tile-header {
   display: flex;
   flex-direction: column;
   gap: 6px;
 }
-.c-num {
-  font-family: var(--font-mono, 'Space Grotesk', monospace);
-  color: #00FF41;
+
+.tile-num {
+  font-family: var(--font-mono, monospace);
   font-size: 12px;
+  color: var(--jx-green);
   letter-spacing: 0.15em;
-  text-transform: uppercase;
-}
-.c-title {
-  display: block;
-  font-family: var(--font-display, 'Syne', sans-serif);
-  font-size: clamp(18px, 2vw, 28px);
-  font-weight: 800;
-  color: #ffffff;
-  text-transform: uppercase;
-  line-height: 1.05;
-  transition: color 0.3s ease;
-}
-.content-cell:hover .c-title {
-  color: #00FF41;
 }
 
-/* ── 12. Interior Routing (Full-screen overlay, no modals) ── */
-.interior-view {
+.tile-title {
+  font-family: var(--font-display, 'Syne', sans-serif);
+  font-size: clamp(20px, 2.5vw, 32px);
+  font-weight: 800;
+  color: var(--jx-white);
+  text-transform: uppercase;
+  line-height: 1;
+  margin: 0;
+  /* The Dropbox scale-up mechanic — JS adds .opening class to tile */
+  transition: transform var(--tile-dur) var(--tile-ease), color var(--tile-dur) var(--tile-ease);
+}
+
+/* When tile is in enlarged state, title scales to fill */
+.jx-tile.enlarge .tile-title {
+  transform: scale(3.5);
+  transform-origin: left top;
+  color: white;
+}
+
+.tile-symbol {
+  align-self: flex-end;
+  width: 55%;
+  max-width: 200px;
+  stroke: var(--jx-white);
+  fill: none;
+  opacity: 0.06;
+  transition: opacity 0.5s ease, stroke 0.5s ease;
+  will-change: transform;
+}
+.jx-tile-content:hover .tile-symbol {
+  opacity: 0.18;
+  stroke: var(--jx-green);
+}
+
+
+/* ══════════════════════════════════════
+   TILE ENLARGE STATE (Click mechanic)
+   Mirror of Dropbox .nav-tile.enlarge
+   ══════════════════════════════════════ */
+.jx-tile.enlarge {
+  z-index: 200 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  /* These are overridden per-tile anchor position by JS */
+  transition: all 0.6s cubic-bezier(0.65, 0, 0.15, 1) !important;
+}
+
+/* Tile anchor corners (mirror of Dropbox tile-1/2/3/4 enlarge) */
+.jx-tile.enlarge.anchor-tl { top: 0 !important; left: 0 !important; }
+.jx-tile.enlarge.anchor-tr { top: 0 !important; right: 0 !important; left: auto !important; }
+.jx-tile.enlarge.anchor-bl { bottom: 0 !important; left: 0 !important; top: auto !important; }
+.jx-tile.enlarge.anchor-br { bottom: 0 !important; right: 0 !important; top: auto !important; left: auto !important; }
+
+/* When any tile is enlarging, fade others */
+.jx-hub.has-enlarged .jx-tile:not(.enlarge) {
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  pointer-events: none;
+}
+
+
+/* ══════════════════════════════════════
+   SCROLL HINT
+   ══════════════════════════════════════ */
+.scroll-hint {
+  position: absolute;
+  bottom: 32px;
+  right: 32px;
+  color: rgba(0,255,65,0.4);
+  animation: scrollBounce 2s ease-in-out infinite;
+  z-index: 50;
+}
+@keyframes scrollBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(6px); }
+}
+
+
+/* ══════════════════════════════════════
+   SCROLL SPACER
+   Gives the user virtual scroll distance
+   to drive the assembly animation
+   ══════════════════════════════════════ */
+.scroll-spacer {
+  /* Height matches the scroll distance the user needs to "travel" */
+  height: 250vh;
+  pointer-events: none;
+  background: transparent;
+}
+
+
+/* ══════════════════════════════════════
+   INTERIOR SHELL
+   Full-screen editorial pages
+   ══════════════════════════════════════ */
+.interior-shell {
   position: fixed;
   inset: 0;
-  background: #030303;
-  z-index: 9999;
-  display: flex;
-  flex-direction: column;
+  background: var(--jx-void);
+  z-index: 300;
   overflow-y: auto;
   overflow-x: hidden;
-  /* autoAlpha handles visibility+opacity via GSAP */
   visibility: hidden;
   opacity: 0;
-}
-
-.interior-nav {
-  position: sticky;
-  top: 0;
-  padding: 20px 5%;
-  background: linear-gradient(180deg, #030303 50%, transparent);
-  z-index: 100;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  flex-shrink: 0;
+  /* GSAP autoAlpha manages visibility+opacity */
 }
 
 .btn-back {
+  position: sticky;
+  top: 0;
+  z-index: 10;
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  background: none;
-  border: 1px solid rgba(0,255,65,0.3);
-  border-radius: 2px;
-  color: #00FF41;
+  gap: 8px;
+  background: rgba(3,3,3,0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: none;
+  border-bottom: 1px solid rgba(0,255,65,0.15);
+  color: var(--jx-green);
   font-family: var(--font-mono, monospace);
   font-size: 12px;
-  cursor: pointer;
+  letter-spacing: 0.15em;
   text-transform: uppercase;
-  letter-spacing: 0.12em;
-  padding: 10px 18px;
+  cursor: pointer;
+  padding: 16px 32px;
+  width: 100%;
   transition: background 0.2s ease, color 0.2s ease;
 }
-.btn-back:hover {
-  background: rgba(0,255,65,0.08);
-  color: #ffffff;
-}
+.btn-back:hover { color: white; }
 
-.interior-content-wrapper {
-  padding: 40px 5% 120px;
+.interior-page {
+  display: none;
+  padding: 0 5% 120px;
   max-width: 1200px;
   margin: 0 auto;
-  width: 100%;
-  box-sizing: border-box;
 }
-
-.interior-page { display: none; }
 .interior-page.active { display: block; }
 
-/* ── 13. Editorial Interior — Equal-height cards ── */
-.ed-header {
-  margin-bottom: 56px;
-  border-bottom: 1px solid rgba(255,255,255,0.08);
-  padding-bottom: 24px;
+
+/* ── Interior Hero ── */
+.int-hero {
+  padding: 60px 0 40px;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  margin-bottom: 48px;
 }
-.ed-num {
+.int-num {
   display: block;
-  color: #00FF41;
-  font-family: var(--font-mono, monospace);
-  font-size: 14px;
-  letter-spacing: 0.1em;
-  margin-bottom: 8px;
-}
-.ed-header h2 {
-  font-family: var(--font-display, 'Syne', sans-serif);
-  font-size: clamp(32px, 5vw, 60px);
-  font-weight: 900;
-  color: #ffffff;
-  margin: 0 0 12px;
-  text-transform: uppercase;
-  line-height: 1;
-}
-.ed-header p {
-  color: rgba(255,255,255,0.4);
   font-family: var(--font-mono, monospace);
   font-size: 13px;
+  color: var(--jx-green);
+  letter-spacing: 0.15em;
+  margin-bottom: 10px;
+}
+.int-title {
+  font-family: var(--font-display, 'Syne', sans-serif);
+  font-size: clamp(36px, 6vw, 72px);
+  font-weight: 900;
+  color: var(--jx-white);
+  text-transform: uppercase;
+  line-height: 1;
+  margin: 0 0 12px;
+}
+.int-sub {
+  font-family: var(--font-mono, monospace);
+  font-size: 13px;
+  color: rgba(240,240,240,0.35);
   margin: 0;
 }
 
-/* The equal-height card grid */
-.ed-editorial-grid {
+
+/* ── Interior Grid ── */
+.int-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  /* 1fr forces all rows to be equal height */
-  grid-auto-rows: 1fr;
   gap: 20px;
-  /* minimum row height so empty data doesn't collapse */
-  min-height: 300px;
+  /* 1fr rows = equal card heights regardless of text length */
+  grid-auto-rows: 1fr;
+  margin-bottom: 60px;
 }
-
 @media (max-width: 768px) {
-  .ed-editorial-grid {
-    grid-template-columns: 1fr;
-    grid-auto-rows: auto;
-  }
+  .int-grid { grid-template-columns: 1fr; grid-auto-rows: auto; }
 }
 
-.ed-text-block {
+.int-card {
   background: #0a0a0a;
   border: 1px solid rgba(255,255,255,0.05);
-  border-radius: 6px;
+  border-radius: 4px;
   padding: 36px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 14px;
+  /* Scroll-reveal: start invisible */
+  opacity: 0;
+  transform: translateY(30px);
+  transition: border-color 0.3s ease;
 }
-.ed-image-block {
-  border-radius: 6px;
+.int-card:hover { border-color: rgba(0,255,65,0.2); }
+.int-card.revealed { opacity: 1; transform: translateY(0); transition: opacity 0.5s ease, transform 0.5s ease, border-color 0.3s ease; }
+
+.int-card-img {
+  padding: 0;
   overflow: hidden;
-  min-height: 280px;
+  border: none;
+  min-height: 260px;
+  background: #0a0a0a;
 }
-.ed-image-block img {
+.int-card-img img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
 }
 
-.ed-label {
-  color: #00FF41;
+.card-label {
   font-family: var(--font-mono, monospace);
   font-size: 11px;
+  color: var(--jx-green);
   text-transform: uppercase;
   letter-spacing: 0.15em;
   margin: 0;
 }
-.ed-text-block h3 {
+.int-card h3 {
   font-family: var(--font-display, 'Syne', sans-serif);
   font-size: 22px;
-  color: #ffffff;
-  margin: 0;
   font-weight: 700;
+  color: var(--jx-white);
+  margin: 0;
 }
-.ed-text-block p {
-  color: rgba(255,255,255,0.55);
+.int-card p {
   font-size: 15px;
-  line-height: 1.7;
+  color: rgba(240,240,240,0.5);
+  line-height: 1.75;
   margin: 0;
 }
 
-/* ── 14. Arsenal Allies ── */
+
+/* ── Arsenal ── */
 .allies-section {
-  margin-top: 72px;
-  border-top: 1px solid rgba(255,255,255,0.08);
-  padding-top: 36px;
+  border-top: 1px solid rgba(255,255,255,0.07);
+  padding-top: 40px;
+  margin: 0 5% 80px;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
 }
-.allies-section h3 {
+.allies-label {
   font-family: var(--font-mono, monospace);
-  color: #00FF41;
   font-size: 12px;
+  color: var(--jx-green);
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  margin: 0 0 28px;
+  margin-bottom: 28px;
 }
-.company-logo-grid {
+.logo-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
   gap: 16px;
 }
-.company-logo {
+.logo-card {
   background: #0a0a0a;
   border: 1px solid rgba(255,255,255,0.05);
   border-radius: 4px;
@@ -407,71 +467,75 @@ body.about-page {
   align-items: center;
   justify-content: center;
   min-height: 80px;
-  transition: border-color 0.3s ease, background 0.3s ease;
+  transition: border-color 0.3s ease;
 }
-.company-logo img {
+.logo-card:hover { border-color: rgba(0,255,65,0.3); }
+.logo-card img {
   max-width: 100%;
   max-height: 48px;
   filter: grayscale(100%) brightness(0.4);
   transition: filter 0.3s ease;
 }
-.company-logo:hover { border-color: rgba(0,255,65,0.4); background: #111; }
-.company-logo:hover img { filter: grayscale(0%) brightness(1); }
+.logo-card:hover img { filter: grayscale(0%) brightness(1); }
 
-/* ── 15. Video ── */
-.video-container {
+
+/* ── Transmission ── */
+.video-wrap {
   position: relative;
-  width: 100%;
-  padding-bottom: 56.25%;
-  border-radius: 8px;
+  width: calc(100% - 10%);
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-bottom: calc((100% - 10%) * 0.5625);
+  border-radius: 4px;
   overflow: hidden;
-  border: 1px solid rgba(255,255,255,0.08);
   background: #000;
+  border: 1px solid rgba(255,255,255,0.07);
 }
-.video-container video {
+.video-wrap video {
   position: absolute;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
+  inset: 0;
+  width: 100%;
+  height: 100%;
 }
 
-/* ── Utility ── */
-.loading-text {
-  color: rgba(255,255,255,0.3);
+
+/* ── Utilities ── */
+.load-text {
   font-family: var(--font-mono, monospace);
   font-size: 13px;
+  color: rgba(255,255,255,0.25);
   padding: 20px 0;
 }
 
-/* ── Mobile ── */
+
+/* ══════════════════════════════════════
+   MOBILE — Stack tiles vertically
+   ══════════════════════════════════════ */
 @media (max-width: 900px) {
-  .dbx-pin-wrapper { height: auto; }
-  .dbx-grid-container {
-    position: relative;
+  .jx-hub {
+    position: relative !important;
+    padding-top: 80px;
     height: auto;
-    min-height: auto;
-    padding: 90px 0 20px;
-    align-items: flex-start;
+    overflow: visible;
   }
-  .gridlines-overlay { display: none; }
-  .dbx-grid {
-    grid-template-columns: 1fr;
-    grid-template-rows: none;
-    grid-auto-rows: 45svh;
-    margin-top: 0;
-  }
-  /* Override all grid areas for linear stack */
-  .hero-cell,
-  .content-cell[data-route="origin"],
-  .content-cell[data-route="philosophy"],
-  .content-cell[data-route="arsenal"],
-  .content-cell[data-route="transmission"] {
-    grid-area: auto !important;
-  }
-  /* Show all cells on mobile without scroll-trigger */
-  .content-cell {
-    opacity: 1 !important;
-    visibility: visible !important;
+  .scroll-spacer { display: none; }
+
+  /* All tiles become static, stacked */
+  .jx-tile {
+    position: relative !important;
+    left: auto !important; top: auto !important;
+    right: auto !important; bottom: auto !important;
+    width: 100% !important;
+    height: 45svh !important;
     transform: none !important;
+    opacity: 1 !important;
+    transition: none !important;
   }
-  .hero-cell { min-height: 50svh; }
+  .jx-tile-logo { height: 55svh !important; }
+  .scroll-hint { display: none; }
+
+  /* Prevent enlarge animation breaking mobile */
+  .jx-tile.enlarge {
+    height: 100vh !important;
+  }
 }

@@ -21,4 +21,6 @@ window.initSupabase = async function() {
 }
 
 // Boot up immediately
-window.initSupabase().catch(err => console.error("Supabase initialization failed:", err));
+window.initSupabase().then(client => {
+    window.jxSupabase = client; // alias used by about-dbx.js and other pages
+}).catch(err => console.error("Supabase initialization failed:", err));

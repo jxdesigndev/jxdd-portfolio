@@ -145,11 +145,29 @@
       });
     });
 
-    // Logo starts large and centered
+    // Logo: compute the offset so the SCALED logo appears dead-center in viewport.
+    // The tile lives at layout.logo.left/top. Its center in hub-space is:
+    const tileCX = layout.logo.left + layout.logo.width  / 2;
+    const tileCY = layout.logo.top  + layout.logo.height / 2;
+    // Viewport center in hub-space (hub starts below nav):
+    const vpCX   = window.innerWidth  / 2;
+    const vpCY   = (window.innerHeight - 80) / 2; // 80 = nav height
+    // The offset that moves the tile's center to the viewport center:
+    const logoDX = vpCX - tileCX;
+    const logoDY = vpCY - tileCY;
+
+    // Scale large enough to look "full screen hero" (fill ~80% of viewport height)
+    const logoScale = Math.min(
+      (window.innerWidth  * 0.85) / layout.logo.width,
+      ((window.innerHeight - 80) * 0.82) / layout.logo.height
+    );
+
     gsap.set(logoTile, {
-      scale: 2.2,
+      x:    logoDX,
+      y:    logoDY,
+      scale: logoScale,
       transformOrigin: 'center center',
-      zIndex: 10,
+      zIndex: 100,
     });
 
     // Set SVG path lengths for stroke animation
@@ -220,10 +238,11 @@
         }
       });
 
-      // Logo shrinks from 2.2 → 1
+      // Logo shrinks from full-viewport-center → grid slot (scale:1, x:0, y:0)
       assemblyTL.to(logoTile, {
-        scale: 1,
-        duration: 1, ease: 'power2.out'
+        scale: 1, x: 0, y: 0,
+        duration: 1, ease: 'power2.inOut',
+        zIndex: 10,
       }, 0);
 
       // Content tiles fly from scatter to their positions
@@ -402,72 +421,97 @@
   }
 
 
-  /* ─── Supabase Data ─── */
-  async function loadOriginChapters() {
-    const container = document.getElementById('origin-grid');
-    if (!container || !window.jxSupabase) return;
-
-    try {
-      const { data, error } = await window.jxSupabase
-        .from('origin_chapters').select('*').order('chapter_order', { ascending: true });
-      if (error) throw error;
-      if (!data || data.length === 0) return;
-
-      container.innerHTML = '';
-      const imgs = ['assets/images/okezie-1.webp', 'assets/images/okezie-coder.webp', 'assets/images/okezie-designer.webp'];
-      let imgIdx = 0;
-
-      data.forEach((ch, i) => {
-        const card = document.createElement('div');
-        card.className = 'int-card';
-        card.innerHTML = `<p class="card-label">Chapter ${esc(ch.chapter_order)}</p><h3>${esc(ch.title)}</h3><p>${esc(ch.content)}</p>`;
-        container.appendChild(card);
-
-        if ((i + 1) % 2 === 0 && imgIdx < imgs.length) {
-          const imgCard = document.createElement('div');
-          imgCard.className = 'int-card int-card-img';
-          imgCard.innerHTML = `<img src="${imgs[imgIdx]}" alt="Chapter visual" loading="lazy">`;
-          container.appendChild(imgCard);
-          imgIdx++;
-        }
-      });
-    } catch(e) { console.error('[JX About] Origin:', e); }
+  /* ─── Wait for Supabase Client ─── */
+  function waitForSupabase(cb, attempts = 0) {
+    if (window.jxSupabase) { cb(window.jxSupabase); return; }
+    if (window.supabaseClient) { window.jxSupabase = window.supabaseClient; cb(window.jxSupabase); return; }
+    if (attempts > 100) { console.warn('[JX About] Supabase timeout'); return; }
+    setTimeout(() => waitForSupabase(cb, attempts + 1), 50);
   }
 
-  async function loadArsenal() {
+  /* ─── Supabase Data ─── */
+  async function loadOriginChapters(db) {
+    const container = document.getElementById('origin-grid');
+    if (!container) return;
+
+    // Supabase table 'origin_chapters' doesn't exist, using static original content
+    const data = [
+      {
+        chapter_order: '01',
+        title: 'Born to Create',
+        content: 'Before code, before computers, there was art. A younger Okezie who wanted to draw, who taught himself by tracing, line by line, character by character. Physics class became a love affair: technical drawing, architectural plans, the geometry of the perfect building. I wanted to design world-class structures. Not just buildings, experiences that people would walk into and feel something.'
+      },
+      {
+        chapter_order: '02',
+        title: 'Then I Found Computers',
+        content: 'A machine that could do anything. I was fascinated, not just by what it could do, but by how it worked. So I learned. First as a student, watching everything. Then under a computer technician, hands inside machines, wires and circuits making sense where they hadn\'t before. I wasn\'t just using computers anymore. I was building with them.'
+      },
+      {
+        chapter_order: '03',
+        title: 'Digital Creations & Animation',
+        content: 'My passion for drawing never left me. It evolved. I transitioned from pencil and paper to becoming a digital artist, creating cartoon pictures directly on my phone and sharing my creations with the world. This was my digital playground, and it sparked my desire to go into animation—bringing those static cartoon frames to life through motion and code.'
+      },
+      {
+        chapter_order: '04',
+        title: 'JX',
+        content: 'All these paths—the artist, the computer technician, the architect, the digital creator—converged into a single identity: JX. It was coined because I wanted to showcase myself—my true self. I wanted to show people who I am, what I can do, provide exceptional services, and grow immensely. JX is my identity. It is the culmination of every pixel drawn, every system built, and every world designed.'
+      },
+      {
+        chapter_order: '05',
+        title: 'A Language of My Own',
+        content: 'The gold and the scattered marks across this site aren\'t trend — they\'re intentional. I built them myself, without copying any existing script, but they carry the same instinct my Igbo ancestors had for turning meaning into symbol. Most of what "design" means online today traces back to Europe, Japan, the U.S. I wanted something that traced back to me. This is what that looks like.'
+      }
+    ];
+
+    container.innerHTML = '';
+    const imgs = ['assets/images/okezie-1.webp', 'assets/images/okezie-coder.webp', 'assets/images/okezie-designer.webp'];
+    let imgIdx = 0;
+
+    data.forEach((ch, i) => {
+      const card = document.createElement('div');
+      card.className = 'int-card';
+      card.innerHTML = `<p class="card-label">Chapter ${esc(ch.chapter_order)}</p><h3>${esc(ch.title)}</h3><p>${esc(ch.content)}</p>`;
+      container.appendChild(card);
+
+      if ((i + 1) % 2 === 0 && imgIdx < imgs.length) {
+        const imgCard = document.createElement('div');
+        imgCard.className = 'int-card int-card-img';
+        imgCard.innerHTML = `<img src="${imgs[imgIdx]}" alt="Chapter visual" loading="lazy">`;
+        container.appendChild(imgCard);
+        imgIdx++;
+      }
+    });
+  }
+
+  async function loadArsenal(db) {
     const tGrid = document.getElementById('arsenal-grid');
     const lGrid = document.getElementById('logo-grid');
-    if (!tGrid || !window.jxSupabase) return;
 
-    try {
-      const { data, error } = await window.jxSupabase
-        .from('experience').select('*').order('start_date', { ascending: false });
-      if (error) throw error;
-      if (data && data.length) {
-        tGrid.innerHTML = '';
-        data.forEach(item => {
-          const card = document.createElement('div');
-          card.className = 'int-card';
-          card.innerHTML = `<p class="card-label">${esc(item.role)} // ${esc(item.start_date)}</p><h3>${esc(item.company)}</h3><p>${esc(item.description)}</p>`;
-          tGrid.appendChild(card);
-        });
+    if (tGrid) {
+      try {
+        const { data, error } = await db
+          .from('experience').select('*').order('created_at', { ascending: false });
+        if (error) throw error;
+        if (data && data.length) {
+          tGrid.innerHTML = '';
+          data.forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'int-card';
+            card.innerHTML = `<p class="card-label">${esc(item.role_title)} // ${esc(item.date_range)}</p><h3>${esc(item.company)}</h3><p>${esc(item.description)}</p>`;
+            tGrid.appendChild(card);
+          });
+        } else {
+          tGrid.innerHTML = '<p class="load-text">Experience vault coming soon.</p>';
+        }
+      } catch(e) {
+        console.error('[JX About] Arsenal:', e);
+        tGrid.innerHTML = '<p class="load-text">Failed to load experience.</p>';
       }
-    } catch(e) { console.error('[JX About] Arsenal:', e); }
+    }
 
-    if (!lGrid) return;
-    try {
-      const { data, error } = await window.jxSupabase
-        .from('company_logos').select('*').order('created_at', { ascending: false });
-      if (error) throw error;
-      if (data && data.length) {
-        lGrid.innerHTML = '';
-        data.forEach(logo => {
-          lGrid.innerHTML += `<div class="logo-card"><img src="${esc(logo.image_url)}" alt="${esc(logo.name || 'Client')}" loading="lazy"></div>`;
-        });
-      } else {
-        lGrid.innerHTML = '<p class="load-text">Roster coming soon.</p>';
-      }
-    } catch(e) { lGrid.innerHTML = '<p class="load-text">Logo vault initialising...</p>'; }
+    if (lGrid) {
+      lGrid.innerHTML = '<p class="load-text">Roster coming soon.</p>';
+    }
   }
 
   function initVideo() {
@@ -487,11 +531,14 @@
     waitForGsap(init);
   }
 
-  // Load data regardless of animation state
+  // Load Supabase data — wait for client to be ready
   document.addEventListener('DOMContentLoaded', () => {
-    loadOriginChapters();
-    loadArsenal();
+    waitForSupabase(db => {
+      loadOriginChapters(db);
+      loadArsenal(db);
+    });
     initVideo();
   });
 
 })();
+

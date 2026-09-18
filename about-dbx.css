@@ -3,24 +3,62 @@
    ───────────────────────────────────────────────────────────────── */
 
 /* ── 1. The Scroll-to-Lock Container ── */
+.dbx-pin-wrapper {
+  width: 100vw;
+  background: var(--void, #030303);
+}
+
 .dbx-grid-container {
   position: relative;
   width: 100vw;
-  padding-top: 80px; 
-  padding-bottom: 15vh; /* Allow scroll room */
-  background: var(--void, #030303);
+  height: 100vh; /* Needs to be viewport height for pinning/centering */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 80px; /* Nav clearance */
   overflow: hidden;
+}
+
+/* ── 1.5 The Laser Gridlines (Blueprint Mechanic) ── */
+.gridlines-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  max-width: 1800px;
+  height: calc(70svh + 4px); /* matches grid height exactly */
+  z-index: 1;
+  pointer-events: none;
+}
+.gl-h, .gl-v {
+  position: absolute;
+  background: rgba(0, 255, 65, 0.2);
+}
+.gl-h {
+  width: 100%;
+  height: 1px;
+  left: 0;
+  transform: scaleX(0); /* starts invisible */
+}
+.gl-v {
+  height: 100%;
+  width: 1px;
+  top: 0;
+  transform: scaleY(0);
 }
 
 /* ── 2. The Dense Bento Grid Architecture ── */
 .dbx-grid {
+  position: relative;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-auto-rows: 35svh;
   gap: 4px;
-  background: var(--void);
+  background: transparent;
+  width: 100%;
   max-width: 1800px;
-  margin: 0 auto;
+  z-index: 2;
 }
 
 /* ── Specific Grid Spans for the Puzzle ── */
@@ -30,26 +68,29 @@
 .content-cell[data-route="arsenal"] { grid-area: 3 / 1 / 4 / 3; } /* 1x2 Wide Bottom Left */
 .content-cell[data-route="transmission"] { grid-area: 3 / 3 / 4 / 5; } /* 1x2 Wide Bottom Right */
 
-
 /* ── 3. Cell Base Mechanics ── */
 .dbx-cell {
   position: relative;
   background: var(--void);
   overflow: hidden;
   cursor: pointer;
-  /* GSAP animation default states */
-  opacity: 0; 
-  transform: translateY(120px);
+  perspective: 1000px; /* For magnetic 3d hover */
 }
-/* The Hero cell starts visible in center */
+
+/* Content cells start translated down, opacity 0 */
+.content-cell {
+  opacity: 0; 
+  visibility: hidden;
+}
+
+/* The Hero cell acts as the full-screen center on load */
 .hero-cell {
-  opacity: 1;
-  transform: none;
-  background: var(--void);
+  background: transparent;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: default;
+  /* GSAP will control scale/translate */
 }
 
 /* ── 4. The JX Logo Draw Animation ── */
@@ -58,6 +99,8 @@
   max-width: 240px;
   height: auto;
   overflow: visible;
+  /* Glow filter for when it flashes green */
+  filter: drop-shadow(0 0 0px transparent);
 }
 .jx-path {
   fill: transparent;
@@ -72,20 +115,23 @@
 .color-green { background-color: #001A06; }
 .color-void  { background-color: #0A0A0E; }
 
-/* The Grayscale photo overlay */
+/* Wrapper ensures we can do parallax without breaking overflow */
+.cell-bg-wrapper {
+  position: absolute;
+  inset: -10%; /* Larger than cell to allow parallax shifting */
+  pointer-events: none;
+}
 .cell-bg {
   position: absolute;
   inset: 0;
   background-size: cover;
   background-position: center;
-  /* The Moody Grayscale State */
   filter: grayscale(100%) brightness(0.3) contrast(1.2);
   mix-blend-mode: luminosity;
   opacity: 0.6;
   transition: filter 0.6s cubic-bezier(0.16, 1, 0.3, 1), 
-              opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
-  transform: scale(1.01);
+              opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform; /* Managed by GSAP mousemove */
 }
 
 /* Hover Ignition: Color + Glow */
@@ -93,7 +139,6 @@
   filter: grayscale(0%) brightness(0.6) contrast(1.1);
   mix-blend-mode: normal;
   opacity: 1;
-  transform: scale(1.05);
 }
 .content-cell::after {
   content: '';
@@ -107,7 +152,7 @@
   box-shadow: inset 0 0 0 1px var(--green);
 }
 
-/* ── 6. Massive Abstract Vector Symbols ── */
+/* ── 6. Massive Abstract Vector Symbols (Parallax target) ── */
 .cell-symbol {
   position: absolute;
   bottom: -10%;
@@ -117,11 +162,11 @@
   fill: var(--white);
   opacity: 0.05;
   z-index: 2;
-  transition: transform 0.6s ease, opacity 0.6s ease, fill 0.6s ease;
+  transition: fill 0.6s ease;
   pointer-events: none;
+  will-change: transform;
 }
 .content-cell:hover .cell-symbol {
-  transform: scale(1.1) translate(-10px, -10px);
   opacity: 0.2;
   fill: var(--green);
 }
@@ -167,7 +212,6 @@
   overflow-y: auto;
   overflow-x: hidden;
 }
-
 .interior-nav {
   position: sticky;
   top: 0;
@@ -176,7 +220,6 @@
   z-index: 100;
   backdrop-filter: blur(8px);
 }
-
 .btn-back {
   display: inline-flex;
   align-items: center;
@@ -199,7 +242,6 @@
   margin: 0 auto;
   width: 100%;
 }
-
 .interior-page { display: none; }
 .interior-page.active { display: block; }
 
@@ -209,11 +251,10 @@
 .ed-header h2 { font-family: var(--font-display); font-size: 48px; font-weight: 900; color: var(--white); margin: 0; text-transform: uppercase; }
 .ed-header p { color: var(--gray-2); font-family: var(--font-mono); font-size: 14px; margin-top: 12px; }
 
-/* The mathematically equal grid */
 .ed-editorial-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  grid-auto-rows: 1fr; /* Forces equal heights */
+  grid-auto-rows: 1fr;
   gap: 24px;
 }
 @media(max-width: 800px) {
@@ -230,7 +271,6 @@
 }
 .ed-image-block { padding: 0; overflow: hidden; border: none; }
 .ed-image-block img { width: 100%; height: 100%; object-fit: cover; }
-
 .ed-label { color: var(--green); font-family: var(--font-mono); font-size: 12px; margin-bottom: 12px; text-transform: uppercase;}
 .ed-text-block h3 { font-family: var(--font-display); font-size: 24px; color: var(--white); margin-bottom: 16px; }
 .ed-text-block p { color: var(--gray-2); font-size: 16px; line-height: 1.6; margin: 0; }
@@ -263,7 +303,9 @@
 
 /* Mobile Grid Fallback */
 @media (max-width: 900px) {
+  .gridlines-overlay { display: none; } /* Hide gridlines on mobile flow */
+  .dbx-grid-container { height: auto; padding-bottom: 5vh; align-items: flex-start; }
   .dbx-grid { grid-template-columns: 1fr; grid-auto-rows: 40svh; }
   .hero-cell { grid-area: auto; }
-  .content-cell { grid-area: auto !important; }
+  .content-cell { grid-area: auto !important; opacity: 1; visibility: visible; }
 }

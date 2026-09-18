@@ -8,7 +8,6 @@
   <meta name="description" content="Product Engineer & Creative Developer.">
   <link rel="canonical" href="https://jx-portfolio.vercel.app/about.html">
   
-  <!-- Preload Critical Fonts -->
   <link rel="preload" href="assets/fonts/Syne-Bold.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/SpaceGrotesk-Regular.woff2" as="font" type="font/woff2" crossorigin>
 
@@ -19,71 +18,84 @@
   <script src="supabase.js" defer></script>
   
   <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="about-dbx.css?v=4.0">
+  <link rel="stylesheet" href="about-dbx.css?v=5.0">
   <link rel="icon" type="image/jpeg" href="assets/images/jx-logo.jpeg">
 </head>
 <body class="about-page">
   <main id="page">
     
-    <!-- ── THE HYBRID BENTO GRID ── -->
-    <div class="dbx-grid-container">
-      <div class="dbx-grid">
+    <!-- ── THE PINNED BENTO WRAPPER ── -->
+    <div class="dbx-pin-wrapper">
+      <div class="dbx-grid-container">
         
-        <!-- Center Hero: JX Logo -->
-        <div class="dbx-cell hero-cell">
-          <svg viewBox="0 0 200 200" class="logo-svg" preserveAspectRatio="xMidYMid meet">
-            <!-- J -->
-            <path class="jx-path" d="M 110,40 L 110,130 C 110,150 90,160 70,150 L 70,125 C 80,130 90,125 90,115 L 90,40 Z" />
-            <!-- X -->
-            <path class="jx-path" d="M 120,40 L 145,95 L 120,160 L 145,160 L 160,120 L 175,160 L 200,160 L 175,95 L 200,40 L 175,40 L 160,75 L 145,40 Z" />
-          </svg>
+        <!-- ── LASER GRIDLINES (The Blueprint Entry) ── -->
+        <div class="gridlines-overlay">
+          <!-- Horizontals -->
+          <div class="gl-h" style="top: 0%"></div>
+          <div class="gl-h" style="top: 50%"></div>
+          <div class="gl-h" style="bottom: 0%"></div>
+          <!-- Verticals -->
+          <div class="gl-v" style="left: 0%"></div>
+          <div class="gl-v" style="left: 25%"></div>
+          <div class="gl-v" style="left: 50%"></div>
+          <div class="gl-v" style="left: 75%"></div>
+          <div class="gl-v" style="right: 0%"></div>
         </div>
 
-        <!-- 01: The Origin (Solid Black + Grayscale Photo) -->
-        <div class="dbx-cell content-cell color-black" data-route="origin">
-          <div class="cell-bg" style="background-image: url('assets/images/okezie-1.webp');"></div>
-          <svg class="cell-symbol" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
-          <div class="cell-text">
-            <span class="c-num">01</span>
-            <span class="c-title">The Origin</span>
+        <div class="dbx-grid">
+          <!-- Center Hero: JX Logo -->
+          <div class="dbx-cell hero-cell">
+            <svg viewBox="0 0 200 200" class="logo-svg" preserveAspectRatio="xMidYMid meet">
+              <path class="jx-path" d="M 110,40 L 110,130 C 110,150 90,160 70,150 L 70,125 C 80,130 90,125 90,115 L 90,40 Z" />
+              <path class="jx-path" d="M 120,40 L 145,95 L 120,160 L 145,160 L 160,120 L 175,160 L 200,160 L 175,95 L 200,40 L 175,40 L 160,75 L 145,40 Z" />
+            </svg>
           </div>
-        </div>
 
-        <!-- 02: The Arsenal (Solid Amber + Grayscale Photo) -->
-        <div class="dbx-cell content-cell color-amber" data-route="arsenal">
-          <div class="cell-bg" style="background-image: url('assets/images/okezie-coder.webp');"></div>
-          <svg class="cell-symbol" viewBox="0 0 24 24"><path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/></svg>
-          <div class="cell-text">
-            <span class="c-num">02</span>
-            <span class="c-title">The Arsenal</span>
+          <!-- 01: The Origin -->
+          <div class="dbx-cell content-cell color-black" data-route="origin">
+            <div class="cell-bg-wrapper"><div class="cell-bg" style="background-image: url('assets/images/okezie-1.webp');"></div></div>
+            <svg class="cell-symbol" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+            <div class="cell-text">
+              <span class="c-num">01</span>
+              <span class="c-title">The Origin</span>
+            </div>
           </div>
-        </div>
 
-        <!-- 03: The Philosophy (Solid Neon Green + Grayscale Photo) -->
-        <div class="dbx-cell content-cell color-green" data-route="philosophy">
-          <div class="cell-bg" style="background-image: url('assets/images/okezie-designer.webp');"></div>
-          <!-- Abstract Igbo / Vision Vector Symbol -->
-          <svg class="cell-symbol" viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
-          <div class="cell-text">
-            <span class="c-num">03</span>
-            <span class="c-title">Philosophy</span>
+          <!-- 02: The Arsenal -->
+          <div class="dbx-cell content-cell color-amber" data-route="arsenal">
+            <div class="cell-bg-wrapper"><div class="cell-bg" style="background-image: url('assets/images/okezie-coder.webp');"></div></div>
+            <svg class="cell-symbol" viewBox="0 0 24 24"><path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/></svg>
+            <div class="cell-text">
+              <span class="c-num">02</span>
+              <span class="c-title">The Arsenal</span>
+            </div>
           </div>
-        </div>
 
-        <!-- 04: Transmission (Solid Deep Purple/Void + Grayscale Photo) -->
-        <div class="dbx-cell content-cell color-void" data-route="transmission">
-          <div class="cell-bg" style="background-image: url('assets/images/og-share-image.jpg');"></div>
-          <svg class="cell-symbol" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-          <div class="cell-text">
-            <span class="c-num">04</span>
-            <span class="c-title">Transmission</span>
+          <!-- 03: The Philosophy -->
+          <div class="dbx-cell content-cell color-green" data-route="philosophy">
+            <div class="cell-bg-wrapper"><div class="cell-bg" style="background-image: url('assets/images/okezie-designer.webp');"></div></div>
+            <svg class="cell-symbol" viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+            <div class="cell-text">
+              <span class="c-num">03</span>
+              <span class="c-title">Philosophy</span>
+            </div>
           </div>
-        </div>
 
+          <!-- 04: Transmission -->
+          <div class="dbx-cell content-cell color-void" data-route="transmission">
+            <div class="cell-bg-wrapper"><div class="cell-bg" style="background-image: url('assets/images/og-share-image.jpg');"></div></div>
+            <svg class="cell-symbol" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            <div class="cell-text">
+              <span class="c-num">04</span>
+              <span class="c-title">Transmission</span>
+            </div>
+          </div>
+
+        </div>
       </div>
     </div>
 
-    <!-- ── INTERIOR PAGES (Smooth Routing Container) ── -->
+    <!-- ── INTERIOR PAGES (Routing Container) ── -->
     <div id="interior-view" class="interior-view hidden">
       <div class="interior-nav">
         <button id="btn-back-grid" class="btn-back">
@@ -93,39 +105,28 @@
       </div>
 
       <div class="interior-content-wrapper">
-        <!-- Route: Origin -->
         <div class="interior-page" id="page-origin">
           <header class="ed-header">
             <span class="ed-num">01</span>
             <h2>The Origin.</h2>
             <p>Five chapters // One relentless arc</p>
           </header>
-          <!-- Editorial Layout with interleaved images -->
-          <div class="ed-editorial-grid" id="origin-editorial">
-             <!-- JS Populates this with chapters and images -->
-          </div>
+          <div class="ed-editorial-grid" id="origin-editorial"></div>
         </div>
 
-        <!-- Route: Arsenal -->
         <div class="interior-page" id="page-arsenal">
           <header class="ed-header">
             <span class="ed-num">02</span>
             <h2>The Arsenal.</h2>
             <p>Experience // Stack // Integrations</p>
           </header>
-          <div class="ed-editorial-grid" id="arsenal-timeline">
-             <p class="loading-text">Loading Vault...</p>
-          </div>
-          <!-- Allies/Logos section -->
+          <div class="ed-editorial-grid" id="arsenal-timeline"><p class="loading-text">Loading Vault...</p></div>
           <div class="allies-section">
             <h3>// ALLIES & CLIENTS</h3>
-            <div class="company-logo-grid" id="company-logos-container">
-              <p class="loading-text">Fetching live roster...</p>
-            </div>
+            <div class="company-logo-grid" id="company-logos-container"><p class="loading-text">Fetching live roster...</p></div>
           </div>
         </div>
 
-        <!-- Route: Philosophy -->
         <div class="interior-page" id="page-philosophy">
           <header class="ed-header">
             <span class="ed-num">03</span>
@@ -141,24 +142,16 @@
             <div class="ed-image-block">
               <img src="assets/images/okezie-designer.webp" alt="Afrofuturism Concept">
             </div>
-            <div class="ed-text-block">
-              <p class="ed-label">The Universe</p>
-              <h3>More Than A Brand</h3>
-              <p>"I wanted to showcase myself. To show people who I am and what I can do. JX isn't a brand; it's a universe."</p>
-            </div>
           </div>
         </div>
 
-        <!-- Route: Transmission -->
         <div class="interior-page" id="page-transmission">
           <header class="ed-header">
             <span class="ed-num">04</span>
             <h2>Transmission.</h2>
             <p>Visual // Audio // Signal</p>
           </header>
-          <div class="video-container">
-            <video id="intro-video" playsinline controls></video>
-          </div>
+          <div class="video-container"><video id="intro-video" playsinline controls></video></div>
         </div>
       </div>
     </div>
@@ -166,6 +159,6 @@
   </main>
   
   <script src="nav.js" defer></script>
-  <script src="about-dbx.js?v=4.0" defer></script>
+  <script src="about-dbx.js?v=5.0" defer></script>
 </body>
 </html>

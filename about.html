@@ -3,201 +3,314 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>About | JX</title>
-  <meta name="description" content="Product Engineer & Creative Developer — Okezie Ferdinand.">
-  <link rel="canonical" href="https://jxdesign.dev/about.html">
-  
+  <title>About | JX Design &amp; Dev — Okezie Ferdinand</title>
+  <meta name="description" content="Product Designer &amp; Creative Technologist. Five chapters, one relentless arc.">
+  <link rel="canonical" href="https://www.jxdesign.dev/about.html">
+  <meta property="og:title" content="About | JX Design &amp; Dev">
+  <meta property="og:description" content="Product Designer &amp; Creative Technologist. Five chapters, one relentless arc.">
+  <meta property="og:image" content="https://www.jxdesign.dev/assets/images/og-share-image.jpg">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+
   <link rel="preload" href="assets/fonts/Syne-Bold.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/SpaceGrotesk-Regular.woff2" as="font" type="font/woff2" crossorigin>
 
-  <!-- GSAP CDN — no defer, needed synchronously -->
+  <!-- GSAP must load synchronously for entry animation -->
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+
+  <!-- Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
   <script src="supabase.js" defer></script>
 
   <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="about-dbx.css?v=7.1">
+  <link rel="stylesheet" href="about-dbx.css?v=8.0">
   <link rel="icon" type="image/jpeg" href="assets/images/jx-logo.jpeg">
 </head>
 <body class="about-page">
 
-  <!-- ══════════════════════════════════════════════
-       THE BENTO HUB — Absolutely positioned tiles
-       (mirrors brand.dropbox.com architecture exactly)
-       ══════════════════════════════════════════════ -->
+  <!-- ═══════════════════════════════════════════════════════
+       THE JX HUB — Mirrors brand.dropbox.com architecture:
+       • position:fixed, inset:0
+       • All tiles are position:absolute inside
+       • Entry: tiles scatter from scale(2) + offscreen translate
+       • Scroll: ScrollTrigger assembles tiles to grid
+       • Click: tile .enlarge → full-screen → interior shell fades in
+       ═══════════════════════════════════════════════════════ -->
   <div class="jx-hub" id="jx-hub">
 
-    <!-- ── JX LOGO TILE (The Hero — starts full-screen) ── -->
-    <div class="jx-tile jx-tile-logo" id="tile-logo">
-      <!-- 4 border lines animated on entry -->
+    <!-- Blueprint gridlines (animate in during entry, like Dropbox) -->
+    <div class="hub-gridlines" id="hub-gridlines" aria-hidden="true">
+      <div class="gl-v" style="left:25%"></div>
+      <div class="gl-v" style="left:50%"></div>
+      <div class="gl-v" style="left:75%"></div>
+      <div class="gl-h" style="top:55%"></div>
+    </div>
+
+    <!-- Left-edge scroll progress indicator -->
+    <div class="scroll-progress" id="scroll-progress" aria-hidden="true">
+      <div class="scroll-progress-bar" id="scroll-progress-bar"></div>
+    </div>
+
+    <!-- JX LOGO TILE — starts fullscreen-centered, shrinks to grid slot on scroll -->
+    <div class="jx-tile jx-tile-logo" id="tile-logo" aria-label="JX Design and Dev">
       <div class="tile-line tl-top"></div>
       <div class="tile-line tl-right"></div>
       <div class="tile-line tl-bottom"></div>
       <div class="tile-line tl-left"></div>
-      <!-- JX SVG Logo -->
       <div class="tile-inner">
-        <svg class="jx-logo-svg" viewBox="0 0 280 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <!-- J letterform -->
+        <svg class="jx-logo-svg" viewBox="0 0 280 200" fill="none"
+             xmlns="http://www.w3.org/2000/svg" role="img" aria-label="JX logotype">
           <path class="jx-path" d="M 30,30 L 80,30 L 80,140 C 80,165 60,178 35,168 L 35,148 C 50,155 60,148 60,135 L 60,30 Z"/>
-          <!-- X letterform -->
           <path class="jx-path" d="M 100,30 L 140,95 L 100,165 L 125,165 L 155,110 L 185,165 L 210,165 L 170,95 L 210,30 L 185,30 L 155,80 L 125,30 Z"/>
         </svg>
-        <p class="jx-tagline">Product Engineer &amp; Creative Developer</p>
+        <p class="jx-tagline">Product Designer &amp; Creative Technologist</p>
       </div>
     </div>
 
-    <!-- ── TILE 1: The Origin (top-left, tall) ── -->
-    <div class="jx-tile jx-tile-content" id="tile-origin" data-index="1" data-route="origin">
+    <!-- TILE 1: The Origin (top-left, tall) -->
+    <div class="jx-tile jx-tile-content" id="tile-origin"
+         data-route="origin" role="button" tabindex="0"
+         aria-label="Open The Origin — five chapters, one relentless arc">
       <div class="tile-line tl-top"></div>
       <div class="tile-line tl-right"></div>
       <div class="tile-line tl-bottom"></div>
       <div class="tile-line tl-left"></div>
-      <div class="tile-bg" style="background-image:url('assets/images/okezie-1.webp')"></div>
+      <div class="tile-bg" style="background-image:url('assets/images/okezie-1.webp')" aria-hidden="true"></div>
       <div class="tile-inner">
         <div class="tile-header">
           <span class="tile-num">01</span>
           <h2 class="tile-title">The Origin</h2>
         </div>
-        <svg class="tile-symbol" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="1.5"/><path d="M12 8v4M12 16h.01" stroke-width="2" stroke-linecap="round"/></svg>
+        <svg class="tile-symbol" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" r="10" stroke-width="1.5"/>
+          <path d="M12 8v4M12 16h.01" stroke-width="2" stroke-linecap="round"/>
+        </svg>
       </div>
     </div>
 
-    <!-- ── TILE 2: Philosophy (top-right, tall) ── -->
-    <div class="jx-tile jx-tile-content" id="tile-philosophy" data-index="2" data-route="philosophy">
+    <!-- TILE 2: Philosophy (top-right, tall) -->
+    <div class="jx-tile jx-tile-content" id="tile-philosophy"
+         data-route="philosophy" role="button" tabindex="0"
+         aria-label="Open Philosophy — a language of my own">
       <div class="tile-line tl-top"></div>
       <div class="tile-line tl-right"></div>
       <div class="tile-line tl-bottom"></div>
       <div class="tile-line tl-left"></div>
-      <div class="tile-bg" style="background-image:url('assets/images/okezie-designer.webp')"></div>
+      <div class="tile-bg" style="background-image:url('assets/images/okezie-designer.webp')" aria-hidden="true"></div>
       <div class="tile-inner">
         <div class="tile-header">
           <span class="tile-num">03</span>
           <h2 class="tile-title">Philosophy</h2>
         </div>
-        <svg class="tile-symbol" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" stroke-width="1.5"/><circle cx="12" cy="12" r="3" stroke-width="1.5"/></svg>
+        <svg class="tile-symbol" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" stroke-width="1.5"/>
+          <circle cx="12" cy="12" r="3" stroke-width="1.5"/>
+        </svg>
       </div>
     </div>
 
-    <!-- ── TILE 3: The Arsenal (bottom-left, wide) ── -->
-    <div class="jx-tile jx-tile-content" id="tile-arsenal" data-index="3" data-route="arsenal">
+    <!-- TILE 3: The Arsenal (bottom-left, wide) -->
+    <div class="jx-tile jx-tile-content" id="tile-arsenal"
+         data-route="arsenal" role="button" tabindex="0"
+         aria-label="Open The Arsenal — experience, stack, signal">
       <div class="tile-line tl-top"></div>
       <div class="tile-line tl-right"></div>
       <div class="tile-line tl-bottom"></div>
       <div class="tile-line tl-left"></div>
-      <div class="tile-bg" style="background-image:url('assets/images/okezie-coder.webp')"></div>
+      <div class="tile-bg" style="background-image:url('assets/images/okezie-coder.webp')" aria-hidden="true"></div>
       <div class="tile-inner">
         <div class="tile-header">
           <span class="tile-num">02</span>
           <h2 class="tile-title">The Arsenal</h2>
         </div>
-        <svg class="tile-symbol" viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6" stroke-width="1.5"/><polyline points="8 6 2 12 8 18" stroke-width="1.5"/></svg>
+        <svg class="tile-symbol" viewBox="0 0 24 24" aria-hidden="true">
+          <polyline points="16 18 22 12 16 6" stroke-width="1.5"/>
+          <polyline points="8 6 2 12 8 18" stroke-width="1.5"/>
+        </svg>
       </div>
     </div>
 
-    <!-- ── TILE 4: Transmission (bottom-right, wide) ── -->
-    <div class="jx-tile jx-tile-content" id="tile-transmission" data-index="4" data-route="transmission">
+    <!-- TILE 4: Transmission (bottom-right, wide) -->
+    <div class="jx-tile jx-tile-content" id="tile-transmission"
+         data-route="transmission" role="button" tabindex="0"
+         aria-label="Open Transmission — visual, audio, signal">
       <div class="tile-line tl-top"></div>
       <div class="tile-line tl-right"></div>
       <div class="tile-line tl-bottom"></div>
       <div class="tile-line tl-left"></div>
-      <div class="tile-bg" style="background-image:url('assets/images/og-share-image.jpg')"></div>
+      <div class="tile-bg" style="background-image:url('assets/images/og-share-image.jpg')" aria-hidden="true"></div>
       <div class="tile-inner">
         <div class="tile-header">
           <span class="tile-num">04</span>
           <h2 class="tile-title">Transmission</h2>
         </div>
-        <svg class="tile-symbol" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3" stroke-width="1.5"/></svg>
+        <svg class="tile-symbol" viewBox="0 0 24 24" aria-hidden="true">
+          <polygon points="5 3 19 12 5 21 5 3" stroke-width="1.5"/>
+        </svg>
       </div>
     </div>
 
-    <!-- Scroll-down hint -->
-    <div class="scroll-hint" id="scroll-hint">
-      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+    <!-- Scroll hint -->
+    <div class="scroll-hint" id="scroll-hint" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="6 9 12 15 18 9"/>
+      </svg>
+      <span>Scroll to assemble</span>
     </div>
   </div>
 
-  <!-- ══════════════════════════════════════════
-       SCROLL SPACER — gives user scroll distance
-       to trigger the assembly animation
-       ══════════════════════════════════════════ -->
+  <!-- Virtual scroll spacer for assembly animation -->
   <div class="scroll-spacer" id="scroll-spacer"></div>
 
+  <!-- ═══════════════════════════════════════════════════════
+       INTERIOR SHELL — Full-screen editorial pages
+       (opened when any content tile is clicked)
+       ═══════════════════════════════════════════════════════ -->
+  <div id="interior-shell" class="interior-shell"
+       role="dialog" aria-modal="true" aria-label="Content panel">
 
-  <!-- ══════════════════════════════════════════
-       INTERIOR VIEWS — per-route editorial pages
-       ══════════════════════════════════════════ -->
-  <div id="interior-shell" class="interior-shell">
-    <button id="btn-back" class="btn-back" aria-label="Back to hub">
-      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
-      <span>Back</span>
-    </button>
+    <!-- Sticky nav: back button + interior scroll progress -->
+    <div class="int-nav-bar">
+      <button id="btn-back" class="btn-back" aria-label="Return to hub">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none"
+             stroke="currentColor" stroke-width="2.5">
+          <polyline points="15 18 9 12 15 6"/>
+        </svg>
+        <span>Hub</span>
+      </button>
+      <div class="int-scroll-indicator" aria-hidden="true">
+        <div class="int-scroll-bar" id="int-scroll-bar"></div>
+      </div>
+    </div>
 
-    <!-- Origin -->
+    <!-- ─── 01: THE ORIGIN ─── -->
     <div class="interior-page" id="page-origin">
       <div class="int-hero">
-        <span class="int-num">01</span>
-        <h1 class="int-title">The Origin.</h1>
-        <p class="int-sub">Five chapters // One relentless arc</p>
+        <div class="int-hero-meta">
+          <span class="int-eyebrow">01</span>
+          <div class="int-hero-divider"></div>
+          <span class="int-eyebrow">The Origin</span>
+        </div>
+        <h1 class="int-title">Five chapters.<br>One relentless arc.</h1>
+        <p class="int-sub">From a boy tracing architecture plans in Nigeria to a product designer building digital universes.</p>
       </div>
-      <div class="int-grid" id="origin-grid"></div>
+      <div class="chapter-grid" id="origin-grid">
+        <!-- Populated by about-dbx.js -->
+      </div>
     </div>
 
-    <!-- Arsenal -->
+    <!-- ─── 02: THE ARSENAL ─── -->
     <div class="interior-page" id="page-arsenal">
       <div class="int-hero">
-        <span class="int-num">02</span>
-        <h1 class="int-title">The Arsenal.</h1>
-        <p class="int-sub">Experience // Stack // Integrations</p>
+        <div class="int-hero-meta">
+          <span class="int-eyebrow">02</span>
+          <div class="int-hero-divider"></div>
+          <span class="int-eyebrow">The Arsenal</span>
+        </div>
+        <h1 class="int-title">Experience.<br>Stack. Signal.</h1>
+        <p class="int-sub">Built for precision. Shipped for impact.</p>
       </div>
-      <div class="int-grid" id="arsenal-grid"><p class="load-text">Loading vault...</p></div>
-      <div class="allies-section">
-        <p class="allies-label">// ALLIES &amp; CLIENTS</p>
-        <div class="logo-grid" id="logo-grid"><p class="load-text">Fetching live roster...</p></div>
-      </div>
+
+      <section class="int-section">
+        <p class="section-label">// EXPERIENCE</p>
+        <div class="exp-timeline" id="arsenal-grid">
+          <div class="ars-loading">Loading vault<span class="dot-anim">...</span></div>
+        </div>
+      </section>
+
+      <section class="int-section">
+        <p class="section-label">// TOOLS &amp; STACK</p>
+        <div class="tools-grid" id="tools-grid">
+          <div class="ars-loading">Fetching arsenal<span class="dot-anim">...</span></div>
+        </div>
+      </section>
     </div>
 
-    <!-- Philosophy -->
+    <!-- ─── 03: PHILOSOPHY ─── -->
     <div class="interior-page" id="page-philosophy">
       <div class="int-hero">
-        <span class="int-num">03</span>
-        <h1 class="int-title">The Philosophy.</h1>
-        <p class="int-sub">A Language of My Own</p>
+        <div class="int-hero-meta">
+          <span class="int-eyebrow">03</span>
+          <div class="int-hero-divider"></div>
+          <span class="int-eyebrow">Philosophy</span>
+        </div>
+        <h1 class="int-title">A language<br>of my own.</h1>
+        <p class="int-sub">Design is decision-making made visible.</p>
       </div>
-      <div class="int-grid">
-        <div class="int-card">
+      <div class="phil-grid">
+        <div class="phil-card phil-card--text">
           <p class="card-label">The Present</p>
           <h3>Igbo Heritage &amp; Code</h3>
-          <p>The gold and the scattered marks across this site aren't trend — they're intentional. I built them myself, without copying any existing script, but they carry the same instinct my Igbo ancestors had for turning meaning into symbol. Most of what "design" means online today traces back to Europe, Japan, the U.S. I wanted something that traced back to me. This is what that looks like.</p>
+          <p>The neon green and the scattered marks across this site are not trend &mdash; they&#39;re intentional. I built them without copying any existing script, but they carry the same instinct my Igbo ancestors had for turning meaning into symbol. Most of what &ldquo;design&rdquo; means online today traces back to Europe, Japan, the U.S. I wanted something that traced back to me. This is what that looks like.</p>
         </div>
-        <div class="int-card int-card-img">
-          <img src="assets/images/okezie-designer.webp" alt="Afrofuturism visual" loading="lazy">
+        <div class="phil-card phil-card--img">
+          <img src="assets/images/okezie-designer.webp" alt="Okezie Ferdinand at work" loading="lazy" width="600" height="800">
         </div>
-        <div class="int-card">
+        <div class="phil-card phil-card--img">
+          <img src="assets/images/okezie-1.webp" alt="Okezie Ferdinand" loading="lazy" width="600" height="800">
+        </div>
+        <div class="phil-card phil-card--text">
           <p class="card-label">The Universe</p>
           <h3>More Than A Brand</h3>
-          <p>"I wanted to showcase myself. To show people who I am and what I can do. JX isn't a brand; it's a universe."</p>
+          <p>&ldquo;I wanted to showcase myself. To show people who I am and what I can do. JX isn&#39;t a brand; it&#39;s a universe.&rdquo; The mission: make life easier, smarter and better through systems. Design is the language. Code is the engine. Culture is the fuel.</p>
         </div>
-        <div class="int-card int-card-img">
-          <img src="assets/images/okezie-1.webp" alt="JX world" loading="lazy">
+        <div class="phil-card phil-card--quote">
+          <blockquote>
+            <p>&ldquo;The details are not the details.<br>They make the design.&rdquo;</p>
+            <cite>&mdash; Charles Eames</cite>
+          </blockquote>
+        </div>
+        <div class="phil-card phil-card--text">
+          <p class="card-label">The Method</p>
+          <h3>Systems Over Aesthetics</h3>
+          <p>Every project starts with a single question: what decision does this design make easier? Not &ldquo;does it look good?&rdquo; &mdash; but &ldquo;does it work?&rdquo; Beauty that doesn&#39;t reduce friction is decoration. Systems that don&#39;t get used are theory. I build at the intersection: beautiful systems that humans actually need.</p>
         </div>
       </div>
     </div>
 
-    <!-- Transmission -->
+    <!-- ─── 04: TRANSMISSION ─── -->
     <div class="interior-page" id="page-transmission">
       <div class="int-hero">
-        <span class="int-num">04</span>
-        <h1 class="int-title">Transmission.</h1>
-        <p class="int-sub">Visual // Audio // Signal</p>
+        <div class="int-hero-meta">
+          <span class="int-eyebrow">04</span>
+          <div class="int-hero-divider"></div>
+          <span class="int-eyebrow">Transmission</span>
+        </div>
+        <h1 class="int-title">Visual.<br>Audio. Signal.</h1>
+        <p class="int-sub">A direct line. Watch, listen, decide.</p>
       </div>
       <div class="video-wrap">
-        <video id="int-video" playsinline controls></video>
+        <video id="int-video" class="int-video" playsinline controls preload="metadata">
+          <track kind="captions" label="English">
+        </video>
+        <div class="video-placeholder" id="video-placeholder">
+          <svg viewBox="0 0 24 24" width="40" height="40" fill="none"
+               stroke="rgba(0,255,65,0.4)" stroke-width="1.5" aria-hidden="true">
+            <polygon points="5 3 19 12 5 21 5 3"/>
+          </svg>
+          <p>Showreel loading...</p>
+        </div>
+      </div>
+      <div class="transmission-cta">
+        <a href="work.html" class="tcta-link">
+          View my work
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </a>
+        <a href="contact.html" class="tcta-link tcta-link--primary">
+          Start a project
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </a>
       </div>
     </div>
-  </div>
+
+  </div><!-- /interior-shell -->
 
   <script src="nav.js" defer></script>
-  <script src="about-dbx.js?v=7.1" defer></script>
+  <script src="about-dbx.js?v=8.0" defer></script>
 </body>
 </html>

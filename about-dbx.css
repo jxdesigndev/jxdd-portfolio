@@ -1,30 +1,34 @@
 /* ═══════════════════════════════════════════════════════════════════
-   ABOUT PAGE — JX BENTO HUB v7.0
-   Architecture mirrors brand.dropbox.com:
-   - Absolutely positioned tiles (not CSS grid)
-   - Each tile has 4 border-line children animated on entry
-   - Tiles start at scale(2) + large translate, animate to scale(1) pos(0)
-   - Click tile → .enlarge class → full-screen expand → interior
+   ABOUT PAGE — JX BENTO HUB v8.0
+   Mechanical mirror of brand.dropbox.com — JX-branded
+   New in v8.0:
+   • Blueprint gridlines overlay (animate in before tiles)
+   • Left-edge scroll progress bar
+   • Tile hover: full invert (bg ignites to color, border glows)
+   • Tile title scale-up mechanic on .opening (Dropbox-exact)
+   • Interior: chapter-grid, phil-grid, exp-timeline, tools-grid
+   • Interior scroll indicator bar
+   • Transmission: video + CTA buttons
+   • All sections polished with correct spacing
    ═══════════════════════════════════════════════════════════════════ */
 
 /* ── CSS Variables ── */
 :root {
-  --jx-void:     #030303;
-  --jx-green:    #00FF41;
-  --jx-white:    #F0F0F0;
-  --jx-gray:     rgba(240,240,240,0.4);
-  --jx-amber-bg: #0E0900;
-  --jx-green-bg: #010E03;
-  --jx-void-bg:  #060608;
-
-  /* Tile sizing — computed like Dropbox's --opening-single-column */
-  --tile-gap:    10px;
-  --tile-ease:   cubic-bezier(.4,0,.2,1);
-  --tile-swoop:  cubic-bezier(.6,0,0,1);
-  --tile-dur:    0.55s;
+  --jx-void:      #030303;
+  --jx-green:     #00FF41;
+  --jx-white:     #F0F0F0;
+  --jx-gray:      rgba(240,240,240,0.4);
+  --jx-amber-bg:  #0E0900;
+  --jx-green-bg:  #010E03;
+  --jx-void-bg:   #060608;
+  --tile-gap:     10px;
+  --tile-ease:    cubic-bezier(.4,0,.2,1);
+  --tile-swoop:   cubic-bezier(.6,0,0,1);
+  --tile-dur:     0.55s;
+  --nav-h:        80px; /* nav height from nav.js */
 }
 
-/* ── Reset for this page ── */
+/* ── Page Reset ── */
 html, body.about-page {
   overflow-x: hidden;
   background: var(--jx-void);
@@ -32,48 +36,92 @@ html, body.about-page {
 }
 
 /* ══════════════════════════════════════
+   BLUEPRINT GRIDLINES
+   Fade in during entry animation
+   ══════════════════════════════════════ */
+.hub-gridlines {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0; /* Animated by GSAP */
+}
+.gl-v {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: rgba(0,255,65,0.05);
+  transform: scaleY(0);
+  transform-origin: top center;
+}
+.gl-h {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: rgba(0,255,65,0.05);
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
+/* ══════════════════════════════════════
+   SCROLL PROGRESS BAR (left edge)
+   ══════════════════════════════════════ */
+.scroll-progress {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: rgba(0,255,65,0.06);
+  z-index: 50;
+  pointer-events: none;
+}
+.scroll-progress-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 0%; /* Set by GSAP ScrollTrigger */
+  background: var(--jx-green);
+  transform-origin: top;
+  transition: height 0.1s linear;
+}
+
+/* ══════════════════════════════════════
    THE HUB CONTAINER
-   position:fixed while user is on the
-   hub view, relative once interior opens
+   Fixed during hub view
    ══════════════════════════════════════ */
 .jx-hub {
   position: fixed;
   inset: 0;
   background: var(--jx-void);
   overflow: hidden;
-  /* Nav height compensation */
-  padding-top: 80px;
+  padding-top: var(--nav-h);
 }
-
-/* When interior is open, hub slides behind */
 .jx-hub.behind {
   pointer-events: none;
 }
-
-/* During entry animation, tiles can overflow their fixed bounds.
-   The hub clips all of them. */
 .jx-hub.assembling {
   overflow: hidden;
 }
 
-
 /* ══════════════════════════════════════
    TILE BASE
-   All tiles are absolute — matches the
-   Dropbox architecture exactly
    ══════════════════════════════════════ */
 .jx-tile {
   position: absolute;
   border-radius: 0;
   overflow: hidden;
   cursor: pointer;
-  /* Each tile will get left/top/width/height from JS */
+  /* Size/position set by JS */
 }
 
-/* ── The 4 Border Lines (animated on entry) ── */
+/* The 4 border lines */
 .tile-line {
   position: absolute;
-  background: rgba(0, 255, 65, 0.2);
+  background: rgba(0,255,65,0.18);
   z-index: 20;
   pointer-events: none;
 }
@@ -82,99 +130,93 @@ html, body.about-page {
 .tl-left   { left: 0; top: 0; bottom: 0; width: 1px; transform: scaleY(0); transform-origin: top center; }
 .tl-right  { right: 0; top: 0; bottom: 0; width: 1px; transform: scaleY(0); transform-origin: bottom center; }
 
-
 /* ══════════════════════════════════════
-   LOGO TILE (JX Hero)
+   LOGO TILE
    ══════════════════════════════════════ */
 .jx-tile-logo {
   background: var(--jx-void);
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-direction: column;
   cursor: default;
   z-index: 5;
 }
-
 .jx-logo-svg {
   width: 60%;
   max-width: 260px;
   height: auto;
   overflow: visible;
   filter: drop-shadow(0 0 0px transparent);
+  transition: filter 0.4s ease;
 }
-
 .jx-path {
   fill: transparent;
   stroke: var(--jx-green);
   stroke-width: 2;
   stroke-linejoin: round;
   stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
 }
-
 .jx-tagline {
   font-family: var(--font-mono, monospace);
-  font-size: 11px;
-  color: rgba(0,255,65,0.5);
+  font-size: 10px;
+  color: rgba(0,255,65,0.45);
   text-transform: uppercase;
-  letter-spacing: 0.15em;
+  letter-spacing: 0.18em;
   margin: 20px 0 0;
   text-align: center;
 }
-
+/* The inner container for logo tile */
+.jx-tile-logo .tile-inner {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
 
 /* ══════════════════════════════════════
    CONTENT TILES
    ══════════════════════════════════════ */
 .jx-tile-content {
-  /* Colors — each tile will have a data-color overriding */
   background: #050505;
   transition:
     background var(--tile-dur) var(--tile-ease),
     box-shadow var(--tile-dur) var(--tile-ease);
 }
-
 #tile-origin       { background: #050505; }
 #tile-philosophy   { background: var(--jx-green-bg); }
 #tile-arsenal      { background: var(--jx-amber-bg); }
 #tile-transmission { background: var(--jx-void-bg); }
 
-
-/* ── Grayscale Photo Background ── */
+/* ── Grayscale photo background (Dropbox-style) ── */
 .tile-bg {
   position: absolute;
-  /* Oversized for parallax */
   inset: -12%;
   background-size: cover;
   background-position: center top;
-  /* Moody desaturated — lower z so text appears on top */
   z-index: 0;
-  /* IMPORTANT: Do NOT use mix-blend-mode here — it creates a stacking
-     context that eats text from parent z-index layers.
-     Use filter + opacity only. */
-  filter: grayscale(100%) brightness(0.25) contrast(1.3);
-  opacity: 0.75;
+  /* No mix-blend-mode! It creates a stacking context that kills text z-index */
+  filter: grayscale(100%) brightness(0.22) contrast(1.3);
+  opacity: 0.8;
   transition:
     filter 0.65s cubic-bezier(0.16,1,0.3,1),
     opacity 0.65s cubic-bezier(0.16,1,0.3,1);
   will-change: transform;
 }
 
-/* Hover: ignite colour — show the real photo */
+/* HOVER: photo ignites to full color (like Dropbox exact) */
 .jx-tile-content:hover .tile-bg {
-  filter: grayscale(0%) brightness(0.55) contrast(1.1);
-  opacity: 0.88;
+  filter: grayscale(0%) brightness(0.5) contrast(1.1);
+  opacity: 0.9;
 }
 
-/* Hover: neon border ignition */
-.jx-tile-content:hover .tl-top,
-.jx-tile-content:hover .tl-bottom,
-.jx-tile-content:hover .tl-left,
-.jx-tile-content:hover .tl-right {
+/* HOVER: border lines ignite green */
+.jx-tile-content:hover .tile-line {
   background: var(--jx-green);
   opacity: 1;
 }
-
 
 /* ── Tile Inner Content ── */
 .tile-inner {
@@ -186,114 +228,115 @@ html, body.about-page {
   justify-content: space-between;
   padding: 28px;
 }
-
 .tile-header {
   display: flex;
   flex-direction: column;
   gap: 6px;
 }
-
 .tile-num {
   font-family: var(--font-mono, monospace);
-  font-size: 12px;
+  font-size: 11px;
   color: var(--jx-green);
-  letter-spacing: 0.15em;
+  letter-spacing: 0.18em;
 }
-
 .tile-title {
   font-family: var(--font-display, 'Syne', sans-serif);
-  font-size: clamp(20px, 2.5vw, 32px);
+  font-size: clamp(18px, 2.2vw, 30px);
   font-weight: 800;
   color: var(--jx-white);
   text-transform: uppercase;
+  letter-spacing: -0.02em;
   line-height: 1;
   margin: 0;
-  /* The Dropbox scale-up mechanic — JS adds .opening class to tile */
-  transition: transform var(--tile-dur) var(--tile-ease), color var(--tile-dur) var(--tile-ease);
+  transition:
+    transform var(--tile-dur) var(--tile-ease),
+    color var(--tile-dur) var(--tile-ease),
+    opacity var(--tile-dur) var(--tile-ease);
 }
 
-/* When tile is in enlarged state, title scales to fill */
-.jx-tile.enlarge .tile-title {
-  transform: scale(3.5);
+/* ── Dropbox-exact: title scales up 4x when tile is opening ── */
+.jx-tile.opening .tile-title {
+  opacity: 1 !important;
+  transform: scale(4) !important;
   transform-origin: left top;
-  color: white;
+}
+@media (max-width: 991px) {
+  .jx-tile.opening .tile-title {
+    transform: scale(2.5) !important;
+  }
 }
 
 .tile-symbol {
   align-self: flex-end;
   width: 55%;
-  max-width: 200px;
+  max-width: 180px;
   stroke: var(--jx-white);
   fill: none;
-  opacity: 0.06;
+  opacity: 0.05;
   transition: opacity 0.5s ease, stroke 0.5s ease;
   will-change: transform;
 }
 .jx-tile-content:hover .tile-symbol {
-  opacity: 0.18;
+  opacity: 0.16;
   stroke: var(--jx-green);
 }
 
-
 /* ══════════════════════════════════════
-   TILE ENLARGE STATE (Click mechanic)
-   Mirror of Dropbox .nav-tile.enlarge
+   TILE ENLARGE STATE (click mechanic)
    ══════════════════════════════════════ */
 .jx-tile.enlarge {
   z-index: 200 !important;
   width: 100vw !important;
   height: 100vh !important;
-  /* These are overridden per-tile anchor position by JS */
   transition: all 0.6s cubic-bezier(0.65, 0, 0.15, 1) !important;
 }
-
-/* Tile anchor corners (mirror of Dropbox tile-1/2/3/4 enlarge) */
+/* Corner anchors — tile expands FROM its corner */
 .jx-tile.enlarge.anchor-tl { top: 0 !important; left: 0 !important; }
 .jx-tile.enlarge.anchor-tr { top: 0 !important; right: 0 !important; left: auto !important; }
 .jx-tile.enlarge.anchor-bl { bottom: 0 !important; left: 0 !important; top: auto !important; }
 .jx-tile.enlarge.anchor-br { bottom: 0 !important; right: 0 !important; top: auto !important; left: auto !important; }
 
-/* When any tile is enlarging, fade others */
+/* Other tiles fade when one is enlarging */
 .jx-hub.has-enlarged .jx-tile:not(.enlarge) {
   opacity: 0;
   transition: opacity 0.25s ease;
   pointer-events: none;
 }
 
-
 /* ══════════════════════════════════════
    SCROLL HINT
    ══════════════════════════════════════ */
 .scroll-hint {
   position: absolute;
-  bottom: 32px;
-  right: 32px;
-  color: rgba(0,255,65,0.4);
-  animation: scrollBounce 2s ease-in-out infinite;
+  bottom: 28px;
+  right: 28px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: rgba(0,255,65,0.35);
+  font-family: var(--font-mono, monospace);
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  animation: scrollBounce 2.2s ease-in-out infinite;
   z-index: 50;
 }
 @keyframes scrollBounce {
   0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(6px); }
+  50%       { transform: translateY(6px); }
 }
-
 
 /* ══════════════════════════════════════
    SCROLL SPACER
-   Gives the user virtual scroll distance
-   to drive the assembly animation
    ══════════════════════════════════════ */
 .scroll-spacer {
-  /* Height matches the scroll distance the user needs to "travel" */
   height: 250vh;
   pointer-events: none;
   background: transparent;
 }
 
-
 /* ══════════════════════════════════════
    INTERIOR SHELL
-   Full-screen editorial pages
    ══════════════════════════════════════ */
 .interior-shell {
   position: fixed;
@@ -304,210 +347,475 @@ html, body.about-page {
   overflow-x: hidden;
   visibility: hidden;
   opacity: 0;
-  /* GSAP autoAlpha manages visibility+opacity */
+  scroll-behavior: smooth;
 }
 
-.btn-back {
+/* Sticky top nav bar */
+.int-nav-bar {
   position: sticky;
   top: 0;
   z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 0;
+  background: rgba(3,3,3,0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(0,255,65,0.1);
+}
+.btn-back {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: rgba(3,3,3,0.85);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: transparent;
   border: none;
-  border-bottom: 1px solid rgba(0,255,65,0.15);
+  border-right: 1px solid rgba(0,255,65,0.1);
   color: var(--jx-green);
   font-family: var(--font-mono, monospace);
-  font-size: 12px;
-  letter-spacing: 0.15em;
+  font-size: 11px;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
   cursor: pointer;
-  padding: 16px 32px;
-  width: 100%;
-  transition: background 0.2s ease, color 0.2s ease;
+  padding: 16px 28px;
+  transition: color 0.2s ease, background 0.2s ease;
+  flex-shrink: 0;
 }
-.btn-back:hover { color: white; }
+.btn-back:hover { color: white; background: rgba(0,255,65,0.04); }
 
+/* Interior scroll progress indicator */
+.int-scroll-indicator {
+  flex: 1;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  min-height: 50px;
+}
+.int-scroll-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0%;  /* Set by JS scroll listener */
+  height: 1px;
+  bottom: 0;
+  margin: auto;
+  background: var(--jx-green);
+  transition: width 0.1s linear;
+}
+
+/* ══════════════════════════════════════
+   INTERIOR PAGE CONTAINER
+   ══════════════════════════════════════ */
 .interior-page {
   display: none;
-  padding: 0 5% 120px;
-  max-width: 1200px;
-  margin: 0 auto;
+  padding-bottom: 120px;
 }
 .interior-page.active { display: block; }
 
-
-/* ── Interior Hero ── */
+/* Interior hero */
 .int-hero {
-  padding: 60px 0 40px;
-  border-bottom: 1px solid rgba(255,255,255,0.07);
-  margin-bottom: 48px;
+  padding: 60px 8% 50px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  max-width: 1300px;
+  margin: 0 auto;
 }
-.int-num {
-  display: block;
+.int-hero-meta {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.int-eyebrow {
   font-family: var(--font-mono, monospace);
-  font-size: 13px;
+  font-size: 11px;
   color: var(--jx-green);
-  letter-spacing: 0.15em;
-  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+}
+.int-hero-divider {
+  width: 40px;
+  height: 1px;
+  background: rgba(0,255,65,0.3);
 }
 .int-title {
   font-family: var(--font-display, 'Syne', sans-serif);
-  font-size: clamp(36px, 6vw, 72px);
+  font-size: clamp(36px, 6vw, 80px);
   font-weight: 900;
   color: var(--jx-white);
   text-transform: uppercase;
+  letter-spacing: -0.03em;
   line-height: 1;
-  margin: 0 0 12px;
+  margin: 0 0 20px;
 }
 .int-sub {
   font-family: var(--font-mono, monospace);
   font-size: 13px;
   color: rgba(240,240,240,0.35);
   margin: 0;
+  max-width: 520px;
+  line-height: 1.75;
 }
 
-
-/* ── Interior Grid ── */
-.int-grid {
+/* ══════════════════════════════════════
+   ORIGIN — Chapter Grid
+   ══════════════════════════════════════ */
+.chapter-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 20px;
-  /* 1fr rows = equal card heights regardless of text length */
-  grid-auto-rows: 1fr;
-  margin-bottom: 60px;
+  gap: 1px;
+  background: rgba(255,255,255,0.04);
+  margin: 0;
 }
 @media (max-width: 768px) {
-  .int-grid { grid-template-columns: 1fr; grid-auto-rows: auto; }
+  .chapter-grid { grid-template-columns: 1fr; }
 }
-
-.int-card {
-  background: #0a0a0a;
-  border: 1px solid rgba(255,255,255,0.05);
-  border-radius: 4px;
-  padding: 36px;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  /* Scroll-reveal: start invisible */
+.chapter-card {
+  background: var(--jx-void);
+  padding: 48px 8%;
   opacity: 0;
-  transform: translateY(30px);
-  transition: border-color 0.3s ease;
+  transform: translateY(24px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
 }
-.int-card:hover { border-color: rgba(0,255,65,0.2); }
-.int-card.revealed { opacity: 1; transform: translateY(0); transition: opacity 0.5s ease, transform 0.5s ease, border-color 0.3s ease; }
-
-.int-card-img {
-  padding: 0;
-  overflow: hidden;
-  border: none;
-  min-height: 260px;
+.chapter-card.revealed {
+  opacity: 1;
+  transform: none;
+}
+.chapter-card:hover {
   background: #0a0a0a;
 }
-.int-card-img img {
+.chapter-num {
+  font-family: var(--font-mono, monospace);
+  font-size: 11px;
+  color: var(--jx-green);
+  letter-spacing: 0.18em;
+  margin-bottom: 14px;
+}
+.chapter-era {
+  font-family: var(--font-mono, monospace);
+  font-size: 10px;
+  color: rgba(0,255,65,0.45);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  margin-bottom: 10px;
+}
+.chapter-card h3 {
+  font-family: var(--font-display, 'Syne', sans-serif);
+  font-size: clamp(20px, 2vw, 28px);
+  font-weight: 700;
+  color: var(--jx-white);
+  margin: 0 0 16px;
+}
+.chapter-card p {
+  font-size: 14px;
+  color: rgba(240,240,240,0.5);
+  line-height: 1.8;
+  margin: 0;
+}
+.chapter-card-img {
+  background: var(--jx-void);
+  overflow: hidden;
+  min-height: 300px;
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.chapter-card-img.revealed {
+  opacity: 1;
+  transform: none;
+}
+.chapter-card-img img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
+  filter: grayscale(100%) brightness(0.35);
+  transition: filter 0.6s ease;
+}
+.chapter-card-img:hover img {
+  filter: grayscale(0%) brightness(0.6);
 }
 
-.card-label {
+/* ══════════════════════════════════════
+   ARSENAL — Experience + Tools
+   ══════════════════════════════════════ */
+.int-section {
+  padding: 60px 8%;
+  max-width: 1300px;
+  margin: 0 auto;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+.section-label {
+  font-family: var(--font-mono, monospace);
+  font-size: 11px;
+  color: rgba(0,255,65,0.5);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-bottom: 40px;
+}
+
+/* Experience timeline */
+.exp-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.exp-item {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 40px;
+  padding: 36px 0;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.exp-item.revealed { opacity: 1; transform: none; }
+@media (max-width: 768px) {
+  .exp-item { grid-template-columns: 1fr; gap: 12px; }
+}
+.exp-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.exp-date {
   font-family: var(--font-mono, monospace);
   font-size: 11px;
   color: var(--jx-green);
-  text-transform: uppercase;
   letter-spacing: 0.15em;
-  margin: 0;
+  text-transform: uppercase;
 }
-.int-card h3 {
+.exp-company {
   font-family: var(--font-display, 'Syne', sans-serif);
-  font-size: 22px;
+  font-size: 15px;
+  font-weight: 700;
+  color: rgba(240,240,240,0.6);
+}
+.exp-content {}
+.exp-role {
+  font-family: var(--font-display, 'Syne', sans-serif);
+  font-size: clamp(18px, 2vw, 24px);
   font-weight: 700;
   color: var(--jx-white);
-  margin: 0;
+  margin: 0 0 16px;
 }
-.int-card p {
-  font-size: 15px;
-  color: rgba(240,240,240,0.5);
-  line-height: 1.75;
+.exp-desc {
+  font-size: 14px;
+  color: rgba(240,240,240,0.45);
+  line-height: 1.8;
   margin: 0;
+  white-space: pre-line;
 }
 
-
-/* ── Arsenal ── */
-.allies-section {
-  border-top: 1px solid rgba(255,255,255,0.07);
-  padding-top: 40px;
-  margin: 0 5% 80px;
-  max-width: 1200px;
-  margin-left: auto;
-  margin-right: auto;
-}
-.allies-label {
+.ars-loading {
   font-family: var(--font-mono, monospace);
   font-size: 12px;
-  color: var(--jx-green);
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  margin-bottom: 28px;
+  color: rgba(0,255,65,0.3);
+  letter-spacing: 0.1em;
+  padding: 20px 0;
 }
-.logo-grid {
+.dot-anim {
+  display: inline-block;
+  animation: dotBlink 1.5s steps(3, end) infinite;
+}
+@keyframes dotBlink {
+  0%   { content: '.'; }
+  33%  { content: '..'; }
+  66%  { content: '...'; }
+}
+
+/* Tools grid */
+.tools-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 12px;
 }
-.logo-card {
+.tool-card {
   background: #0a0a0a;
   border: 1px solid rgba(255,255,255,0.05);
   border-radius: 4px;
-  padding: 20px;
+  padding: 20px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  opacity: 0;
+  transform: scale(0.96);
+  transition: opacity 0.4s ease, transform 0.4s ease, border-color 0.3s ease;
+}
+.tool-card.revealed { opacity: 1; transform: scale(1); }
+.tool-card:hover { border-color: rgba(0,255,65,0.2); }
+.tool-card img {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+  filter: grayscale(100%) brightness(0.5);
+  transition: filter 0.3s ease;
+}
+.tool-card:hover img { filter: grayscale(0%) brightness(1); }
+.tool-name {
+  font-family: var(--font-mono, monospace);
+  font-size: 10px;
+  color: rgba(240,240,240,0.4);
+  text-align: center;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* ══════════════════════════════════════
+   PHILOSOPHY — Phil Grid
+   ══════════════════════════════════════ */
+.phil-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1px;
+  background: rgba(255,255,255,0.04);
+  padding: 0 0 80px;
+}
+@media (max-width: 768px) {
+  .phil-grid { grid-template-columns: 1fr; }
+}
+.phil-card {
+  background: var(--jx-void);
+  padding: 48px 8%;
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.phil-card.revealed { opacity: 1; transform: none; }
+.phil-card--text h3 {
+  font-family: var(--font-display, 'Syne', sans-serif);
+  font-size: clamp(20px, 2vw, 28px);
+  font-weight: 700;
+  color: var(--jx-white);
+  margin: 0 0 16px;
+}
+.phil-card--text p {
+  font-size: 14px;
+  color: rgba(240,240,240,0.5);
+  line-height: 1.85;
+  margin: 0;
+}
+.phil-card--img {
+  padding: 0;
+  overflow: hidden;
+  min-height: 340px;
+}
+.phil-card--img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: grayscale(100%) brightness(0.35);
+  transition: filter 0.65s ease;
+}
+.phil-card--img:hover img {
+  filter: grayscale(0%) brightness(0.6);
+}
+.phil-card--quote {
+  grid-column: span 2;
+  background: #060606;
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 80px;
-  transition: border-color 0.3s ease;
+  min-height: 220px;
 }
-.logo-card:hover { border-color: rgba(0,255,65,0.3); }
-.logo-card img {
-  max-width: 100%;
-  max-height: 48px;
-  filter: grayscale(100%) brightness(0.4);
-  transition: filter 0.3s ease;
+@media (max-width: 768px) {
+  .phil-card--quote { grid-column: span 1; }
 }
-.logo-card:hover img { filter: grayscale(0%) brightness(1); }
+.phil-card--quote blockquote {
+  text-align: center;
+  max-width: 620px;
+}
+.phil-card--quote blockquote p {
+  font-family: var(--font-display, 'Syne', sans-serif);
+  font-size: clamp(22px, 3vw, 36px);
+  font-weight: 700;
+  color: var(--jx-white);
+  line-height: 1.2;
+  margin: 0 0 16px;
+}
+.phil-card--quote blockquote cite {
+  font-family: var(--font-mono, monospace);
+  font-size: 11px;
+  color: rgba(0,255,65,0.5);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  font-style: normal;
+}
+.card-label {
+  font-family: var(--font-mono, monospace);
+  font-size: 10px;
+  color: var(--jx-green);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  margin: 0 0 14px;
+}
 
-
-/* ── Transmission ── */
+/* ══════════════════════════════════════
+   TRANSMISSION — Video + CTA
+   ══════════════════════════════════════ */
 .video-wrap {
   position: relative;
-  width: calc(100% - 10%);
-  max-width: 1200px;
-  margin: 0 auto;
-  padding-bottom: calc((100% - 10%) * 0.5625);
-  border-radius: 4px;
-  overflow: hidden;
+  width: 84%;
+  max-width: 1100px;
+  margin: 0 auto 60px;
+  padding-bottom: calc(84% * 0.5625);
   background: #000;
-  border: 1px solid rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.06);
+  overflow: hidden;
+  border-radius: 2px;
 }
-.video-wrap video {
+.int-video {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
 }
-
-
-/* ── Utilities ── */
-.load-text {
-  font-family: var(--font-mono, monospace);
-  font-size: 13px;
-  color: rgba(255,255,255,0.25);
-  padding: 20px 0;
+.video-placeholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
 }
-
+.video-placeholder p {
+  font-family: var(--font-mono, monospace);
+  font-size: 12px;
+  color: rgba(0,255,65,0.3);
+  letter-spacing: 0.1em;
+}
+.video-placeholder.hidden { display: none; }
+.transmission-cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 0 8% 80px;
+  flex-wrap: wrap;
+}
+.tcta-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono, monospace);
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(240,240,240,0.5);
+  text-decoration: none;
+  border: 1px solid rgba(255,255,255,0.1);
+  padding: 14px 28px;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+.tcta-link:hover { color: white; border-color: rgba(255,255,255,0.3); }
+.tcta-link--primary {
+  color: var(--jx-void);
+  background: var(--jx-green);
+  border-color: var(--jx-green);
+}
+.tcta-link--primary:hover { background: #39FF14; border-color: #39FF14; color: #000; }
 
 /* ══════════════════════════════════════
    MOBILE — Stack tiles vertically
@@ -515,13 +823,14 @@ html, body.about-page {
 @media (max-width: 900px) {
   .jx-hub {
     position: relative !important;
-    padding-top: 80px;
+    padding-top: var(--nav-h);
     height: auto;
     overflow: visible;
   }
   .scroll-spacer { display: none; }
+  .scroll-progress { display: none; }
+  .hub-gridlines { display: none; }
 
-  /* All tiles become static, stacked */
   .jx-tile {
     position: relative !important;
     left: auto !important; top: auto !important;
@@ -535,8 +844,15 @@ html, body.about-page {
   .jx-tile-logo { height: 55svh !important; }
   .scroll-hint { display: none; }
 
-  /* Prevent enlarge animation breaking mobile */
   .jx-tile.enlarge {
     height: 100vh !important;
   }
+  .int-hero { padding: 40px 6% 32px; }
+  .int-title { font-size: clamp(32px, 10vw, 56px); }
+  .chapter-grid { grid-template-columns: 1fr; }
+  .phil-grid { grid-template-columns: 1fr; }
+  .exp-item { grid-template-columns: 1fr; }
+  .tools-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }
+  .phil-card--quote { grid-column: span 1; }
+  .video-wrap { width: 92%; padding-bottom: calc(92% * 0.5625); }
 }

@@ -1,0 +1,217 @@
+diff --git a/admin.html b/admin.html
+index e33989f..7319ce2 100644
+--- a/admin.html
++++ b/admin.html
+@@ -322,8 +322,9 @@
+         </div>
+ 
+         <div class="form-group">
+-          <label class="form-label" for="pf-image">Cover Image URL</label>
+-          <input type="text" id="pf-image" class="form-input" placeholder="https://...">
++          <label class="form-label" for="pf-image">Thumbnail Image (Listings, single)</label>
++          <input type="file" id="pf-image" class="form-input" accept="image/*">
++          <div id="pf-image-preview" style="margin-top:var(--s-2); font-size:var(--text-xs); color:var(--gray-2); word-break: break-all;"></div>
+         </div>
+ 
+         <div class="form-group">
+@@ -362,6 +363,22 @@
+             <label class="form-label" for="pf-slug">URL Slug <span style="font-weight: normal; color: var(--gray-2); font-size: var(--text-2xs);">(used in the project's URL, e.g. 'zenflow')</span></label>
+             <input type="text" id="pf-slug" class="form-input" placeholder="zenflow">
+           </div>
++        <div class="form-row">
++          <div class="form-group">
++            <label class="form-label" for="pf-cover">Cover Image (single)</label>
++            <input type="file" id="pf-cover" class="form-input" accept="image/*">
++            <div id="pf-cover-preview" style="margin-top:var(--s-2); font-size:var(--text-xs); color:var(--gray-2); word-break: break-all;"></div>
++          </div>
++        </div>
++
++        <div class="form-row">
++          <div class="form-group">
++            <label class="form-label" for="pf-process">Process Images (Wireframes, Multiple)</label>
++            <input type="file" id="pf-process" class="form-input" accept="image/*" multiple>
++            <div id="pf-process-preview" style="margin-top:var(--s-2); font-size:var(--text-xs); color:var(--gray-2); word-break: break-all;"></div>
++          </div>
++        </div>
++
+           <div class="form-group">
+             <label class="form-label" for="pf-persona">Persona Image (single)</label>
+             <input type="file" id="pf-persona" class="form-input" accept="image/*">
+diff --git a/admin.js b/admin.js
+index 69d5374..e321501 100644
+--- a/admin.js
++++ b/admin.js
+@@ -211,6 +211,9 @@
+   function openProjectModal(project) {
+     currentEditingProject = project || null;
+     DOM.projectForm.reset();
++    document.getElementById('pf-image-preview').textContent = '';
++    document.getElementById('pf-cover-preview').textContent = '';
++    document.getElementById('pf-process-preview').textContent = '';
+     document.getElementById('pf-persona-preview').textContent = '';
+     document.getElementById('pf-screenshots-preview').textContent = '';
+ 
+@@ -224,7 +227,7 @@
+       document.getElementById('pf-timeline').value = project.timeline || '';
+       document.getElementById('pf-project-type').value = project.project_type || '';
+       document.getElementById('pf-priority').value = project.priority || 0;
+-      document.getElementById('pf-image').value = project.image_url || '';
++      
+       document.getElementById('pf-tools').value = (project.tools || []).join(', ');
+       document.getElementById('pf-url').value = project.url || '';
+       document.getElementById('pf-github').value = project.github_url || '';
+@@ -234,6 +237,15 @@
+       document.getElementById('pf-slug').value = project.slug || '';
+       document.getElementById('pf-outcome').value = project.outcome_text || '';
+       
++      if (project.image_url) {
++        document.getElementById('pf-image-preview').textContent = `Current: ${project.image_url.split('/').pop()}`;
++      }
++      if (project.cover_image_url) {
++        document.getElementById('pf-cover-preview').textContent = `Current: ${project.cover_image_url.split('/').pop()}`;
++      }
++      if (project.process_image_urls && project.process_image_urls.length > 0) {
++        document.getElementById('pf-process-preview').textContent = `Current: ${project.process_image_urls.length} image(s) saved.`;
++      }
+       if (project.persona_image_url) {
+         document.getElementById('pf-persona-preview').textContent = `Current: ${project.persona_image_url.split('/').pop()}`;
+       }
+@@ -266,6 +278,28 @@
+     btn.disabled = true;
+ 
+     try {
++      let newImageUrl = currentEditingProject ? currentEditingProject.image_url : null;
++      const imageFile = document.getElementById('pf-image').files[0];
++      if (imageFile) {
++        newImageUrl = await uploadCompressedImage(imageFile);
++      }
++
++      let newCoverUrl = currentEditingProject ? currentEditingProject.cover_image_url : null;
++      const coverFile = document.getElementById('pf-cover').files[0];
++      if (coverFile) {
++        newCoverUrl = await uploadCompressedImage(coverFile);
++      }
++
++      let newProcessUrls = currentEditingProject ? currentEditingProject.process_image_urls : [];
++      const processFiles = document.getElementById('pf-process').files;
++      if (processFiles && processFiles.length > 0) {
++        newProcessUrls = [];
++        for (let i = 0; i < processFiles.length; i++) {
++          const url = await uploadCompressedImage(processFiles[i]);
++          newProcessUrls.push(url);
++        }
++      }
++
+       let newPersonaUrl = currentEditingProject ? currentEditingProject.persona_image_url : null;
+       const personaFile = document.getElementById('pf-persona').files[0];
+       if (personaFile) {
+@@ -290,7 +324,7 @@
+         timeline: document.getElementById('pf-timeline').value.trim(),
+         project_type: document.getElementById('pf-project-type').value.trim(),
+         priority: parseInt(document.getElementById('pf-priority').value) || 0,
+-        image_url: document.getElementById('pf-image').value.trim(),
++        image_url: newImageUrl,
+         tools: document.getElementById('pf-tools').value.split(',').map(s => s.trim()).filter(Boolean),
+         url: document.getElementById('pf-url').value.trim(),
+         github_url: document.getElementById('pf-github').value.trim(),
+@@ -300,6 +334,8 @@
+         featured: document.getElementById('pf-featured').checked,
+         slug: document.getElementById('pf-slug').value.trim(),
+         outcome_text: document.getElementById('pf-outcome').value.trim(),
++        cover_image_url: newCoverUrl,
++        process_image_urls: newProcessUrls,
+         persona_image_url: newPersonaUrl,
+         screenshot_urls: newScreenshots
+       };
+diff --git a/project.js b/project.js
+index 96fe65c..795d81a 100644
+--- a/project.js
++++ b/project.js
+@@ -168,9 +168,10 @@ document.addEventListener('DOMContentLoaded', async () => {
+       heroSection.appendChild(metaGrid);
+     }
+ 
+-    if (project.image_url) {
++    const heroSrc = project.cover_image_url || project.image_url;
++    if (heroSrc) {
+       const heroImg = document.createElement('img');
+-      heroImg.src = project.image_url;
++      heroImg.src = heroSrc;
+       heroImg.alt = project.title;
+       heroImg.className = 'case-study-image-full reveal-scale';
+       heroImg.loading = 'lazy';
+@@ -223,6 +224,56 @@ document.addEventListener('DOMContentLoaded', async () => {
+       contentSection.appendChild(splitDiv);
+     }
+ 
++
++    // Process Images
++    if (project.process_image_urls && project.process_image_urls.length > 0) {
++      const procHeading = document.createElement('h2');
++      procHeading.className = 'reveal';
++      procHeading.textContent = 'Process & Wireframes';
++      procHeading.style.marginTop = 'var(--s-32)';
++      contentSection.appendChild(procHeading);
++
++      const processGallery = document.createElement('div');
++      processGallery.className = 'screenshot-gallery';
++
++      const procPromises = project.process_image_urls.map((url, i) => {
++        return new Promise((resolve) => {
++          const frame = document.createElement('div');
++          frame.className = 'screenshot-frame reveal-scale';
++          frame.style.transitionDelay = `${i * 0.1}s`;
++          
++          const img = document.createElement('img');
++          
++          img.onload = () => {
++            if (img.naturalWidth > img.naturalHeight) {
++              frame.classList.add('frame-landscape');
++            } else {
++              frame.classList.add('frame-portrait');
++            }
++            resolve(frame);
++          };
++          img.onerror = () => {
++            console.warn('Failed to load process image:', url);
++            resolve(null);
++          };
++
++          img.src = url;
++          img.alt = `Process ${i + 1}`;
++          
++          const picture = document.createElement('picture');
++          picture.appendChild(img);
++          frame.appendChild(picture);
++        });
++      });
++
++      const loadedProcFrames = await Promise.all(procPromises);
++      loadedProcFrames.forEach(frame => {
++        if (frame) processGallery.appendChild(frame);
++      });
++
++      contentSection.appendChild(processGallery);
++    }
++
+     // Screenshots Gallery
+     if (project.screenshot_urls && project.screenshot_urls.length > 0) {
+       const galleryDiv = document.createElement('div');
+diff --git a/zenflow_live.html b/zenflow_live.html
+index 6681d07..81d8a96 100644
+--- a/zenflow_live.html
++++ b/zenflow_live.html
+@@ -10,11 +10,11 @@
+   <meta property="og:url" content="https://www.jxdesign.dev/projects/zenflow.html">
+   <meta property="og:title" content="Zenflow Case Study | Okezie Ferdinand | JX Design &amp; Dev">
+   <meta property="og:description" content="Zenflow Case Study - A wellness app concept for women combining yoga and strength training.">
+-  <meta property="og:image" content="https://www.jxdesign.dev/assets/images/zenflow-cover.png">
++  <meta property="og:image" content="https://www.jxdesign.dev/assets/images/og-share-image.jpg">
+   <meta name="twitter:card" content="summary_large_image">
+   <meta name="twitter:title" content="Zenflow Case Study | Okezie Ferdinand | JX Design &amp; Dev">
+   <meta name="twitter:description" content="Zenflow Case Study - A wellness app concept for women combining yoga and strength training.">
+-  <meta name="twitter:image" content="https://www.jxdesign.dev/assets/images/zenflow-cover.png">
++  <meta name="twitter:image" content="https://www.jxdesign.dev/assets/images/og-share-image.jpg">
+   <title>Zenflow Case Study | Okezie Ferdinand | JX Design & Dev</title>
+ 
+   <!-- Fonts -->

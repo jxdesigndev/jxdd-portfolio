@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  body { background: #111; color: #fff; }
+  .physics-grid {
+    position: relative; width: 400px; height: 240px; overflow: hidden;
+    background: #333; border: 1px solid red;
+  }
+  .tool-item {
+    position: absolute; top: 0; left: 0;
+    width: 64px; height: 64px; background: lime;
+    display: flex; align-items: center; justify-content: center;
+  }
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
+</head>
+<body>
+<div class="physics-grid" id="grid">
+  <div class="tool-item" id="t1">1</div>
+  <div class="tool-item" id="t2">2</div>
+</div>
+<script>
+  const container = document.getElementById('grid');
+  const newNodes = [document.getElementById('t1'), document.getElementById('t2')];
+  
+            const Engine = Matter.Engine,
+                  Runner = Matter.Runner,
+                  Bodies = Matter.Bodies,
+                  Composite = Matter.Composite,
+                  Mouse = Matter.Mouse,
+                  MouseConstraint = Matter.MouseConstraint,
+                  Events = Matter.Events;
+
+            const engine = Engine.create();
+            const world = engine.world;
+            
+            const rect = container.getBoundingClientRect();
+            const width = rect.width || 400;
+            const height = rect.height || 240;
+
+            const wallOpts = { isStatic: true, render: { visible: false } };
+            const floor = Bodies.rectangle(width/2, height + 25, width*2, 50, wallOpts);
+            const leftWall = Bodies.rectangle(-25, height/2, 50, height*2, wallOpts);
+            const rightWall = Bodies.rectangle(width + 25, height/2, 50, height*2, wallOpts);
+            const ceiling = Bodies.rectangle(width/2, -100, width*2, 50, wallOpts);
+            
+            Composite.add(world, [floor, leftWall, rightWall, ceiling]);
+
+            const bodyMap = [];
+            const size = 64; 
+
+            newNodes.forEach((node, i) => {
+               const startX = (width / 2) + (Math.random() * 100 - 50);
+               const startY = Math.random() * -100 - 50;
+               const body = Bodies.rectangle(startX, startY, size, size, {
+                   restitution: 0.6,
+                   friction: 0.1,
+                   density: 0.04
+               });
+               bodyMap.push({ body, node });
+               Composite.add(world, body);
+            });
+
+            const mouse = Mouse.create(container);
+            const mouseConstraint = MouseConstraint.create(engine, {
+                mouse: mouse,
+                constraint: { stiffness: 0.2, render: { visible: false } }
+            });
+            Composite.add(world, mouseConstraint);
+
+            Events.on(engine, 'afterUpdate', function() {
+                bodyMap.forEach(({ body, node }) => {
+                    const x = body.position.x - size/2;
+                    const y = body.position.y - size/2;
+                    node.style.transform = `translate(${x}px, ${y}px) rotate(${body.angle}rad)`;
+                });
+            });
+
+            Runner.run(Runner.create(), engine);
+</script>
+</body>
+</html>

@@ -1,0 +1,73 @@
+diff --git a/admin.html b/admin.html
+index 7319ce2..76c47fa 100644
+--- a/admin.html
++++ b/admin.html
+@@ -483,6 +483,12 @@
+           <textarea id="tf-quote" class="form-textarea" rows="3" required></textarea>
+         </div>
+ 
++        <div class="form-group">
++          <label class="form-label" for="tf-website">Client Website URL</label>
++          <input type="url" id="tf-website" class="form-input" placeholder="https://...">
++
++        </div>
++
+         <div class="form-group">
+           <label class="form-label" for="tf-logo-file">Logo Upload</label>
+           <input type="file" id="tf-logo-file" class="form-input" accept="image/*">
+diff --git a/admin.js b/admin.js
+index e321501..fd57741 100644
+--- a/admin.js
++++ b/admin.js
+@@ -538,6 +538,7 @@
+       document.getElementById('tf-name').value = testm.name || '';
+       document.getElementById('tf-role').value = testm.role_company || '';
+       document.getElementById('tf-quote').value = testm.quote_text || '';
++      document.getElementById('tf-website').value = testm.client_website_url || '';
+       document.getElementById('tf-logo-preview').value = testm.logo_url || '';
+       document.getElementById('tf-video-preview').value = testm.video_url || '';
+       document.getElementById('tf-photo-preview').value = testm.photo_url || '';
+@@ -584,6 +585,7 @@
+         name: document.getElementById('tf-name').value.trim(),
+         role_company: document.getElementById('tf-role').value.trim(),
+         quote_text: document.getElementById('tf-quote').value.trim(),
++        client_website_url: document.getElementById('tf-website').value.trim() || null,
+         logo_url: logoUrl,
+         video_url: videoUrl,
+         photo_url: photoUrl,
+diff --git a/index.html b/index.html
+index a068dda..4bf26b9 100644
+--- a/index.html
++++ b/index.html
+@@ -520,7 +520,7 @@
+       opacity: 0.6;
+     }
+     .logo-strip img {
+-      height: 32px;
++      height: clamp(40px, 8vw, 80px);
+       width: auto;
+       filter: grayscale(100%) brightness(0.7);
+       transition: filter 0.3s ease, transform 0.3s ease;
+diff --git a/script.js b/script.js
+index 093d4a1..e7df757 100644
+--- a/script.js
++++ b/script.js
+@@ -2452,7 +2452,17 @@ const JXUniverse = {
+           img.src = t.logo_url;
+           img.alt = t.role_company || 'Company Logo';
+           img.loading = 'lazy';
+-          logoStrip.appendChild(img);
++          
++          if (t.client_website_url) {
++            const a = document.createElement('a');
++            a.href = t.client_website_url;
++            a.target = '_blank';
++            a.rel = 'noopener noreferrer';
++            a.appendChild(img);
++            logoStrip.appendChild(a);
++          } else {
++            logoStrip.appendChild(img);
++          }
+         }
+       });
+ 

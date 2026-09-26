@@ -1,0 +1,18 @@
+const puppeteer = require('puppeteer');
+
+(async () => {
+  const browser = await puppeteer.launch({ headless: "new" });
+  const page = await browser.newPage();
+  
+  await page.setViewport({ width: 1440, height: 900 });
+  await page.goto('https://brand.dropbox.com/', { waitUntil: 'domcontentloaded' });
+  
+  // Wait just 500ms to catch the entry state
+  await new Promise(r => setTimeout(r, 500));
+  await page.screenshot({ path: 'dropbox_entry.png' });
+  
+  await new Promise(r => setTimeout(r, 3000));
+  await page.screenshot({ path: 'dropbox_loaded.png' });
+
+  await browser.close();
+})();

@@ -196,10 +196,10 @@
     
     DOM.projectsTbody.innerHTML = allProjects.map(p => `
       <tr>
-        <td>${p.priority || 0}</td>
-        <td style="color:var(--white);">${p.title}</td>
-        <td>${p.category || '-'}</td>
-        <td>${p.year || '-'}</td>
+        <td>${escapeHTML(p.priority || 0)}</td>
+        <td style="color:var(--white);">${escapeHTML(p.title)}</td>
+        <td>${escapeHTML(p.category || '-')}</td>
+        <td>${escapeHTML(p.year || '-')}</td>
         <td>
           <button class="btn btn-ghost btn-sm btn-edit-project" data-id="${p.id}">Edit</button>
         </td>
@@ -1148,9 +1148,9 @@
     
     DOM.servicesTbody.innerHTML = allServices.map(sv => `
       <tr>
-        <td>${sv.priority || 0}</td>
-        <td style="color:var(--white);">${sv.name}</td>
-        <td>${sv.tool_category || '-'}</td>
+        <td>${escapeHTML(sv.priority || 0)}</td>
+        <td style="color:var(--white);">${escapeHTML(sv.name)}</td>
+        <td>${escapeHTML(sv.tool_category || '-')}</td>
         <td style="text-align:center;">
           <span style="color:${sv.is_active ? 'var(--green)' : 'var(--red)'}">${sv.is_active ? 'Yes' : 'No'}</span>
         </td>

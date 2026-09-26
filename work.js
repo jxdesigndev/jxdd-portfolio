@@ -185,7 +185,8 @@
               duration: 0.15, 
               onComplete: () => {
                 vdIndex.textContent = String(c.index + 1).padStart(2, '0');
-                vdTitle.innerHTML = c.p.title.split(' ').join('<br>');
+                vdTitle.innerHTML = '';
+c.p.title.split(' ').forEach((w,i,a) => { vdTitle.appendChild(document.createTextNode(w)); if (i<a.length-1) vdTitle.appendChild(document.createElement('br')); });
                 vdRole.textContent = c.p.category || 'Project';
                 vdYear.textContent = c.p.year || '2026';
                 gsap.to(['#vd-index', '#vd-title', '#vd-role', '#vd-year'], { opacity: 1, duration: 0.25 });

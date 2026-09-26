@@ -6,6 +6,17 @@
 
 'use strict';
 
+function escapeHTML(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+
 const JXUniverse = {
 
   /* ─── State ─── */
@@ -2111,15 +2122,15 @@ const JXUniverse = {
     const sub       = [category, year].filter(Boolean).join(' / ');
 
     const media = hasImage 
-      ? (isVid ? `<video src="${p.image_url}" class="reelfolio-card-img" autoplay loop muted playsinline loading="lazy"></video>` : `<img src="${p.image_url}" alt="${title}" class="reelfolio-card-img" loading="lazy">`)
+      ? (isVid ? `<video src="${p.image_url}" class="reelfolio-card-img" autoplay loop muted playsinline loading="lazy"></video>` : `<img src="${p.image_url}" alt="${escapeHTML(title)}" class="reelfolio-card-img" loading="lazy">`)
       : `<div class="reelfolio-card-ph">${title.slice(0, 2).toUpperCase()}</div>`;
 
     return `
-      <article class="reelfolio-card" role="listitem" tabindex="0" aria-label="View project: ${title}">
+      <article class="reelfolio-card" role="listitem" tabindex="0" aria-label="View project: ${escapeHTML(title)}">
         ${media}
         <div class="reelfolio-card-overlay">
-          <h3 class="reelfolio-card-title">${title}</h3>
-          <span class="reelfolio-card-sub">${sub}</span>
+          <h3 class="reelfolio-card-title">${escapeHTML(title)}</h3>
+          <span class="reelfolio-card-sub">${escapeHTML(sub)}</span>
         </div>
       </article>
     `;
@@ -2295,7 +2306,7 @@ const JXUniverse = {
     /* Remove any existing modal */
     document.getElementById('jx-modal-overlay')?.remove();
 
-    const tools = (p.tools || []).map(t => `<span class="tag">${t}</span>`).join('');
+    const tools = (p.tools || []).map(t => `<span class="tag">${escapeHTML(t)}</span>`).join('');
 
     // 1. Meta Grid
     const roleMeta = p.project_role ? `<div style="display:flex;flex-direction:column;gap:var(--s-1);"><span style="font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:var(--track-widest);text-transform:uppercase;color:var(--green);">Role</span><span style="font-size:var(--text-sm);color:var(--gray-2);">${p.project_role}</span></div>` : '';

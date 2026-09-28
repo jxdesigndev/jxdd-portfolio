@@ -14,8 +14,8 @@ const ROOT = __dirname;
 /* ─── Inline dev server ─── */
 const MIME_TYPES = {
   '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript',
-  '.json': 'application/json', '.png': 'image/png', '.jpg': 'image/jpeg',
-  '.jpeg': 'image/jpeg', '.svg': 'image/svg+xml', '.ico': 'image/x-icon',
+  '.json': 'application/json', '.webp': 'image/png', '.webp': 'image/jpeg',
+  '.webp': 'image/jpeg', '.svg': 'image/svg+xml', '.ico': 'image/x-icon',
   '.mp4': 'video/mp4', '.woff2': 'font/woff2', '.woff': 'font/woff', '.ttf': 'font/ttf'
 };
 const server = http.createServer((req, res) => {
@@ -154,7 +154,7 @@ server.listen(PORT, async () => {
       warn('index', 'Audio toast', 'Not in DOM — may have already auto-dismissed due to earlier scroll interaction');
     }
 
-    await p1.screenshot({ path: 'qa_audit_index.jpg', quality: 90, type: 'jpeg' });
+    await p1.screenshot({ path: 'qa_audit_index.webp', quality: 90, type: 'jpeg' });
     await p1.close();
 
     /* ═══════════════════════════════════════════════════════
@@ -203,7 +203,7 @@ server.listen(PORT, async () => {
     await new Promise(r => setTimeout(r, 600));
     pass('about', 'Full page scroll without exception');
 
-    await p2.screenshot({ path: 'qa_audit_about.jpg', quality: 90, type: 'jpeg' });
+    await p2.screenshot({ path: 'qa_audit_about.webp', quality: 90, type: 'jpeg' });
     await p2.close();
 
     /* ═══════════════════════════════════════════════════════
@@ -291,7 +291,7 @@ server.listen(PORT, async () => {
       fail('work', 'Project cards', 'No .work-card found');
     }
 
-    await p3.screenshot({ path: 'qa_audit_work.jpg', quality: 90, type: 'jpeg' });
+    await p3.screenshot({ path: 'qa_audit_work.webp', quality: 90, type: 'jpeg' });
     await p3.close();
 
     /* ═══════════════════════════════════════════════════════
@@ -329,7 +329,7 @@ server.listen(PORT, async () => {
     });
     decorativeIconsHidden ? pass('services', 'Decorative service icons aria-hidden="true"') : fail('services', 'Decorative icons ARIA', 'Icons not aria-hidden — screen readers will read Unicode symbols aloud');
 
-    await p4.screenshot({ path: 'qa_audit_services.jpg', quality: 90, type: 'jpeg' });
+    await p4.screenshot({ path: 'qa_audit_services.webp', quality: 90, type: 'jpeg' });
     await p4.close();
 
     /* ═══════════════════════════════════════════════════════
@@ -396,7 +396,7 @@ server.listen(PORT, async () => {
       ariaInvalid === 'true' ? pass('contact', 'aria-invalid="true" set on empty fields') : fail('contact', 'aria-invalid validation', `Got: ${ariaInvalid}`);
     }
 
-    await p5.screenshot({ path: 'qa_audit_contact.jpg', quality: 90, type: 'jpeg' });
+    await p5.screenshot({ path: 'qa_audit_contact.webp', quality: 90, type: 'jpeg' });
     await p5.close();
 
     /* ─── SUMMARY ─── */

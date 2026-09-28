@@ -35,8 +35,8 @@ setTimeout(async () => {
         headers,
         body: JSON.stringify({
           slug: targetSlug,
-          persona_image_url: 'https://www.jxdesign.dev/assets/images/zenflow-amara.jpeg',
-          screenshot_urls: ['https://www.jxdesign.dev/assets/images/zenflow-courses-screen.png'],
+          persona_image_url: 'https://www.jxdesign.dev/assets/images/zenflow-amara.webp',
+          screenshot_urls: ['https://www.jxdesign.dev/assets/images/zenflow-courses-screen.webp'],
           outcome_text: 'Test outcome.'
         })
       });

@@ -15,7 +15,7 @@ const puppeteer = require('puppeteer');
     await page.setViewport({ width: vp.width, height: vp.height });
     await page.goto('https://www.jxdesign.dev', { waitUntil: 'networkidle2' });
     await new Promise(r => setTimeout(r, 4000));
-    await page.screenshot({ path: `/home/jx/.gemini/antigravity/brain/4c64f8e8-4ff9-49f0-913d-5609635902fa/audit_${vp.name}.png`, fullPage: true });
+    await page.screenshot({ path: `/home/jx/.gemini/antigravity/brain/4c64f8e8-4ff9-49f0-913d-5609635902fa/audit_${vp.name}.webp`, fullPage: true });
     console.log(`Captured ${vp.name}`);
     await page.close();
   }

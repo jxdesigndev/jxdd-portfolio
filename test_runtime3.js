@@ -22,7 +22,7 @@ dom.window.eval(`
         eq: () => ({
           order: async () => ({
             data: [
-              { name: 'Tool 1', category: 'dev', is_active: true, logo_url: 'http://test.com/1.jpg' }
+              { name: 'Tool 1', category: 'dev', is_active: true, logo_url: 'http://test.com/1.webp' }
             ],
             error: null
           })

@@ -9,7 +9,7 @@ const CORE_ASSETS = [
   '/script.js',
   '/nav.js',
   '/audio.js',
-  '/assets/images/jx-hero.png',
+  '/assets/images/jx-hero.webp',
   'https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js',
   'https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js',
   'https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js',

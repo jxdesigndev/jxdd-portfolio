@@ -191,7 +191,16 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   /* ── Not Found ── */
   const renderNotFound = () => {
+    
+    if (window.ScrollTrigger) {
+      window.ScrollTrigger.getAll().forEach(st => {
+        if (mainContent.contains(st.trigger)) {
+          st.kill();
+        }
+      });
+    }
     mainContent.innerHTML = '';
+
     const section = document.createElement('section');
     section.className = 'case-study-hero';
     section.style.textAlign = 'center';
@@ -227,7 +236,16 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     if (error || !project) { console.error('Project fetch error:', error); renderNotFound(); return; }
 
+    
+    if (window.ScrollTrigger) {
+      window.ScrollTrigger.getAll().forEach(st => {
+        if (mainContent.contains(st.trigger)) {
+          st.kill();
+        }
+      });
+    }
     mainContent.innerHTML = '';
+
 
     // ── HERO SECTION ──
     const heroSection = document.createElement('section');

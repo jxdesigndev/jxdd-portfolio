@@ -39,7 +39,7 @@ const puppeteer = require('puppeteer');
   await new Promise(r => setTimeout(r, 2000));
 
   // Take screenshot
-  const screenshotPath = './live_modal_test_zenflow.jpg';
+  const screenshotPath = './live_modal_test_zenflow.webp';
   console.log(`Taking screenshot: ${screenshotPath}`);
   await page.screenshot({ path: screenshotPath, type: 'jpeg', quality: 90 });
 

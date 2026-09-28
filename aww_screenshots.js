@@ -18,8 +18,8 @@ const server = http.createServer((req, res) => {
             '.css': 'text/css',
             '.html': 'text/html',
             '.json': 'application/json',
-            '.png': 'image/png',
-            '.jpg': 'image/jpeg',
+            '.webp': 'image/png',
+            '.webp': 'image/jpeg',
             '.svg': 'image/svg+xml',
             '.woff2': 'font/woff2',
         };
@@ -58,7 +58,7 @@ async function main() {
         for (const pg of pages) {
             await page.goto(`${BASE}${pg.url}`, { waitUntil: 'networkidle0', timeout: 30000 });
             await new Promise(r => setTimeout(r, pg.wait));
-            const outPath = `${ARTIFACTS}/${pg.name}_${vp.w}.png`;
+            const outPath = `${ARTIFACTS}/${pg.name}_${vp.w}.webp`;
             await page.screenshot({ path: outPath, fullPage: true });
             console.log(`DONE: ${pg.name} @ ${vp.w}px -> ${outPath}`);
         }

@@ -140,7 +140,16 @@
         console.warn('Failed to load tools', e);
       }
 
+      
+      if (window.ScrollTrigger) {
+        window.ScrollTrigger.getAll().forEach(st => {
+          if (container.contains(st.trigger)) {
+            st.kill();
+          }
+        });
+      }
       container.innerHTML = ''; // Clear container
+
 
       services.forEach((sv, idx) => {
         const num = `0${idx + 1}`.slice(-2);

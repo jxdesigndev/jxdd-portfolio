@@ -9,7 +9,7 @@ const server = http.createServer((req, res) => {
   let filePath = path.join(ROOT, req.url.split('?')[0] === '/' ? '/about.html' : req.url.split('?')[0]);
   const ext = path.extname(filePath);
   const types = { '.html':'text/html', '.css':'text/css', '.js':'application/javascript',
-                  '.webp':'image/webp', '.jpg':'image/jpeg', '.png':'image/png', '.svg':'image/svg+xml' };
+                  '.webp':'image/webp', '.webp':'image/jpeg', '.webp':'image/png', '.svg':'image/svg+xml' };
   try {
     const data = fs.readFileSync(filePath);
     res.writeHead(200, { 'Content-Type': types[ext] || 'text/plain' });
@@ -28,10 +28,10 @@ server.listen(8889, async () => {
 
   await page.goto('http://localhost:8889/', { waitUntil: 'domcontentloaded', timeout: 15000 });
   await new Promise(r => setTimeout(r, 500));
-  await page.screenshot({ path: path.join(ROOT, 'v71_t0.png') });
+  await page.screenshot({ path: path.join(ROOT, 'v71_t0.webp') });
 
   await new Promise(r => setTimeout(r, 3500));
-  await page.screenshot({ path: path.join(ROOT, 'v71_t4s.png') });
+  await page.screenshot({ path: path.join(ROOT, 'v71_t4s.webp') });
 
   // Check DOM state
   const state = await page.evaluate(() => {
@@ -63,7 +63,7 @@ server.listen(8889, async () => {
   // Scroll and check assembly
   await page.evaluate(() => window.scrollTo(0, 1200));
   await new Promise(r => setTimeout(r, 1000));
-  await page.screenshot({ path: path.join(ROOT, 'v71_scroll.png') });
+  await page.screenshot({ path: path.join(ROOT, 'v71_scroll.webp') });
 
   await browser.close();
   server.close();

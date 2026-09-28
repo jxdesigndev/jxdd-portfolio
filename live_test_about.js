@@ -82,7 +82,7 @@ const fs = require('fs');
   });
 
   // Take a screenshot to prove the visual state
-  await page.screenshot({ path: 'scratch/about_live_test.png', fullPage: true });
+  await page.screenshot({ path: 'scratch/about_live_test.webp', fullPage: true });
   
   console.log(JSON.stringify(results, null, 2));
   

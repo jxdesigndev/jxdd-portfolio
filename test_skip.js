@@ -33,7 +33,7 @@ const puppeteer = require('puppeteer');
   console.log("Waiting 3s for settle...");
   await new Promise(r => setTimeout(r, 3000));
   
-  await page.screenshot({ path: 'after_skip_real.png' });
+  await page.screenshot({ path: 'after_skip_real.webp' });
   
   console.log("Closing browser.");
   await browser.close();

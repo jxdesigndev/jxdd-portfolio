@@ -121,8 +121,8 @@ const puppeteer = require('puppeteer');
 
     // Final Screenshot
     console.log("\\nTaking final screenshot...");
-    await page.screenshot({ path: 'qa_final_state.jpg', quality: 90, type: 'jpeg' });
-    console.log("Saved qa_final_state.jpg.");
+    await page.screenshot({ path: 'qa_final_state.webp', quality: 90, type: 'jpeg' });
+    console.log("Saved qa_final_state.webp.");
 
   } catch (err) {
     console.error("Test script encountered an error:", err);

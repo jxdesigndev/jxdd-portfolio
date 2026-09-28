@@ -9,10 +9,10 @@ const puppeteer = require('puppeteer');
   
   // Wait just 500ms to catch the entry state
   await new Promise(r => setTimeout(r, 500));
-  await page.screenshot({ path: 'dropbox_entry.png' });
+  await page.screenshot({ path: 'dropbox_entry.webp' });
   
   await new Promise(r => setTimeout(r, 3000));
-  await page.screenshot({ path: 'dropbox_loaded.png' });
+  await page.screenshot({ path: 'dropbox_loaded.webp' });
 
   await browser.close();
 })();

@@ -15,7 +15,7 @@ const fs = require('fs');
 
   await new Promise(r => setTimeout(r, 6000));
 
-  await page.screenshot({ path: 'mobile_before_scroll.png' });
+  await page.screenshot({ path: 'mobile_before_scroll.webp' });
   
   // Scroll to reelfolio
   await page.evaluate(() => {
@@ -23,14 +23,14 @@ const fs = require('fs');
   });
   
   await new Promise(r => setTimeout(r, 2000));
-  await page.screenshot({ path: 'mobile_at_reelfolio.png' });
+  await page.screenshot({ path: 'mobile_at_reelfolio.webp' });
 
   // Scroll a bit more
   await page.evaluate(() => {
     window.scrollBy(0, 300);
   });
   await new Promise(r => setTimeout(r, 1000));
-  await page.screenshot({ path: 'mobile_scrolled.png' });
+  await page.screenshot({ path: 'mobile_scrolled.webp' });
 
   await browser.close();
   console.log("Screenshots taken.");

@@ -139,7 +139,7 @@ async function runAudit() {
           });
           results.responsiveness[p.name][w] = { hasHorizontalOverflow: overflow };
           
-          await page.screenshot({ path: `screenshot_${p.name}_${w}.png`, fullPage: true });
+          await page.screenshot({ path: `screenshot_${p.name}_${w}.webp`, fullPage: true });
         }
       }
 

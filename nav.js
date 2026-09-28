@@ -19,7 +19,7 @@
   ];
 
   const JX_LOGO_SVG = `
-    <img src="/assets/images/jx-logo.jpeg" alt="JX Logo" class="nav-logo-img">`;
+    <img src="/assets/images/jx-logo.webp" alt="JX Logo" class="nav-logo-img">`;
 
   const JX_LOGO_LARGE_SVG = `
     <svg viewBox="0 0 120 54" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -366,9 +366,13 @@
       window.JX.cursor.vy    = velY;
       window.JX.cursor.speed = speed;
 
-      requestAnimationFrame(raf);
     };
-    requestAnimationFrame(raf);
+    if (window.gsap && window.gsap.ticker) {
+      window.gsap.ticker.add(raf);
+    } else {
+      const fallbackRaf = () => { raf(); requestAnimationFrame(fallbackRaf); };
+      requestAnimationFrame(fallbackRaf);
+    }
   }
 
   /* ────────────────────────────────────────────────────────────────

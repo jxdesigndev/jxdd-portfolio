@@ -17,7 +17,7 @@ const puppeteer = require('puppeteer');
   ]);
   
   console.log("Navigated URL:", page.url());
-  await page.screenshot({ path: '/home/jx/.gemini/antigravity/brain/4c64f8e8-4ff9-49f0-913d-5609635902fa/zenflow_live.png' });
+  await page.screenshot({ path: '/home/jx/.gemini/antigravity/brain/4c64f8e8-4ff9-49f0-913d-5609635902fa/zenflow_live.webp' });
   
   await browser.close();
 })();

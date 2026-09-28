@@ -20,10 +20,10 @@ const puppeteer = require('puppeteer');
     console.log("Clicking the link...");
     await page.goto(zenflowLink, { waitUntil: 'networkidle2' });
     console.log("Arrived at:", page.url());
-    await page.screenshot({ path: 'zenflow_click_result.png' });
+    await page.screenshot({ path: 'zenflow_click_result.webp' });
   } else {
     console.log("Could not find Zenflow link.");
-    await page.screenshot({ path: 'zenflow_work_page.png' });
+    await page.screenshot({ path: 'zenflow_work_page.webp' });
   }
   
   await browser.close();

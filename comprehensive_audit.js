@@ -15,8 +15,8 @@ if (!fs.existsSync(OUT)) fs.mkdirSync(OUT, { recursive: true });
 
 const MIME = {
   '.html':'text/html','.css':'text/css','.js':'application/javascript',
-  '.json':'application/json','.png':'image/png','.jpg':'image/jpeg',
-  '.jpeg':'image/jpeg','.svg':'image/svg+xml','.ico':'image/x-icon',
+  '.json':'application/json','.webp':'image/png','.webp':'image/jpeg',
+  '.webp':'image/jpeg','.svg':'image/svg+xml','.ico':'image/x-icon',
   '.woff2':'font/woff2','.woff':'font/woff','.ttf':'font/ttf','.mp4':'video/mp4'
 };
 const server = http.createServer((req,res)=>{
@@ -118,7 +118,7 @@ async function runSectionA(browser){
       page.on('response',r=>{if(r.status()>=400)networkErrors.push(`HTTP ${r.status()}:${r.url()}`);});
       await page.setViewport({width:bp.width,height:bp.height,deviceScaleFactor:1});
       await nav(page,pg.url);
-      const ssFile=path.join(OUT,`${pg.name}_${bp.label}.png`);
+      const ssFile=path.join(OUT,`${pg.name}_${bp.label}.webp`);
       await page.screenshot({path:ssFile,fullPage:true});
       const overflow=await checkOverflow(page);
       const wordBreak=await checkWordBreak(page);

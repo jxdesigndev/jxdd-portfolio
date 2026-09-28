@@ -55,7 +55,16 @@
     
     // Clear inner contents except the center text
     const centerText = document.getElementById('viscose-center-text');
+    
+    if (window.ScrollTrigger) {
+      window.ScrollTrigger.getAll().forEach(st => {
+        if (ring.contains(st.trigger) || listContainer.contains(st.trigger)) {
+          st.kill();
+        }
+      });
+    }
     ring.innerHTML = '';
+
     if (centerText) ring.appendChild(centerText);
     listContainer.innerHTML = '';
 
@@ -374,8 +383,7 @@ c.p.title.split(' ').forEach((w,i,a) => { vdTitle.appendChild(document.createTex
     if (!window.Lenis) return;
     if (!window.JXLenis) {
       window.JXLenis = new Lenis({ duration: 1.4, smoothWheel: true });
-      const raf = t => { window.JXLenis.raf(t); requestAnimationFrame(raf); };
-      requestAnimationFrame(raf);
+      gsap.ticker.add((time) => { window.JXLenis.raf(time * 1000); });
       if (window.ScrollTrigger) window.JXLenis.on('scroll', ScrollTrigger.update);
     }
     workLenis = window.JXLenis;

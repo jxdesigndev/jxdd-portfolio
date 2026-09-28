@@ -19,14 +19,14 @@ const puppeteer = require('puppeteer');
     
     // Full page screenshot
     await page.screenshot({ 
-      path: `/home/jx/.gemini/antigravity/brain/4c64f8e8-4ff9-49f0-913d-5609635902fa/postload_${vp.name}.png`, 
+      path: `/home/jx/.gemini/antigravity/brain/4c64f8e8-4ff9-49f0-913d-5609635902fa/postload_${vp.name}.webp`, 
       fullPage: true 
     });
     console.log(`Captured full page: ${vp.name}`);
 
     // Also capture just the above-fold view
     await page.screenshot({ 
-      path: `/home/jx/.gemini/antigravity/brain/4c64f8e8-4ff9-49f0-913d-5609635902fa/postload_${vp.name}_fold.png`, 
+      path: `/home/jx/.gemini/antigravity/brain/4c64f8e8-4ff9-49f0-913d-5609635902fa/postload_${vp.name}_fold.webp`, 
       fullPage: false 
     });
     console.log(`Captured fold: ${vp.name}`);
@@ -54,7 +54,7 @@ const puppeteer = require('puppeteer');
     await page.evaluate(y => window.scrollTo(0, y), s.scroll);
     await new Promise(r => setTimeout(r, 1500));
     await page.screenshot({ 
-      path: `/home/jx/.gemini/antigravity/brain/4c64f8e8-4ff9-49f0-913d-5609635902fa/section_${s.name}.png`,
+      path: `/home/jx/.gemini/antigravity/brain/4c64f8e8-4ff9-49f0-913d-5609635902fa/section_${s.name}.webp`,
       fullPage: false 
     });
     console.log(`Section captured: ${s.name}`);

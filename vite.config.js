@@ -14,7 +14,6 @@ export default defineConfig({
         admin: resolve(__dirname, 'admin.html'),
         notfound: resolve(__dirname, '404.html')
       }
-    },
-    minify: 'esbuild'
+    }
   }
 });

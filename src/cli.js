@@ -1,5 +1,5 @@
 export function attach(universe) {
-  universe.initCLI = () {
+  universe.initCLI = async function() {
     const panel   = document.getElementById('cli-panel');
     const trigger = document.getElementById('cli-trigger');
     const closeBtn = document.getElementById('cli-close');

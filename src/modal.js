@@ -1,5 +1,5 @@
 export function attach(universe) {
-  universe.openModal = (p) {
+  universe.openModal = async function(p) {
     universe._triggerElement = document.activeElement;
 
     if (universe._escListener) document.removeEventListener('keydown', universe._escListener);
@@ -152,7 +152,7 @@ export function attach(universe) {
     });
   };
 
-  universe.closeModal = () {
+  universe.closeModal = async function() {
     const overlay = document.getElementById('jx-modal-overlay');
     if (!overlay) return;
     overlay.classList.remove('open');

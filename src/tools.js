@@ -1,5 +1,5 @@
 export function attach(universe) {
-  universe.loadTools = () {
+  universe.loadTools = async function() {
     const containers = document.querySelectorAll('.db-tools-container');
     if (!containers.length) return;
 

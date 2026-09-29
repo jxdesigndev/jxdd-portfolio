@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "scripts": {
     "start": "node serve.js",
-    "dev": "node serve.js",
-    "build": "node scripts/bump-sw-cache.js"
+    "dev": "vite",
+    "build": "vite build && node scripts/bump-sw-cache.js",
+    "preview": "vite preview"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.116.0",

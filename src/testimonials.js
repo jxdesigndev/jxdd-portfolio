@@ -1,5 +1,5 @@
 export function attach(universe) {
-  universe.loadTestimonials = () {
+  universe.loadTestimonials = async function() {
     const section = document.getElementById('testimonials-section');
     const grid = document.getElementById('testimonials-grid');
     const logoStrip = document.getElementById('logo-strip');

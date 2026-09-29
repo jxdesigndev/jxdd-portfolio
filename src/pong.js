@@ -1,5 +1,5 @@
 export function attach(universe) {
-  universe.initPong = () {
+  universe.initPong = async function() {
     if (universe._pongActive) return; // already running
     if (!universe.threeCtx || universe.threeCtx.is2D) {
       console.warn('JX Pong: WebGL required');

@@ -124,16 +124,16 @@ const JXUniverse = {
   /* ────────────────────────────────────────────────────────────────
      2. PARTICLE UNIVERSE — WebGL primary, Canvas2D fallback
      ──────────────────────────────────────────────────────────────── */
-  initParticles: async function(...args) { const m = await import('./src/webgl.js'); m.attach(this); return this.initParticles(...args); }
+  initParticles: async function(...args) { const m = await import('./src/webgl.js'); m.attach(this); return this.initParticles(...args); },
 
   /* ── 2a. THREE.JS WebGL particle universe ── */
-  initThreeJS: async function(...args) { const m = await import('./src/webgl.js'); m.attach(this); return this.initThreeJS(...args); }
+  initThreeJS: async function(...args) { const m = await import('./src/webgl.js'); m.attach(this); return this.initThreeJS(...args); },
 
   /* ── 2b. Canvas2D fallback (Firefox / no-WebGL) ── */
-  initCanvas2D: async function(...args) { const m = await import('./src/webgl.js'); m.attach(this); return this.initCanvas2D(...args); }
+  initCanvas2D: async function(...args) { const m = await import('./src/webgl.js'); m.attach(this); return this.initCanvas2D(...args); },
 
   /* ── Uniform tweener (WebGL fade-in helper) ── */
-  tweenUniform: async function(...args) { const m = await import('./src/webgl.js'); m.attach(this); return this.tweenUniform(...args); }
+  tweenUniform: async function(...args) { const m = await import('./src/webgl.js'); m.attach(this); return this.tweenUniform(...args); },
 
   /* ────────────────────────────────────────────────────────────────
      3. LENIS SMOOTH SCROLL
@@ -678,7 +678,7 @@ const JXUniverse = {
   /* ────────────────────────────────────────────────────────────────
      7b. PONG GAME ENGINE — Phase 4
      ──────────────────────────────────────────────────────────────── */
-  initPong: async function(...args) { const m = await import('./src/pong.js'); m.attach(this); return this.initPong(...args); }
+  initPong: async function(...args) { const m = await import('./src/pong.js'); m.attach(this); return this.initPong(...args); },
 
   /* ────────────────────────────────────────────────────────────────
      ORGANIC FLOAT (JS Perlin-like motion for Hero SVGs)
@@ -1050,24 +1050,24 @@ const JXUniverse = {
   /* ────────────────────────────────────────────────────────────────
      10. CINEMATIC MODAL
      ──────────────────────────────────────────────────────────────── */
-  openModal: async function(...args) { const m = await import('./src/modal.js'); m.attach(this); return this.openModal(...args); }
+  openModal: async function(...args) { const m = await import('./src/modal.js'); m.attach(this); return this.openModal(...args); },
 
-  closeModal: async function(...args) { const m = await import('./src/modal.js'); m.attach(this); return this.closeModal(...args); }
+  closeModal: async function(...args) { const m = await import('./src/modal.js'); m.attach(this); return this.closeModal(...args); },
 
   /* ────────────────────────────────────────────────────────────────
      12. JX TERMINAL — CLI
      ──────────────────────────────────────────────────────────────── */
-  initCLI: async function(...args) { const m = await import('./src/cli.js'); m.attach(this); return this.initCLI(...args); }
+  initCLI: async function(...args) { const m = await import('./src/cli.js'); m.attach(this); return this.initCLI(...args); },
 
   /* ────────────────────────────────────────────────────────────────
      13. TESTIMONIALS
      ──────────────────────────────────────────────────────────────── */
-  loadTestimonials: async function(...args) { const m = await import('./src/testimonials.js'); m.attach(this); return this.loadTestimonials(...args); }
+  loadTestimonials: async function(...args) { const m = await import('./src/testimonials.js'); m.attach(this); return this.loadTestimonials(...args); },
 
   /* ────────────────────────────────────────────────────────────────
      14. TOOLS / STACK
      ──────────────────────────────────────────────────────────────── */
-  loadTools: async function(...args) { const m = await import('./src/tools.js'); m.attach(this); return this.loadTools(...args); }};
+  loadTools: async function(...args) { const m = await import('./src/tools.js'); m.attach(this); return this.loadTools(...args); },};
 
 /* ── Boot ── */
 if (document.readyState === 'loading') {

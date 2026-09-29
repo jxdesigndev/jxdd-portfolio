@@ -1,5 +1,5 @@
 export function attach(universe) {
-  universe.initParticles = () {
+  universe.initParticles = async function() {
     const canvas = universe.heroCanvas;
     if (!canvas) return;
 
@@ -17,7 +17,7 @@ export function attach(universe) {
     universe.initCanvas2D(canvas);
   };
 
-  universe.initThreeJS = (canvas) {
+  universe.initThreeJS = async function(canvas) {
     if (!universe.particleWorker) {
       universe.particleWorker = new Worker('particle-worker.js');
       universe.workerPending = {};
@@ -283,7 +283,7 @@ export function attach(universe) {
       return arr;
     };
 
-    universe.rebuildGeometry = (count) => {
+    universe.rebuildGeometry = async (count) => {
       const geo = new THREE.BufferGeometry();
       const mainPos    = new Float32Array(count * 3);
       const target1    = new Float32Array(count * 3);
@@ -782,7 +782,7 @@ export function attach(universe) {
     universe.threeCtx = { mainMat, ambMat, mainParticles };
   };
 
-  universe.initCanvas2D = (canvas) {
+  universe.initCanvas2D = async function(canvas) {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
@@ -902,7 +902,7 @@ export function attach(universe) {
     universe.threeCtx = { is2D: true }; /* mark as active so loader knows */
   };
 
-  universe.tweenUniform = (uniform, from, to, duration) {
+  universe.tweenUniform = async function(uniform, from, to, duration) {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       uniform.value = to;
       return;

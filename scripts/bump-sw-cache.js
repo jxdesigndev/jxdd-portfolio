@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const swPath = path.join(__dirname, '..', 'sw.js');
+const swPath = path.join(__dirname, '..', 'public', 'sw.js');
 let swContent = fs.readFileSync(swPath, 'utf8');
 
 // Replace any existing CACHE_NAME assignment with a new timestamp

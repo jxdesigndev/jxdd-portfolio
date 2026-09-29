@@ -4,7 +4,7 @@
   "scripts": {
     "start": "node serve.js",
     "dev": "vite",
-    "build": "vite build && node scripts/bump-sw-cache.js",
+    "build": "node scripts/bump-sw-cache.js && vite build",
     "preview": "vite preview"
   },
   "dependencies": {

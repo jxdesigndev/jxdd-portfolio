@@ -283,7 +283,7 @@ export function attach(universe) {
       return arr;
     };
 
-    universe.rebuildGeometry = async (count) => {
+    universe.rebuildGeometry = (count) => {
       const geo = new THREE.BufferGeometry();
       const mainPos    = new Float32Array(count * 3);
       const target1    = new Float32Array(count * 3);

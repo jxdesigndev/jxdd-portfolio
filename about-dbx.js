@@ -465,9 +465,9 @@
 
     container.innerHTML = '';
     const imgs = [
-      'assets/images/okezie-1.webp',
-      'assets/images/okezie-coder.webp',
-      'assets/images/okezie-designer.webp',
+      '/assets/images/okezie-1.webp',
+      '/assets/images/okezie-coder.webp',
+      '/assets/images/okezie-designer.webp',
     ];
     let imgIdx = 0;
 
@@ -487,7 +487,7 @@
       if ((i + 1) % 2 === 0 && imgIdx < imgs.length) {
         const imgCard = document.createElement('div');
         imgCard.className = 'chapter-card-img';
-        imgCard.innerHTML = `<img src="${imgs[imgIdx]}" alt="Chapter ${ch.chapter_order} visual" loading="lazy">`;
+        imgCard.innerHTML = `<img src="${imgs[imgIdx]}" alt="Chapter ${ch.chapter_order} visual" >`;
         container.appendChild(imgCard);
         imgIdx++;
       }
@@ -527,7 +527,7 @@
       const el = document.createElement('div');
       el.className = 'tool-card';
       el.innerHTML = tool.logo_url
-        ? `<img src="${esc(tool.logo_url)}" alt="${esc(tool.name)}" loading="lazy"><span class="tool-name">${esc(tool.name)}</span>`
+        ? `<img src="${esc(tool.logo_url)}" alt="${esc(tool.name)}" ><span class="tool-name">${esc(tool.name)}</span>`
         : `<span class="tool-name">${esc(tool.name)}</span>`;
       grid.appendChild(el);
     });

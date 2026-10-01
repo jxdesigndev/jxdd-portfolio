@@ -1368,6 +1368,10 @@ function initTipTap() {
 window.addEventListener('tiptap-ready', initTipTap);
 if (window.TipTap) initTipTap(); // In case it loaded before this script
 
+  // Enable the login button now that JS has attached the submit listener
+  const loginBtn = DOM.loginForm.querySelector('button[type="submit"]');
+  if (loginBtn) loginBtn.disabled = false;
+
   // Init
   checkAuth();
 

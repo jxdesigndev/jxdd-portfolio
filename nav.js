@@ -286,6 +286,7 @@
       }
     }, { passive: true });
     const raf = (now) => {
+      if (_mqlRM.matches) return;
       const dt = Math.min((now - lastTime) / 16.67, 3); // normalised to 60fps
       lastTime = now;
 
@@ -368,9 +369,9 @@
 
     };
     if (window.gsap && window.gsap.ticker) {
-      window.gsap.ticker.add(raf);
+      window.gsap.ticker.add((time) => raf(time * 1000));
     } else {
-      const fallbackRaf = () => { raf(); requestAnimationFrame(fallbackRaf); };
+      const fallbackRaf = (now) => { raf(now); requestAnimationFrame(fallbackRaf); };
       requestAnimationFrame(fallbackRaf);
     }
   }

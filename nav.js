@@ -590,7 +590,9 @@
         dot.style.animation  = 'none';
         text.textContent = 'Unavailable';
       }
-    } catch (_) { /* silently fail */ }
+    } catch (err) {
+      console.warn('Availability fetch failed:', err);
+    }
   }
 
   /* ────────────────────────────────────────────────────────────────

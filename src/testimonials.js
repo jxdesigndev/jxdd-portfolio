@@ -71,11 +71,11 @@ export function attach(universe) {
       grid.innerHTML = '';
       
       function scrambleText(element, originalText) {
-        if (element.dataset.scrambling === 'true') return;
+        if (element._scrambleInterval) clearInterval(element._scrambleInterval);
         element.dataset.scrambling = 'true';
         let iterations = 0;
         const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()";
-        const interval = setInterval(() => {
+        element._scrambleInterval = setInterval(() => {
           element.textContent = originalText.split("").map((letter, index) => {
             if(index < Math.floor(iterations)) {
               return originalText[index];
@@ -83,7 +83,8 @@ export function attach(universe) {
             return letters[Math.floor(Math.random() * letters.length)]
           }).join("");
           if(iterations >= originalText.length) {
-            clearInterval(interval);
+            clearInterval(element._scrambleInterval);
+            element._scrambleInterval = null;
             element.dataset.scrambling = 'false';
             element.textContent = originalText;
           }

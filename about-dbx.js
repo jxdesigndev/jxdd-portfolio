@@ -18,6 +18,8 @@
  */
 
 (function () {
+  const MAX_SUPABASE_RETRIES = 120;
+
   'use strict';
 
   /* ─── Wait for GSAP ─── */
@@ -434,7 +436,7 @@
   function waitForSupabase(cb, attempts = 0) {
     if (window.jxSupabase)      { cb(window.jxSupabase); return; }
     if (window.supabaseClient)  { window.jxSupabase = window.supabaseClient; cb(window.jxSupabase); return; }
-    if (attempts > 120) { console.warn('[JX About] Supabase timeout — using static fallbacks'); loadStaticFallbacks(); return; }
+    if (attempts > MAX_SUPABASE_RETRIES) { console.warn('[JX About] Supabase timeout — using static fallbacks'); loadStaticFallbacks(); return; }
     setTimeout(() => waitForSupabase(cb, attempts + 1), 50);
   }
 

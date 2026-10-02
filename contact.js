@@ -91,7 +91,9 @@
           }
         });
       }
-    } catch (_) {}
+    } catch (err) {
+      console.warn('Availability fetch failed in contact:', err);
+    }
   }
 
   /* Form submission */
@@ -158,7 +160,7 @@
         showStatus('error', '> Transmission failed. Try emailing hello@jxdesigndev.com directly.');
       } finally {
         submit.disabled = false;
-        submit.textContent = 'TRANSMIT_SIGNAL ↗';
+        submit.textContent = 'Transmit Signal ↗';
       }
     });
 

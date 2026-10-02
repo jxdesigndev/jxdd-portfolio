@@ -832,8 +832,6 @@ const JXUniverse = {
 
       grid.innerHTML = renderList.map((p, i) => this.renderProjectCard(p, i)).join('');
 
-      grid.innerHTML = renderList.map((p, i) => this.renderProjectCard(p, i)).join('');
-
       /* Animate the whole container in on scroll */
       if (window.gsap) {
         gsap.fromTo(grid, { opacity: 0, y: 40 }, {

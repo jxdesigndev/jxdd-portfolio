@@ -25,6 +25,7 @@
   /* ─── Wait for GSAP ─── */
   function waitForGsap(cb) {
     if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) gsap.globalTimeline.timeScale(1000);
       cb();
     } else {
       setTimeout(() => waitForGsap(cb), 30);
@@ -254,7 +255,7 @@
         trigger: document.documentElement,
         start:   'top top',
         end:     '+=220vh',
-        scrub:   1.2,
+        scrub: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? false : 1.2,
       }
     });
 

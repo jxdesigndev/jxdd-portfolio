@@ -856,3 +856,13 @@ html, body.about-page {
   .phil-card--quote { grid-column: span 1; }
   .video-wrap { width: 92%; padding-bottom: calc(92% * 0.5625); }
 }
+
+/* ── Reduced motion for About Page ── */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -1665,7 +1665,7 @@ svg { display: block; }
   font-size: var(--text-base);
   color: var(--white);
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
-  outline: none;
+  /* outline removed for a11y */
   width: 100%;
 }
 
@@ -2771,7 +2771,7 @@ svg { display: block; }
       flex: 1;
       background: transparent;
       border: none;
-      outline: none;
+      /* outline removed for a11y */
       font-family: var(--font-mono);
       font-size: var(--text-sm);
       color: var(--white);
@@ -3428,3 +3428,7 @@ svg { display: block; }
   object-fit: cover;
 }
 
+
+
+/* Global a11y focus ring added to replace outline: none */
+*:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }

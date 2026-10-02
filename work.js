@@ -49,6 +49,7 @@
   /* Initialize Viscose Ring Animation */
   function initViscoseRing(projects) {
     if (!window.gsap || !window.ScrollTrigger) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) gsap.globalTimeline.timeScale(1000);
 
     const ring = document.getElementById('viscose-ring');
     const listContainer = document.getElementById('viscose-list');
@@ -115,7 +116,7 @@
       scrollTrigger: {
         trigger: '#viscose-wrapper',
         pin: true,
-        scrub: 1.5,
+        scrub: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? false : 1.5,
         end: `+=${numCards * 700}px` 
       }
     });

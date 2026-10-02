@@ -10,7 +10,8 @@
   function revealPage () {
     const page = document.getElementById('page');
     if (!page) return;
-    if (window.gsap) {
+    const prefsRM = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (window.gsap && !prefsRM) {
       gsap.to(page, { opacity: 1, duration: 0.7, ease: 'power2.out' });
       const tl = gsap.timeline({ delay: 0.1 });
       const chTitle = document.getElementById('ch-title');
@@ -29,11 +30,24 @@
       }
     } else {
       page.style.opacity = '1';
+      document.querySelectorAll('#ch-label, #ch-title, #ch-sub').forEach(el => {
+        if (el) {
+          el.style.opacity = '1';
+          el.style.transform = 'none';
+        }
+      });
     }
   }
 
   function initScrollAnimations () {
-    if (!window.gsap || !window.ScrollTrigger) return;
+    const prefsRM = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!window.gsap || !window.ScrollTrigger || prefsRM) {
+      document.querySelectorAll('.reveal, .reveal-scale').forEach(el => {
+        el.style.opacity = '1';
+        el.style.transform = 'none';
+      });
+      return;
+    }
     gsap.registerPlugin(ScrollTrigger);
     document.querySelectorAll('.reveal, .reveal-scale').forEach(el => {
       const isScale = el.classList.contains('reveal-scale');

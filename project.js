@@ -110,7 +110,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   /* ── GSAP animations ── */
   const applyAnimations = () => {
-    if (window.gsap) {
+    const prefsRM = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (window.gsap && !prefsRM) {
       gsap.to('#page', { opacity: 1, duration: 1, ease: 'power2.out' });
 
       const reveals = document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale, .reveal-blur');

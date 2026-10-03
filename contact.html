@@ -274,6 +274,20 @@
     }
   }
   </script>
+<link rel="manifest" href="/site.webmanifest">
+  <link rel="apple-touch-icon" href="/assets/images/apple-touch-icon.png">
+  <script src="https://browser.sentry-cdn.com/8.32.0/bundle.tracing.min.js" integrity="sha384-azPZNenw1tFrK+792hW27tmLnD4rHaeVToH/tzGQEC8vTwaE8DeelviliETYPmdA" crossorigin="anonymous"></script>
+  <script>
+    if (window.Sentry) {
+      Sentry.init({
+        dsn: "https://4dc0504b7ed168eca887ddcf377af5c6@o4512191041568768.ingest.de.sentry.io/4512191058214992",
+        sendDefaultPii: false,
+        integrations: [ Sentry.browserTracingIntegration() ],
+        tracesSampleRate: 1.0,
+      });
+    }
+  </script>
+  <script type="module" src="/compliance.js"></script>
 </head>
 <body>
   <a href="#page" class="skip-to-content">Skip to content</a>
@@ -410,7 +424,7 @@
 
     <!-- ── FOOTER ── -->
     <footer style="border-top:1px solid var(--border); padding:var(--s-8) var(--s-8); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:var(--s-4);">
-      <span style="font-family:var(--font-mono); font-size:var(--text-xs); color:var(--gray-2);">© 2026 JX. Nigeria.</span>
+      <span style="font-family:var(--font-mono); font-size:var(--text-xs); color:var(--gray-2);">© 2026 JX. Nigeria. | <a href="privacy.html" style="color:inherit;text-decoration:underline;">Privacy</a></span>
       <span style="font-family:var(--font-mono); font-size:var(--text-xs); color:var(--cyan);">SIGNAL_OPEN / WAITING_FOR_INPUT</span>
     </footer>
 

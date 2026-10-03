@@ -229,6 +229,20 @@
   }
   </script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js" defer integrity="sha384-cwS6YdhLI7XS60eoDiC+egV0qHp8zI+Cms46R0nbn8JrmoAzV9uFL60etMZhAnSu" crossorigin="anonymous"></script>
+<link rel="manifest" href="/site.webmanifest">
+  <link rel="apple-touch-icon" href="/assets/images/apple-touch-icon.png">
+  <script src="https://browser.sentry-cdn.com/8.32.0/bundle.tracing.min.js" integrity="sha384-azPZNenw1tFrK+792hW27tmLnD4rHaeVToH/tzGQEC8vTwaE8DeelviliETYPmdA" crossorigin="anonymous"></script>
+  <script>
+    if (window.Sentry) {
+      Sentry.init({
+        dsn: "https://4dc0504b7ed168eca887ddcf377af5c6@o4512191041568768.ingest.de.sentry.io/4512191058214992",
+        sendDefaultPii: false,
+        integrations: [ Sentry.browserTracingIntegration() ],
+        tracesSampleRate: 1.0,
+      });
+    }
+  </script>
+  <script type="module" src="/compliance.js"></script>
 </head>
 <body>
   <a href="#page" class="skip-to-content">Skip to content</a>
@@ -602,7 +616,7 @@
           </div>
         </div>
         <div class="footer-bottom">
-          <p class="footer-copy">© 2026 JX Design & Dev. All rights reserved.</p>
+          <p class="footer-copy">© 2026 JX Design & Dev. All rights reserved. | <a href="privacy.html" style="color:inherit;text-decoration:underline;">Privacy</a></p>
           <p class="footer-made">Built with <span class="green">♦</span> in Nigeria</p>
         </div>
       </div>

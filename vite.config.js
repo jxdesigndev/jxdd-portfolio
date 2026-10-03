@@ -12,7 +12,7 @@ export default defineConfig({
         services: resolve(__dirname, 'services.html'),
         project: resolve(__dirname, 'project.html'),
         admin: resolve(__dirname, 'admin.html'),
-        notfound: resolve(__dirname, '404.html')
+        notfound: resolve(__dirname, '404.html'), privacy: resolve(__dirname, 'privacy.html')
       }
     }
   }

@@ -111,6 +111,20 @@
       z-index: 1;
     }
   </style>
+<link rel="manifest" href="/site.webmanifest">
+  <link rel="apple-touch-icon" href="/assets/images/apple-touch-icon.png">
+  <script src="https://browser.sentry-cdn.com/8.32.0/bundle.tracing.min.js" integrity="sha384-azPZNenw1tFrK+792hW27tmLnD4rHaeVToH/tzGQEC8vTwaE8DeelviliETYPmdA" crossorigin="anonymous"></script>
+  <script>
+    if (window.Sentry) {
+      Sentry.init({
+        dsn: "https://4dc0504b7ed168eca887ddcf377af5c6@o4512191041568768.ingest.de.sentry.io/4512191058214992",
+        sendDefaultPii: false,
+        integrations: [ Sentry.browserTracingIntegration() ],
+        tracesSampleRate: 1.0,
+      });
+    }
+  </script>
+  <script type="module" src="/compliance.js"></script>
 </head>
 <body>
   <!-- Particle background -->

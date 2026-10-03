@@ -34,6 +34,12 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://www.jxdesign.dev/privacy.html</loc>
+    <lastmod>2026-10-03</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
     <loc>https://www.jxdesign.dev/project.html?slug=zenflow</loc>
     <lastmod>2026-08-04</lastmod>
     <changefreq>monthly</changefreq>

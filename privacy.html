@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="canonical" href="https://www.jxdesign.dev/privacy.html">
+  <meta name="description" content="Privacy Policy for JX Design & Dev. Transparency on data collection, tracking, and cookies.">
+  <meta name="theme-color" content="#000000">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.jxdesign.dev/privacy.html">
+  <meta property="og:title" content="Privacy Policy | JX Design &amp; Dev">
+  <meta property="og:description" content="Privacy Policy for JX Design & Dev. Transparency on data collection, tracking, and cookies.">
+  <meta property="og:image" content="https://www.jxdesign.dev/assets/images/og-share-image.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Privacy Policy | JX Design &amp; Dev">
+  <meta name="twitter:description" content="Privacy Policy for JX Design & Dev. Transparency on data collection, tracking, and cookies.">
+  <meta name="twitter:image" content="https://www.jxdesign.dev/assets/images/og-share-image.jpg">
+  <title>Privacy Policy | JX Design & Dev</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js" defer></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js" integrity="sha384-HOvlOYPIs/zjoIkWUGXkVmXsjr8GuZLV+Q+rcPwmJOVZVpvTSXQChiN4t9Euv9Vc" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js" integrity="sha384-P8VzCVnT9NBUkMrpcIZrJbA7EBjJvh/fJS6PmP+4nLIM284DtsImIv8D0fFjIkeh" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer integrity="sha384-WgXwGL6fUsYJWNaKJgVbrJKGRQwc1vieh2oy4kw9nXqpNDz3tdSsqEYUgeHD/NuF" crossorigin="anonymous"></script>
+  <script type="module" src="/supabase.js"></script>
+  
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/jpeg" href="assets/images/jx-logo.webp">
+
+  <style>
+    .privacy-hero {
+      padding: var(--s-24) var(--s-4) var(--s-12);
+      max-width: var(--max-width);
+      margin: 0 auto;
+    }
+    .privacy-title {
+      font-family: var(--font-display);
+      font-size: clamp(3rem, 6vw, 5rem);
+      text-transform: uppercase;
+      line-height: 0.9;
+      margin-bottom: var(--s-6);
+    }
+    .privacy-content {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 0 var(--s-4) var(--s-24);
+      font-family: var(--font-sans);
+      color: var(--gray-1);
+      line-height: 1.6;
+    }
+    .privacy-content h2 {
+      font-family: var(--font-mono);
+      font-size: var(--text-xl);
+      color: var(--text);
+      margin-top: var(--s-12);
+      margin-bottom: var(--s-4);
+      border-bottom: 1px solid var(--border);
+      padding-bottom: var(--s-2);
+    }
+    .privacy-content p {
+      margin-bottom: var(--s-4);
+      font-size: var(--text-base);
+    }
+    .privacy-content ul {
+      margin-bottom: var(--s-4);
+      padding-left: var(--s-6);
+      list-style-type: square;
+    }
+    .privacy-content li {
+      margin-bottom: var(--s-2);
+    }
+    .privacy-content a {
+      color: var(--green);
+      text-decoration: underline;
+    }
+  </style>
+<link rel="manifest" href="/site.webmanifest">
+  <link rel="apple-touch-icon" href="/assets/images/apple-touch-icon.png">
+  <script src="https://browser.sentry-cdn.com/8.32.0/bundle.tracing.min.js" integrity="sha384-azPZNenw1tFrK+792hW27tmLnD4rHaeVToH/tzGQEC8vTwaE8DeelviliETYPmdA" crossorigin="anonymous"></script>
+  <script>
+    if (window.Sentry) {
+      Sentry.init({
+        dsn: "https://4dc0504b7ed168eca887ddcf377af5c6@o4512191041568768.ingest.de.sentry.io/4512191058214992",
+        sendDefaultPii: false,
+        integrations: [ Sentry.browserTracingIntegration() ],
+        tracesSampleRate: 1.0,
+      });
+    }
+  </script>
+  <script type="module" src="/compliance.js"></script>
+</head>
+<body class="privacy-active">
+  <!-- Nav will be injected by nav.js -->
+
+  <main id="page">
+    <section class="privacy-hero">
+      <h1 class="privacy-title">Privacy<br>Policy</h1>
+      <p style="font-family: var(--font-mono); color: var(--green);">LAST UPDATED: 2026-10-03</p>
+    </section>
+
+    <section class="privacy-content">
+      <p>This privacy policy describes how JX Design & Dev ("we", "us", or "our") collects, uses, and shares information in connection with your use of our website (jxdesign.dev).</p>
+
+      <h2>1. Information We Collect</h2>
+      <p>We believe in data minimization. We only collect data that is strictly necessary for the operation, security, and improvement of this website.</p>
+      <ul>
+        <li><strong>Contact Form Data:</strong> When you submit a message via the Contact page (The Signal), we collect your name, email address, project type, and message content. This data is securely stored in our Supabase database for the sole purpose of responding to your inquiry.</li>
+        <li><strong>Error Tracking:</strong> We use Sentry to monitor website performance and catch errors (such as UI crashes or broken scripts). This tracking collects anonymized stack traces, browser environment data, and device types. <strong>No Personally Identifiable Information (PII)</strong>, such as IP addresses or exact location, is captured by default.</li>
+        <li><strong>Analytics (Optional):</strong> If you grant explicit consent via our cookie banner, we use Google Analytics (GA4) to understand aggregate traffic patterns and page views. This helps us improve the site. GA4 is configured to anonymize your IP address by default. If you decline consent, the Google Analytics script is entirely blocked from loading.</li>
+      </ul>
+
+      <h2>2. Use of Cookies</h2>
+      <p>We use cookies and local storage to store your preferences, specifically your choice to accept or decline analytics tracking (stored locally as <code>jx_cookie_consent</code>). We do not use third-party tracking cookies without your explicit consent.</p>
+
+      <h2>3. Data Sharing</h2>
+      <p><strong>We do not sell, rent, or trade your personal information.</strong> Your data is strictly used for the operations of this portfolio. The only third-party processors involved are essential infrastructure providers:</p>
+      <ul>
+        <li><strong>Vercel:</strong> Hosts the website and provides edge network delivery.</li>
+        <li><strong>Supabase:</strong> Provides secure database infrastructure for project data and contact form submissions.</li>
+        <li><strong>Sentry:</strong> Processes anonymized error logs.</li>
+        <li><strong>Google Analytics:</strong> Processes aggregate site traffic data (only if you consent).</li>
+      </ul>
+
+      <h2>4. Your Rights & Data Deletion</h2>
+      <p>You have the right to request access to or deletion of any personal data you have provided via the contact form. To request data deletion, please contact me directly at <a href="mailto:ferdinandokezie.o@gmail.com">ferdinandokezie.o@gmail.com</a> with the subject line "Data Deletion Request".</p>
+
+    </section>
+  </main>
+
+  <footer id="footer">
+    <div class="footer-wrap">
+      <div class="footer-left">
+        <p class="footer-copy">© 2026 JX DESIGN & DEV</p>
+        <p class="footer-time" id="footer-time">00:00:00 WAT</p>
+      </div>
+      <div class="footer-center">
+        <p class="footer-title">THE UNIVERSE AWAITS</p>
+      </div>
+      <div class="footer-right">
+        <a href="privacy.html" class="footer-link">PRIVACY</a>
+      </div>
+    </div>
+  </footer>
+
+  <script type="module" src="/nav.js"></script>
+  <script type="module" src="/script.js"></script>
+</body>
+</html>

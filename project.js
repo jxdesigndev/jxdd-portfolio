@@ -237,6 +237,32 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     if (error || !project) { console.error('Project fetch error:', error); renderNotFound(); return; }
 
+    /* ── Dynamically update SEO Meta Tags ── */
+    document.title = `${project.title} | Case Study | JX Design & Dev`;
+    const cleanDesc = project.description ? project.description.replace(/<[^>]+>/g, '').substring(0, 155) + '...' : 'Case study by Okezie Ferdinand (JX).';
+    const setMeta = (selector, content) => {
+      const el = document.querySelector(selector);
+      if (el) el.setAttribute('content', content);
+    };
+    setMeta('meta[name="description"]', cleanDesc);
+    setMeta('meta[property="og:title"]', `${project.title} | Case Study`);
+    setMeta('meta[property="og:description"]', cleanDesc);
+    setMeta('meta[name="twitter:title"]', `${project.title} | Case Study`);
+    setMeta('meta[name="twitter:description"]', cleanDesc);
+    if (project.hero_image) {
+      setMeta('meta[property="og:image"]', project.hero_image);
+      setMeta('meta[name="twitter:image"]', project.hero_image);
+    }
+    
+    /* ── Dynamically update Canonical URL ── */
+    let canonicalEl = document.querySelector('link[rel="canonical"]');
+    if (!canonicalEl) {
+      canonicalEl = document.createElement('link');
+      canonicalEl.rel = 'canonical';
+      document.head.appendChild(canonicalEl);
+    }
+    canonicalEl.href = `https://www.jxdesign.dev/project.html?slug=${slug}`;
+
     
     if (window.ScrollTrigger) {
       window.ScrollTrigger.getAll().forEach(st => {

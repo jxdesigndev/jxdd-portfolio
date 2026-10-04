@@ -1,5 +1,5 @@
 // CACHE_NAME is auto-generated at build time by package.json. Do not edit manually.
-const CACHE_NAME = 'jxdd-cache-v1791086574305';
+const CACHE_NAME = 'jxdd-cache-v1791086861147';
 
 const CORE_ASSETS = [
   '/',

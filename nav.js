@@ -801,11 +801,7 @@
     window.addEventListener('load', buildMobileCLIBtn);
 
     /* Page-in reveal if we came from a transition */
-    if (document.readyState === 'complete') {
-      pageRevealIn();
-    } else {
-      window.addEventListener('load', pageRevealIn);
-    }
+    pageRevealIn();
 
     /* Shared Video Looping Utility */
     function initLoopingPreviewVideo(videoEl) {

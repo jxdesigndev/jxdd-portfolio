@@ -152,7 +152,25 @@ const JXUniverse = {
      4. CINEMATIC LOADER
      ──────────────────────────────────────────────────────────────── */
   runLoader () {
-    return new Promise(resolve => {
+    return new Promise(async resolve => {
+      if (sessionStorage.getItem('jx_visited')) {
+        if (this.loader) this.loader.style.display = 'none';
+        const skipBtn = document.getElementById('loader-skip');
+        if (skipBtn) skipBtn.remove();
+        await this.initParticles();
+        this.particlesReady = true;
+        if (this.threeCtx && !this.threeCtx.is2D) {
+          const mats = this.threeCtx.mainMat.uniforms;
+          mats.uAlpha.value = 1;
+          mats.uProgress1.value = 0.0;
+          mats.uProgress2.value = 1.0; 
+          this.tweenUniform(mats.uGreenMix, 0, 0.15, 100);
+        }
+        resolve();
+        return;
+      }
+      sessionStorage.setItem('jx_visited', '1');
+
       const statuses = [
         'SIGNAL ACQUIRED',
         'LOADING JX CONSCIOUSNESS',

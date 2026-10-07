@@ -165,10 +165,34 @@
         numP.textContent = `${num} / ${sv.name}`;
         left.appendChild(numP);
 
+        const titleContainer = document.createElement('div');
+        titleContainer.style.display = 'flex';
+        titleContainer.style.alignItems = 'center';
+        titleContainer.style.gap = '16px';
+        titleContainer.style.flexWrap = 'wrap';
+        titleContainer.style.marginBottom = 'var(--s-6)';
+
         const title = document.createElement('h2');
         title.className = 'service-deep-title';
+        title.style.margin = '0'; // override default margin if any, to align with badge
         title.textContent = sv.name;
-        left.appendChild(title);
+        titleContainer.appendChild(title);
+
+        if (sv.is_coming_soon) {
+          const badge = document.createElement('span');
+          badge.textContent = 'COMING SOON';
+          badge.style.fontFamily = 'var(--font-mono)';
+          badge.style.fontSize = 'var(--text-xs)';
+          badge.style.color = 'var(--green)';
+          badge.style.border = '1px solid var(--green)';
+          badge.style.padding = '4px 8px';
+          badge.style.borderRadius = '4px';
+          badge.style.letterSpacing = '0.05em';
+          badge.style.whiteSpace = 'nowrap';
+          titleContainer.appendChild(badge);
+        }
+
+        left.appendChild(titleContainer);
 
         const body = document.createElement('p');
         body.className = 'service-deep-body';

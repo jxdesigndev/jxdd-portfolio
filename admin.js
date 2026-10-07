@@ -1194,11 +1194,13 @@
       
       document.getElementById('sv-priority').value = sv.priority || 0;
       document.getElementById('sv-active').checked = sv.is_active !== false;
+      document.getElementById('sv-coming-soon').checked = sv.is_coming_soon === true;
       DOM.btnDeleteService.style.display = 'block';
     } else {
       DOM.serviceModalTitle.textContent = 'Add Service';
       document.getElementById('sv-id').value = '';
       document.getElementById('sv-active').checked = true;
+      document.getElementById('sv-coming-soon').checked = false;
       DOM.btnDeleteService.style.display = 'none';
     }
     DOM.serviceModal.classList.add('open');
@@ -1248,6 +1250,7 @@
           video_url: videoUrl || null,
           priority: parseInt(document.getElementById('sv-priority').value) || 0,
           is_active: document.getElementById('sv-active').checked,
+          is_coming_soon: document.getElementById('sv-coming-soon').checked,
         };
 
         if (id) {

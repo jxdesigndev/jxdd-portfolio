@@ -562,6 +562,7 @@ const JXUniverse = {
     this.initCLI();
     this.initTypeToForm();
     this.loadFeaturedProjects();
+    this.loadHomeServices();
     this.loadTestimonials();
     this.loadTools();
   },
@@ -682,15 +683,7 @@ const JXUniverse = {
       }
     });
 
-    /* Service cards stagger */
-    if (prefsRM) {
-      gsap.set('.service-card', { opacity: 1, y: 0 });
-    } else {
-      gsap.fromTo('.service-card', { opacity: 0, y: 30 }, {
-        opacity: 1, y: 0, duration: 0.7, ease: 'power3.out', stagger: 0.1,
-        scrollTrigger: { trigger: '.services-grid', start: 'top 85%', once: true }
-      });
-    }
+
   },
 
   /* ────────────────────────────────────────────────────────────────
@@ -1083,6 +1076,147 @@ const JXUniverse = {
   /* ────────────────────────────────────────────────────────────────
      14. TOOLS / STACK
      ──────────────────────────────────────────────────────────────── */
+  
+  /* ────────────────────────────────────────────────────────────────
+     10. HOME SERVICES (The Forge)
+     ──────────────────────────────────────────────────────────────── */
+  async loadHomeServices () {
+    const grid = document.getElementById('home-services-grid');
+    if (!grid) return;
+    
+    let client = null;
+    try {
+      if (window.initSupabase) {
+        client = await window.initSupabase();
+      } else {
+        client = window.supabase;
+      }
+    } catch (err) {
+      console.warn('Supabase init failed for home services', err);
+    }
+    
+    if (!client || !client.from) return;
+    
+    try {
+      const { data: services, error } = await client
+        .from('services')
+        .select('*')
+        .eq('is_active', true)
+        .order('priority', { ascending: true })
+        .limit(4);
+        
+      if (error) throw error;
+      
+      if (!services || services.length === 0) {
+        grid.innerHTML = '<p style="color:var(--gray-3);">No services available.</p>';
+        return;
+      }
+      
+      grid.innerHTML = '';
+      const fragment = document.createDocumentFragment();
+      const nodes = [];
+      
+      services.forEach(sv => {
+        const card = document.createElement('div');
+        card.className = 'service-card';
+        
+        // Icon
+        const iconDiv = document.createElement('div');
+        iconDiv.className = 'service-icon';
+        let svg = '';
+        if (sv.tool_category === 'design') {
+          svg = `<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 5.5A3.5 3.5 0 0 1 8.5 2H12v7H8.5A3.5 3.5 0 0 1 5 5.5z"/><path d="M12 2h3.5a3.5 3.5 0 1 1 0 7H12V2z"/><path d="M12 12.5a3.5 3.5 0 1 1 7 0 3.5 3.5 0 1 1-7 0z"/><path d="M5 19.5A3.5 3.5 0 0 1 8.5 16H12v3.5a3.5 3.5 0 1 1-7 0z"/><path d="M5 12.5A3.5 3.5 0 0 1 8.5 9H12v7H8.5A3.5 3.5 0 0 1 5 12.5z"/></svg>`;
+        } else if (sv.tool_category === 'dev' || sv.tool_category === 'development') {
+          svg = `<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/></svg>`;
+        } else if (sv.tool_category === 'automation') {
+          svg = `<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="8" height="8" x="3" y="3" rx="2"/><path d="M7 11v4a2 2 0 0 0 2 2h4"/><rect width="8" height="8" x="13" y="13" rx="2"/></svg>`;
+        } else if (sv.tool_category === 'security' || sv.tool_category === 'security & other') {
+          svg = `<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2-1 4-2 7-2 2.8 0 4.7.8 6 2a1 1 0 0 1 1 1v7z"/></svg>`;
+        } else {
+          svg = `<svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>`;
+        }
+        
+        if (sv.icon && sv.icon.startsWith('<svg')) {
+          iconDiv.innerHTML = sv.icon;
+        } else if (sv.icon) {
+          iconDiv.innerHTML = `<span style="font-size:1.5em; font-family: var(--font-mono);">${sv.icon}</span>`;
+        } else {
+          iconDiv.innerHTML = svg;
+        }
+        card.appendChild(iconDiv);
+        
+        // Title & Badge container
+        const titleContainer = document.createElement('div');
+        titleContainer.style.display = 'flex';
+        titleContainer.style.alignItems = 'center';
+        titleContainer.style.gap = '8px';
+        titleContainer.style.flexWrap = 'wrap';
+        titleContainer.style.marginBottom = '8px';
+        
+        const name = document.createElement('h3');
+        name.className = 'service-name';
+        name.style.margin = '0';
+        name.textContent = sv.name;
+        titleContainer.appendChild(name);
+        
+        if (sv.is_coming_soon) {
+          const badge = document.createElement('span');
+          badge.textContent = 'COMING SOON';
+          badge.style.fontFamily = 'var(--font-mono)';
+          badge.style.fontSize = '0.65rem';
+          badge.style.color = 'var(--green)';
+          badge.style.border = '1px solid var(--green)';
+          badge.style.padding = '2px 6px';
+          badge.style.borderRadius = '4px';
+          badge.style.letterSpacing = '0.05em';
+          badge.style.whiteSpace = 'nowrap';
+          titleContainer.appendChild(badge);
+        }
+        card.appendChild(titleContainer);
+        
+        const desc = document.createElement('p');
+        desc.className = 'service-desc';
+        desc.textContent = sv.description || '';
+        card.appendChild(desc);
+        
+        const link = document.createElement('a');
+        link.href = 'services.html';
+        link.className = 'service-link';
+        link.textContent = 'Explore →';
+        if (typeof window.initPageTransitions === 'function') {
+           link.setAttribute('data-nav-link', '');
+        }
+        card.appendChild(link);
+        
+        fragment.appendChild(card);
+        nodes.push(card);
+      });
+      
+      grid.appendChild(fragment);
+      
+      if (window.gsap && window.ScrollTrigger) {
+        gsap.fromTo(nodes, 
+          { opacity: 0, y: 30 }, 
+          { 
+            opacity: 1, 
+            y: 0, 
+            duration: 0.7, 
+            stagger: 0.1,
+            ease: 'power3.out', 
+            scrollTrigger: { 
+              trigger: grid, 
+              start: 'top 85%', 
+              once: true 
+            } 
+          }
+        );
+      }
+      
+    } catch (e) {
+      console.error('Failed to load home services', e);
+    }
+  },
+
   loadTools: async function(...args) { const m = await import('./src/tools.js'); m.attach(this); return this.loadTools(...args); },};
 
 /* ── Boot ── */

@@ -403,7 +403,10 @@
 
   function consciousnessShift (destination) {
     if (isTransitioning) return;
-    if (!window.gsap) {
+
+    /* Prefers-reduced-motion or missing GSAP: navigate instantly */
+    const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion || !window.gsap) {
       window.location.href = destination;
       return;
     }
@@ -411,10 +414,14 @@
     isTransitioning = true;
 
     const wrap   = document.getElementById('ct-wrap');
+    if (!wrap) {
+      window.location.href = destination;
+      return;
+    }
     const panels = wrap.querySelectorAll('.ct-panel');
     const grid   = wrap.querySelector('.ct-grid');
     const sigil  = wrap.querySelector('.ct-sigil');
-    const strokes = sigil.querySelectorAll('.jx-stroke');
+    const strokes = sigil ? sigil.querySelectorAll('.jx-stroke') : [];
 
     /* Make clickable during transition */
     wrap.style.pointerEvents = 'all';
@@ -423,58 +430,69 @@
       onComplete: () => { window.location.href = destination; }
     });
 
-    /* 0 – 0.2s: panels slam in from left */
+    /* 0 – 0.32s: panels slam in from left (~0.32s total panel coverage) */
     tl.set(panels, { scaleX: 0, transformOrigin: 'left center' })
-      .to(panels[0], { scaleX: 1, duration: 0.5, ease: 'expo.inOut' }, 0)
-      .to(panels[1], { scaleX: 1, duration: 0.5, ease: 'expo.inOut' }, 0.04)
-      .to(panels[2], { scaleX: 1, duration: 0.5, ease: 'expo.inOut' }, 0.08)
+      .to(panels[0], { scaleX: 1, duration: 0.28, ease: 'expo.inOut' }, 0)
+      .to(panels[1], { scaleX: 1, duration: 0.28, ease: 'expo.inOut' }, 0.02)
+      .to(panels[2], { scaleX: 1, duration: 0.28, ease: 'expo.inOut' }, 0.04)
 
     /* Grid + sigil reveal */
-      .to(grid,  { opacity: 1, duration: 0.3, ease: 'power2.out' }, 0.35)
-      .to(sigil, { opacity: 1, scale: 1, duration: 0.4, ease: 'back.out(1.4)' }, 0.4)
+      .to(grid,  { opacity: 1, duration: 0.16, ease: 'power2.out' }, 0.14)
+      .to(sigil, { opacity: 1, scale: 1, duration: 0.18, ease: 'back.out(1.4)' }, 0.14);
 
-    /* Stroke-draw the JX sigil */
-      .to(strokes, {
+    if (strokes.length) {
+      /* Stroke-draw the JX sigil */
+      tl.to(strokes, {
         strokeDashoffset: 0,
-        duration: 0.5,
+        duration: 0.16,
         ease: 'power3.inOut',
-        stagger: 0.06,
-      }, 0.45)
+        stagger: 0.02,
+      }, 0.15);
+    }
 
-    /* Hold — we navigate here */
-      .to({}, { duration: 0.2 }, 0.85);
-
+    /* Outgoing animation completes at ~0.35s and navigates immediately (no hold delay) */
     return tl;
   }
 
   /* Page-in reveal (panels wipe out when page loads) */
   function pageRevealIn () {
-    if (!window.gsap) return;
-
     const wrap = document.getElementById('ct-wrap');
     if (!wrap) return;
-
-    const panels = wrap.querySelectorAll('.ct-panel');
-    const grid   = wrap.querySelector('.ct-grid');
-    const sigil  = wrap.querySelector('.ct-sigil');
-    const strokes = sigil ? sigil.querySelectorAll('.jx-stroke') : [];
 
     /* If panels already at scaleX = 1 (came from a transition), wipe them out */
     const fromPanel = sessionStorage.getItem('ct-active');
     if (!fromPanel) return;
     sessionStorage.removeItem('ct-active');
 
+    const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion || !window.gsap) {
+      wrap.style.pointerEvents = 'none';
+      isTransitioning = false;
+      return;
+    }
+
+    const panels = wrap.querySelectorAll('.ct-panel');
+    const grid   = wrap.querySelector('.ct-grid');
+    const sigil  = wrap.querySelector('.ct-sigil');
+    const strokes = sigil ? sigil.querySelectorAll('.jx-stroke') : [];
+
+    /* Block pointer events during incoming reveal */
+    wrap.style.pointerEvents = 'all';
+
     gsap.set(panels, { scaleX: 1, transformOrigin: 'right center' });
     gsap.set(grid, { opacity: 1 });
     gsap.set(sigil, { opacity: 1, scale: 1 });
     gsap.set(strokes, { strokeDashoffset: 0 });
 
+    /* Incoming reveal scales down proportionally to ~0.4s total */
     const tl = gsap.timeline();
-    tl.to(strokes, { strokeDashoffset: 200, duration: 0.3, ease: 'power2.in', stagger: 0.03 }, 0)
-      .to([sigil, grid], { opacity: 0, duration: 0.25, ease: 'power2.in' }, 0.1)
-      .to(panels[2], { scaleX: 0, duration: 0.55, ease: 'expo.inOut' }, 0.3)
-      .to(panels[1], { scaleX: 0, duration: 0.55, ease: 'expo.inOut' }, 0.35)
-      .to(panels[0], { scaleX: 0, duration: 0.55, ease: 'expo.inOut' }, 0.40)
+    if (strokes.length) {
+      tl.to(strokes, { strokeDashoffset: 200, duration: 0.14, ease: 'power2.in', stagger: 0.02 }, 0);
+    }
+    tl.to([sigil, grid], { opacity: 0, duration: 0.12, ease: 'power2.in' }, 0.04)
+      .to(panels[2], { scaleX: 0, duration: 0.26, ease: 'expo.inOut' }, 0.10)
+      .to(panels[1], { scaleX: 0, duration: 0.26, ease: 'expo.inOut' }, 0.12)
+      .to(panels[0], { scaleX: 0, duration: 0.26, ease: 'expo.inOut' }, 0.14)
       .set(wrap, { pointerEvents: 'none' })
       .call(() => { isTransitioning = false; });
   }
@@ -539,22 +557,102 @@
   }
 
   /* ────────────────────────────────────────────────────────────────
-     INTERCEPT NAV CLICKS
+     LINK PREFETCHING (Hover / Focus / Touch)
+     ──────────────────────────────────────────────────────────────── */
+  const prefetchedUrls = new Set();
+
+  function prefetchUrl (href) {
+    if (!href || href.startsWith('#') || href.startsWith('http') || href.startsWith('mailto:') || href.startsWith('tel:') || href.startsWith('javascript:')) return;
+
+    let url;
+    try {
+      url = new URL(href, window.location.origin).pathname;
+    } catch (_) {
+      return;
+    }
+
+    /* Don't prefetch current page */
+    if (url === getActivePage()) return;
+
+    if (prefetchedUrls.has(url)) return;
+    prefetchedUrls.add(url);
+
+    if (document.querySelector(`link[rel="prefetch"][href="${url}"]`)) return;
+
+    const link = document.createElement('link');
+    link.rel = 'prefetch';
+    link.href = url;
+    document.head.appendChild(link);
+  }
+
+  /* ────────────────────────────────────────────────────────────────
+     INTERCEPT NAV CLICKS & PREFETCH
      ──────────────────────────────────────────────────────────────── */
   function interceptNavLinks () {
+    /* Bind prefetch listeners on static [data-nav-link] elements */
     document.querySelectorAll('[data-nav-link]').forEach(link => {
-      link.addEventListener('click', e => {
+      const onPrefetch = () => {
         const href = link.getAttribute('href');
-        if (!href || href.startsWith('#') || href.startsWith('http')) return;
+        if (href) prefetchUrl(href);
+      };
+      link.addEventListener('mouseenter', onPrefetch, { passive: true, once: true });
+      link.addEventListener('focus', onPrefetch, { passive: true, once: true });
+      link.addEventListener('touchstart', onPrefetch, { passive: true, once: true });
+    });
 
-        /* Same page? Do nothing */
-        const current = getActivePage();
-        if (href === current) return;
+    if (document.__jxNavInterceptBound) return;
+    document.__jxNavInterceptBound = true;
 
+    /* Event delegation for prefetch on any dynamic [data-nav-link] elements */
+    const onPrefetchDelegated = (e) => {
+      const link = e.target.closest('a[data-nav-link]');
+      if (!link) return;
+      const href = link.getAttribute('href');
+      if (href) prefetchUrl(href);
+    };
+    document.addEventListener('mouseover', onPrefetchDelegated, { passive: true });
+    document.addEventListener('focusin', onPrefetchDelegated, { passive: true });
+    document.addEventListener('touchstart', onPrefetchDelegated, { passive: true });
+
+    /* Event delegation for click intercept */
+    document.addEventListener('click', e => {
+      const link = e.target.closest('a[data-nav-link]');
+      if (!link) return;
+
+      /* Do not intercept if default was already prevented */
+      if (e.defaultPrevented) return;
+
+      /* Preserve native behavior for modifier keys (Ctrl/Cmd/Shift/Alt) and non-left clicks (middle click) */
+      if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+
+      const href = link.getAttribute('href');
+      if (!href || href.startsWith('#') || href.startsWith('http') || href.startsWith('mailto:') || href.startsWith('tel:') || href.startsWith('javascript:')) return;
+
+      /* Don't intercept target="_blank" */
+      if (link.target && link.target !== '_self') return;
+
+      /* Same page? Do nothing */
+      const current = getActivePage();
+      let targetPath = href;
+      try {
+        targetPath = new URL(href, window.location.origin).pathname;
+      } catch (_) {}
+      if (targetPath === current) {
         e.preventDefault();
-        sessionStorage.setItem('ct-active', '1');
-        consciousnessShift(href);
-      });
+        return;
+      }
+
+      e.preventDefault();
+
+      /* Prefers-reduced-motion: instant navigation with no panel animation */
+      const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (prefersReducedMotion) {
+        window.location.href = href;
+        return;
+      }
+
+      sessionStorage.setItem('ct-active', '1');
+      consciousnessShift(href);
     });
   }
 
@@ -844,6 +942,7 @@
       loadAvailability,
     };
     window.JX.initLoopingPreviewVideo = initLoopingPreviewVideo;
+    window.initPageTransitions = interceptNavLinks;
   }
 
   /* Run immediately when DOM is ready */

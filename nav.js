@@ -72,7 +72,7 @@
     nav.setAttribute('role', 'navigation');
     nav.setAttribute('aria-label', 'Main navigation');
     nav.innerHTML = `
-      <a href="/index.html" class="nav-brand" aria-label="JX Design & Dev — Home">
+      <a href="/index.html" class="nav-brand" aria-label="JX Design & Dev — Home" data-nav-link>
         ${JX_LOGO_SVG}
       </a>
 

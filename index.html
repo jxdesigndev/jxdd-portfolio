@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <script>try{if(sessionStorage.getItem('jx_visited'))document.documentElement.classList.add('jx-returning');}catch(e){}</script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="canonical" href="https://www.jxdesign.dev/">
@@ -30,6 +31,14 @@
   <link rel="icon" type="image/jpeg" href="assets/images/jx-logo.webp">
   <style>
     /* ─── INDEX-ONLY STYLES ─── */
+
+    /* ── Returning visitor: loader never renders, canvas prepared for smooth fade ── */
+    .jx-returning #loader {
+      display: none !important;
+    }
+    .jx-returning #hero-canvas {
+      opacity: 0;
+    }
 
     /* ── Canvas Layer ── */
     #hero-canvas {

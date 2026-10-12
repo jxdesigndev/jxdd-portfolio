@@ -153,7 +153,8 @@ const JXUniverse = {
      ──────────────────────────────────────────────────────────────── */
   runLoader () {
     return new Promise(async resolve => {
-      if (sessionStorage.getItem('jx_visited')) {
+      const isReturning = document.documentElement.classList.contains('jx-returning') || !!sessionStorage.getItem('jx_visited');
+      if (isReturning) {
         if (this.loader) this.loader.style.display = 'none';
         const skipBtn = document.getElementById('loader-skip');
         if (skipBtn) skipBtn.remove();
@@ -164,7 +165,13 @@ const JXUniverse = {
           mats.uAlpha.value = 1;
           mats.uProgress1.value = 0.0;
           mats.uProgress2.value = 1.0; 
-          this.tweenUniform(mats.uGreenMix, 0, 0.15, 100);
+          mats.uGreenMix.value = 0.15;
+          if (this.threeCtx.mainParticles) {
+            const baseSize = window.innerWidth < 768 ? 1.8 : 2.8;
+            this.threeCtx.mainParticles.scale.set(1, 1, 1);
+            this.threeCtx.mainParticles.rotation.set(0, 0, 0);
+            mats.uSize.value = baseSize;
+          }
         }
         resolve();
         return;
@@ -360,6 +367,41 @@ const JXUniverse = {
   revealPage () {
     const loader = this.loader;
     const page   = document.getElementById('page');
+    const canvas = this.heroCanvas || document.getElementById('hero-canvas');
+    const isReturning = document.documentElement.classList.contains('jx-returning') || !!sessionStorage.getItem('jx_visited');
+    const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (isReturning) {
+      if (loader) loader.style.display = 'none';
+
+      /* Returning visitors: make all hero sub-elements visible immediately so they fade in together with hero/canvas */
+      const heroSelectors = [
+        '#hero-eyebrow', '#hl-1', '#hl-2', '.hero-name-line',
+        '#hr-1', '#hr-2', '#hr-3', '.hero-role-separator',
+        '#hero-desc', '#hero-cta', '#hero-meta', '#hero-hud', '#hero-scroll'
+      ];
+      if (window.gsap) {
+        gsap.set(heroSelectors, { opacity: 1, y: 0, yPercent: 0, clearProps: 'transform' });
+      } else {
+        document.querySelectorAll(heroSelectors.join(',')).forEach(el => {
+          el.style.opacity = '1';
+          el.style.transform = 'none';
+        });
+      }
+
+      if (prefersReducedMotion || !window.gsap) {
+        /* No fade for prefers-reduced-motion */
+        if (page) page.style.opacity = '1';
+        if (canvas) canvas.style.opacity = '1';
+      } else {
+        /* Smooth fade-in (<=300ms) once particles are ready */
+        gsap.fromTo([page, canvas],
+          { opacity: 0 },
+          { opacity: 1, duration: 0.3, ease: 'power2.out' }
+        );
+      }
+      return;
+    }
 
     if (!window.gsap) {
       if (loader) { loader.style.opacity = '0'; setTimeout(() => loader.style.display = 'none', 600); }

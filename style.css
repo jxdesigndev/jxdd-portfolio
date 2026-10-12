@@ -916,6 +916,14 @@ svg { display: block; }
   gap: var(--s-8);
 }
 
+/* Returning visitor: loader never renders, canvas prepared for smooth fade */
+.jx-returning #loader {
+  display: none !important;
+}
+.jx-returning #hero-canvas {
+  opacity: 0;
+}
+
 .loader-logo {
   opacity: 0;
   animation: loader-logo-in 0.8s var(--ease-snap) 0.3s forwards;

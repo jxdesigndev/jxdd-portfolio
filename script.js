@@ -368,7 +368,7 @@ const JXUniverse = {
     const loader = this.loader;
     const page   = document.getElementById('page');
     const canvas = this.heroCanvas || document.getElementById('hero-canvas');
-    const isReturning = document.documentElement.classList.contains('jx-returning') || !!sessionStorage.getItem('jx_visited');
+    const isReturning = document.documentElement.classList.contains('jx-returning');
     const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     if (isReturning) {
@@ -451,10 +451,11 @@ const JXUniverse = {
       }, '-=0.3');
     } else {
       /* Fallback: word-level reveal (GSAP loaded but SplitText unavailable) */
-      tl.to(['#hl-1', '#hl-2'], {
-        yPercent: 0, opacity: 1, duration: 0.9,
-        ease: 'expo.out', stagger: 0.08
-      }, '-=0.3');
+      tl.fromTo(['#hl-1', '#hl-2'],
+        { yPercent: 40, opacity: 0 },
+        { yPercent: 0, opacity: 1, duration: 0.9, ease: 'expo.out', stagger: 0.08 },
+        '-=0.3'
+      );
     }
 
     tl.to(['#hr-1', '#hr-2', '#hr-3', '.hero-role-separator'], {

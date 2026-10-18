@@ -171,7 +171,7 @@
 
       } catch (err) {
         console.error('Contact form error:', err);
-        showStatus('error', '> Transmission failed. Try emailing hello@jxdesigndev.com directly.');
+        showStatus('error', '> Transmission failed. Try emailing okiz@jxdesign.dev directly.');
       } finally {
         submit.disabled = false;
         submit.textContent = 'Transmit Signal ↗';

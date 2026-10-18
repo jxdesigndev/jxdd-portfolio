@@ -38,16 +38,37 @@ document.addEventListener("DOMContentLoaded", () => {
       </div>
     `;
     document.body.appendChild(banner);
+    document.body.classList.add('has-cookie-banner');
 
-    document.getElementById('btn-accept').addEventListener('click', () => {
-      localStorage.setItem(CONSENT_KEY, 'granted');
-      banner.style.display = 'none';
-      initAnalytics();
-    });
+    const updateBannerHeight = () => {
+      if (!banner || banner.style.display === 'none') {
+        document.documentElement.style.setProperty('--cookie-banner-height', '0px');
+        return;
+      }
+      const rect = banner.getBoundingClientRect();
+      document.documentElement.style.setProperty('--cookie-banner-height', `${Math.round(rect.height)}px`);
+    };
 
-    document.getElementById('btn-decline').addEventListener('click', () => {
-      localStorage.setItem(CONSENT_KEY, 'denied');
+    updateBannerHeight();
+
+    let resizeObserver = null;
+    if (window.ResizeObserver) {
+      resizeObserver = new ResizeObserver(updateBannerHeight);
+      resizeObserver.observe(banner);
+    }
+    window.addEventListener('resize', updateBannerHeight, { passive: true });
+
+    const dismissBanner = (granted) => {
+      localStorage.setItem(CONSENT_KEY, granted ? 'granted' : 'denied');
       banner.style.display = 'none';
-    });
+      document.body.classList.remove('has-cookie-banner');
+      document.documentElement.style.setProperty('--cookie-banner-height', '0px');
+      if (resizeObserver) resizeObserver.disconnect();
+      window.removeEventListener('resize', updateBannerHeight);
+      if (granted) initAnalytics();
+    };
+
+    document.getElementById('btn-accept').addEventListener('click', () => dismissBanner(true));
+    document.getElementById('btn-decline').addEventListener('click', () => dismissBanner(false));
   }
 });

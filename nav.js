@@ -798,8 +798,9 @@
 
   /* ────────────────────────────────────────────────────────────────
      SCROLL PROGRESS BAR
-     A 2px green line at the top of the viewport that fills as the
-     user scrolls the page. Injected on every page.
+     A thin fixed line at the top of the viewport whose scaleX is driven
+     by scroll progress. Uses existing design tokens and respects
+     prefers-reduced-motion. Injected on every public page.
      ──────────────────────────────────────────────────────────────── */
   function buildScrollProgress () {
     if (document.getElementById('jx-scroll-progress')) return;
@@ -811,25 +812,45 @@
     bar.setAttribute('aria-valuenow', '0');
     bar.setAttribute('aria-valuemin', '0');
     bar.setAttribute('aria-valuemax', '100');
+
+    const mql = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)');
+    const getTransition = () => (mql && mql.matches) ? 'none' : 'transform 0.05s linear';
+
     bar.style.cssText = [
       'position:fixed', 'top:0', 'left:0',
-      'height:2px', 'width:0%',
+      'height:2px', 'width:100%',
       'background:linear-gradient(90deg, var(--green) 0%, var(--cyan, #00FFCC) 100%)',
       'z-index:9999', 'pointer-events:none',
-      'transition:width 0.1s linear',
-      'transform-origin:left',
+      'transform-origin:left top',
+      'transform:scaleX(0)',
+      `transition:${getTransition()}`,
     ].join(';');
     document.body.prepend(bar);
 
+    function updateMotion () {
+      bar.style.transition = getTransition();
+    }
+    if (mql) {
+      if (mql.addEventListener) {
+        mql.addEventListener('change', updateMotion);
+      } else if (mql.addListener) {
+        mql.addListener(updateMotion);
+      }
+    }
+
     function updateProgress () {
-      const scrollTop  = window.scrollY || document.documentElement.scrollTop;
-      const docHeight  = document.documentElement.scrollHeight - window.innerHeight;
-      const pct = docHeight > 0 ? Math.min(100, (scrollTop / docHeight) * 100) : 0;
-      bar.style.width = pct + '%';
-      bar.setAttribute('aria-valuenow', Math.round(pct));
+      const scrollTop = window.scrollY || document.documentElement.scrollTop;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress  = docHeight > 0 ? Math.min(1, Math.max(0, scrollTop / docHeight)) : 0;
+      bar.style.transform = `scaleX(${progress})`;
+      bar.setAttribute('aria-valuenow', Math.round(progress * 100));
     }
 
     window.addEventListener('scroll', updateProgress, { passive: true });
+    window.addEventListener('resize', updateProgress, { passive: true });
+    if (window.JXLenis && typeof window.JXLenis.on === 'function') {
+      window.JXLenis.on('scroll', updateProgress);
+    }
     updateProgress(); // init state
   }
 
@@ -885,6 +906,8 @@
      INIT — runs on every page
      ──────────────────────────────────────────────────────────────── */
   function init () {
+    document.documentElement.classList.add('no-native-scrollbar');
+    if (document.body) document.body.classList.add('no-native-scrollbar');
     buildNav();
     buildCursor();
     buildTransitionDOM();
